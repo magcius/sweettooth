@@ -2,7 +2,7 @@
 {% block body %}
   <ul>
   {% for extension in extensions %}
-    <li> {{ extension.name }} </li>
+    <li> <a href="{% url ext-detail extension.slug %}">{{ extension.name }} by {{ extension.uploader }}</li>
   {% endfor %}
   </ul>
 {% endblock %}

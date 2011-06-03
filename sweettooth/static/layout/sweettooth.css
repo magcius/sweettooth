@@ -1,1 +1,61 @@
 
+@import url("http://www.gnome.org/wp-content/themes/gnome-grass/style.css");
+
+#container {
+    background-image: linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 20px);
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 20px);
+    border: 1px solid #eeeeee;
+    border-style: none solid;
+    padding-top: 30px;
+    margin-top: 10px;
+}
+
+#global_domain_bar div {
+    position: relative;
+}
+
+#login_popup_form {
+    position: absolute;
+    padding: 20px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 5px;
+    font-size: 50%;
+    top: 30px;
+    right: 30px;
+    display: none;
+}
+
+#login_form ol {
+    list-style-type: none;
+    font-size: 200%;
+}
+
+#login_form li.submit input {
+    width: 86.5%;
+    margin: 0 5%;
+}
+
+#login_form label {
+    display: inline-block;
+    display: -moz-inline-block;
+    width: 45%;
+    margin-left: 5%;
+    line-height: 1.8;
+    vertical-align: top;
+}
+
+#login_form input {
+    width: 40%;
+}
+
+p.error {
+    display: block;
+    background: #fcc;
+    padding: .5em;
+    margin: 0 auto;
+    background-image: url(http://git.gnome.org/browse/gnome-icon-theme/plain/gnome/48x48/status/dialog-error.png);
+    padding-left: 64px;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    font-size: 2em;
+}

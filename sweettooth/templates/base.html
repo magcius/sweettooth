@@ -2,17 +2,71 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}/layout/sweettooth.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}layout/sweettooth.css" />
     {% block head %} {% endblock %}
     <title> {% block title %} SweetTooth {% endblock %} </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
   </head>
   <body>
-    <h1> SweetTooth </h1>
-    <div id="container">
-      {% block body %}
-      {% endblock %}
+    <div id="global_domain_bar">
+      <div>
+        {% include "login_popup_form.html" %}
+        <a href="http://www.gnome.org/"><strong>GNOME</strong>.org</a>
+      </div>
     </div>
-    {% block afterbody %} {% endblock %}
+    <script>
+      $("#login_link").click(function(evt) {
+        $("#login_popup_form").slideToggle();
+        evt.preventDefault();
+        return false;
+      });
+    </script>
+
+    <!-- header -->
+    <div id="header" class="container_12">
+        <div id="logo" class="grid_3">
+            <h1><a title="Go to home page" href="http://www.gnome.org/"><img src="http://www.gnome.org/wp-content/themes/gnome-grass/images/gnome-logo.png" alt="'GNOME: The Free Software Desktop Project" /></a></h1>
+        </div>
+        <div id="top_bar" class="grid_9">
+            <div class="left">
+              <ul>
+                <li><a href="#item1">Item 1</a></li>
+                <li><a href="#item2">Item 2</a></li>
+                <li><a href="#item3">Item 3</a></li>
+                <li><a href="#item4">Item 4</a></li>
+              </ul>
+            </div>
+            <div class="right">
+                <form role="search" method="get" id="searchform" action="/dummy-search" >
+                    <div>
+                        <label class="hidden" for="s">Search</label><input type="text" value="" name="s" id="s" placeholder="Search" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    {% for message in messages %}
+      <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <div id="container" class="two_columns">
+      <div class="column_12">
+        {% block body %}
+        {% endblock %}
+      </div>
+    </div>
+    <div id="footer_grass">&nbsp;</div>
+
+    <div id="footer">
+      <div class="container_12">
+        {% include "dummy_links.html" %}
+        <div class="grid_9" id="footnotes">
+          Copyright &copy; 2005&#8210;2011 <strong class="gnome_logo">The GNOME Project</strong><br>
+          <small>Free to share and remix: <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons CC-BY</a>. Optimised for standards. Hosted by <a href="http://www.canonical.com/">Canonical</a>. Powered by <a href="http://www.wordpress.org">WordPress</a></small>
+        </div>
+        <div class="clear"></div>
+    </div>
   </body>
 </html>

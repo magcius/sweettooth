@@ -1,19 +1,21 @@
 
 from django.conf.urls.defaults import patterns, include, url
+from django.views.generic import RedirectView
 
-from sweettooth.browse import urls as browse_urls
-
-# Uncomment the next two lines to enable the admin:
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^browse/', include(browse_urls)),
+    url(r'^$', RedirectView.as_view(url='/browse'), name='index'),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^browse/', include('browse.urls')),
 
-    # Uncomment the next line to enable the admin:
+    # 'login' and 'register'
+    url(r'^', include('auth.urls')),
+
+    
     url(r'^admin/', include(admin.site.urls)),
 )
+
+urlpatterns += staticfiles_urlpatterns()

@@ -1,0 +1,12 @@
+{% if user.is_authenticated %}
+  <a href="/logout">Log out</a>
+{% else %}
+  <a href="/login/" id="login_link">Login?</a>
+  <form action="{% url login %}" method="POST" id="login_popup_form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="/">
+    <input type="text" placeholder="Username" name="username">
+    <input type="password" placeholder="Password" name="password">
+    <input type="submit" value="Log in">
+  </form>
+{% endif %}
