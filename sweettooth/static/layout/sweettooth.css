@@ -1,6 +1,19 @@
 
 @import url("http://www.gnome.org/wp-content/themes/gnome-grass/style.css");
 
+html, body {
+    min-height: 100%;
+}
+
+#eee {
+    text-align: center;
+    font-size: 3em;
+    position: relative;
+    margin: 0;
+    text-shadow: hsl(211, 47%, 75%) 0 3px 4px;
+    top: -40px;
+}
+
 #container {
     background-image: linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 20px);
     background-image: -moz-linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 20px);
@@ -14,13 +27,23 @@
     position: relative;
 }
 
+#login_link {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    -moz-transition: background-color 200ms ease-out 0s;
+}
+
+#login_link.selected {
+    background-color: #eee;
+}
+
 #login_popup_form {
     position: absolute;
     padding: 20px;
     background-color: rgba(255,255,255,0.9);
     border-radius: 5px;
     font-size: 50%;
-    top: 30px;
+    top: 35px;
     right: 30px;
     display: none;
 }

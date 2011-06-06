@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
-  <ul>
-  {% for extension in extensions %}
-    <li> <a href="{% url ext-detail extension.slug %}">{{ extension.name }} by {{ extension.uploader }}</li>
-  {% endfor %}
-  </ul>
+  <h2 id="eee"> Extend. Embrace. Enjoy. </h2>
+  <div class="grid_3"><h3> What are extensions? </h3><p> Lorem ipsum1. </p></div>
+  <div class="grid_3"><h3> What are themes? </h3><p> Lorem ipsum2. </p></div>
+  <div class="grid_3"><h3> What's GNOME3? </h3><p> Lorem ipsum3. </p></div>
+  <div class="grid_3"><h3> Why am I writing terrible copytext? </h3><p> Lorem ipsum4. </p></div>
 {% endblock %}
