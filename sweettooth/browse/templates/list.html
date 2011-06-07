@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+  <ul>
+  {% for extension in extensions_list %}
+    <li class="extension-view">
+      <a href="{% url ext-detail slug=extension.slug %}" rel="detail">
+        {{ extension.name }} by {{ extension.creator }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}

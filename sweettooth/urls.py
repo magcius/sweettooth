@@ -10,10 +10,10 @@ urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url='/browse'), name='index'),
 
     url(r'^browse/', include('browse.urls')),
+    url(r'^upload/', include('upload.urls')),
 
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
-
     
     url(r'^admin/', include(admin.site.urls)),
 )

@@ -114,6 +114,8 @@ TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates'),
 )
 
+LOGIN_URL = '/login/'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,8 +124,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'tagging',
+
+    'extensions',
     'browse',
     'auth',
+    'upload',
+
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

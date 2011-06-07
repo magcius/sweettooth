@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, get_object_or_404
-from browse.models import Extension
+from extensions.models import Extension
 
 def index(request):
     extensions = Extension.objects.all()

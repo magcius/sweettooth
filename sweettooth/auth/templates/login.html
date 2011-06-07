@@ -3,11 +3,8 @@
 <form action="{% url login %}" method="POST" id="login_form">
   {% csrf_token %}
 
-  {% if form.errors %}
-    <p class="message error">Invalid username and password.</p>
-  {% endif %}
+  {{ form.errors }}
 
-  <input type="hidden" name="next" value="/">
   <ol>
     <li>
       {{ form.username.label_tag }}

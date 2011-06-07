@@ -31,10 +31,11 @@
         <div id="top_bar" class="grid_9">
             <div class="left">
               <ul>
-                <li><a href="/browse/featured/">Featured Extensions</a></li>
+                <li><a href="{% url ext-tags tag='featured' %}">Featured Extensions</a></li>
                 <li><a href="/browse/top/">Highest Rated</a></li>
-                <li><a href="#item3">Item 3</a></li>
-                <li><a href="#item4">Item 4</a></li>
+                {% if user.is_authenticated %}
+                  <li><a href="/upload/">Upload a new extension</a></li>
+                {% endif %}
               </ul>
             </div>
             <div class="right">
