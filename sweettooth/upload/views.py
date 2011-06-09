@@ -24,11 +24,12 @@ def upload_file(request):
             file_source = request.FILES['source']
             extension, version = ExtensionVersion.from_zipfile(file_source)
             extension.creator = request.user
+            extension.save()
+
+            version.extension = extension
             version.source = file_source
             version.is_published = False
-
             version.save()
-            extension.save()
 
             request.session[EXTENSION_DATA_KEY] = extension, version
             return redirect(reverse('upload-edit-data'))
@@ -49,13 +50,14 @@ def upload_edit_data(request):
             extension.name = form.cleaned_data['name']
             extension.description = form.cleaned_data['description']
             extension.url = form.cleaned_data['url']
-            version.is_published = True
-            version.replace_metadata_json()
-            version.save()
+            extension.is_published = True
             extension.save()
 
+            version.replace_metadata_json()
+            version.save()
+
             del request.session[EXTENSION_DATA_KEY]
-            return redirect(reverse('ext-detail', dict(slug=extension.slug)))
+            return redirect(reverse('ext-detail', kwargs=dict(slug=extension.slug)))
     else:
         initial = dict(name=extension.name,
                        description=extension.description,

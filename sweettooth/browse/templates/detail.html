@@ -1,4 +1,5 @@
 {% extends "base.html" %}
 {% block body %}
     <li> {{ extension.name }} by {{ extension.creator }} </li>
+    <a href="{% url ext-download slug=extension.slug ver=version.version %}">Install</a>
 {% endblock %}
