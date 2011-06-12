@@ -55,7 +55,7 @@ class ExtensionVersion(models.Model):
         In the uploaded extension zipfile, edit metadata.json
         to reflect the new contents.
         """
-        zipfile = ZipFile(self.source.name, "w")
+        zipfile = ZipFile(self.source.storage.path(self.source.name), "a")
         zipfile.writestr("metadata.json", self.make_metadata_json())
         zipfile.close()
 
