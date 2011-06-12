@@ -16,9 +16,6 @@ urlpatterns = patterns('',
 
     url(r'^upload/', include('upload.urls')),
 
-    url(r'^uploaded-files/(?P<path>.*)', static.serve,
-        dict(document_root=SITE_ROOT), name='uploaded-files'),
-
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
 

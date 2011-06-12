@@ -19,4 +19,4 @@ def extension_detail(request, slug, ver):
 
 def extension_download(request, slug, ver):
     extension, version = get_extension(slug, ver)
-    return redirect('uploaded-files', version.source.name)
+    return redirect('/' + version.source.name)
