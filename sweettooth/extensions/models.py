@@ -32,8 +32,8 @@ class ExtensionVersion(models.Model):
     extra_json_fields = models.TextField()
 
     def make_filename(self, filename):
-        return os.path.join("uploaded-files", self.extension.uuid,
-                            str(self.version), self.extension.slug + ".shell-extension.zip")
+        return os.path.join(self.extension.uuid, str(self.version),
+                            self.extension.slug + ".shell-extension.zip")
 
     source = models.FileField(upload_to=make_filename)
 

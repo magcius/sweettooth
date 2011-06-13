@@ -1,5 +1,8 @@
 
-from django.shortcuts import get_object_or_404, render, redirect
+import json
+
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
 
 from extensions.models import Extension
 
@@ -17,6 +20,16 @@ def extension_detail(request, slug, ver):
     extension, version = get_extension(slug, ver)
     return render(request, 'detail.html', dict(version=version, extension=extension))
 
-def extension_download(request, slug, ver):
+def extension_manifest(request, slug):
+    ver = request.GET.get('version', 'latest')
+
     extension, version = get_extension(slug, ver)
-    return redirect('/' + version.source.name)
+
+    # XXX - this sucks
+    url = 'http://extensions.gnome.org/static/extension-data/' + version.source.name
+    manifestdata = json.loads(version.extra_json_fields)
+    manifestdata.update({'_manifest_url': url})
+
+    return HttpResponse(json.dumps(manifestdata),
+                        content_type='application/x-shell-extension')
+>>>>>>> Do it faster.
