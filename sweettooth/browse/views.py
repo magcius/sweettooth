@@ -32,4 +32,3 @@ def extension_manifest(request, slug):
 
     return HttpResponse(json.dumps(manifestdata),
                         content_type='application/x-shell-extension')
->>>>>>> Do it faster.
