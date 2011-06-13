@@ -15,6 +15,10 @@ urlpatterns = patterns('',
 
     url(r'^upload/', include('upload.urls')),
 
+    # dummy URI for reverse()
+    url(r'^static/extension-data/(?P<filepath>.+)', lambda x: None,
+        name='ext-url'),
+
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
 

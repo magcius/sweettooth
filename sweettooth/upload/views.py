@@ -21,7 +21,7 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            file_source = request.FILES['source']
+            file_source = form.cleaned_data['source']
             extension, version = ExtensionVersion.from_zipfile(file_source)
             extension.creator = request.user
             extension.save()

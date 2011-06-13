@@ -2,6 +2,7 @@
 import json
 
 from django.shortcuts import get_object_or_404, render
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
 from extensions.models import Extension
@@ -25,8 +26,7 @@ def extension_manifest(request, slug):
 
     extension, version = get_extension(slug, ver)
 
-    # XXX - this sucks
-    url = 'http://extensions.gnome.org/static/extension-data/' + version.source.name
+    url = request.build_absolute_uri(reverse('ext-url', kwargs=dict(filepath=version.source.url)))
     manifestdata = json.loads(version.extra_json_fields)
     manifestdata.update({'_manifest_url': url})
 
