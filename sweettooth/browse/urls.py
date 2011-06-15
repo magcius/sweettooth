@@ -30,4 +30,7 @@ urlpatterns = patterns('browse',
         dict(ver=None), name='ext-detail'),
     url(r'^(?P<slug>%s+)/(?P<ver>\d+)' % (slug_charset,), detail),
 
+    url(r'command/(?P<uuid>.+)/(?P<cmd>.+)$',
+        command, name='ext-command'),
+
 )

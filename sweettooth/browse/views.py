@@ -25,3 +25,10 @@ def download(request, uuid):
 
     url = reverse('ext-url', kwargs=dict(filepath=version.source.url))
     return redirect(request.build_absolute_url(url))
+
+def command(request, uuid, cmd):
+    data = {'arg': uuid,
+            'command': cmd}
+
+    return HttpResponse(json.dumps(data),
+                        content_type='application/x-shell-command')
