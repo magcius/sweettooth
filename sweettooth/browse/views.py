@@ -1,34 +1,27 @@
 
 import json
 
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
 from extensions.models import Extension
 
-def get_extension(slug, ver):
+def detail(request, slug, ver):
     extension = get_object_or_404(Extension, is_published=True, slug=slug)
-
-    if ver == 'latest':
-        version = extension.extensionversion_set.order_by('-version')[0]
-    else:
-        version = extension.extensionversion_set.get(version=int(ver))
-
-    return extension, version
-
-def extension_detail(request, slug, ver):
-    extension, version = get_extension(slug, ver)
+    version = extension.get_version(ver)
     return render(request, 'detail.html', dict(version=version, extension=extension))
 
-def extension_manifest(request, slug):
-    ver = request.GET.get('version', 'latest')
+def manifest(request, slug):
+    extension = get_object_or_404(Extension, is_published=True, slug=slug)
+    version = extension.get_version(request.get('version'))
 
-    extension, version = get_extension(slug, ver)
-
-    url = request.build_absolute_uri(reverse('ext-url', kwargs=dict(filepath=version.source.url)))
-    manifestdata = json.loads(version.extra_json_fields)
-    manifestdata.update({'_manifest_url': url})
-
-    return HttpResponse(json.dumps(manifestdata),
+    return HttpResponse(version.extra_json_data,
                         content_type='application/x-shell-extension')
+
+def download(request, uuid):
+    extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
+    version = extension.get_version(request.get('version'))
+
+    url = reverse('ext-url', kwargs=dict(filepath=version.source.url))
+    return redirect(request.build_absolute_url(url))

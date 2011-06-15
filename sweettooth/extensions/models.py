@@ -21,6 +21,12 @@ class Extension(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
 
+    def get_version(self, version):
+        if version in (None, 'latest'):
+            return self.extensionversion_set.order_by('-version')[0]
+
+        return self.extensionversion_set.get(version=int(ver))
+
 tagging.register(Extension)
 
 class InvalidExtensionData(Exception):
