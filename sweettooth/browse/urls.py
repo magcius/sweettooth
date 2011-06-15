@@ -23,14 +23,14 @@ urlpatterns = patterns('browse',
     url(r'^manifest/(?P<slug>%s+).json' % (slug_charset,),
         manifest, name='ext-manifest'),
 
-    url(r'^download/(?P<uuid>.+)',
+    url(r'^download/(?P<uuid>.+).shell-extension',
         download, name='ext-download'),
+
+    url(r'^command/(?P<uuid>.+)/(?P<cmd>.+).shell-command',
+        command, name='ext-command'),
 
     url(r'^(?P<slug>%s+)' % (slug_charset,), detail,
         dict(ver=None), name='ext-detail'),
     url(r'^(?P<slug>%s+)/(?P<ver>\d+)' % (slug_charset,), detail),
-
-    url(r'command/(?P<uuid>.+)/(?P<cmd>.+)$',
-        command, name='ext-command'),
 
 )

@@ -14,14 +14,14 @@ def detail(request, slug, ver):
 
 def manifest(request, slug):
     extension = get_object_or_404(Extension, is_published=True, slug=slug)
-    version = extension.get_version(request.get('version'))
+    version = extension.get_version(request.GET.get('version'))
 
-    return HttpResponse(version.extra_json_data,
+    return HttpResponse(version.extra_json_fields,
                         content_type='application/x-shell-extension')
 
 def download(request, uuid):
     extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
-    version = extension.get_version(request.get('version'))
+    version = extension.get_version(request.GET.get('version'))
 
     url = reverse('ext-url', kwargs=dict(filepath=version.source.url))
     return redirect(request.build_absolute_url(url))
