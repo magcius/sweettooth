@@ -28,7 +28,16 @@
                  cache: false,
                  success: callback,
                  error: errback });
-    }
+    };
+
+    http.GetErrors = function(uuid, callback, errback) {
+        $.ajax({ url: HOST + "errors",
+                 dataType: "json",
+                 data: {uuid: uuid},
+                 cache: false,
+                 success: callback,
+                 error: errback });        
+    };
 
     http.InstallExtension = function(manifest) {
         $.ajax({ url: HOST + "install",
@@ -56,6 +65,26 @@
         return false;
     };
 
+    buttons.GetErrors = function(event) {
+        var elem = event.data.config.element;
+
+        function callback(data) {
+            var log = $('<div class="error-log"></div>');
+            $.each(data, function(idx, error) {
+                log.append($('<span class="line"></span>').text(error));
+            });
+            event.data.config.element.append(log);
+            log.hide().slideDown();
+        }
+
+        var eventLog = elem.find('.error-log');
+        if (eventLog.length)
+            eventLog.slideToggle();
+        else
+            http.GetErrors(event.data.config.uuid, callback);
+
+    };
+
     var states = buttons.States = {};
     states[state.ENABLED]     = {"class": "disable", "text": "Disable",
                                  "handler": {"func": buttons.DoExtensionCommand,
@@ -67,7 +96,9 @@
     states[state.UNINSTALLED] = {"class": "install", "text": "Install",
                                  "handler": {"func": buttons.InstallExtension}};
 
-    states[state.ERROR]       = {"class": "error", "text": "Error"};
+    states[state.ERROR]       = {"class": "error", "text": "Error",
+                                 "handler": {"func": buttons.GetErrors}};
+
     states[state.OUT_OF_DATE] = {"class": "ood", "text": "Out of Date"};
 
     buttons.ShowCorrectButton = function(config) {
@@ -85,7 +116,7 @@
             }
         }
 
-        http.GetExtensions(callback, errback);
+        http.GetExtensions(callback);
     };
 
     // Magical buttons.
@@ -98,6 +129,7 @@
             var config = {"uuid": element.attr('data-uuid'),
                           "manifest": element.attr('data-manifest')};
 
+            config.element = element;
             config.button = element.find('.button');
             buttons.ShowCorrectButton(config);
         });
