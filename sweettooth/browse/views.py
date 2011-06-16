@@ -7,17 +7,22 @@ from django.http import HttpResponse
 
 from extensions.models import Extension
 
-def detail(request, slug, ver):
-    extension = get_object_or_404(Extension, is_published=True, slug=slug)
-    version = extension.get_version(ver)
-
+def get_manifest_url(request, extension, ver):
     manifest_url = reverse('ext-manifest', kwargs=dict(uuid=extension.uuid))
     manifest_url = request.build_absolute_uri(manifest_url)
 
     if ver not in (None, 'latest'):
         manifest_url += '?version=%d' % (ver,)
 
-    template_args = dict(version=version, extension=extension, manifest=manifest_url)
+    return manifest_url
+
+def detail(request, slug, ver):
+    extension = get_object_or_404(Extension, is_published=True, slug=slug)
+    version = extension.get_version(ver)
+
+    template_args = dict(version=version,
+                         extension=extension,
+                         manifest=get_manifest_url(request, extension, version))
     return render(request, 'detail.html', template_args)
 
 def manifest(request, uuid):

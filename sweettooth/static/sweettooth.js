@@ -39,10 +39,13 @@
                  error: errback });        
     };
 
-    http.InstallExtension = function(manifest) {
+    http.InstallExtension = function(uuid) {
+        // XXX -- for demo, need real manifest
+        var url = "http://extensions.gnome.org/browse/manifest/" + encodeURIComponent(uuid) + ".json";
+
         $.ajax({ url: HOST + "install",
                  cache: false,
-                 data: {url: manifest} });
+                 data: {url: url} });
     };
 
     http.DoExtensionCommand = function(command, arg) {
@@ -54,7 +57,7 @@
     var buttons = SweetTooth.buttons = {};
 
     buttons.InstallExtension = function(event) {
-        http.InstallExtension(event.data.config.manifest);
+        http.InstallExtension(event.data.config.uuid);
         buttons.ShowCorrectButton(event.data.config);
         return false;
     };
