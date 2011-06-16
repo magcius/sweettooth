@@ -20,7 +20,7 @@ urlpatterns = patterns('browse',
              template_object_name="extensions",
              template_name="list.html"), name='ext-tags'),
 
-    url(r'^manifest/(?P<slug>%s+).json' % (slug_charset,),
+    url(r'^manifest/(?P<uuid>.+).json',
         manifest, name='ext-manifest'),
 
     url(r'^download/(?P<uuid>.+).shell-extension',

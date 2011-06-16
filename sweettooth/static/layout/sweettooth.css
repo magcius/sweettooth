@@ -71,6 +71,84 @@ html, body {
     width: 40%;
 }
 
+li.extension {
+    padding: .7em 1em;
+    list-style-type: none;
+    list-style-position: inner;
+}
+
+li.extension:hover {
+    background-color: #ddd;
+}
+
+li.extension .title-link {
+    font-size: 2em;
+    text-decoration: none;
+    color: #224;
+}
+
+li.extension .author {
+    color: #888;
+}
+
+.button-placeholder {
+    float: right;
+}
+
+.button, .button:visited {
+    cursor: pointer;
+    float: right;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: .25em 1em;
+    color: white;
+    text-decoration: none;
+    text-shadow: black 0 1px 4px;
+    border-radius: 1.5em;
+    width: 150px;
+    text-align: center;
+    margin-right: 1em;
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.59, rgba(255,255,255,0))
+        color-stop(0.60, rgba(255,255,255,0.2)),
+        color-stop(1.00, rgba(255,255,255,0.6)),
+    );
+
+    background-image: -moz-linear-gradient(
+        center bottom,
+        rgba(255,255,255,0) 59%,
+        rgba(255,255,255,0.2) 60%,
+        rgba(255,255,255,0.6) 100%
+    );
+}
+
+.button:hover {
+    box-shadow: inset 0 0 1em rgba(255,255,255,0.6);
+}
+
+.button:active {
+    box-shadow: inset 0 .5em 1em rgba(0,0,0,0.3);
+}
+
+.button.disable {
+    background-color: #c88;
+    border: 2px solid #a77;
+}
+
+.button.enable, .button.install {
+    background-color: #8c8;
+    border: 2px solid #7a7;
+}
+
+.button.error {
+    background-color: #f85;
+    border: 2px solid #e73;
+}
+
 p.error {
     display: block;
     background: #fcc;

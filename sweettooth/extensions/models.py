@@ -13,7 +13,7 @@ from django.db import models
 
 class Extension(models.Model):
     name = models.CharField(max_length=200)
-    uuid = models.CharField(max_length=36)
+    uuid = models.TextField()
     slug = autoslug.AutoSlugField(populate_from="name", unique=True)
     creator = models.ForeignKey(auth.models.User)
     description = models.TextField()
@@ -25,7 +25,7 @@ class Extension(models.Model):
         if version in (None, 'latest'):
             return self.extensionversion_set.order_by('-version')[0]
 
-        return self.extensionversion_set.get(version=int(ver))
+        return self.extensionversion_set.get(version=int(version))
 
 tagging.register(Extension)
 

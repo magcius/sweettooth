@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 {% block body %}
-    <div id="extension">
+    <div class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
       <li> {{ extension.name }} by {{ extension.creator }} </li>
-      <a class="button install" href="{% url ext-manifest slug=extension.slug %}">Install</a>
-      <a class="button enable" href="{% url ext-command cmd='enable' uuid=extension.uuid %}">Enable</a>
-      <a class="button disable" href="{% url ext-command cmd='disable' uuid=extension.uuid %}">Disable</a>
+      <div class="button"></div>
     </div>
 {% endblock %}
 {% block script %}
     {{ block.super }}
     <script>
       $(document).ready(function() {
-      var config = {"uuid": "{{ extension.uuid }}", "manifest": "{% url ext-manifest slug=extension.slug %}"};
-      $("#extension").buttonify(config);
+        $(".extension").buttonify();
       });
     </script>
 {% endblock %}

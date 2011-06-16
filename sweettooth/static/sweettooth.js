@@ -5,7 +5,8 @@
         ENABLED: 1,
         DISABLED: 2,
         ERROR: 3,
-        OUT_OF_DATE: 4
+        OUT_OF_DATE: 4,
+        UNINSTALLED: 5 // Dummy state.
     };
 
     var HOST = "http://localhost:16269/";
@@ -38,63 +39,71 @@
 
     var buttons = SweetTooth.buttons = {};
 
-    buttons.ShowCorrectButtons = function(config) {
-
-        function callback(extensions) {
-            config.install.hide();
-            config.disable.hide();
-            config.enable.hide();
-
-            var meta = extensions[config.uuid];
-            if (meta) {
-                if (meta.state == state.ENABLED)
-                    config.disable.show();
-                else if (meta.state == state.DISABLED)
-                    config.enable.show();
-            } else {
-                config.install.show();
-            }
-        }
-
-        function errback() {
-            config.install.show();
-            config.disable.show();
-            config.enable.show();
-        }
-
-        http.GetExtensions(callback, errback);
-    };
-
     buttons.InstallExtension = function(event) {
         http.InstallExtension(event.data.config.manifest);
-        buttons.ShowCorrectButtons(event.data.config);
+        buttons.ShowCorrectButton(event.data.config);
         return false;
     };
 
     buttons.DoExtensionCommand = function(event) {
         http.DoExtensionCommand(event.data.cmd, event.data.config.uuid);
-        buttons.ShowCorrectButtons(event.data.config);
+        buttons.ShowCorrectButton(event.data.config);
         return false;
     };
 
+    var states = buttons.States = {};
+    states[state.ENABLED]     = {"class": "disable", "text": "Disable",
+                                 "handler": {"func": buttons.DoExtensionCommand,
+                                             "data": {"cmd": "disable"}}};
+    states[state.DISABLED]    = {"class": "enable", "text": "Enable",
+                                 "handler": {"func": buttons.DoExtensionCommand,
+                                             "data": {"cmd": "enable"}}};
+
+    states[state.UNINSTALLED] = {"class": "install", "text": "Install",
+                                 "handler": {"func": buttons.InstallExtension}};
+
+    states[state.ERROR]       = {"class": "error", "text": "Error"};
+    states[state.OUT_OF_DATE] = {"class": "ood", "text": "Out of Date"};
+
+    buttons.ShowCorrectButton = function(config) {
+        function callback(extensions) {
+            var meta = extensions[config.uuid];
+            var buttonState = states[(!!meta) ? meta.state : state.UNINSTALLED];
+            var button = config.button;
+            button.text(buttonState.text);
+            button.removeClass().addClass('button').addClass(buttonState['class']);
+            button.unbind('click');
+            console.log(buttonState, button);
+
+            if (buttonState.handler) {
+                var handlerData = $.extend({config: config}, (buttonState.handler.data || {}));
+                button.bind('click', handlerData, buttonState.handler.func);
+            }
+        }
+
+        function errback() {
+            console.log(arguments);
+        }
+
+        console.log("BBB", config.uuid);
+
+        http.GetExtensions(callback, errback);
+    };
+
     // Magical buttons.
-    $.fn.buttonify = function(CONFIG) {
+    $.fn.buttonify = function() {
         if (!http.hasLocal)
             return;
 
-        var element = $(this);
-        var config = $.extend({}, CONFIG);
-        element.data('_sweettooth_config', config);
+        $(this).each(function () {
+            var element = $(this);
+            var config = {"uuid": element.attr('data-uuid'),
+                          "manifest": element.attr('data-manifest')};
 
-        var i = config.install = element.find(".button.install");
-        var d = config.disable = element.find(".button.disable");
-        var e = config.enable = element.find(".button.enable");
-
-        i.bind('click', {config: config}, buttons.InstallExtension);
-        d.bind('click', {config: config, cmd: 'disable'}, buttons.DoExtensionCommand);
-        e.bind('click', {config: config, cmd: 'enable'}, buttons.DoExtensionCommand);
-
-        buttons.ShowCorrectButtons(config);
+            config.button = element.find('.button');
+            console.log(config.uuid);
+            buttons.ShowCorrectButton(config);
+        });
     };
 
     $(document).ready(function() {

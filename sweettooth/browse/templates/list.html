@@ -2,11 +2,24 @@
 {% block body %}
   <ul>
   {% for extension in extensions_list %}
-    <li class="extension-view">
-      <a href="{% url ext-detail slug=extension.slug %}" rel="detail">
-        {{ extension.name }} by {{ extension.creator }}
+    <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
+      <div class="button"></div>
+      <a href="{% url ext-detail slug=extension.slug %}" class="title-link">
+        {{ extension.name }}
       </a>
+      <span class="author">by {{ extension.creator }}</span>
+      <p>
+        {{ extension.description }}
+      </p>
     </li>
   {% endfor %}
   </ul>
+{% endblock %}
+{% block script %}
+    {{ block.super }}
+    <script>
+      $(document).ready(function() {
+        $(".extension").buttonify();
+      });
+    </script>
 {% endblock %}
