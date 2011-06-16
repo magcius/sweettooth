@@ -12,6 +12,11 @@
     var HOST = "http://localhost:16269/";
     var http = SweetTooth.LocalHTTP = { hasLocal: false };
 
+    $(document).ajaxError(function(_, __, ___, exc) {
+        if (window.console && window.console.log)
+            window.console.log("AJAX: " + exc);
+    });
+
     $.ajax({ url: HOST,
              async: false,
              cache: false,
@@ -73,19 +78,12 @@
             button.text(buttonState.text);
             button.removeClass().addClass('button').addClass(buttonState['class']);
             button.unbind('click');
-            console.log(buttonState, button);
 
             if (buttonState.handler) {
                 var handlerData = $.extend({config: config}, (buttonState.handler.data || {}));
                 button.bind('click', handlerData, buttonState.handler.func);
             }
         }
-
-        function errback() {
-            console.log(arguments);
-        }
-
-        console.log("BBB", config.uuid);
 
         http.GetExtensions(callback, errback);
     };
@@ -101,7 +99,6 @@
                           "manifest": element.attr('data-manifest')};
 
             config.button = element.find('.button');
-            console.log(config.uuid);
             buttons.ShowCorrectButton(config);
         });
     };
