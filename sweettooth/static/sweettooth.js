@@ -28,7 +28,7 @@
                         cache: false });
     };
 
-    http.GetExtensionInfo = function() {
+    http.GetExtensionInfo = function(uuid) {
         return $.ajax({ url: HOST + "info",
                         dataType: "json",
                         data: {uuid: uuid},
@@ -62,13 +62,13 @@
 
     buttons.InstallExtension = function(event) {
         http.InstallExtension(event.data.config.uuid);
-        buttons.ShowCorrectButton(event.data.config);
+        buttons.GetCorrectButton(event.data.config);
         return false;
     };
 
     buttons.DoExtensionCommand = function(event) {
         http.DoExtensionCommand(event.data.cmd, event.data.config.uuid);
-        buttons.ShowCorrectButton(event.data.config);
+        buttons.GetCorrectButton(event.data.config);
         return false;
     };
 
@@ -109,8 +109,8 @@
 
     states[state.OUT_OF_DATE] = {"class": "ood", "text": "Out of Date"};
 
-    buttons.ShowCorrectButton = function(config, stateName) {
-        var buttonState = states[(!!stateName) ? stateName : state.UNINSTALLED];
+    buttons.ShowCorrectButton = function(config, stateid) {
+        var buttonState = states[(!!stateid) ? stateid : state.UNINSTALLED];
         var button = config.button;
         button.text(buttonState.text);
 
@@ -124,13 +124,10 @@
         }
     };
 
-    buttons.GetCorrectButton = function(uuid) {
-        function callback(extensions) {
-            var meta = extensions[config.uuid];
-            buttons.ShowCorrectButton(meta.state);
-        }
-
-        http.GetExtensionMeta(uuid).done(callback);
+    buttons.GetCorrectButton = function(config) {
+        http.GetExtensionInfo(config.uuid).done(function(meta) {
+            buttons.ShowCorrectButton(config, meta.state);
+        });
     };
 
     // Magical buttons.
@@ -148,7 +145,9 @@
 
                 config.element = element;
                 config.button = element.find('.button');
-                buttons.ShowCorrectButton(config, extensions[config.uuid].state);
+
+                var meta = extensions[config.uuid] || {"state": state.UNINSTALLED};
+                buttons.ShowCorrectButton(config, meta.state);
             });
         }
 
