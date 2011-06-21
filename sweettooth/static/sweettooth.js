@@ -1,6 +1,6 @@
 (function($) {
 
-    var SweetTooth = {};
+    var SweetTooth = window.SweetTooth = {};
     var state = SweetTooth.State = {
         ENABLED: 1,
         DISABLED: 2,
@@ -22,26 +22,30 @@
              cache: false,
              success: function() { http.hasLocal = true; }});
 
-    http.GetExtensions = function(callback, errback) {
-        $.ajax({ url: HOST + "list",
-                 dataType: "json",
-                 cache: false,
-                 success: callback,
-                 error: errback });
+    http.ListExtensions = function() {
+        return $.ajax({ url: HOST + "list",
+                        dataType: "json",
+                        cache: false });
     };
 
-    http.GetErrors = function(uuid, callback, errback) {
-        $.ajax({ url: HOST + "errors",
-                 dataType: "json",
-                 data: {uuid: uuid},
-                 cache: false,
-                 success: callback,
-                 error: errback });        
+    http.GetExtensionInfo = function() {
+        return $.ajax({ url: HOST + "info",
+                        dataType: "json",
+                        data: {uuid: uuid},
+                        cache: false });
+    };
+
+    http.GetErrors = function(uuid) {
+        return $.ajax({ url: HOST + "errors",
+                        dataType: "json",
+                        data: {uuid: uuid},
+                        cache: false });
     };
 
     http.InstallExtension = function(uuid) {
-        // XXX -- for demo, need real manifest
-        var url = "http://extensions.gnome.org/browse/manifest/" + encodeURIComponent(uuid) + ".json";
+        // XXX for demo -- need real manifest
+        var MANIFEST_BASE = "http://extensions.gnome.org/browse/manifest/";
+        var url = MANIFEST_BASE + encodeURIComponent(uuid) + ".json";
 
         $.ajax({ url: HOST + "install",
                  cache: false,
@@ -54,7 +58,7 @@
                  data: {arg: arg} });
     };
 
-    var buttons = SweetTooth.buttons = {};
+    var buttons = SweetTooth.Buttons = {};
 
     buttons.InstallExtension = function(event) {
         http.InstallExtension(event.data.config.uuid);
@@ -84,7 +88,7 @@
         if (eventLog.length)
             eventLog.slideToggle();
         else
-            http.GetErrors(event.data.config.uuid, callback);
+            http.GetErrors(event.data.config.uuid).done(callback);
 
     };
 
@@ -92,6 +96,7 @@
     states[state.ENABLED]     = {"class": "disable", "text": "Disable",
                                  "handler": {"func": buttons.DoExtensionCommand,
                                              "data": {"cmd": "disable"}}};
+
     states[state.DISABLED]    = {"class": "enable", "text": "Enable",
                                  "handler": {"func": buttons.DoExtensionCommand,
                                              "data": {"cmd": "enable"}}};
@@ -104,22 +109,28 @@
 
     states[state.OUT_OF_DATE] = {"class": "ood", "text": "Out of Date"};
 
-    buttons.ShowCorrectButton = function(config) {
+    buttons.ShowCorrectButton = function(config, stateName) {
+        var buttonState = states[(!!stateName) ? stateName : state.UNINSTALLED];
+        var button = config.button;
+        button.text(buttonState.text);
+
+        // 'class' is a reserved word in JS.
+        button.removeClass().addClass('button').addClass(buttonState['class']);
+        button.unbind('click');
+
+        if (buttonState.handler) {
+            var handlerData = $.extend({config: config}, (buttonState.handler.data || {}));
+            button.bind('click', handlerData, buttonState.handler.func);
+        }
+    };
+
+    buttons.GetCorrectButton = function(uuid) {
         function callback(extensions) {
             var meta = extensions[config.uuid];
-            var buttonState = states[(!!meta) ? meta.state : state.UNINSTALLED];
-            var button = config.button;
-            button.text(buttonState.text);
-            button.removeClass().addClass('button').addClass(buttonState['class']);
-            button.unbind('click');
-
-            if (buttonState.handler) {
-                var handlerData = $.extend({config: config}, (buttonState.handler.data || {}));
-                button.bind('click', handlerData, buttonState.handler.func);
-            }
+            buttons.ShowCorrectButton(meta.state);
         }
 
-        http.GetExtensions(callback);
+        http.GetExtensionMeta(uuid).done(callback);
     };
 
     // Magical buttons.
@@ -127,15 +138,21 @@
         if (!http.hasLocal)
             return;
 
-        $(this).each(function () {
-            var element = $(this);
-            var config = {"uuid": element.attr('data-uuid'),
-                          "manifest": element.attr('data-manifest')};
+        var container = $(this);
 
-            config.element = element;
-            config.button = element.find('.button');
-            buttons.ShowCorrectButton(config);
-        });
+        function callback(extensions) {
+            container.each(function () {
+                var element = $(this);
+                var config = {"uuid": element.attr('data-uuid'),
+                              "manifest": element.attr('data-manifest')};
+
+                config.element = element;
+                config.button = element.find('.button');
+                buttons.ShowCorrectButton(config, extensions[config.uuid].state);
+            });
+        }
+
+        http.ListExtensions().done(callback);
     };
 
     $(document).ready(function() {
