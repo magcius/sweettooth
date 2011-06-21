@@ -16,6 +16,11 @@ def get_manifest_url(request, extension, ver):
 
     return manifest_url
 
+def list_ext(request):
+    extensions = Extension.objects.filter(is_published=True)
+    extensions_list = ((ext, ext.get_version('latest')) for ext in extensions)
+    return render(request, 'list.html', dict(extensions_list=extensions_list))
+
 def detail(request, slug, ver):
     extension = get_object_or_404(Extension, is_published=True, slug=slug)
     version = extension.get_version(ver)

@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block body %}
   <ul>
-  {% for extension in extensions_list %}
-    <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
+  {% for extension, version in extensions_list %}
+    <li class="extension" data-uuid="{{ extension.uuid }}"
+                          data-manifest="{{ manifest }}"
+                          data-version="{{ version.version }}">
       <div class="button"></div>
       <a href="{% url ext-detail slug=extension.slug %}" class="title-link">
         {{ extension.name }}
