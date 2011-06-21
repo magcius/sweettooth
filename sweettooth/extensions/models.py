@@ -81,6 +81,16 @@ class ExtensionVersion(models.Model):
 
         version = ExtensionVersion(extension=extension)
         version.extra_json_fields = json.dumps(metadata)
+
+        # get version number
+        ver_ids = extension.extensionversion_set.order_by('-version')
+        try:
+            ver_id = ver_ids[0].version + 1
+        except IndexError:
+            # New extension, no versions yet
+            ver_id = 1
+
+        version.version = ver_id
         return extension, version
 
     @classmethod
@@ -106,16 +116,3 @@ class ExtensionVersion(models.Model):
         extension, version = cls.from_metadata_json(metadata, extension)
         zipfile.close()
         return extension, version
-
-    def save(self, **kw):
-        # autoincrement version
-        if self.version == 0:
-            versions = type(self).objects.filter(extension=self.extension)
-            versions = versions.order_by('-version')
-            try:
-                self.version_number = versions[0]
-            except IndexError:
-                # New extension, no versions yes
-                self.version_number = 1
-
-        super(ExtensionVersion, self).save(**kw)
