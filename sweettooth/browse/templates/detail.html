@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 {% block body %}
     <div class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
-      <li> {{ extension.name }} by {{ extension.creator }} </li>
       <div class="button"></div>
+      <h3> {{ extension.name }} </h3>
+      <span class="author"> by {{ extension.creator }}</span>
+      <p>
+        {{ extension.description }}
+      </p>
+
+      <ul>
+        {% if user == extension.creator %}
+          <li><a href="{% url upload-file slug=extension.slug %}">Upload a new version</a></li>
+        {% endif %}
+      </ul>
     </div>
 {% endblock %}
 {% block script %}

@@ -3,6 +3,7 @@ from django import forms
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 from extensions.models import Extension, ExtensionVersion
 
@@ -17,12 +18,19 @@ class ExtensionDataForm(forms.Form):
     url = forms.URLField(label="Author URL")
 
 @login_required
-def upload_file(request):
+def upload_file(request, slug):
+    if slug is None:
+        extension = None
+    else:
+        extension = Extension.objects.get(slug=slug)
+        if extension.creator != request.user:
+            return HttpResponseForbidden()
+
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             file_source = form.cleaned_data['source']
-            extension, version = ExtensionVersion.from_zipfile(file_source)
+            extension, version = ExtensionVersion.from_zipfile(file_source, extension)
             extension.creator = request.user
             extension.save()
 

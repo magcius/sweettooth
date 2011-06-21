@@ -81,13 +81,13 @@ li.extension:hover {
     background-color: #ddd;
 }
 
-li.extension .title-link {
+.extension .title-link, .extension h3 {
     font-size: 2em;
     text-decoration: none;
     color: #224;
 }
 
-li.extension .author {
+.extension .author  {
     color: #888;
 }
 

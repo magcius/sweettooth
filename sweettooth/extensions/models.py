@@ -66,23 +66,25 @@ class ExtensionVersion(models.Model):
         zipfile.close()
 
     @classmethod
-    def from_metadata_json(cls, metadata):
+    def from_metadata_json(cls, metadata, extension=None):
         """
         Given the contents of a metadata.json file, create an extension
         and version with its data and return them.
         """
-        extension = Extension()
-        extension.name = metadata.get('name', "")
-        extension.description = metadata.get('description', "")
-        extension.url = metadata.get('url', "")
-        extension.uuid = metadata.get('uuid', str(uuid.uuid1()))
+
+        if extension is None:
+            extension = Extension()
+            extension.name = metadata.get('name', "")
+            extension.description = metadata.get('description', "")
+            extension.url = metadata.get('url', "")
+            extension.uuid = metadata.get('uuid', str(uuid.uuid1()))
 
         version = ExtensionVersion(extension=extension)
         version.extra_json_fields = json.dumps(metadata)
         return extension, version
 
     @classmethod
-    def from_zipfile(cls, uploaded_file):
+    def from_zipfile(cls, uploaded_file, extension=None):
         """
         Given a file, create an extension and version, populated
         with the data from the metadata.json and return them.
@@ -101,7 +103,7 @@ class ExtensionVersion(models.Model):
             # invalid JSON file, raise error
             raise InvalidExtensionData("Invalid JSON data")
 
-        extension, version = cls.from_metadata_json(metadata)
+        extension, version = cls.from_metadata_json(metadata, extension)
         zipfile.close()
         return extension, version
 
