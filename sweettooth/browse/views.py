@@ -22,7 +22,8 @@ def detail(request, slug, ver):
 
     template_args = dict(version=version,
                          extension=extension,
-                         manifest=get_manifest_url(request, extension, version))
+#                         manifest=get_manifest_url(request, extension, version))
+                         )
     return render(request, 'detail.html', template_args)
 
 def manifest(request, uuid):
