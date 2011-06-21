@@ -13,8 +13,8 @@
     var http = SweetTooth.LocalHTTP = { hasLocal: false };
 
     $(document).ajaxError(function(_, __, ___, exc) {
-        if (window.console && window.console.log)
-            window.console.log("AJAX: " + exc);
+        if (window.console && window.console.error)
+            window.console.error("AJAX: " + exc);
     });
 
     $.ajax({ url: HOST,
