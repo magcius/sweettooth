@@ -4,7 +4,7 @@ from django.conf.urls.defaults import patterns, url
 from extensions.models import Extension
 from tagging.views import tagged_object_list
 
-from browse.views import detail, manifest, download, command, list_ext
+from browse.views import detail, manifest, download, list_ext
 
 slug_charset = "[a-zA-Z0-9-_]"
 
@@ -21,9 +21,6 @@ urlpatterns = patterns('browse',
 
     url(r'^download/(?P<uuid>.+).shell-extension$',
         download, name='ext-download'),
-
-    url(r'^command/(?P<uuid>.+)/(?P<cmd>.+).shell-command$',
-        command, name='ext-command'),
 
     url(r'^(?P<slug>%s+)/$' % (slug_charset,), detail,
         dict(ver=None), name='ext-detail'),
