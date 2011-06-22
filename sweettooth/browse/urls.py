@@ -19,7 +19,7 @@ urlpatterns = patterns('browse',
     url(r'^manifest/(?P<uuid>.+).json$',
         manifest, name='ext-manifest'),
 
-    url(r'^download/(?P<uuid>.+).shell-extension$',
+    url(r'^download/(?P<uuid>.+).shell-extension.zip$',
         download, name='ext-download'),
 
     url(r'^(?P<slug>%s+)/$' % (slug_charset,), detail,
