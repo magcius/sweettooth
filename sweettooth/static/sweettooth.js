@@ -51,6 +51,18 @@
                         cache: false });
     };
 
+    http.EnableExtension = function(uuid) {
+        $.ajax({ url: HOST + "enable",
+                 cache: false,
+                 data: {uuid: uuid} });
+    };
+
+    http.DisableExtension = function(uuid) {
+        $.ajax({ url: HOST + "disable",
+                 cache: false,
+                 data: {uuid: uuid} });
+    };
+
     http.InstallExtension = function(uuid) {
         // XXX for demo -- need real manifest
         var MANIFEST_BASE = "http://extensions.gnome.org/browse/manifest/";
@@ -61,25 +73,19 @@
                  data: {url: url} });
     };
 
-    http.DoExtensionCommand = function(command, arg) {
-        $.ajax({ url: HOST + "command/" + command,
-                 cache: false,
-                 data: {arg: arg} });
-    };
-
     var buttons = SweetTooth.Buttons = {};
 
-    buttons.InstallExtension = function(event) {
-        http.InstallExtension(event.data.config.uuid);
-        buttons.GetCorrectButton(event.data.config);
-        return false;
-    };
+    function wrapHTTPMethod(method) {
+        return function(event) {
+            http.InstallExtension(event.data.config.uuid);
+            buttons.GetCorrectButton(event.data.config);
+            return false;
+        };
+    }
 
-    buttons.DoExtensionCommand = function(event) {
-        http.DoExtensionCommand(event.data.cmd, event.data.config.uuid);
-        buttons.GetCorrectButton(event.data.config);
-        return false;
-    };
+    buttons.InstallExtension = wrapHTTPMethod(http.InstallExtension);
+    buttons.DisableExtension = wrapHTTPMethod(http.DisableExtension);
+    buttons.EnableExtension = wrapHTTPMethod(http.EnableExtension);
 
     buttons.GetErrors = function(event) {
         var elem = event.data.config.element;
@@ -103,18 +109,16 @@
 
     var states = buttons.States = {};
     states[state.ENABLED]     = {"class": "disable", "text": "Disable",
-                                 "handler": {"func": buttons.DoExtensionCommand,
-                                             "data": {"cmd": "disable"}}};
+                                 "handler": buttons.DisableExtension};
 
     states[state.DISABLED]    = {"class": "enable", "text": "Enable",
-                                 "handler": {"func": buttons.DoExtensionCommand,
-                                             "data": {"cmd": "enable"}}};
+                                 "handler": buttons.DisableExtension};
 
     states[state.UNINSTALLED] = {"class": "install", "text": "Install",
-                                 "handler": {"func": buttons.InstallExtension}};
+                                 "handler": buttons.InstallExtension};
 
     states[state.ERROR]       = {"class": "error", "text": "Error",
-                                 "handler": {"func": buttons.GetErrors}};
+                                 "handler": buttons.GetErrors};
 
     states[state.OUT_OF_DATE] = {"class": "ood", "text": "Out of Date"};
 
@@ -127,10 +131,8 @@
         button.removeClass().addClass('button').addClass(buttonState['class']);
         button.unbind('click');
 
-        if (buttonState.handler) {
-            var handlerData = $.extend({config: config}, (buttonState.handler.data || {}));
-            button.bind('click', handlerData, buttonState.handler.func);
-        }
+        if (buttonState.handler)
+            button.bind('click', {config: config}, buttonState.handler);
     };
 
     buttons.GetCorrectButton = function(config) {
