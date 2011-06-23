@@ -13,6 +13,12 @@
           <li><a href="{% url upload-file slug=extension.slug %}">Upload a new version</a></li>
         {% endif %}
       </ul>
+
+      <hr>
+
+      {% load comments %}
+      {% render_comment_list for extension %}
+      {% render_comment_form for extension %}
     </div>
 {% endblock %}
 {% block script %}

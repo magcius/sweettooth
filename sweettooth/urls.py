@@ -19,6 +19,8 @@ urlpatterns = patterns('',
     url(r'^', include('browse.urls'), name='index'),
 
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^comments/', include('django.contrib.comments.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
