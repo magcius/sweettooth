@@ -2,11 +2,16 @@
 
     var SweetTooth = window.SweetTooth = {};
     var state = SweetTooth.State = {
+        // These constants should be kept in sync
+        // with those in gnome-shell: see js/ui/extensionSystem.js
         ENABLED: 1,
         DISABLED: 2,
         ERROR: 3,
         OUT_OF_DATE: 4,
-        UNINSTALLED: 5 // Dummy state.
+
+        // Not a real state, used when there's no extension
+        // with the associated UUID in the extension map.
+        UNINSTALLED: 99
     };
 
     var HOST = "http://localhost:16269/";
