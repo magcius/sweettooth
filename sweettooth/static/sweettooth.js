@@ -17,15 +17,19 @@
     var HOST = "http://localhost:16269/";
     var http = SweetTooth.LocalHTTP = { hasLocal: false };
 
-    $(document).ajaxError(function(_, __, ___, exc) {
-        if (window.console && window.console.error)
-            window.console.error("AJAX: " + exc);
-    });
-
-    $.ajax({ url: HOST,
+    // Detect if the local system is up.
+    $.ajax({ url: HOST + "ping",
              async: false,
              cache: false,
              success: function() { http.hasLocal = true; }});
+
+    $(document).ajaxError(function(event, xhr, settings, exc) {
+        if (!window.console || !window.console.error)
+            return;
+
+        window.console.error("AJAX: " + " in " + settings.url + "\n"
+                             + xhr.responseText + " " + exc);
+    });
 
     http.ListExtensions = function() {
         return $.ajax({ url: HOST + "list",
