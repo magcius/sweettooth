@@ -1,6 +1,5 @@
 
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic import RedirectView
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
@@ -9,9 +8,7 @@ admin.autodiscover()
 from sweettooth.settings import SITE_ROOT
 
 urlpatterns = patterns('',
-    url(r'^$', RedirectView.as_view(url='/browse'), name='index'),
-
-    url(r'^browse/', include('browse.urls')),
+    url(r'^', include('browse.urls'), name='index'),
 
     url(r'^upload/', include('upload.urls')),
 
