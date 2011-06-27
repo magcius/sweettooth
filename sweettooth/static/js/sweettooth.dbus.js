@@ -50,6 +50,7 @@
     };
 
     var states = buttons.States = {};
+    var state = SweetTooth.ExtensionState;
     states[state.ENABLED]     = {"class": "disable", "text": "Disable",
                                  "handler": buttons.DisableExtension};
 
