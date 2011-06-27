@@ -35,7 +35,13 @@ def manifest(request, uuid):
     extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
     version = extension.get_version(request.GET.get('version'))
 
-    return HttpResponse(version.extra_json_fields,
+    url = reverse('ext-download', kwargs=dict(uuid=uuid))
+    url += '?version=%d' % (version.version,)
+
+    manifestdata = json.loads(version.extra_json_fields)
+    manifestdata['__installer'] = request.build_absolute_uri(url)
+
+    return HttpResponse(json.dumps(manifestdata),
                         content_type='application/x-shell-extension')
 
 def download(request, uuid):
