@@ -45,26 +45,22 @@
                             cache: false });
         },
 
-        EnableExtension: function(uuid) {
+        EnableExtension: function(config) {
             $.ajax({ url: this.HOST + "enable",
                      cache: false,
-                     data: {uuid: uuid} });
+                     data: {uuid: config.uuid} });
         },
 
-        DisableExtension: function(uuid) {
+        DisableExtension: function(config) {
             $.ajax({ url: this.HOST + "disable",
                      cache: false,
-                     data: {uuid: uuid} });
+                     data: {uuid: config.uuid} });
         },
 
-        InstallExtension: function(uuid) {
-            // XXX for demo -- need real manifest
-            var MANIFEST_BASE = "http://extensions.gnome.org/browse/manifest/";
-            var url = MANIFEST_BASE + encodeURIComponent(uuid) + ".json";
-
+        InstallExtension: function(config) {
             $.ajax({ url: this.HOST + "install",
                      cache: false,
-                     data: {url: url} });
+                     data: {url: config.manifest} });
         }
     };
 

@@ -7,18 +7,18 @@ from django.http import HttpResponse
 
 from extensions.models import Extension
 
-def get_manifest_url(request, extension, ver):
-    manifest_url = reverse('ext-manifest', kwargs=dict(uuid=extension.uuid))
+def get_manifest_url(request, ver):
+    manifest_url = reverse('ext-manifest', kwargs=dict(uuid=ver.extension.uuid))
     manifest_url = request.build_absolute_uri(manifest_url)
 
     if ver not in (None, 'latest'):
-        manifest_url += '?version=%d' % (ver,)
+        manifest_url += '?version=%d' % (ver.version,)
 
     return manifest_url
 
 def list_ext(request):
     extensions = Extension.objects.filter(is_published=True)
-    extensions_list = ((ext, ext.get_version('latest')) for ext in extensions)
+    extensions_list = ((ext, get_manifest_url(request, ext.get_version('latest'))) for ext in extensions)
     return render(request, 'list.html', dict(extensions_list=extensions_list))
 
 def detail(request, slug, ver):
@@ -27,8 +27,7 @@ def detail(request, slug, ver):
 
     template_args = dict(version=version,
                          extension=extension,
-#                         manifest=get_manifest_url(request, extension, version))
-                         )
+                         manifest=get_manifest_url(request, version))
     return render(request, 'detail.html', template_args)
 
 def manifest(request, uuid):

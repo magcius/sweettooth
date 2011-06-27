@@ -19,7 +19,7 @@
 
     function _wrapDBusProxyMethod(meth) {
         return function(event) {
-            meth.call(dbusProxy, event.data.config.uuid);
+            meth.call(dbusProxy, event.data.config);
             buttons.GetCorrectButton(event.data.config);
             return false;
         };
@@ -95,6 +95,7 @@
             container.each(function () {
                 var element = $(this);
                 var config = {"uuid": element.attr('data-uuid'),
+                              "version": "latest", // XXX
                               "manifest": element.attr('data-manifest')};
 
                 config.element = element;
