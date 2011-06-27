@@ -77,7 +77,7 @@
 
     function wrapHTTPMethod(method) {
         return function(event) {
-            http.InstallExtension(event.data.config.uuid);
+            method(event.data.config.uuid);
             buttons.GetCorrectButton(event.data.config);
             return false;
         };
