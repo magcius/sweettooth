@@ -112,7 +112,7 @@
                                  "handler": buttons.DisableExtension};
 
     states[state.DISABLED]    = {"class": "enable", "text": "Enable",
-                                 "handler": buttons.DisableExtension};
+                                 "handler": buttons.EnableExtension};
 
     states[state.UNINSTALLED] = {"class": "install", "text": "Install",
                                  "handler": buttons.InstallExtension};
