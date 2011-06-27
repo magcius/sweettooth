@@ -10,7 +10,9 @@
             this.active = false;
             this.pluginObject = document.createElement('embed');
             this.pluginObject.setAttribute('type', this.MIME_TYPE);
-            $(this.pluginObject).hide();
+            $(this.pluginObject).css({ position: "absolute",
+                                       left: "-1000em", 
+                                       top: "-1000em" });
             $(document.body).append(this.pluginObject);
 
             this.API_VERSION = this.pluginObject.apiVersion;
