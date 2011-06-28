@@ -8,6 +8,7 @@
         DISABLED: 2,
         ERROR: 3,
         OUT_OF_DATE: 4,
+        DOWNLOADING: 5,
 
         // Not a real state, used when there's no extension
         // with the associated UUID in the extension map.

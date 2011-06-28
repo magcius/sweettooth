@@ -65,6 +65,8 @@
 
     states[state.OUT_OF_DATE] = {"class": "ood", "content": "Out of Date"};
 
+    states[state.DOWNLOADING] = {"class": "downloading", "content": "Downloading..."};
+
     buttons.ShowCorrectButton = function(config, stateid) {
         var buttonState = states[(!!stateid) ? stateid : state.UNINSTALLED];
         var button = config.button;
