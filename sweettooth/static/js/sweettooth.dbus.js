@@ -84,6 +84,8 @@
         });
     };
 
+    var configs = {};
+
     // Magical buttons.
     $.fn.buttonify = function() {
         var container = $(this);
@@ -97,10 +99,11 @@
                 var element = $(this);
                 var config = {"uuid": element.attr('data-uuid'),
                               "version": "latest", // XXX
-                              "manifest": element.attr('data-manifest')};
+                              "manifest": element.attr('data-manifest'),
+                              "element": element,
+                              "button": element.find('.button')};
 
-                config.element = element;
-                config.button = element.find('.button');
+                configs[config.uuid] = config;
 
                 var meta = extensions[config.uuid] || {"state": state.UNINSTALLED};
                 buttons.ShowCorrectButton(config, meta.state);
