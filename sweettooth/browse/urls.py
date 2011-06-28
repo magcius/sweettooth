@@ -8,7 +8,7 @@ from browse.views import detail, manifest, download, list_ext
 
 slug_charset = "[a-zA-Z0-9-_]"
 
-urlpatterns = patterns('browse',
+urlpatterns = patterns('',
     url(r'^$', list_ext, name='ext-index'),
 
     url(r'tags/(?P<tag>%s+)/$' % (slug_charset,), tagged_object_list,
@@ -22,8 +22,8 @@ urlpatterns = patterns('browse',
     url(r'^download/(?P<uuid>.+).shell-extension.zip$',
         download, name='ext-download'),
 
-    url(r'^(?P<slug>%s+)/$' % (slug_charset,), detail,
+    url(r'^extension/(?P<slug>%s+)/$' % (slug_charset,), detail,
         dict(ver=None), name='ext-detail'),
-    url(r'^(?P<slug>%s+)/(?P<ver>\d+)/$' % (slug_charset,), detail),
+    url(r'^extension/(?P<slug>%s+)/(?P<ver>\d+)/$' % (slug_charset,), detail),
 
 )

@@ -8,8 +8,6 @@ admin.autodiscover()
 from sweettooth.settings import SITE_ROOT
 
 urlpatterns = patterns('',
-    url(r'^', include('browse.urls'), name='index'),
-
     url(r'^upload/', include('upload.urls')),
 
     # dummy URI for reverse()
@@ -18,6 +16,7 @@ urlpatterns = patterns('',
 
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
+    url(r'^', include('browse.urls'), name='index'),
 
     url(r'^admin/', include(admin.site.urls)),
 )
