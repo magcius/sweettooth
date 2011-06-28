@@ -86,6 +86,10 @@
 
     var configs = {};
 
+    dbusProxy.extensionChangedHandler = function(uuid, newState, _) {
+        buttons.ShowCorrectButton(configs[uuid], newState);
+    };
+
     // Magical buttons.
     $.fn.buttonify = function() {
         var container = $(this);

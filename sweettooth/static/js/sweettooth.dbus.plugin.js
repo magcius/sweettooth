@@ -18,6 +18,18 @@
             this.API_VERSION = this.pluginObject.apiVersion;
             if (!!this.API_VERSION)
                 this.active = true;
+
+            var me = this;
+            this.pluginObject.onchange = function(uuid, newState, error) {
+                return me._extensionStateChanged.call(me, uuid, newState, error);
+            };
+
+            this.extensionChangedHandler = null;
+        },
+
+        _extensionStateChanged: function(uuid, newState, error) {
+            if (!!this.extensionChangedHandler)
+                return this.extensionChangedHandler(uuid, newState, error);
         },
 
         _makePromise: function(result) {
