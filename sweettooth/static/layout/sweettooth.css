@@ -153,6 +153,11 @@ li.extension:hover {
     border: 2px solid #e73;
 }
 
+.button.downloading {
+    background-color: #888;
+    border: 2px solid #666;
+}
+
 p.error {
     display: block;
     background: #fcc;
