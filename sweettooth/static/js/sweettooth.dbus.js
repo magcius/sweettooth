@@ -51,24 +51,24 @@
 
     var states = buttons.States = {};
     var state = SweetTooth.ExtensionState;
-    states[state.ENABLED]     = {"class": "disable", "text": "Disable",
+    states[state.ENABLED]     = {"class": "disable", "content": "Disable",
                                  "handler": buttons.DisableExtension};
 
-    states[state.DISABLED]    = {"class": "enable", "text": "Enable",
+    states[state.DISABLED]    = {"class": "enable", "content": "Enable",
                                  "handler": buttons.EnableExtension};
 
-    states[state.UNINSTALLED] = {"class": "install", "text": "Install",
+    states[state.UNINSTALLED] = {"class": "install", "content": "Install",
                                  "handler": buttons.InstallExtension};
 
-    states[state.ERROR]       = {"class": "error", "text": "Error",
+    states[state.ERROR]       = {"class": "error", "content": "Error",
                                  "handler": buttons.GetErrors};
 
-    states[state.OUT_OF_DATE] = {"class": "ood", "text": "Out of Date"};
+    states[state.OUT_OF_DATE] = {"class": "ood", "content": "Out of Date"};
 
     buttons.ShowCorrectButton = function(config, stateid) {
         var buttonState = states[(!!stateid) ? stateid : state.UNINSTALLED];
         var button = config.button;
-        button.text(buttonState.text);
+        button.html(buttonState.content);
 
         // 'class' is a reserved word in JS.
         button.removeClass().addClass('button').addClass(buttonState['class']);
