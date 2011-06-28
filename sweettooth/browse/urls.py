@@ -22,8 +22,8 @@ urlpatterns = patterns('',
     url(r'^download/(?P<uuid>.+).shell-extension.zip$',
         download, name='ext-download'),
 
-    url(r'^(?P<slug>%s+)/$' % (slug_charset,), detail,
+    url(r'^extension/(?P<slug>%s+)/$' % (slug_charset,), detail,
         dict(ver=None), name='ext-detail'),
-    url(r'^(?P<slug>%s+)/(?P<ver>\d+)/$' % (slug_charset,), detail),
+    url(r'^extension/(?P<slug>%s+)/(?P<ver>\d+)/$' % (slug_charset,), detail),
 
 )
