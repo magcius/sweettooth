@@ -86,10 +86,11 @@
 
     // Magical buttons.
     $.fn.buttonify = function() {
-        if (!dbusProxy.active)
-            return;
-
         var container = $(this);
+        if (!dbusProxy.active) {
+            container.find('.button').hide();
+            return;
+        }
 
         function callback(extensions) {
             container.each(function () {
