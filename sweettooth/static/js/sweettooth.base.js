@@ -19,6 +19,20 @@
         Available: []
     };
 
+    SweetTooth.Messages = {
+        addMessage: function(tag, message) {
+            $("#message_container").append(
+                $('<p>')
+                    .addClass('message')
+                    .addClass(tag)
+                    .text(message));
+        },
+
+        addError: function(message) {
+            return SweetTooth.Messages.addMessage('error', message);
+        }
+    };
+
     // layout
     $(document).ready(function() {
         $("#login_link").click(function(event) {

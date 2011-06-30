@@ -42,9 +42,11 @@
     </div>
     <div class="clearfix"></div>
 
+    <div id="message_container">
     {% for message in messages %}
       <div class="message {{ message.tags }}">{{ message }}</div>
     {% endfor %}
+    </div>
 
     <div id="container" class="two_columns">
       <div class="container_12">
