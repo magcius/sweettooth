@@ -72,7 +72,6 @@ html, body {
 }
 
 li.extension {
-    padding: .7em 1em;
     list-style-type: none;
     list-style-position: inner;
 }
@@ -81,7 +80,12 @@ li.extension:hover {
     background-color: #ddd;
 }
 
+.extension {
+    padding: .7em 1em;
+}
+
 .extension .title-link, .extension h3 {
+    display: inline;
     font-size: 2em;
     text-decoration: none;
     color: #224;
