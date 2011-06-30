@@ -15,9 +15,19 @@
         }
     }
 
+    if (!dbusProxy) {
+        // If we don't have a proper proxy interface, give us
+        // a stooge to fake out the code below.
+        dbusProxy = SweetTooth.DBusProxy = { active: false };
+        SweetTooth.Messages.addError("You do not appear to have an up to date version of GNOME3");
+    }
+
     var buttons = SweetTooth.Buttons = {};
 
     function _wrapDBusProxyMethod(meth) {
+        if (!meth)
+            return;
+
         return function(event) {
             meth.call(dbusProxy, event.data.config);
             buttons.GetCorrectButton(event.data.config);
