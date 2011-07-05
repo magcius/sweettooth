@@ -27,6 +27,13 @@ class Extension(models.Model):
 
         return self.extensionversion_set.get(version=int(version))
 
+    def is_featured(self):
+        try:
+            tag = self.tags.get(name="featured")
+            return True
+        except self.tags.model.DoesNotExist:
+            return False
+
 tagging.register(Extension)
 
 class InvalidExtensionData(Exception):

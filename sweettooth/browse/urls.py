@@ -4,7 +4,7 @@ from django.conf.urls.defaults import patterns, url
 from extensions.models import Extension
 from tagging.views import tagged_object_list
 
-from browse.views import detail, manifest, download, list_ext, browse_tag
+from browse.views import detail, manifest, download, list_ext, browse_tag, modify_tag
 
 slug_charset = "[a-zA-Z0-9-_]"
 
@@ -18,6 +18,8 @@ urlpatterns = patterns('',
 
     url(r'^download/(?P<uuid>.+).shell-extension.zip$',
         download, name='ext-download'),
+
+    url(r'ajax/modifytag/(?P<tag>%s+)' % (slug_charset,), modify_tag),
 
     url(r'^extension/(?P<slug>%s+)/$' % (slug_charset,), detail,
         dict(ver=None), name='ext-detail'),

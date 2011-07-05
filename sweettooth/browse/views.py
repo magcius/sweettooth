@@ -6,7 +6,8 @@ from tagging.utils import get_tag
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 
 from extensions.models import Extension
 
@@ -61,3 +62,19 @@ def browse_tag(request, tag):
         extensions = TaggedItem.objects.get_by_model(Extension, tag_inst)
         extensions_list = ((ext, ext.get_version('latest')) for ext in extensions)
     return render(request, 'list.html', dict(extensions_list=extensions_list))
+
+@login_required
+def modify_tag(request, tag):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+
+    uuid = request.GET.get('uuid')
+    action = request.GET.get('action')
+    extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
+
+    if action == 'add':
+        Tag.objects.add_tag(extension, tag)
+    elif action == 'rm':
+        Tag.objects.update_tags(extension, [t for t in extension.tags if t.name != tag])
+
+    return HttpResponse("true" if extension.is_featured() else "false")
