@@ -21,7 +21,7 @@
 
     SweetTooth.Messages = {
         addMessage: function(tag, message) {
-            $("#message_container").append(
+            $('#message_container').append(
                 $('<p>')
                     .addClass('message')
                     .addClass(tag)

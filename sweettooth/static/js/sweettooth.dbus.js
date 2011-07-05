@@ -61,21 +61,21 @@
 
     var states = buttons.States = {};
     var state = SweetTooth.ExtensionState;
-    states[state.ENABLED]     = {"class": "disable", "content": "Disable",
-                                 "handler": buttons.DisableExtension};
+    states[state.ENABLED]     = {'class': 'disable', 'content': "Disable",
+                                 'handler': buttons.DisableExtension};
 
-    states[state.DISABLED]    = {"class": "enable", "content": "Enable",
-                                 "handler": buttons.EnableExtension};
+    states[state.DISABLED]    = {'class': 'enable', 'content': "Enable",
+                                 'handler': buttons.EnableExtension};
 
-    states[state.UNINSTALLED] = {"class": "install", "content": "Install",
-                                 "handler": buttons.InstallExtension};
+    states[state.UNINSTALLED] = {'class': 'install', 'content': "Install",
+                                 'handler': buttons.InstallExtension};
 
-    states[state.ERROR]       = {"class": "error", "content": "Error",
-                                 "handler": buttons.GetErrors};
+    states[state.ERROR]       = {'class': 'error', 'content': "Error",
+                                 'handler': buttons.GetErrors};
 
-    states[state.OUT_OF_DATE] = {"class": "ood", "content": "Out of Date"};
+    states[state.OUT_OF_DATE] = {'class': 'ood', 'content': "Out of Date"};
 
-    states[state.DOWNLOADING] = {"class": "downloading", "content": "Downloading..."};
+    states[state.DOWNLOADING] = {'class': 'downloading', 'content': "Downloading..."};
 
     buttons.ShowCorrectButton = function(config, stateid) {
         var buttonState = states[(!!stateid) ? stateid : state.UNINSTALLED];
@@ -113,15 +113,15 @@
         function callback(extensions) {
             container.each(function () {
                 var element = $(this);
-                var config = {"uuid": element.attr('data-uuid'),
-                              "version": "latest", // XXX
-                              "manifest": element.attr('data-manifest'),
-                              "element": element,
-                              "button": element.find('.button')};
+                var config = {'uuid': element.attr('data-uuid'),
+                              'version': 'latest', // XXX
+                              'manifest': element.attr('data-manifest'),
+                              'element': element,
+                              'button': element.find('.button')};
 
                 configs[config.uuid] = config;
 
-                var meta = extensions[config.uuid] || {"state": state.UNINSTALLED};
+                var meta = extensions[config.uuid] || {'state': state.UNINSTALLED};
                 buttons.ShowCorrectButton(config, meta.state);
             });
         }
