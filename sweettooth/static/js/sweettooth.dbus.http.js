@@ -45,22 +45,22 @@
                             cache: false });
         },
 
-        EnableExtension: function(config) {
+        EnableExtension: function(uuid) {
             $.ajax({ url: this.HOST + "enable",
                      cache: false,
-                     data: {uuid: config.uuid} });
+                     data: {uuid: uuid} });
         },
 
-        DisableExtension: function(config) {
+        DisableExtension: function(uuid) {
             $.ajax({ url: this.HOST + "disable",
                      cache: false,
-                     data: {uuid: config.uuid} });
+                     data: {uuid: uuid} });
         },
 
-        InstallExtension: function(config) {
+        InstallExtension: function(manifest) {
             $.ajax({ url: this.HOST + "install",
                      cache: false,
-                     data: {url: config.manifest} });
+                     data: {url: manifest} });
         }
     };
 

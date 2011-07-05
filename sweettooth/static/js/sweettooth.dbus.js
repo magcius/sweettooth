@@ -28,30 +28,31 @@
 
     var buttons = SweetTooth.Buttons = {};
 
-    function _wrapDBusProxyMethod(meth) {
+    function _wrapDBusProxyMethod(meth, attr) {
         if (!meth)
             return;
 
         return function(event) {
-            meth.call(dbusProxy, event.data.config);
-            buttons.GetCorrectButton(event.data.config);
+            var elem = $(this).data('elem');
+            meth.call(dbusProxy, elem.data(attr));
+            elem.getCorrectButton();
             return false;
         };
     }
 
-    buttons.InstallExtension = _wrapDBusProxyMethod(dbusProxy.InstallExtension);
-    buttons.DisableExtension = _wrapDBusProxyMethod(dbusProxy.DisableExtension);
-    buttons.EnableExtension  = _wrapDBusProxyMethod(dbusProxy.EnableExtension);
+    buttons.InstallExtension = _wrapDBusProxyMethod(dbusProxy.InstallExtension, 'manifest');
+    buttons.DisableExtension = _wrapDBusProxyMethod(dbusProxy.DisableExtension, 'uuid');
+    buttons.EnableExtension  = _wrapDBusProxyMethod(dbusProxy.EnableExtension, 'uuid');
 
     buttons.GetErrors = function(event) {
-        var elem = event.data.config.element;
+        var elem = $(this).data('elem');
 
         function callback(data) {
             var log = $('<div class="error-log"></div>');
             $.each(data, function(idx, error) {
                 log.append($('<span class="line"></span>').text(error));
             });
-            event.data.config.element.append(log);
+            elem.append(log);
             log.hide().slideDown();
         }
 
@@ -59,53 +60,52 @@
         if (eventLog.length)
             eventLog.slideToggle();
         else
-            dbusProxy.GetErrors(event.data.config.uuid).done(callback);
-
+            dbusProxy.GetErrors(elem.data('uuid')).done(callback);
     };
 
-    var states = buttons.States = {};
+    var states = {};
     var state = SweetTooth.ExtensionState;
-    states[state.ENABLED]     = {'class': 'disable', 'content': "Disable",
+    states[state.ENABLED]     = {'style': 'disable', 'content': "Disable",
                                  'handler': buttons.DisableExtension};
 
-    states[state.DISABLED]    = {'class': 'enable', 'content': "Enable",
+    states[state.DISABLED]    = {'style': 'enable', 'content': "Enable",
                                  'handler': buttons.EnableExtension};
 
-    states[state.UNINSTALLED] = {'class': 'install', 'content': "Install",
+    states[state.UNINSTALLED] = {'style': 'install', 'content': "Install",
                                  'handler': buttons.InstallExtension};
 
-    states[state.ERROR]       = {'class': 'error', 'content': "Error",
+    states[state.ERROR]       = {'style': 'error', 'content': "Error",
                                  'handler': buttons.GetErrors};
 
-    states[state.OUT_OF_DATE] = {'class': 'ood', 'content': "Out of Date"};
+    states[state.OUT_OF_DATE] = {'style': 'ood', 'content': "Out of Date"};
 
-    states[state.DOWNLOADING] = {'class': 'downloading', 'content': "Downloading..."};
+    states[state.DOWNLOADING] = {'style': 'downloading', 'content': "Downloading..."};
 
-    buttons.ShowCorrectButton = function(config, stateid) {
+    $.fn.showCorrectButton = function(stateid) {
+        var elem = $(this);
+        var button = elem.find('.button');
         var buttonState = states[(!!stateid) ? stateid : state.UNINSTALLED];
-        var button = config.button;
-        button.html(buttonState.content);
-
-        // 'class' is a reserved word in JS.
-        button.removeClass().addClass('button').addClass(buttonState['class']);
-        button.unbind('click');
+        button.
+            html(buttonState.content).
+            removeClass().addClass('button').
+            addClass(buttonState.style).unbind('click');
 
         if (buttonState.handler)
-            button.bind('click', {config: config}, buttonState.handler);
+            button.bind('click', buttonState.handler);
     };
 
-    buttons.GetCorrectButton = function(config) {
-        dbusProxy.GetExtensionInfo(config.uuid).done(function(meta) {
-            buttons.ShowCorrectButton(config, meta.state);
+    $.fn.getCorrectButton = function() {
+        var elem = $(this).data('elem');
+        dbusProxy.GetExtensionInfo(elem.data('uuid')).done(function(meta) {
+            elem.showCorrectButton(meta.state);
         });
     };
 
-    // uuid => config
-    // XXX: config system is getting ugly.
-    var configs = {};
+    // uuid => elem
+    var elems = {};
 
     dbusProxy.extensionChangedHandler = function(uuid, newState, _) {
-        buttons.ShowCorrectButton(configs[uuid], newState);
+        elems[uuid].trigger('state-changed', newState);
     };
 
     $.fn.buttonify = function() {
@@ -118,23 +118,27 @@
             return;
         }
 
-        function callback(extensions) {
+        dbusProxy.ListExtensions().done(function(extensions) {
             container.each(function () {
-                var element = $(this);
-                var config = {'uuid': element.attr('data-uuid'),
-                              'version': 'latest', // XXX
-                              'manifest': element.attr('data-manifest'),
-                              'element': element,
-                              'button': element.find('.button')};
+                var elem = $(this);
+                var button = elem.find('.button');
+                var uuid = elem.data('uuid');
+                var meta = extensions[uuid] || {'state': state.UNINSTALLED};
 
-                configs[config.uuid] = config;
-
-                var meta = extensions[config.uuid] || {'state': state.UNINSTALLED};
-                buttons.ShowCorrectButton(config, meta.state);
+                button.data('elem', elem);
+                elem.data('elem', elem);
+                elem.data('meta', meta);
+                elem.data('state', meta.state);
+                elem.bind('state-changed', function(e, newState) {
+                    var elem = $(this);
+                    var meta = elem.data('meta');
+                    meta.state = newState;
+                    return elem.showCorrectButton(newState);
+                });
+                elem.trigger('state-changed', meta.state);
+                elems[uuid] = elem;
             });
-        }
-
-        dbusProxy.ListExtensions().done(callback);
+        });
     };
 
 })(jQuery);
