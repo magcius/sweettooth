@@ -33,13 +33,12 @@
         }
     };
 
-    // layout
-    $(document).ready(function() {
-        $("#login_link").click(function(event) {
-            $(this).toggleClass("selected");
-            $("#login_popup_form").slideToggle();
-            event.preventDefault();
+    $.fn.loginPopupify = function(form) {
+        var elem = $(this);
+        elem.click(function(event) {
+            elem.toggleClass('selected');
+            $(form).slideToggle();
             return false;
         });
-    });
+    };
 })(jQuery);

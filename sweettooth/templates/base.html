@@ -74,6 +74,7 @@
       <script>
         $(document).ready(function() {
         {% block document-ready %}
+          $("#login_link").loginPopupify("#login_popup_form");
         {% endblock %}
         });
       </script>
