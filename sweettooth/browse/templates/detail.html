@@ -21,11 +21,7 @@
       {% render_comment_form for extension %}
     </div>
 {% endblock %}
-{% block script %}
+{% block document-ready %}
     {{ block.super }}
-    <script>
-      $(document).ready(function() {
-        $(".extension").buttonify();
-      });
-    </script>
+    $(".extension").buttonify();
 {% endblock %}

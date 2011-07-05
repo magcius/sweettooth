@@ -15,11 +15,7 @@
   {% endfor %}
   </ul>
 {% endblock %}
-{% block script %}
-    {{ block.super }}
-    <script>
-      $(document).ready(function() {
-        $(".extension").buttonify();
-      });
-    </script>
+{% block document-ready %}
+  {{ block.super }}
+  $(".extension").buttonify();
 {% endblock %}

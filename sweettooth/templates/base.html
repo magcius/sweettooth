@@ -71,6 +71,12 @@
       <script src="{{ STATIC_URL }}js/sweettooth.dbus.plugin.js"></script>
       <script src="{{ STATIC_URL }}js/sweettooth.dbus.http.js"></script>
       <script src="{{ STATIC_URL }}js/sweettooth.dbus.js"></script>
+      <script>
+        $(document).ready(function() {
+        {% block document-ready %}
+        {% endblock %}
+        });
+      </script>
     {% endblock %}
   </body>
 </html>
