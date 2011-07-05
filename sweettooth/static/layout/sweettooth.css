@@ -157,6 +157,11 @@ li.extension:hover {
     border: 2px solid #e73;
 }
 
+.button.ood {
+    background-color: #ccc;
+    border: 2px solid #aaa;
+}
+
 .button.downloading {
     background-color: #888;
     border: 2px solid #666;
