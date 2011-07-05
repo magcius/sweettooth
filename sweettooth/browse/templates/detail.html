@@ -12,6 +12,9 @@
         {% if user == extension.creator %}
           <li><a href="{% url upload-file slug=extension.slug %}">Upload a new version</a></li>
         {% endif %}
+        {% if user.is_superuser %}
+          <li><a class="featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>
+        {% endif %}
       </ul>
 
       <hr>
@@ -24,4 +27,7 @@
 {% block document-ready %}
     {{ block.super }}
     $(".extension").buttonify();
+    {% if user.is_superuser %}
+    $(".featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
+    {% endif %}
 {% endblock %}

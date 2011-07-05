@@ -41,4 +41,25 @@
             return false;
         });
     };
+
+    $.fn.featureToggleify = function(init) {
+        var elem = $(this);
+        elem.bind('feature-status-changed', function(e, isFeatured) {
+            elem.data('feature-status', isFeatured);
+            if (isFeatured)
+                elem.text("Unfeature extension");
+            else
+                elem.text("Feature extension");
+        }).click(function() {
+            $.ajax({
+                url: '/browse/ajax/modifytag/featured',
+                dataType: 'json',
+                data: {'uuid': elem.attr('data-uuid'),
+                       'action': elem.data('feature-status') ? 'rm' : 'add'},
+                success: function(data) {
+                    elem.trigger('feature-status-changed', data);
+                }
+            });
+        }).trigger('feature-status-changed', init);
+    };
 })(jQuery);
