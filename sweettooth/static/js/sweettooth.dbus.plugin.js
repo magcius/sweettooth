@@ -58,16 +58,16 @@
             return this._makePromise(this.pluginObject.getExtensionErrors(uuid));
         },
 
-        EnableExtension: function(config) {
-            this.pluginObject.setExtensionEnabled(config.uuid, true);
+        EnableExtension: function(uuid) {
+            this.pluginObject.setExtensionEnabled(uuid, true);
         },
 
-        DisableExtension: function(config) {
-            this.pluginObject.setExtensionEnabled(config.uuid, false);
+        DisableExtension: function(uuid) {
+            this.pluginObject.setExtensionEnabled(uuid, false);
         },
 
-        InstallExtension: function(config) {
-            this.pluginObject.installExtension(config.manifest);
+        InstallExtension: function(manifest) {
+            this.pluginObject.installExtension(manifest);
         }
     };
 })(jQuery);
