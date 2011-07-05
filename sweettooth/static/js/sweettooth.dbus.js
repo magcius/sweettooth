@@ -16,10 +16,14 @@
     }
 
     if (!dbusProxy) {
-        // If we don't have a proper proxy interface, give us
-        // a stooge to fake out the code below.
+        // We don't have a proper DBus proxy -- it's probably an old
+        // version of GNOME3 or the Shell.
+        SweetTooth.Messages.addError("You do not appear to have an up "+
+                                     "to date version of GNOME3");
+
+        // If we don't have a proper proxy interface, give us a simple
+        // to prevent undefined errors in the code below.
         dbusProxy = SweetTooth.DBusProxy = { active: false };
-        SweetTooth.Messages.addError("You do not appear to have an up to date version of GNOME3");
     }
 
     var buttons = SweetTooth.Buttons = {};
@@ -96,16 +100,20 @@
         });
     };
 
+    // uuid => config
+    // XXX: config system is getting ugly.
     var configs = {};
 
     dbusProxy.extensionChangedHandler = function(uuid, newState, _) {
         buttons.ShowCorrectButton(configs[uuid], newState);
     };
 
-    // Magical buttons.
     $.fn.buttonify = function() {
         var container = $(this);
+
         if (!dbusProxy.active) {
+            // Don't show our buttons -- CSS styles define a clickable
+            // area even with no content.
             container.find('.button').hide();
             return;
         }
