@@ -81,6 +81,11 @@
 
     states[state.DOWNLOADING] = {'style': 'downloading', 'content': "Downloading..."};
 
+    function getStateName(stateid) {
+        for (var key in state)
+            if (state[key] == stateid) return key;
+    }
+
     $.fn.showCorrectButton = function(stateid) {
         var elem = $(this);
         var button = elem.find('.button');
@@ -105,6 +110,7 @@
     var elems = {};
 
     dbusProxy.extensionChangedHandler = function(uuid, newState, _) {
+        console.log(uuid + ' changed to ' + getStateName(newState));
         elems[uuid].trigger('state-changed', newState);
     };
 
