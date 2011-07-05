@@ -1,6 +1,9 @@
 
 import json
 
+from tagging.models import TaggedItem
+from tagging.utils import get_tag
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -49,3 +52,12 @@ def download(request, uuid):
 
     url = reverse('ext-url', kwargs=dict(filepath=version.source.url))
     return redirect(request.build_absolute_uri(url))
+
+def browse_tag(request, tag):
+    tag_inst = get_tag(tag)
+    if tag_inst is None:
+        extensions_list = []
+    else:
+        extensions = TaggedItem.objects.get_by_model(Extension, tag_inst)
+        extensions_list = ((ext, ext.get_version('latest')) for ext in extensions)
+    return render(request, 'list.html', dict(extensions_list=extensions_list))

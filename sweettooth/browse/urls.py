@@ -4,17 +4,14 @@ from django.conf.urls.defaults import patterns, url
 from extensions.models import Extension
 from tagging.views import tagged_object_list
 
-from browse.views import detail, manifest, download, list_ext
+from browse.views import detail, manifest, download, list_ext, browse_tag
 
 slug_charset = "[a-zA-Z0-9-_]"
 
 urlpatterns = patterns('',
     url(r'^$', list_ext, name='ext-index'),
 
-    url(r'tags/(?P<tag>%s+)/$' % (slug_charset,), tagged_object_list,
-        dict(queryset_or_model=Extension,
-             template_object_name="extensions",
-             template_name="list.html"), name='ext-tags'),
+    url(r'tags/(?P<tag>%s+)/$' % (slug_charset,), browse_tag, name='ext-browse-tag'),
 
     url(r'^manifest/(?P<uuid>.+).json$',
         manifest, name='ext-manifest'),
