@@ -17,7 +17,7 @@ Proxies
 The DBus proxies are being developed in several forms. The initial prototype
 was developed as a Python-based HTTP server. See `Bug #653212`_ for more details.
 
-The NPAPI-based plugin, 'sweettooth-plugin`_, is another alternative.
+The NPAPI-based plugin, `sweettooth-plugin`_, is another alternative.
 
 .. _Bug #653212: https://bugzilla.gnome.org/show_bug.cgi?id=653212
 .. _sweettooth-plugin: https://github.com/magcius/sweettooth-plugin
