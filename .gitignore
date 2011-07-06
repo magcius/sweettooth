@@ -5,3 +5,7 @@
 *.pyo
 *.db
 .#*
+venv
+Demos
+sweettooth/uploaded-files
+
