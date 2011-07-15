@@ -1,9 +1,9 @@
 (function($) {
-    var iface = SweetTooth.DBusProxyInterfaces.LocalPlugin = function() {
+    var iface = SweetTooth.DBusProxy = function() {
         this._init();
     };
 
-    SweetTooth.DBusProxyInterfaces.LocalPlugin.prototype = {
+    SweetTooth.DBusProxy.prototype = {
         MIME_TYPE: "application/x-gnome-shell-integration",
 
         _init: function() {
@@ -62,6 +62,4 @@
             this.pluginObject.installExtension(config.manifest);
         }
     };
-
-    SweetTooth.DBusProxyInterfaces.Available.push(iface);
 })(jQuery);

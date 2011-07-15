@@ -1,20 +1,6 @@
 (function($) {
 
-    var dbusProxy, testing;
-    var available = SweetTooth.DBusProxyInterfaces.Available;
-    for (var i = 0; i < available.length; i ++) {
-        var iface = available[i];
-        try {
-            testing = new iface();
-        } catch (e) {
-            continue;
-        }
-        if (testing && testing.active) {
-            dbusProxy = SweetTooth.DBusProxy = testing;
-            break;
-        }
-    }
-
+    var dbusProxy = new SweetTooth.DBusProxy();
     if (!dbusProxy) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
