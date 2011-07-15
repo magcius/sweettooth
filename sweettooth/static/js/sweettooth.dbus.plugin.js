@@ -4,32 +4,40 @@
     };
 
     SweetTooth.DBusProxy.prototype = {
-        MIME_TYPE: "application/x-gnome-shell-integration",
+        MIME_TYPE: 'application/x-gnome-shell-integration',
 
         _init: function() {
             this.active = false;
             this.pluginObject = document.createElement('embed');
-            this.pluginObject.setAttribute('type', this.MIME_TYPE);
-            $(this.pluginObject).css({ position: "absolute",
-                                       left: "-1000em", 
-                                       top: "-1000em" });
+            $(this.pluginObject).attr('type', this.MIME_TYPE);
+
+            // Netscape plugins are strange: if you make them invisible with
+            // CSS or give them 0 width/height, they won't load. Just smack it
+            // off-screen so it isn't visible, but still works.
+            $(this.pluginObject).css({ position: 'absolute',
+                                       left: '-1000em',
+                                       top: '-1000em' });
             $(document.body).append(this.pluginObject);
 
-            this.API_VERSION = this.pluginObject.apiVersion;
-            if (!!this.API_VERSION)
-                this.active = true;
+            this.apiVersion = this.pluginObject.apiVersion;
+            if (!this.apiVersion)
+                return;
+
+            this.active = true;
+
+            this.shellVersion = this.pluginObject.shellVersion;
 
             var me = this;
             this.pluginObject.onchange = function(uuid, newState, error) {
-                return me._extensionStateChanged.call(me, uuid, newState, error);
+                me._extensionStateChanged.call(me, uuid, newState, error);
             };
 
             this.extensionChangedHandler = null;
         },
 
         _extensionStateChanged: function(uuid, newState, error) {
-            if (!!this.extensionChangedHandler)
-                return this.extensionChangedHandler(uuid, newState, error);
+            if (this.extensionChangedHandler)
+                this.extensionChangedHandler(uuid, newState, error);
         },
 
         _makePromise: function(result) {
