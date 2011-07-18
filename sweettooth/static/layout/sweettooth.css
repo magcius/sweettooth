@@ -1,5 +1,4 @@
-
-@import url("http://www.gnome.org/wp-content/themes/gnome-grass/style.css");
+@import url("template.css");
 
 html, body {
     min-height: 100%;
@@ -23,7 +22,7 @@ html, body {
     margin-top: 10px;
 }
 
-#global_domain_bar div {
+#global_domain_bar div, #global_domain_bar div a {
     position: relative;
 }
 
@@ -46,6 +45,7 @@ html, body {
     top: 35px;
     right: 30px;
     display: none;
+    z-index: 99;
 }
 
 #login_form ol {

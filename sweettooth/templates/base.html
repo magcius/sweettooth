@@ -13,34 +13,24 @@
         <a href="http://www.gnome.org/"><strong>GNOME</strong>.org</a>
       </div>
     </div>
-    <script>
-    </script>
 
     <!-- header -->
-    <div id="header" class="container_12">
-        <div id="logo" class="grid_3">
-            <h1><a title="Go to home page" href="/"><img src="http://www.gnome.org/wp-content/themes/gnome-grass/images/gnome-logo.png" alt="'GNOME: The Free Software Desktop Project" /></a></h1>
+    <div id="gnome_header">
+      <div class="maxwidth">
+        <h1><a href="/"><img src="{{ STATIC_URL }}images/foot.png" alt="GNOME" /> Shell Extensions</a></h1>
+        
+        <ul id="globalnav">
+          <li><a href="{% url ext-index %} ">Extensions</a></li>
+          <li><a href="{% url upload-file %}">Add extension</a></li>
+        </ul>
+        
+        <div class="right">
+          <input id="search_input" type="text" placeholder="Search..." />
         </div>
-        <div id="top_bar" class="grid_9">
-            <div class="left">
-              <ul>
-                <li><a href="{% url ext-browse-tag tag='featured' %}">Featured Extensions</a></li>
-                <li><a href="/browse/top/">Highest Rated</a></li>
-                {% if user.is_authenticated %}
-                  <li><a href="/upload/">Upload a new extension</a></li>
-                {% endif %}
-              </ul>
-            </div>
-            <div class="right">
-                <form role="search" method="get" id="searchform" action="/dummy-search" >
-                    <div>
-                        <label class="hidden" for="s">Search</label><input type="text" value="" name="s" id="s" placeholder="Search" />
-                    </div>
-                </form>
-            </div>
-        </div>
+        
+        <div class="clear"></div>
+      </div>
     </div>
-    <div class="clearfix"></div>
 
     <div id="message_container">
     {% for message in messages %}
@@ -48,14 +38,21 @@
     {% endfor %}
     </div>
 
-    <div id="container" class="two_columns">
-      <div class="container_12">
-        {% block body %}
-        {% endblock %}
+    <div id="gnome_container">
+      <div class="maxwidth">
+        <div id="content">
+          {% block body %}
+          {% endblock %}
+        </div>
       </div>
     </div>
 
-    <div id="footer_grass">&nbsp;</div>
+    <div id="footer_art" class="default">
+    </div>
+    
+    <div id="footer_grass">
+    </div>
+
     <div id="footer">
       <div class="container_12">
         {% include "dummy_links.html" %}
