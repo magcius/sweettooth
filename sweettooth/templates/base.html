@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="/static/css/sweettooth.css" />
     {% block head %} {% endblock %}
     <title> {% block title %} SweetTooth {% endblock %} </title>
+    <script>
+      window._SW = function() {
+        {% block document-ready %} {% endblock %}
+      }
+    </script>
+    <script data-main="/static/js/main.js" src="/static/js/require.js"></script>
   </head>
   <body>
     <div id="global_domain_bar">
@@ -62,19 +68,5 @@
         </div>
         <div class="clear"></div>
     </div>
-    {% block script %}
-      <script src="http://code.jquery.com/jquery-1.6.2.js"></script>
-      <script src="{{ STATIC_URL }}js/sweettooth.base.js"></script>
-      <script src="{{ STATIC_URL }}js/sweettooth.dbus.plugin.js"></script>
-      <script src="{{ STATIC_URL }}js/sweettooth.dbus.http.js"></script>
-      <script src="{{ STATIC_URL }}js/sweettooth.dbus.js"></script>
-      <script>
-        $(document).ready(function() {
-        {% block document-ready %}
-          $("#login_link").loginPopupify("#login_popup_form");
-        {% endblock %}
-        });
-      </script>
-    {% endblock %}
   </body>
 </html>

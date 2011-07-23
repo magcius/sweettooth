@@ -1,18 +1,30 @@
-(function($) {
+"use strict";
 
-    var dbusProxy = new SweetTooth.DBusProxy();
+define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
+    var ExtensionState = {
+        // These constants should be kept in sync
+        // with those in gnome-shell: see js/ui/extensionSystem.js
+        ENABLED: 1,
+        DISABLED: 2,
+        ERROR: 3,
+        OUT_OF_DATE: 4,
+        DOWNLOADING: 5,
+
+        // Not a real state, used when there's no extension
+        // with the associated UUID in the extension map.
+        UNINSTALLED: 99
+    };
+
     if (!dbusProxy) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
-        SweetTooth.Messages.addError("You do not appear to have an up "+
-                                     "to date version of GNOME3");
+        messages.addError("You do not appear to have an up " +
+                          "to date version of GNOME3");
 
-        // If we don't have a proper proxy interface, give us a simple
-        // to prevent undefined errors in the code below.
-        dbusProxy = SweetTooth.DBusProxy = { active: false };
+        return {};
     }
 
-    var buttons = SweetTooth.Buttons = {};
+    var buttons = {};
 
     function _wrapDBusProxyMethod(meth, attr) {
         if (!meth)
@@ -49,7 +61,7 @@
     };
 
     var states = {};
-    var state = SweetTooth.ExtensionState;
+    var state = ExtensionState;
     states[state.ENABLED]     = {'style': 'disable', 'content': "Disable",
                                  'handler': buttons.DisableExtension};
 
@@ -89,14 +101,14 @@
     // uuid => elem
     var elems = {};
 
-    dbusProxy.extensionChangedHandler = function(uuid, newState, _) {
+    dbusProxy.extensionStateChangedHandler = function(uuid, newState, _) {
         elems[uuid].trigger('state-changed', newState);
     };
 
-    $.fn.buttonify = function() {
+    $.fn.buttonify = function () {
         var container = $(this);
 
-        if (!dbusProxy.active) {
+        if (!dbusProxy) {
             // Don't show our buttons -- CSS styles define a clickable
             // area even with no content.
             container.find('.button').hide();
@@ -126,4 +138,4 @@
         });
     };
 
-})(jQuery);
+});
