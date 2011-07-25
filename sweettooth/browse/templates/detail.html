@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load thumbnail %}
 {% block body %}
     <div class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
       <div class="button"></div>
@@ -11,12 +12,31 @@
       <ul>
         {% if user == extension.creator %}
           <li><a href="{% url upload-file pk=extension.pk %}">Upload a new version</a></li>
+          <li><a href="{% url upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
         {% endif %}
         {% if user.is_superuser %}
           <li><a class="featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>
         {% endif %}
       </ul>
 
+      <hr>
+      <h4> Screenshots </h4>
+      {% if extension.screenshot_set.count %}
+      <ul>
+        {% for screenshot in extension.screenshot_set.all %}
+          <li>
+            <p>
+              {% thumbnail screenshot.image "300x200" as th %}
+                <a href="{{ screenshot.image.url }}"><img src="{{ th.url }}" /></a>
+              {% endthumbnail %}
+            </p>
+            <p>{{ screenshot.title }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        This extension has no screenshots.
+      {% endif %}
       <hr>
 
       {% load comments %}

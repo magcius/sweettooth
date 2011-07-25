@@ -8,6 +8,7 @@ import autoslug
 import tagging
 from django.contrib import auth
 from django.db import models
+from sorl import thumbnail
 
 # Create your models here.
 
@@ -123,3 +124,12 @@ class ExtensionVersion(models.Model):
         extension, version = cls.from_metadata_json(metadata, extension)
         zipfile.close()
         return extension, version
+
+class Screenshot(models.Model):
+    extension = models.ForeignKey(Extension)
+    title = models.TextField()
+
+    def make_filename(self, filename):
+        return os.path.join(self.extension.uuid, filename)
+
+    image = thumbnail.ImageField(upload_to=make_filename)

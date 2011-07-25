@@ -8,8 +8,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from django import forms
 
-from extensions.models import Extension
+from extensions.models import Extension, Screenshot
 
 def get_manifest_url(request, ver):
     manifest_url = reverse('ext-manifest', kwargs=dict(uuid=ver.extension.uuid))
@@ -59,6 +60,30 @@ def download(request, uuid):
 
     url = reverse('ext-url', kwargs=dict(filepath=version.source.url))
     return redirect(request.build_absolute_uri(url))
+
+class UploadScreenshotForm(forms.ModelForm):
+    class Meta:
+        model = Screenshot
+        exclude = 'extension',
+
+@login_required
+def upload_screenshot(request, pk):
+    extension = get_object_or_404(Extension, pk=pk)
+    if request.user != extension.creator:
+        return HttpResponseForbidden()
+
+    if request.method == 'POST':
+        form = UploadScreenshotForm(request.POST, request.FILES)
+        if form.is_valid():
+            screenshot = form.save(commit=False)
+            screenshot.extension = extension
+            screenshot.save()
+
+        return redirect(reverse('ext-detail', kwargs=dict(pk=extension.pk)))
+    else:
+        form = UploadScreenshotForm(initial=dict(extension="FOO"))
+
+    return render(request, 'upload-screenshot.html', dict(form=form))
 
 def browse_tag(request, tag):
     tag_inst = get_tag(tag)

@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'tagging',
+    'sorl.thumbnail',
 
     'extensions',
     'browse',

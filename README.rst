@@ -31,6 +31,7 @@ For now, we require:
   * django-autoslug_
   * django-extensions_
   * django-tagging_
+  * sorl-thumbnail_
 
 I develop with PostgreSQL_ at home, but Django should be able to use
 SQLite_, MySQL_, and others.
@@ -39,6 +40,7 @@ SQLite_, MySQL_, and others.
 .. _django-autoslug: http://packages.python.org/django-autoslug/
 .. _django-extensions: http://packages.python.org/django-extensions/
 .. _django-tagging: http://code.google.com/p/django-tagging/
+.. _sorl-thumbnail: http://thumbnail.sorl.net/
 .. _PostgreSQL: http://www.postgresql.org/
 .. _SQLite: http://www.sqlite.org/
 .. _MySQL: http://www.mysql.com/

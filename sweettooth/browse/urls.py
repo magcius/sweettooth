@@ -4,7 +4,8 @@ from django.conf.urls.defaults import patterns, url
 from extensions.models import Extension
 from tagging.views import tagged_object_list
 
-from browse.views import detail, manifest, download, list_ext, browse_tag, modify_tag
+from browse.views import detail, manifest, download, list_ext, browse_tag
+from browse.views import modify_tag, upload_screenshot
 
 urlpatterns = patterns('',
     url(r'^$', list_ext, name='ext-index'),
@@ -21,4 +22,6 @@ urlpatterns = patterns('',
 
     url(r'^extension/(?P<pk>\d+)/(?P<slug>.+)', detail, name='ext-detail'),
     url(r'^extension/(?P<pk>\d+)', detail, dict(slug=None), name='ext-detail'),
+
+    url(r'^extension/upload-screenshot/(?P<pk>\d+)', upload_screenshot, name='upload-screenshot'),
 )
