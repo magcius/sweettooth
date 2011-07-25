@@ -84,26 +84,6 @@ define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
 
     states[state.DOWNLOADING] = {'style': 'downloading', 'content': "Downloading..."};
 
-    $.fn.showCorrectButton = function(stateid) {
-        var elem = $(this);
-        var button = elem.find('.button');
-        var buttonState = states[(!!stateid) ? stateid : state.UNINSTALLED];
-        button.
-            html(buttonState.content).
-            removeClass().addClass('button').
-            addClass(buttonState.style).unbind('click');
-
-        if (buttonState.handler)
-            button.bind('click', buttonState.handler);
-    };
-
-    $.fn.getCorrectButton = function() {
-        var elem = $(this).data('elem');
-        dbusProxy.GetExtensionInfo(elem.data('uuid')).done(function(meta) {
-            elem.showCorrectButton(meta.state);
-        });
-    };
-
     // uuid => elem
     var elems = {};
 
@@ -118,19 +98,25 @@ define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
                 var elem = $(this);
                 var button = elem.find('.button');
                 var uuid = elem.data('uuid');
-                var meta = extensions[uuid] || {'state': state.UNINSTALLED};
+                var state = ExtensionState.UNINSTALLED;
+                if (extensions[uuid])
+                    state = extensions[uuid].state;
 
                 button.data('elem', elem);
                 elem.data('elem', elem);
-                elem.data('meta', meta);
-                elem.data('state', meta.state);
+                elem.data('state', state);
                 elem.bind('state-changed', function(e, newState) {
-                    var elem = $(this);
-                    var meta = elem.data('meta');
-                    meta.state = newState;
-                    return elem.showCorrectButton(newState);
+                    var button = elem.find('.button');
+                    var buttonState = states[newState];
+                    button.
+                        html(buttonState.content).
+                        removeClass().addClass('button').
+                        addClass(buttonState.style).unbind('click');
+
+                    if (buttonState.handler)
+                        button.bind('click', buttonState.handler);
                 });
-                elem.trigger('state-changed', meta.state);
+                elem.trigger('state-changed', state);
                 elems[uuid] = elem;
             });
         });
