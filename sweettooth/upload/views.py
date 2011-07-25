@@ -18,11 +18,11 @@ class ExtensionDataForm(forms.Form):
     url = forms.URLField(label="Author URL")
 
 @login_required
-def upload_file(request, slug):
-    if slug is None:
+def upload_file(request, pk):
+    if pk is None:
         extension = None
     else:
-        extension = Extension.objects.get(slug=slug)
+        extension = Extension.objects.get(pk=pk)
         if extension.creator != request.user:
             return HttpResponseForbidden()
 
@@ -65,7 +65,7 @@ def upload_edit_data(request):
             version.save()
 
             del request.session[EXTENSION_DATA_KEY]
-            return redirect(reverse('ext-detail', kwargs=dict(slug=extension.slug)))
+            return redirect(reverse('ext-detail', kwargs=dict(pk=extension.pk)))
     else:
         initial = dict(name=extension.name,
                        description=extension.description,

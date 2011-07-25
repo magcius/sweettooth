@@ -4,7 +4,7 @@
   {% for extension, manifest in extensions_list %}
     <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
       <div class="button"></div>
-      <a href="{% url ext-detail slug=extension.slug %}" class="title-link">
+      <a href="{% url ext-detail pk=extension.pk %}" class="title-link">
         {{ extension.name }}
       </a>
       <span class="author">by {{ extension.creator }}</span>

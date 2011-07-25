@@ -10,7 +10,7 @@
 
       <ul>
         {% if user == extension.creator %}
-          <li><a href="{% url upload-file slug=extension.slug %}">Upload a new version</a></li>
+          <li><a href="{% url upload-file pk=extension.pk %}">Upload a new version</a></li>
         {% endif %}
         {% if user.is_superuser %}
           <li><a class="featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>

@@ -25,9 +25,16 @@ def list_ext(request):
     extensions_list = ((ext, get_manifest_url(request, ext.get_version('latest'))) for ext in extensions)
     return render(request, 'list.html', dict(extensions_list=extensions_list))
 
-def detail(request, slug, ver):
-    extension = get_object_or_404(Extension, is_published=True, slug=slug)
-    version = extension.get_version(ver)
+def detail(request, pk, slug):
+    extension = get_object_or_404(Extension, is_published=True, pk=pk)
+    version_string = request.GET.get('version')
+    if slug != extension.slug:
+        url = reverse('ext-detail', kwargs=dict(pk=pk, slug=extension.slug))
+        if version_string:
+            url += '?version=%s' % (version_string,)
+        return redirect(url)
+
+    version = extension.get_version(version_string)
 
     template_args = dict(version=version,
                          extension=extension,
