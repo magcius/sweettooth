@@ -1,8 +1,10 @@
 
 from django.conf.urls.defaults import patterns, include, url
+from django.conf import settings
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
+from django.views import static
 admin.autodiscover()
 
 from sweettooth.settings import SITE_ROOT
@@ -10,9 +12,9 @@ from sweettooth.settings import SITE_ROOT
 urlpatterns = patterns('',
     url(r'^upload/', include('upload.urls')),
 
-    # dummy URI for reverse()
-    url(r'^static/extension-data/(?P<filepath>.+)', lambda x: None,
-        name='ext-url'),
+    # just for development
+    url(r'^static/extension-data/(?P<path>.*)', static.serve,
+        dict(document_root=settings.MEDIA_ROOT), name='ext-url'),
 
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
