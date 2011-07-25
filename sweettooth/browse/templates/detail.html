@@ -28,6 +28,6 @@
     {{ block.super }}
     $(".extension").buttonify();
     {% if user.is_superuser %}
-    $(".featured").featureToggleify{{ extension.is_featured|yesno:"true,false" }});
+    $(".featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
     {% endif %}
 {% endblock %}
