@@ -21,6 +21,12 @@ define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
         messages.addError("You do not appear to have an up " +
                           "to date version of GNOME3");
 
+        $.fn.buttonify = function() {
+            // Don't show our buttons -- CSS styles define a clickable
+            // area even with no content.
+            $(this).find('.button').hide();
+        };
+
         return {};
     }
 
@@ -106,17 +112,9 @@ define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
     };
 
     $.fn.buttonify = function () {
-        var container = $(this);
-
-        if (!dbusProxy) {
-            // Don't show our buttons -- CSS styles define a clickable
-            // area even with no content.
-            container.find('.button').hide();
-            return;
-        }
-
+        var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
-            container.each(function () {
+            $container.each(function () {
                 var elem = $(this);
                 var button = elem.find('.button');
                 var uuid = elem.data('uuid');
