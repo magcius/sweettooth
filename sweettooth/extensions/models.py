@@ -13,13 +13,13 @@ from django.db import models
 
 class Extension(models.Model):
     name = models.CharField(max_length=200)
-    uuid = models.TextField()
-    slug = autoslug.AutoSlugField(populate_from="name", unique=True)
-    creator = models.ForeignKey(auth.models.User)
+    uuid = models.CharField(max_length=200, unique=True, db_index=True)
+    slug = autoslug.AutoSlugField(populate_from="name")
+    creator = models.ForeignKey(auth.models.User, db_index=True)
     description = models.TextField()
     url = models.URLField()
     created = models.DateTimeField(auto_now_add=True)
-    is_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False, db_index=True)
 
     def get_version(self, version):
         if version in (None, 'latest'):
