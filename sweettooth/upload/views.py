@@ -7,8 +7,6 @@ from django.http import HttpResponseForbidden
 
 from extensions.models import Extension, ExtensionVersion
 
-EXTENSION_DATA_KEY = "extension data"
-
 class UploadForm(forms.Form):
     source = forms.FileField()
 
@@ -39,18 +37,25 @@ def upload_file(request, pk):
             version.is_published = False
             version.save()
 
-            request.session[EXTENSION_DATA_KEY] = extension, version
-            return redirect(reverse('upload-edit-data'))
+            return redirect(reverse('upload-edit-data', kwargs=dict(pk=version.pk)))
     else:
         form = UploadForm()
 
     return render(request, 'upload-file.html', dict(form=form))
 
 @login_required
-def upload_edit_data(request):
-    extension, version = request.session.get(EXTENSION_DATA_KEY, (None, None))
-    if extension is None or version is None:
-        return redirect(reverse('upload-file'))
+def upload_edit_data(request, pk):
+    try:
+        version = ExtensionVersion.objects.get(pk=pk)
+    except ExtensionVersion.DoesNotExist:
+        return HttpResponseForbidden()
+
+    extension = version.extension
+    if extension.is_published:
+        return HttpResponseForbidden()
+
+    if extension.creator != request.user:
+        return HttpResponseForbidden()
 
     if request.method == 'POST':
         form = ExtensionDataForm(request.POST)
@@ -64,7 +69,6 @@ def upload_edit_data(request):
             version.replace_metadata_json()
             version.save()
 
-            del request.session[EXTENSION_DATA_KEY]
             return redirect(reverse('ext-detail', kwargs=dict(pk=extension.pk)))
     else:
         initial = dict(name=extension.name,
