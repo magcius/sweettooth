@@ -54,7 +54,9 @@ def upload_edit_data(request, pk):
     if extension.is_published:
         return HttpResponseForbidden()
 
-    if extension.creator != request.user:
+    if request.user.has_perm('extensions.can-modify-data') or extension.creator == request.user:
+        pass
+    else:
         return HttpResponseForbidden()
 
     if request.method == 'POST':

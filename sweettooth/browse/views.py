@@ -7,7 +7,7 @@ from tagging.utils import get_tag
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django import forms
 
 from extensions.models import Extension, Screenshot
@@ -69,7 +69,9 @@ class UploadScreenshotForm(forms.ModelForm):
 @login_required
 def upload_screenshot(request, pk):
     extension = get_object_or_404(Extension, pk=pk)
-    if request.user != extension.creator:
+    if request.user.has_perm('extensions.can-modify-data') or extension.creator == request.user:
+        pass
+    else:
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -94,11 +96,8 @@ def browse_tag(request, tag):
         extensions_list = ((ext, ext.get_version('latest')) for ext in extensions)
     return render(request, 'list.html', dict(extensions_list=extensions_list))
 
-@login_required
+@permission_required('extensions.can-modify-tags')
 def modify_tag(request, tag):
-    if not request.user.is_superuser:
-        return HttpResponseForbidden()
-
     uuid = request.GET.get('uuid')
     action = request.GET.get('action')
     extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
