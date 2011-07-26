@@ -1,6 +1,7 @@
 "use strict";
 
-define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
+define(['jquery', 'messages', 'dbus!_',
+        'switch', 'jquery.tipsy'], function($, messages, dbusProxy) {
     var ExtensionState = {
         // These constants should be kept in sync
         // with those in gnome-shell: see js/ui/extensionSystem.js
@@ -66,24 +67,6 @@ define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
             dbusProxy.GetErrors(elem.data('uuid')).done(callback);
     };
 
-    var states = {};
-    var state = ExtensionState;
-    states[state.ENABLED]     = {'style': 'disable', 'content': "Disable",
-                                 'handler': buttons.DisableExtension};
-
-    states[state.DISABLED]    = {'style': 'enable', 'content': "Enable",
-                                 'handler': buttons.EnableExtension};
-
-    states[state.UNINSTALLED] = {'style': 'install', 'content': "Install",
-                                 'handler': buttons.InstallExtension};
-
-    states[state.ERROR]       = {'style': 'error', 'content': "Error",
-                                 'handler': buttons.GetErrors};
-
-    states[state.OUT_OF_DATE] = {'style': 'ood', 'content': "Out of Date"};
-
-    states[state.DOWNLOADING] = {'style': 'downloading', 'content': "Downloading..."};
-
     // uuid => elem
     var elems = {};
 
@@ -98,25 +81,50 @@ define(['jquery', 'messages', 'dbus!_'], function($, messages, dbusProxy) {
                 var elem = $(this);
                 var button = elem.find('.button');
                 var uuid = elem.data('uuid');
-                var state = ExtensionState.UNINSTALLED;
+                var _state = ExtensionState.UNINSTALLED;
                 if (extensions[uuid])
-                    state = extensions[uuid].state;
+                    _state = extensions[uuid].state;
+
+                elem.data({'elem': elem,
+                           'state': _state});
 
                 button.data('elem', elem);
-                elem.data('elem', elem);
-                elem.data('state', state);
-                elem.bind('state-changed', function(e, newState) {
-                    var button = elem.find('.button');
-                    var buttonState = states[newState];
-                    button.
-                        html(buttonState.content).
-                        removeClass().addClass('button').
-                        addClass(buttonState.style).unbind('click');
+                button.switchify();
 
-                    if (buttonState.handler)
-                        button.bind('click', buttonState.handler);
+                button.bind('changed', function(e, newValue) {
+                    var oldState = elem.data('state');
+                    if (newValue) {
+                        if (oldState == ExtensionState.UNINSTALLED) {
+                            // Extension is installed and we flick the switch on,
+                            // install.
+                            dbusProxy.InstallExtension(elem.data('manifest'));
+                        } else if (oldState == ExtensionState.DISABLED) {
+                            dbusProxy.EnableExtension(uuid);
+                        }
+                    } else {
+                        if (oldState == ExtensionState.ENABLED)
+                            dbusProxy.DisableExtension(uuid);
+                    }
                 });
-                elem.trigger('state-changed', state);
+
+                elem.bind('state-changed', function(e, newState) {
+                    elem.data('state', newState);
+                    button.switchify('insensitive', false);
+                    button.tipsy({ gravity: 'e', fade: true });
+                    if (newState == ExtensionState.DISABLED ||
+                        newState == ExtensionState.UNINSTALLED) {
+                        button.switchify('activate', false);
+                    } else if (newState == ExtensionState.ENABLED) {
+                        button.switchify('activate', true);
+                    } else if (newState == ExtensionState.ERROR) {
+                        button.switchify('insensitive', true);
+                        button.attr('title', "This extension had an error");
+                    } else if (newState == ExtensionState.OUT_OF_DATE) {
+                        button.switchify('insensitive', true);
+                        button.attr('title', "This extension is not compatible with your version of GNOME.");
+                    }
+                });
+                elem.trigger('state-changed', _state);
                 elems[uuid] = elem;
             });
         });
