@@ -41,7 +41,7 @@ def upload_file(request, pk):
     else:
         form = UploadForm()
 
-    return render(request, 'upload-file.html', dict(form=form))
+    return render(request, 'upload/upload-file.html', dict(form=form))
 
 @login_required
 def upload_edit_data(request, pk):
@@ -79,4 +79,4 @@ def upload_edit_data(request, pk):
 
         form = ExtensionDataForm(initial=initial)
 
-    return render(request, 'upload-edit-data.html', dict(form=form))
+    return render(request, 'upload/upload-edit-data.html', dict(form=form))
