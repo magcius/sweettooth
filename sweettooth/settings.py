@@ -132,12 +132,15 @@ INSTALLED_APPS = (
     'browse',
     'auth',
     'upload',
+    'ratings',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs'
 )
+
+COMMENTS_APP = 'ratings'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
