@@ -24,7 +24,7 @@ def get_manifest_url(request, ver):
 def list_ext(request):
     extensions = Extension.objects.filter(is_published=True)
     extensions_list = ((ext, get_manifest_url(request, ext.get_version('latest'))) for ext in extensions)
-    return render(request, 'list.html', dict(extensions_list=extensions_list))
+    return render(request, 'browse/list.html', dict(extensions_list=extensions_list))
 
 def detail(request, pk, slug):
     extension = get_object_or_404(Extension, is_published=True, pk=pk)
@@ -40,7 +40,7 @@ def detail(request, pk, slug):
     template_args = dict(version=version,
                          extension=extension,
                          manifest=get_manifest_url(request, version))
-    return render(request, 'detail.html', template_args)
+    return render(request, 'browse/detail.html', template_args)
 
 def manifest(request, uuid):
     extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
@@ -85,7 +85,7 @@ def upload_screenshot(request, pk):
     else:
         form = UploadScreenshotForm(initial=dict(extension="FOO"))
 
-    return render(request, 'upload-screenshot.html', dict(form=form))
+    return render(request, 'browse/upload-screenshot.html', dict(form=form))
 
 def browse_tag(request, tag):
     tag_inst = get_tag(tag)
@@ -94,7 +94,7 @@ def browse_tag(request, tag):
     else:
         extensions = TaggedItem.objects.get_by_model(Extension, tag_inst)
         extensions_list = ((ext, ext.get_version('latest')) for ext in extensions)
-    return render(request, 'list.html', dict(extensions_list=extensions_list))
+    return render(request, 'browse/list.html', dict(extensions_list=extensions_list))
 
 @permission_required('extensions.can-modify-tags')
 def modify_tag(request, tag):
