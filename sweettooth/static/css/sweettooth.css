@@ -3,28 +3,6 @@
 @import url("switch.css");
 @import url("tipsy.css");
 
-html, body {
-    min-height: 100%;
-}
-
-#eee {
-    text-align: center;
-    font-size: 3em;
-    position: relative;
-    margin: 0;
-    text-shadow: hsl(211, 47%, 75%) 0 3px 4px;
-    top: -40px;
-}
-
-#container {
-    background-image: linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 20px);
-    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 20px);
-    border: 1px solid #eeeeee;
-    border-style: none solid;
-    padding-top: 30px;
-    margin-top: 10px;
-}
-
 #global_domain_bar div, #global_domain_bar div a {
     position: relative;
 }
