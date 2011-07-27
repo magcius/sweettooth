@@ -52,6 +52,12 @@
     width: 40%;
 }
 
+hr {
+    height: 0;
+    border: none;
+    border-top: 1px solid #aaa;
+}
+
 li.extension {
     list-style-type: none;
     list-style-position: inner;
@@ -63,6 +69,8 @@ li.extension:hover {
 
 .extension {
     padding: .7em 1em;
+    margin-left: 100px;
+    position: relative;
 }
 
 .extension .title-link, .extension h3 {
@@ -76,16 +84,43 @@ li.extension:hover {
     color: #888;
 }
 
+.extension .switch {
+    position: absolute;
+    margin-left: -100px;
+}
+
+.extension .description {
+    font-size: 14pt;
+}
+
+.extension .screenshot.featured {
+    float: right;
+}
+
+.comment {
+    margin-left: 90px;
+    font-size: 12pt;
+}
+
+.comment .gravatar {
+    position: absolute;
+    margin-left: -90px;
+}
+
+.comment .comment-author {
+    font-weight: bold;
+}
+
+.comment .timestamp {
+    color: #999;
+}
+
 .error-log {
     font-family: "Droid Sans", "Deja Vu Sans Mono", monospace;
     line-height 1.4;
     color: #00CC00;
     background-color: #121212;
     padding: 1em;
-}
-
-.switch {
-    float: right;
 }
 
 p.error {

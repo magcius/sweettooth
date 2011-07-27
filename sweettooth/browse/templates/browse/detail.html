@@ -3,51 +3,51 @@
 {% block body %}
     <div class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
       <div class="button"></div>
+      {% if extension.screenshot_set.count %}
+      {% for screenshot in extension.screenshot_set.all %}
+      {% thumbnail screenshot.image "300x200" as th %}
+      <a href="{{ screenshot.image.url }}" class="screenshot featured"><img src="{{ th.url }}" /></a>
+      {% endthumbnail %}
+      {% endfor %}
+      {% else %}
+      {% endif %}
+
       <h3> {{ extension.name }} </h3>
-      <span class="author"> by {{ extension.creator }}</span>
-      <p>
+      <span class="author">by {{ extension.creator }}</span>
+      <p class="description">
         {{ extension.description }}
       </p>
 
       <ul>
         {% if user == extension.creator %}
-          <li><a href="{% url upload-file pk=extension.pk %}">Upload a new version</a></li>
-          <li><a href="{% url upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
+        <li><a href="{% url upload-file pk=extension.pk %}">Upload a new version</a></li>
+        <li><a href="{% url upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
         {% endif %}
         {% if user.is_superuser %}
-          <li><a class="featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>
+        <li><a class="ajax-featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>
         {% endif %}
       </ul>
-
       <hr>
-      <h4> Screenshots </h4>
-      {% if extension.screenshot_set.count %}
-      <ul>
-        {% for screenshot in extension.screenshot_set.all %}
-          <li>
-            <p>
-              {% thumbnail screenshot.image "300x200" as th %}
-                <a href="{{ screenshot.image.url }}"><img src="{{ th.url }}" /></a>
-              {% endthumbnail %}
-            </p>
-            <p>{{ screenshot.title }}</p>
-          </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-        This extension has no screenshots.
-      {% endif %}
-      <hr>
-
+      <h4>User comments</h4>
       {% load comments %}
-      {% render_comment_list for extension %}
+      {% load gravatar %}
+      {% get_comment_list for extension as comments %}
+      {% for comment in comments %}
+      <div class="comment">
+        <img src="{% gravatar_url comment.user_email %}" class="gravatar">
+        <span class="comment-author">{{ comment.user_name }}</span>
+        <p>{{ comment.comment }}</p>
+        <abbr class="timestamp" title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</abbr>
+      </div>
+      {% endfor %}
       {% render_comment_form for extension %}
     </div>
 {% endblock %}
 {% block document-ready %}
     {{ block.super }}
+    $("abbr.timestamp").timeago();
     $(".extension").buttonify();
     {% if user.is_superuser %}
-    $(".featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
+    $("a.ajax-featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
     {% endif %}
 {% endblock %}
