@@ -37,7 +37,7 @@ def upload_file(request, pk):
             version.is_published = False
             version.save()
 
-            return redirect(reverse('upload-edit-data', kwargs=dict(pk=version.pk)))
+            return redirect(reverse('upload:edit-data', kwargs=dict(pk=version.pk)))
     else:
         form = UploadForm()
 
@@ -71,7 +71,7 @@ def upload_edit_data(request, pk):
             version.replace_metadata_json()
             version.save()
 
-            return redirect(reverse('ext-detail', kwargs=dict(pk=extension.pk)))
+            return redirect(reverse('browse:detail', kwargs=dict(pk=extension.pk)))
     else:
         initial = dict(name=extension.name,
                        description=extension.description,

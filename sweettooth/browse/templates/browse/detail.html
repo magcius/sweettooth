@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+{% load manifest %}
 {% block body %}
-    <div class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
+{% with extension=version.extension %}
+    <div class="extension"
+         data-uuid="{{ extension.uuid }}"
+         data-manifest="{% manifest_url version %}">
       <div class="button"></div>
       {% for screenshot in extension.screenshot_set.all %}
       {% thumbnail screenshot.image "300x200" as th %}
@@ -17,8 +21,8 @@
 
       <ul>
         {% if user == extension.creator %}
-        <li><a href="{% url upload-file pk=extension.pk %}">Upload a new version</a></li>
-        <li><a href="{% url upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
+        <li><a href="{% url upload:file pk=extension.pk %}">Upload a new version</a></li>
+        <li><a href="{% url browse:upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
         {% endif %}
         {% if user.is_superuser %}
         <li><a class="ajax-featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>
@@ -55,7 +59,9 @@
         </div>
       </div>
     </div>
+{% endwith %}
 {% endblock %}
+{% with extension=version.extension %}
 {% block document-ready %}
     {{ block.super }}
     $("abbr.timestamp").timeago();
@@ -69,3 +75,4 @@
     $("a.ajax-featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
     {% endif %}
 {% endblock %}
+{% endwith %}

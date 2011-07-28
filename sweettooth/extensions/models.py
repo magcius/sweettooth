@@ -4,10 +4,12 @@ import json
 import uuid
 from zipfile import ZipFile, BadZipfile
 
-import autoslug
-import tagging
+from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.db import models
+
+import autoslug
+import tagging
 from sorl import thumbnail
 
 # Create your models here.
@@ -22,12 +24,6 @@ class Extension(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False, db_index=True)
 
-    def get_version(self, version):
-        if version in (None, 'latest'):
-            return self.extensionversion_set.order_by('-version')[0]
-
-        return self.extensionversion_set.get(version=int(version))
-
     def is_featured(self):
         try:
             tag = self.tags.get(name="featured")
@@ -35,21 +31,32 @@ class Extension(models.Model):
         except self.tags.model.DoesNotExist:
             return False
 
+    def get_latest_version(self):
+        return self.versions.order_by("-version")[0]
+
 tagging.register(Extension)
 
 class InvalidExtensionData(Exception):
     pass
 
 class ExtensionVersion(models.Model):
-    extension = models.ForeignKey(Extension)
+    extension = models.ForeignKey(Extension, related_name="versions")
     version = models.IntegerField(default=0)
     extra_json_fields = models.TextField()
+
+    class Meta:
+        unique_together = ('extension', 'version'),
 
     def make_filename(self, filename):
         return os.path.join(self.extension.uuid, str(self.version),
                             self.extension.slug + ".shell-extension.zip")
 
     source = models.FileField(upload_to=make_filename)
+
+    def get_manifest_url(self, request):
+        path = reverse('extensions:manifest',
+                       kwargs=dict(uuid=self.extension.uuid, ver=self.version))
+        return request.build_absolute_uri(path)
 
     def make_metadata_json(self):
         """
@@ -91,7 +98,7 @@ class ExtensionVersion(models.Model):
         version.extra_json_fields = json.dumps(metadata)
 
         # get version number
-        ver_ids = extension.extensionversion_set.order_by('-version')
+        ver_ids = extension.versions.order_by('-version')
         try:
             ver_id = ver_ids[0].version + 1
         except IndexError:
