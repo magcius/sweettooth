@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'jquery.timeago', 'buttons'], function($) {
+require(['jquery', 'jquery.timeago', 'jquery.rating', 'buttons'], function($) {
     $(document).ready(function() {
         // Make the login link activatable.
         $("#login_link").click(function(event) {

@@ -3,14 +3,11 @@
 {% block body %}
     <div class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
       <div class="button"></div>
-      {% if extension.screenshot_set.count %}
       {% for screenshot in extension.screenshot_set.all %}
       {% thumbnail screenshot.image "300x200" as th %}
       <a href="{{ screenshot.image.url }}" class="screenshot featured"><img src="{{ th.url }}" /></a>
       {% endthumbnail %}
       {% endfor %}
-      {% else %}
-      {% endif %}
 
       <h3> {{ extension.name }} </h3>
       <span class="author">by {{ extension.creator }}</span>
@@ -28,25 +25,46 @@
         {% endif %}
       </ul>
       <hr>
-      <h4>User comments</h4>
-      {% load comments %}
-      {% load gravatar %}
-      {% get_comment_list for extension as comments %}
-      {% for comment in comments %}
-      <div class="comment">
-        <img src="{% gravatar_url comment.user_email %}" class="gravatar">
-        <span class="comment-author">{{ comment.user_name }}</span>
-        <p>{{ comment.comment }}</p>
-        <abbr class="timestamp" title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</abbr>
+      <div id="comments">
+        <h4>User comments</h4>
+        {% load comments %}
+        {% load gravatar %}
+        {% load rating %}
+        {% get_comment_list for extension as comments %}
+        {% for comment in comments %} 
+        <div class="comment">
+          <img src="{% gravatar_url comment.user_email %}" class="gravatar">
+          <div class="rating-author">
+            <div class="rating">
+              {% rating comment.rating 5 %}
+            </div> by
+            <span class="comment-author">{{ comment.user_name }}</span>
+          </div>
+          <p>{{ comment.comment }}</p>
+          <abbr class="timestamp" title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</abbr>
+        </div>
+        <hr>
+        {% empty %}
+        There are no comments.
+        {% endfor %}
       </div>
-      {% endfor %}
-      {% render_comment_form for extension %}
+      <div id="new-comment-form">
+        <div>
+          <h4>Your opinion</h4>
+          {% render_comment_form for extension %}
+        </div>
+      </div>
     </div>
 {% endblock %}
 {% block document-ready %}
     {{ block.super }}
     $("abbr.timestamp").timeago();
     $(".extension").buttonify();
+    $(".comment .rating").each(function() {
+      $(this).find('input').rating();
+    });
+    $("form .rating").rating();
+
     {% if user.is_superuser %}
     $("a.ajax-featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
     {% endif %}

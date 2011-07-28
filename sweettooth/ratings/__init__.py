@@ -5,4 +5,4 @@ def get_model():
     return models.RatingComment
 
 def get_form():
-    return models.RatingForm
+    return forms.RatingCommentForm
