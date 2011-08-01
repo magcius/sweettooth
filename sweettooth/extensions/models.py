@@ -91,12 +91,14 @@ class ExtensionVersion(models.Model):
         and version with its data and return them.
         """
 
+        print metadata
+
         if extension is None:
             extension = Extension()
-            extension.name = metadata.get('name', "")
-            extension.description = metadata.get('description', "")
-            extension.url = metadata.get('url', "")
-            extension.uuid = metadata.get('uuid', str(uuid.uuid1()))
+            extension.name = metadata.pop('name', "")
+            extension.description = metadata.pop('description', "")
+            extension.url = metadata.pop('url', "")
+            extension.uuid = metadata.pop('uuid', str(uuid.uuid1()))
 
         version = ExtensionVersion(extension=extension)
         version.extra_json_fields = json.dumps(metadata)
