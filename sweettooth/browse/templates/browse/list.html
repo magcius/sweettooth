@@ -1,10 +1,12 @@
 {% extends "base.html" %}
+{% load manifest %}
 {% block body %}
   <ul>
-  {% for extension, manifest in extensions_list %}
-    <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{{ manifest }}">
+  {% for extension in extensions %}
+  {% with version=extension.get_latest_version %}
+    <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{% manifest_url version %}">
       <div class="button"></div>
-      <a href="{% url ext-detail pk=extension.pk %}" class="title-link">
+      <a href="{% url browse-detail pk=extension.pk %}" class="title-link">
         {{ extension.name }}
       </a>
       <span class="author">by {{ extension.creator }}</span>
@@ -12,6 +14,7 @@
         {{ extension.description }}
       </p>
     </li>
+  {% endwith %}
   {% endfor %}
   </ul>
 {% endblock %}
