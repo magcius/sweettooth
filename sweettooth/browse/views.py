@@ -59,7 +59,7 @@ def upload_screenshot(request, pk):
             screenshot.extension = extension
             screenshot.save()
 
-        return redirect('detail', kwargs=dict(pk=extension.pk))
+        return redirect('browse-detail', pk=extension.pk)
     else:
         form = UploadScreenshotForm(initial=dict(extension="FOO"))
 
