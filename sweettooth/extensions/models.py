@@ -90,9 +90,6 @@ class ExtensionVersion(models.Model):
         Given the contents of a metadata.json file, create an extension
         and version with its data and return them.
         """
-
-        print metadata
-
         if extension is None:
             extension = Extension()
             extension.name = metadata.pop('name', "")
