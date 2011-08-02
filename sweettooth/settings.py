@@ -15,7 +15,7 @@ SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django',
         'USER': 'test-deploy',                      # Not used with sqlite3.
         'PASSWORD': 'test-deploy',                  # Not used with sqlite3.
