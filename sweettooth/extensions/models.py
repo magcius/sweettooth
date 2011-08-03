@@ -102,7 +102,7 @@ class ExtensionVersion(models.Model):
             extension.url = metadata.pop('url', "")
             extension.uuid = metadata.pop('uuid', str(uuid.uuid1()))
 
-        version = ExtensionVersion(extension=extension)
+        version = ExtensionVersion()
         version.extra_json_fields = json.dumps(metadata)
 
         # get version number
