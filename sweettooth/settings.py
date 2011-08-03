@@ -142,9 +142,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
 
     'extensions',
-    'browse',
     'auth',
-    'upload',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

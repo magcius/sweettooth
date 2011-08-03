@@ -7,18 +7,14 @@ from django.contrib import admin
 from django.views import static
 admin.autodiscover()
 
-from sweettooth.settings import SITE_ROOT
+from extensions import urls
 
 urlpatterns = patterns('',
-    url(r'^upload/', include('upload.urls')),
-    url(r'^extensions/', include('extensions.urls')),
-
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
-    url(r'^', include('browse.urls'), name='index'),
+    url(r'^', include('extensions.urls'), name='index'),
 
     url(r'^admin/', include(admin.site.urls)),
-
     url(r'^comments/', include('django.contrib.comments.urls')),
 )
 
