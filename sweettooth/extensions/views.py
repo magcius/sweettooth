@@ -9,11 +9,11 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.generic import DetailView
 
-from extensions.models import Extension, ExtensionVersion, Screenshot
+from extensions import models
 from extensions.forms import UploadScreenshotForm, UploadForm, ExtensionDataForm
 
 def manifest(request, uuid, ver):
-    version = get_object_or_404(ExtensionVersion, pk=ver)
+    version = get_object_or_404(models.ExtensionVersion, pk=ver)
 
     url = reverse('extensions-download', kwargs=dict(uuid=uuid, ver=ver))
 
@@ -24,11 +24,11 @@ def manifest(request, uuid, ver):
                         content_type="application/json")
 
 def download(request, uuid, ver):
-    version = get_object_or_404(ExtensionVersion, pk=ver)
+    version = get_object_or_404(models.ExtensionVersion, pk=ver)
     return redirect(version.source.url)
 
 class ExtensionLatestVersionView(DetailView):
-    model = Extension
+    model = models.Extension
     context_object_name = "version"
     template_name = "extensions/detail.html"
 
@@ -46,16 +46,16 @@ class ExtensionLatestVersionView(DetailView):
 
     def get_object(self):
         extension = super(ExtensionLatestVersionView, self).get_object()
-        return extension.get_latest_version()
+        return extension.latest_version
 
 class ExtensionVersionView(DetailView):
-    model = ExtensionVersion
+    model = models.ExtensionVersion
     context_object_name = "version"
     template_name = "extensions/detail.html"
 
 @login_required
 def upload_screenshot(request, pk):
-    extension = get_object_or_404(Extension, pk=pk)
+    extension = get_object_or_404(models.Extension, pk=pk)
     if request.user.has_perm('extensions.can-modify-data') or extension.creator == request.user:
         pass
     else:
@@ -78,7 +78,7 @@ def upload_screenshot(request, pk):
 def modify_tag(request, tag):
     uuid = request.GET.get('uuid')
     action = request.GET.get('action')
-    extension = get_object_or_404(Extension, is_published=True, uuid=uuid)
+    extension = get_object_or_404(models.Extension, uuid=uuid)
 
     if action == 'add':
         Tag.objects.add_tag(extension, tag)
@@ -93,7 +93,7 @@ def upload_file(request, pk):
     if pk is None:
         extension = None
     else:
-        extension = Extension.objects.get(pk=pk)
+        extension = models.Extension.objects.get(pk=pk)
         if extension.creator != request.user:
             return HttpResponseForbidden()
 
@@ -101,13 +101,13 @@ def upload_file(request, pk):
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             file_source = form.cleaned_data['source']
-            extension, version = ExtensionVersion.from_zipfile(file_source, extension)
+            extension, version = models.ExtensionVersion.from_zipfile(file_source, extension)
             extension.creator = request.user
             extension.save()
 
             version.extension = extension
             version.source = file_source
-            version.is_published = False
+            version.status = models.STATUS_NEW
             version.save()
 
             return redirect('extensions-edit-data', pk=version.pk)
@@ -119,12 +119,12 @@ def upload_file(request, pk):
 @login_required
 def upload_edit_data(request, pk):
     try:
-        version = ExtensionVersion.objects.get(pk=pk)
-    except ExtensionVersion.DoesNotExist:
+        version = models.ExtensionVersion.objects.get(pk=pk)
+    except models.ExtensionVersion.DoesNotExist:
         return HttpResponseForbidden()
 
     extension = version.extension
-    if extension.is_published:
+    if version.status in models.REVIEWED_STATUSES:
         return HttpResponseForbidden()
 
     if (extension.creator != request.user and not \
@@ -137,10 +137,11 @@ def upload_edit_data(request, pk):
             extension.name = form.cleaned_data['name']
             extension.description = form.cleaned_data['description']
             extension.url = form.cleaned_data['url']
-            extension.is_published = True
             extension.save()
 
             version.replace_metadata_json()
+            # XXX: for now until code review happens
+            version.status = models.STATUS_ACTIVE
             version.save()
 
             return redirect('extensions-detail', pk=extension.pk)

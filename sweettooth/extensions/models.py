@@ -12,7 +12,16 @@ import autoslug
 import tagging
 from sorl import thumbnail
 
-# Create your models here.
+STATUS_NEW, STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE = xrange(4)
+STATUSES = {
+    STATUS_NEW: u"New",
+    STATUS_REJECTED: u"Rejected",
+    STATUS_INACTIVE: u"Invactive",
+    STATUS_ACTIVE: u"Active",
+}
+
+VISIBLE_STATUSES = (STATUS_ACTIVE,)
+REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
 
 class Extension(models.Model):
     name = models.CharField(max_length=200)
@@ -22,7 +31,7 @@ class Extension(models.Model):
     description = models.TextField()
     url = models.URLField()
     created = models.DateTimeField(auto_now_add=True)
-    is_published = models.BooleanField(default=False, db_index=True)
+
     def __unicode__(self):
         return self.uuid
 
@@ -33,8 +42,16 @@ class Extension(models.Model):
         except self.tags.model.DoesNotExist:
             return False
 
-    def get_latest_version(self):
-        return self.versions.order_by("-version")[0]
+    @property
+    def visible_versions(self):
+        return self.versions.filter(status__in=VISIBLE_STATUSES)
+
+    @property
+    def latest_version(self):
+        qs = self.visible_versions.order_by("-version")
+        if qs.exists():
+            return qs[0]
+        return None
 
 tagging.register(Extension)
 
@@ -45,6 +62,7 @@ class ExtensionVersion(models.Model):
     extension = models.ForeignKey(Extension, related_name="versions")
     version = models.IntegerField(default=0)
     extra_json_fields = models.TextField()
+    status = models.PositiveIntegerField(choices=STATUSES.items())
 
     class Meta:
         unique_together = ('extension', 'version'),
@@ -103,6 +121,7 @@ class ExtensionVersion(models.Model):
             extension.uuid = metadata.pop('uuid', str(uuid.uuid1()))
 
         version = ExtensionVersion()
+        version.status = STATUS_NEW
         version.extra_json_fields = json.dumps(metadata)
 
         # get version number

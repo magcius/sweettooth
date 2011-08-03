@@ -13,7 +13,7 @@ class ScreenshotAdmin(AdminImageMixin, admin.TabularInline):
     list_display = 'title', 'image'
 
 class ExtensionAdmin(admin.ModelAdmin):
-    list_display = 'is_published', 'name', 'num_versions', 'creator'
+    list_display = 'name', 'num_versions', 'creator'
     list_display_links = 'name',
 
     def num_versions(self, ext):

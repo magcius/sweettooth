@@ -3,7 +3,7 @@
 {% block body %}
   <ul>
   {% for extension in extensions %}
-  {% with version=extension.get_latest_version %}
+  {% with version=extension.latest_version %}
     <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{% manifest_url version %}">
       <div class="button"></div>
       <a href="{% url extensions-detail pk=extension.pk %}" class="title-link">
