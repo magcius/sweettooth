@@ -23,6 +23,8 @@ class Extension(models.Model):
     url = models.URLField()
     created = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False, db_index=True)
+    def __unicode__(self):
+        return self.uuid
 
     def is_featured(self):
         try:
@@ -46,6 +48,9 @@ class ExtensionVersion(models.Model):
 
     class Meta:
         unique_together = ('extension', 'version'),
+
+    def __unicode__(self):
+        return "Version %d of %s" % (self.version, self.extension)
 
     def make_filename(self, filename):
         return os.path.join(self.extension.uuid, str(self.version),
