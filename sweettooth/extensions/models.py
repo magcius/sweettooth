@@ -53,6 +53,13 @@ class Extension(models.Model):
             return qs[0]
         return None
 
+    def user_has_access(self, user):
+        if user == self.creator:
+            return True
+        if user.has_perm('extensions.can-modify-data'):
+            return True
+        return False
+
 tagging.register(Extension)
 
 class InvalidExtensionData(Exception):

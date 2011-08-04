@@ -56,10 +56,8 @@ class ExtensionVersionView(DetailView):
 @login_required
 def upload_screenshot(request, pk):
     extension = get_object_or_404(models.Extension, pk=pk)
-    if request.user.has_perm('extensions.can-modify-data') or extension.creator == request.user:
-        pass
-    else:
-        return HttpResponseForbidden()
+    if not extension.user_has_access(request.user):
+        return
 
     if request.method == 'POST':
         form = UploadScreenshotForm(request.POST, request.FILES)
@@ -127,8 +125,7 @@ def upload_edit_data(request, pk):
     if version.status in models.REVIEWED_STATUSES:
         return HttpResponseForbidden()
 
-    if (extension.creator != request.user and not \
-        request.user.has_perm('extensions.can-modify-data')):
+    if not extension.user_has_access(request.user):
         return HttpResponseForbidden()
 
     if request.method == 'POST':
