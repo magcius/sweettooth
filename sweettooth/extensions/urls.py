@@ -9,7 +9,6 @@ from extensions import views, models
 upload_patterns = patterns('',
     url(r'^$', views.upload_file, dict(pk=None), name='extensions-upload-file'),
     url(r'^new-version/(?P<pk>\d+)/$', views.upload_file, name='extensions-upload-file'),
-    url(r'^edit-data/(?P<pk>\d+)/$', views.upload_edit_data, name='extensions-edit-data'),
 )
 
 data_patterns = patterns('',
@@ -19,6 +18,11 @@ data_patterns = patterns('',
     url(r'^downloads/(?P<uuid>.+)\.(?P<ver>\d+)\.shell-extension\.zip$',
         views.download, name='extensions-download'),
 )
+
+ajax_patterns = patterns('',
+    url('^i/(?P<pk>\d+)', views.AjaxInlineEditView.as_view(), name='extensions-ajax-inline'),
+)
+
 
 urlpatterns = patterns('',
     url(r'^$', ListView.as_view(model=models.Extension,
@@ -41,4 +45,5 @@ urlpatterns = patterns('',
 
     url('^upload/', include(upload_patterns)),
     url('^extension-data/', include(data_patterns)),
+    url('^ajax/', include(ajax_patterns)),
 )

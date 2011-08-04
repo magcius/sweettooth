@@ -73,6 +73,29 @@ class ExtensionVersionView(DetailView):
                            ext_pk=self.object.extension.pk))
         return redirect('extensions-version-detail', **kwargs)
 
+class AjaxInlineEditView(SingleObjectMixin, View):
+    model = models.Extension
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseForbidden()
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        key = self.request.POST['id']
+        value = self.request.POST['value']
+        if key.startswith('extension_'):
+            key = key[len('extension_'):]
+
+        whitelist = 'name', 'description', 'url'
+        if key not in whitelist:
+            return HttpResponseForbidden()
+
+        setattr(self.object, key, value)
+        self.object.save()
+
+        return HttpResponse(mark_for_escaping(value))
+
 @login_required
 def upload_screenshot(request, pk):
     extension = get_object_or_404(models.Extension, pk=pk)
@@ -114,45 +137,11 @@ def upload_file(request, pk):
             version.status = models.STATUS_NEW
             version.save()
 
-            return redirect('extensions-edit-data', pk=version.pk)
+            return redirect('extensions-version-detail',
+                            pk=version.pk,
+                            ext_pk=extension.pk,
+                            slug=extension.slug)
     else:
         form = UploadForm()
 
     return render(request, 'extensions/upload-file.html', dict(form=form))
-
-@login_required
-def upload_edit_data(request, pk):
-    try:
-        version = models.ExtensionVersion.objects.get(pk=pk)
-    except models.ExtensionVersion.DoesNotExist:
-        return HttpResponseForbidden()
-
-    extension = version.extension
-    if version.status in models.REVIEWED_STATUSES:
-        return HttpResponseForbidden()
-
-    if not extension.user_has_access(request.user):
-        return HttpResponseForbidden()
-
-    if request.method == 'POST':
-        form = ExtensionDataForm(request.POST)
-        if form.is_valid():
-            extension.name = form.cleaned_data['name']
-            extension.description = form.cleaned_data['description']
-            extension.url = form.cleaned_data['url']
-            extension.save()
-
-            version.replace_metadata_json()
-            # XXX: for now until code review happens
-            version.status = models.STATUS_ACTIVE
-            version.save()
-
-            return redirect('extensions-detail', pk=extension.pk)
-    else:
-        initial = dict(name=extension.name,
-                       description=extension.description,
-                       url=extension.url)
-
-        form = ExtensionDataForm(initial=initial)
-
-    return render(request, 'extensions/upload-edit-data.html', dict(form=form))

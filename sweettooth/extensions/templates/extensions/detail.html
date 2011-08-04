@@ -2,6 +2,16 @@
 {% load thumbnail %}
 {% load manifest %}
 {% block title %} {{ version.extension.name }} - GNOME Shell Extensions {% endblock %}
+
+{% if is_preview %}
+{% block extra-messages %}
+    <p class="message info">
+      This is a preview of how your extension's page will look.
+      You can edit any of the things marked in yellow by clicking on them.
+    </p>
+{% endblock %}
+{% endif %}
+
 {% block body %}
 {% with extension=version.extension %}
     <div class="extension"
@@ -14,9 +24,9 @@
       {% endthumbnail %}
       {% endfor %}
 
-      <h3> {{ extension.name }} </h3>
+      <h3 id="extension_name">{{ extension.name }}</h3>
       <span class="author">by {{ extension.creator }}</span>
-      <p class="description">
+      <p class="description" id="extension_description">
         {{ extension.description }}
       </p>
 
@@ -27,7 +37,11 @@
         {% endif %}
       </ul>
       <hr>
+      {% if is_preview %}
+      Comments will appear here after review.
+      {% else %}
       {% include "extensions/comments.html" %}
+      {% endif %}
 </div>
 {% endwith %}
 {% endblock %}
@@ -39,4 +53,5 @@
       $(this).find('input').rating();
     });
     $("form .rating").rating();
+    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}", "{{ csrf_token }}");
 {% endblock %}

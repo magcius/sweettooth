@@ -4,6 +4,10 @@
 @import url("tipsy.css");
 @import url("jquery.rating.css");
 
+form input {
+    font-size: 100%;
+}
+
 #global_domain_bar div, #global_domain_bar div a {
     position: relative;
 }
@@ -143,6 +147,10 @@ p.error {
     background-repeat: no-repeat;
     background-position: 8px center;
     font-size: 2em;
+}
+
+.editable {
+    background-color: #F4F0D4;
 }
 
 #comments {
