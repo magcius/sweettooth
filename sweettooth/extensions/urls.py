@@ -31,14 +31,14 @@ urlpatterns = patterns('',
 
     url(r'^extensions/tags/(?P<tag>.+)/$', tagged_object_list, name='extensions-tags'),
 
-    url(r'^extension/(?P<pk>\d+)/(?P<slug>.+)',
-        views.ExtensionLatestVersionView.as_view(), name='extensions-detail'),
-    url(r'^extension/(?P<pk>\d+)/',
-        views.ExtensionLatestVersionView.as_view(), dict(slug=None), name='extensions-detail'),
-
     # we ignore PK of extension, and get extension from version PK
-    url(r'^extension/(?P<ext_pk>\d+)/(?P<slug>.+)/version/(?P<pk>\d+)/',
+    url(r'^extension/(?P<ext_pk>\d+)/(?P<slug>.+)/version/(?P<pk>\d+)/$',
         views.ExtensionVersionView.as_view(), name='extensions-version-detail'),
+
+    url(r'^extension/(?P<pk>\d+)/(?P<slug>.+)/$',
+        views.ExtensionLatestVersionView.as_view(), name='extensions-detail'),
+    url(r'^extension/(?P<pk>\d+)/$',
+        views.ExtensionLatestVersionView.as_view(), dict(slug=None), name='extensions-detail'),
 
     url(r'^extension/upload-screenshot/(?P<pk>\d+)',
         views.upload_screenshot, name='extensions-upload-screenshot'),
