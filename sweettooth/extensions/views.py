@@ -5,7 +5,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
-from django.views.generic import DetailView
+from django.views.generic import DetailView, View
+from django.views.generic.detail import SingleObjectMixin
+from django.utils.safestring import mark_for_escaping
 
 from extensions import models
 from extensions.forms import UploadScreenshotForm, UploadForm, ExtensionDataForm
@@ -50,6 +52,26 @@ class ExtensionVersionView(DetailView):
     model = models.ExtensionVersion
     context_object_name = "version"
     template_name = "extensions/detail.html"
+
+    def get(self, request, **kwargs):
+        # Redirect if we don't match the slug or extension PK.
+        slug = self.kwargs.get('slug')
+        extpk = self.kwargs.get('ext_pk')
+        self.object = self.get_object()
+        try:
+            extpk = int(extpk)
+        except ValueError:
+            extpk = None
+
+        if slug == self.object.extension.slug and extpk == self.object.extension.pk:
+            context = self.get_context_data(object=self.object)
+            context['is_preview'] = is_preview
+            return self.render_to_response(context)
+
+        kwargs = dict(self.kwargs)
+        kwargs.update(dict(slug=self.object.extension.slug,
+                           ext_pk=self.object.extension.pk))
+        return redirect('extensions-version-detail', **kwargs)
 
 @login_required
 def upload_screenshot(request, pk):
