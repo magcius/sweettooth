@@ -90,6 +90,8 @@ define(['jquery', 'messages', 'dbus!_',
 
                 button.data('elem', elem);
                 button.switchify();
+                if (button.hasClass('insensitive'))
+                    return;
 
                 button.bind('changed', function(e, newValue) {
                     var oldState = elem.data('state');
