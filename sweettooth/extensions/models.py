@@ -12,9 +12,13 @@ import autoslug
 import tagging
 from sorl import thumbnail
 
-STATUS_NEW, STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE = xrange(4)
+(STATUS_NEW, STATUS_LOCKED,
+ STATUS_REJECTED, STATUS_INACTIVE,
+ STATUS_ACTIVE) = xrange(5)
+
 STATUSES = {
     STATUS_NEW: u"New",
+    STATUS_LOCKED: u"Unreviewed and Locked",
     STATUS_REJECTED: u"Rejected",
     STATUS_INACTIVE: u"Invactive",
     STATUS_ACTIVE: u"Active",
