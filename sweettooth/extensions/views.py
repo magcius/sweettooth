@@ -70,7 +70,7 @@ def upload_screenshot(request, pk):
 
         return redirect('extensions-detail', pk=extension.pk)
     else:
-        form = UploadScreenshotForm(initial=dict(extension="FOO"))
+        form = UploadScreenshotForm(initial=dict(extension=extension))
 
     return render(request, 'extensions/upload-screenshot.html', dict(form=form))
 
