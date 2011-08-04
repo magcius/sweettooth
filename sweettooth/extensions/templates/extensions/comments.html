@@ -1,0 +1,29 @@
+<div id="comments">
+  <h4>User comments</h4>
+  {% load comments %}
+  {% load gravatar %}
+  {% load rating %}
+  {% get_comment_list for extension as comments %}
+  {% for comment in comments %} 
+  <div class="comment">
+    <img src="{% gravatar_url comment.user_email %}" class="gravatar">
+    <div class="rating-author">
+      <div class="rating">
+        {% rating comment.rating 5 %}
+      </div> by
+      <span class="comment-author">{{ comment.user_name }}</span>
+    </div>
+    <p>{{ comment.comment }}</p>
+    <abbr class="timestamp" title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</abbr>
+  </div>
+  <hr>
+  {% empty %}
+  There are no comments.
+  {% endfor %}
+</div>
+<div id="new-comment-form">
+  <div>
+    <h4>Your opinion</h4>
+    {% render_comment_form for extension %}
+  </div>
+</div>
