@@ -39,8 +39,6 @@ urlpatterns = patterns('',
     url(r'^extension/upload-screenshot/(?P<pk>\d+)',
         views.upload_screenshot, name='extensions-upload-screenshot'),
 
-    url(r'^modifytag/(?P<tag>.+)', views.modify_tag),
-
     url('^upload/', include(upload_patterns)),
     url('^extension-data/', include(data_patterns)),
 )

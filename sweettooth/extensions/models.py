@@ -35,13 +35,6 @@ class Extension(models.Model):
     def __unicode__(self):
         return self.uuid
 
-    def is_featured(self):
-        try:
-            tag = self.tags.get(name="featured")
-            return True
-        except self.tags.model.DoesNotExist:
-            return False
-
     @property
     def visible_versions(self):
         return self.versions.filter(status__in=VISIBLE_STATUSES)

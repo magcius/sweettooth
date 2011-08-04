@@ -72,20 +72,6 @@ def upload_screenshot(request, pk):
 
     return render(request, 'extensions/upload-screenshot.html', dict(form=form))
 
-@permission_required('extensions.can-modify-tags')
-def modify_tag(request, tag):
-    uuid = request.GET.get('uuid')
-    action = request.GET.get('action')
-    extension = get_object_or_404(models.Extension, uuid=uuid)
-
-    if action == 'add':
-        Tag.objects.add_tag(extension, tag)
-    elif action == 'rm':
-        Tag.objects.update_tags(extension, [t for t in extension.tags if t.name != tag])
-
-    return HttpResponse("true" if extension.is_featured() else "false")
-
-
 @login_required
 def upload_file(request, pk):
     if pk is None:

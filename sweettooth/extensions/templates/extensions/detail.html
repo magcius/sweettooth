@@ -24,9 +24,6 @@
         <li><a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a></li>
         <li><a href="{% url extensions-upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
         {% endif %}
-        {% if user.is_superuser %}
-        <li><a class="ajax-featured" href="#" data-uuid="{{ extension.uuid }}"></a></li>
-        {% endif %}
       </ul>
       <hr>
       <div id="comments">
@@ -61,7 +58,6 @@
     </div>
 {% endwith %}
 {% endblock %}
-{% with extension=version.extension %}
 {% block document-ready %}
     {{ block.super }}
     $("abbr.timestamp").timeago();
@@ -70,9 +66,4 @@
       $(this).find('input').rating();
     });
     $("form .rating").rating();
-
-    {% if user.is_superuser %}
-    $("a.ajax-featured").featureToggleify({{ extension.is_featured|yesno:"true,false" }});
-    {% endif %}
 {% endblock %}
-{% endwith %}
