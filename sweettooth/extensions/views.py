@@ -1,11 +1,9 @@
 
 import json
 
-from tagging.models import Tag
-
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.generic import DetailView
 
