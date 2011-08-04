@@ -3,8 +3,9 @@ import json
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.views.generic import DetailView, View
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.safestring import mark_for_escaping
@@ -36,6 +37,9 @@ class ExtensionLatestVersionView(DetailView):
         # Redirect if we don't match the slug.
         slug = self.kwargs.get('slug')
         self.object = self.get_object()
+        if self.object is None:
+            raise Http404()
+
         if slug == self.object.extension.slug:
             context = self.get_context_data(object=self.object)
             return self.render_to_response(context)
@@ -54,10 +58,24 @@ class ExtensionVersionView(DetailView):
     template_name = "extensions/detail.html"
 
     def get(self, request, **kwargs):
+        self.object = self.get_object()
+
+        if self.object is None:
+            raise Http404()
+
+        is_preview = False
+        if self.object.status == models.STATUS_NEW:
+            # If it's unreviewed and unlocked, this is a preview
+            # for pre-lock.
+            is_preview = True
+
+            # Don't allow anybody (even moderators) to peek pre-lock.
+            if self.object.extension.creator != request.user:
+                raise Http404()
+
         # Redirect if we don't match the slug or extension PK.
         slug = self.kwargs.get('slug')
         extpk = self.kwargs.get('ext_pk')
-        self.object = self.get_object()
         try:
             extpk = int(extpk)
         except ValueError:
