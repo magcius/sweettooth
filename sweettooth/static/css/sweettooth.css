@@ -137,16 +137,26 @@ li.extension:hover {
     padding: 1em;
 }
 
-p.error {
+p.message {
     display: block;
-    background: #fcc;
     padding: .5em;
     margin: 0 auto;
-    background-image: url(http://git.gnome.org/browse/gnome-icon-theme/plain/gnome/48x48/status/dialog-error.png);
-    padding-left: 64px;
+    padding-left: 72px;
     background-repeat: no-repeat;
-    background-position: 8px center;
-    font-size: 2em;
+    background-position: 16px center;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+p.message.error {
+    background-color: #fcc;
+    background-image: url(http://git.gnome.org/browse/gnome-icon-theme/plain/gnome/48x48/status/dialog-error.png);
+    border-bottom: 1px solid #b44;
+}
+
+p.message.info {
+    background-color: #ccf;
+    background-image: url(http://git.gnome.org/browse/gnome-icon-theme/plain/gnome/48x48/status/dialog-information.png);
+    border-bottom: 1px solid #aad;
 }
 
 .editable {

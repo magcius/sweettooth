@@ -38,15 +38,17 @@
       </div>
     </div>
 
-    <div id="message_container">
-    {% for message in messages %}
-      <div class="message {{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-    </div>
-
     <div id="gnome_container">
       <div class="maxwidth">
         <div id="content">
+          <div id="message_container">
+            {% for message in messages %}
+            <p class="message {{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+
+            {% block extra-messages %}
+            {% endblock %}
+          </div>
           {% block body %}
           {% endblock %}
         </div>
