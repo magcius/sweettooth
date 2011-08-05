@@ -25,7 +25,7 @@ ajax_patterns = patterns('',
 
 
 urlpatterns = patterns('',
-    url(r'^$', ListView.as_view(model=models.Extension,
+    url(r'^$', ListView.as_view(queryset=models.Extension.objects.visible(),
                                 context_object_name="extensions",
                                 template_name="extensions/list.html"), name='extensions-index'),
 

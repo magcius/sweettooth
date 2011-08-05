@@ -27,6 +27,10 @@ STATUSES = {
 VISIBLE_STATUSES = (STATUS_ACTIVE,)
 REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
 
+class ExtensionManager(models.Manager):
+    def visible(self):
+        return self.filter(versions__status__in=VISIBLE_STATUSES)
+
 class Extension(models.Model):
     name = models.CharField(max_length=200)
     uuid = models.CharField(max_length=200, unique=True, db_index=True)
@@ -35,6 +39,8 @@ class Extension(models.Model):
     description = models.TextField()
     url = models.URLField()
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = ExtensionManager()
 
     def __unicode__(self):
         return self.uuid
