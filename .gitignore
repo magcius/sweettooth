@@ -5,6 +5,7 @@
 *.pyo
 *.db
 .#*
+*_flymake*
 venv
 Demos
 sweettooth/uploaded-files
