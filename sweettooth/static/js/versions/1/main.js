@@ -1,4 +1,6 @@
-define(['jquery', '_DBUS_PLG'], function($, pluginObject) {
+"use strict";
+
+define(['jquery', 'dbus!API'], function($, API) {
     function _makePromise(result) {
         // Make a new completed promise -- when we move the plugin
         // over to async, we can remove this.
@@ -7,33 +9,33 @@ define(['jquery', '_DBUS_PLG'], function($, pluginObject) {
 
     var proxy = {
         ListExtensions: function() {
-            return _makePromise(pluginObject.listExtensions());
+            return _makePromise(API.listExtensions());
         },
 
         GetExtensionInfo: function(uuid) {
-            return _makePromise(pluginObject.getExtensionInfo(uuid));
+            return _makePromise(API.getExtensionInfo(uuid));
         },
 
         GetErrors: function(uuid) {
-            return _makePromise(pluginObject.getExtensionErrors(uuid));
+            return _makePromise(API.getExtensionErrors(uuid));
         },
 
         EnableExtension: function(uuid) {
-            pluginObject.setExtensionEnabled(uuid, true);
+            API.setExtensionEnabled(uuid, true);
         },
 
         DisableExtension: function(uuid) {
-            pluginObject.setExtensionEnabled(uuid, false);
+            API.setExtensionEnabled(uuid, false);
         },
 
         InstallExtension: function(manifest) {
-            pluginObject.installExtension(manifest);
+            API.installExtension(manifest);
         },
 
         extensionStateChangedHandler: null
     };
 
-    pluginObject.onchange = function(uuid, newState, error) {
+    API.onchange = function(uuid, newState, error) {
         try {
             proxy.extensionStateChangedHandler(uuid, newState, error);
         } catch(e) {
