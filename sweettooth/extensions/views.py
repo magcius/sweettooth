@@ -11,7 +11,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.utils.safestring import mark_for_escaping
 
 from extensions import models
-from extensions.forms import UploadScreenshotForm, UploadForm, ExtensionDataForm
+from extensions.forms import UploadForm, ExtensionDataForm
 
 def manifest(request, uuid, ver):
     version = get_object_or_404(models.ExtensionVersion, pk=ver)
@@ -113,25 +113,6 @@ class AjaxInlineEditView(SingleObjectMixin, View):
         self.object.save()
 
         return HttpResponse(mark_for_escaping(value))
-
-@login_required
-def upload_screenshot(request, pk):
-    extension = get_object_or_404(models.Extension, pk=pk)
-    if not extension.user_has_access(request.user):
-        return
-
-    if request.method == 'POST':
-        form = UploadScreenshotForm(request.POST, request.FILES)
-        if form.is_valid():
-            screenshot = form.save(commit=False)
-            screenshot.extension = extension
-            screenshot.save()
-
-        return redirect('extensions-detail', pk=extension.pk)
-    else:
-        form = UploadScreenshotForm(initial=dict(extension=extension))
-
-    return render(request, 'extensions/upload-screenshot.html', dict(form=form))
 
 @login_required
 def upload_file(request, pk):

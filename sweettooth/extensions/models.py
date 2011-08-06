@@ -40,6 +40,11 @@ class Extension(models.Model):
     url = models.URLField(verify_exists=False)
     created = models.DateTimeField(auto_now_add=True)
 
+    def make_screenshot_filename(self, filename):
+        return os.path.join(self.uuid, filename)
+
+    screenshot = thumbnail.ImageField(upload_to=make_screenshot_filename, blank=True)
+
     objects = ExtensionManager()
 
     def __unicode__(self):
@@ -168,12 +173,3 @@ class ExtensionVersion(models.Model):
         extension, version = cls.from_metadata_json(metadata, extension)
         zipfile.close()
         return extension, version
-
-class Screenshot(models.Model):
-    extension = models.ForeignKey(Extension)
-    title = models.TextField()
-
-    def make_filename(self, filename):
-        return os.path.join(self.extension.uuid, filename)
-
-    image = thumbnail.ImageField(upload_to=make_filename)

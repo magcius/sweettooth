@@ -18,11 +18,9 @@
          data-uuid="{{ extension.uuid }}"
          data-manifest="{% manifest_url version %}">
       <div class="button{% if is_preview %} insensitive{% endif %}"></div>
-      {% for screenshot in extension.screenshot_set.all %}
-      {% thumbnail screenshot.image "300x200" as th %}
-      <a href="{{ screenshot.image.url }}" class="screenshot featured"><img src="{{ th.url }}" /></a>
+      {% thumbnail extension.screenshot "300x200" as th %}
+      <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
       {% endthumbnail %}
-      {% endfor %}
 
       <h3 id="extension_name">{{ extension.name }}</h3>
       <span class="author">by {{ extension.creator }}</span>
@@ -33,7 +31,6 @@
       <ul>
         {% if user == extension.creator %}
         <li><a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a></li>
-        <li><a href="{% url extensions-upload-screenshot pk=extension.pk %}">Upload screenshot</a></li>
         {% endif %}
       </ul>
       <hr>

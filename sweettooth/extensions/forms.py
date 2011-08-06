@@ -1,11 +1,5 @@
 
 from django import forms
-from extensions import models
-
-class UploadScreenshotForm(forms.ModelForm):
-    class Meta:
-        model = models.Screenshot
-        exclude = 'extension',
 
 class UploadForm(forms.Form):
     source = forms.FileField()
