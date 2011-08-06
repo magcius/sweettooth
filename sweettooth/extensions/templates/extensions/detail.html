@@ -44,10 +44,12 @@
 {% endblock %}
 {% block document-ready %}
     {{ block.super }}
-    $("abbr.timestamp").timeago();
-    $(".extension").buttonify();
-    $(".comment .rating").each(function() {
-      $(this).find('input').rating();
+    require(['jquery.timeago', 'jquery.rating', 'buttons'], function() {
+        $("abbr.timestamp").timeago();
+        $(".extension").buttonify();
+        $(".comment .rating").each(function() {
+            $(this).find('input').rating();
+        });
     });
     $("form .rating").rating();
     $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}", "{{ csrf_token }}");

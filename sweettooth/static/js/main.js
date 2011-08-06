@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'jquery.timeago', 'jquery.rating', 'jquery.jeditable', 'buttons'], function($) {
+require(['jquery', 'jquery.jeditable'], function($) {
     $.fn.csrfEditable = function(url, tok) {
         var self = this;
 
@@ -17,7 +17,6 @@ require(['jquery', 'jquery.timeago', 'jquery.rating', 'jquery.jeditable', 'butto
                            return $.trim(string, settings);
                        }});
         self.addClass("editable");
-
     };
 
     $(document).ready(function() {
