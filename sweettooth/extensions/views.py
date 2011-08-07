@@ -16,6 +16,9 @@ from extensions.forms import UploadForm, ExtensionDataForm
 def manifest(request, uuid, ver):
     version = get_object_or_404(models.ExtensionVersion, pk=ver)
 
+    if version.status != models.STATUS_ACTIVE:
+        return HttpResponseForbidden()
+
     url = reverse('extensions-download', kwargs=dict(uuid=uuid, ver=ver))
 
     manifestdata = version.make_metadata_json()
@@ -26,6 +29,10 @@ def manifest(request, uuid, ver):
 
 def download(request, uuid, ver):
     version = get_object_or_404(models.ExtensionVersion, pk=ver)
+
+    if version.status != models.STATUS_ACTIVE:
+        return HttpResponseForbidden()
+
     return redirect(version.source.url)
 
 class ExtensionLatestVersionView(DetailView):
