@@ -7,6 +7,7 @@ from zipfile import ZipFile, BadZipfile
 from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.db import models
+from django.dispatch import Signal
 
 import autoslug
 import tagging
@@ -112,12 +113,15 @@ class ExtensionVersion(models.Model):
         data.update(fields)
         return data
 
+    def get_zipfile(self, mode):
+        return ZipFile(self.source.storage.path(self.source.name), mode)
+
     def replace_metadata_json(self):
         """
         In the uploaded extension zipfile, edit metadata.json
         to reflect the new contents.
         """
-        zipfile = ZipFile(self.source.storage.path(self.source.name), "a")
+        zipfile = self.get_zipfile("a")
         metadata = self.make_metadata_json()
         zipfile.writestr("metadata.json", json.dumps(metadata, sort_keys=True, indent=2))
         zipfile.close()
@@ -173,3 +177,5 @@ class ExtensionVersion(models.Model):
         extension, version = cls.from_metadata_json(metadata, extension)
         zipfile.close()
         return extension, version
+
+submitted_for_review = Signal(providing_args=["version"])

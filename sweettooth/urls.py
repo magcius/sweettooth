@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     url(r'^', include('auth.urls')),
     url(r'^', include('extensions.urls'), name='index'),
 
+    url(r'^review/', include('review.urls')),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^comments/', include('django.contrib.comments.urls')),
 )

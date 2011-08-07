@@ -104,6 +104,25 @@ class ExtensionVersionView(DetailView):
                            ext_pk=self.object.extension.pk))
         return redirect('extensions-version-detail', **kwargs)
 
+class AjaxSubmitAndLockView(SingleObjectMixin, View):
+    model = models.ExtensionVersion
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseForbidden()
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not self.object.extension.user_has_access(request.user):
+            return HttpResponseForbidden()
+
+        self.object.status = models.STATUS_LOCKED
+        self.object.save()
+
+        models.submitted_for_review.send(version=self)
+
+        return HttpResponse()
+
 class AjaxInlineEditView(SingleObjectMixin, View):
     model = models.Extension
 

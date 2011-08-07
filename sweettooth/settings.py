@@ -143,6 +143,7 @@ INSTALLED_APPS = (
 
     'extensions',
     'auth',
+    'review',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
