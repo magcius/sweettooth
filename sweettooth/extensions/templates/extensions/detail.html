@@ -9,9 +9,14 @@
          data-uuid="{{ extension.uuid }}"
          data-manifest="{% manifest_url version %}">
       <div class="button"></div>
+      {% if extension.screenshot %}
       {% thumbnail extension.screenshot "300x200" as th %}
       <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
       {% endthumbnail %}
+      {% else %}
+      {% block no-screenshot %}
+      {% endblock %}
+      {% endif %}
 
       <h3 id="extension_name">{{ extension.name }}</h3>
       <span class="author">by {{ extension.creator }}</span>
@@ -35,6 +40,6 @@
             $(this).find('input').rating();
         });
     });
+
     $("form .rating").rating();
-    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}", "{{ csrf_token }}");
 {% endblock %}

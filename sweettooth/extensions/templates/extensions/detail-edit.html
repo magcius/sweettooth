@@ -35,3 +35,10 @@
 
     $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}", "{{ csrf_token }}");
 {% endblock %}
+
+{% block no-screenshot %}
+<div class="screenshot upload">
+  <span>Upload a screenshot</span>
+  <input type="file" accept="image/*">
+</div>
+{% endblock %}

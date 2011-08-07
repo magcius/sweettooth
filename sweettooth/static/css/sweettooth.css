@@ -98,8 +98,36 @@ li.extension:hover {
     font-size: 14pt;
 }
 
-.extension .screenshot.featured {
+.extension .screenshot {
     float: right;
+}
+
+.extension .screenshot.upload {
+    display: block;
+    width: 300px;
+    height: 200px;
+    margin-left: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #eee;
+    border: 2px dashed #ccc;
+    display: table;
+    cursor: pointer;
+}
+
+.extension .screenshot.upload:hover {
+    background-color: #f5f5f5;
+    color: #4F5658;
+}
+
+.extension .screenshot.upload span {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.extension .screenshot.upload input {
+    display: none;
 }
 
 #comments {
