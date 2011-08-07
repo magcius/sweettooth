@@ -3,21 +3,12 @@
 {% load manifest %}
 {% block title %} {{ version.extension.name }} - GNOME Shell Extensions {% endblock %}
 
-{% if is_preview %}
-{% block extra-messages %}
-    <p class="message info">
-      This is a preview of how your extension's page will look.
-      You can edit any of the things marked in yellow by clicking on them.
-    </p>
-{% endblock %}
-{% endif %}
-
 {% block body %}
 {% with extension=version.extension %}
     <div class="extension"
          data-uuid="{{ extension.uuid }}"
          data-manifest="{% manifest_url version %}">
-      <div class="button{% if is_preview %} insensitive{% endif %}"></div>
+      <div class="button"></div>
       {% thumbnail extension.screenshot "300x200" as th %}
       <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
       {% endthumbnail %}
@@ -27,18 +18,11 @@
       <p class="description" id="extension_description">
         {{ extension.description }}
       </p>
-
-      <ul>
-        {% if user == extension.creator %}
-        <li><a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a></li>
-        {% endif %}
-      </ul>
       <hr>
-      {% if is_preview %}
-      Comments will appear here after review.
-      {% else %}
+
+      {% block comments %}
       {% include "extensions/comments.html" %}
-      {% endif %}
+      {% endblock comments %}
 </div>
 {% endwith %}
 {% endblock %}

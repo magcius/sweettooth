@@ -55,7 +55,13 @@ class ExtensionLatestVersionView(DetailView):
 class ExtensionVersionView(DetailView):
     model = models.ExtensionVersion
     context_object_name = "version"
-    template_name = "extensions/detail.html"
+
+    @property
+    def template_name(self):
+        # If the user can edit the model, let him do so.
+        if self.object.extension.user_has_access(self.request.user):
+            return "extensions/detail-edit.html"
+        return "extensions/detail.html"
 
     def get(self, request, **kwargs):
         self.object = self.get_object()

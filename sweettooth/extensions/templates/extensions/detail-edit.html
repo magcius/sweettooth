@@ -1,0 +1,37 @@
+{% extends "extensions/detail.html" %}
+
+{% if is_preview %}
+  {% block extra-messages %}
+    {{ block.super }}
+    <p class="message info">
+      This is a preview of how your extension's page will look.
+      You can edit any of the things marked in yellow by clicking on them.
+    </p>
+  {% endblock %}
+{% endif %}
+
+{% block comments %}
+  {% if is_preview %}
+    Comments will appear here after review.
+  {% else %}
+    {% include "extensions/comments.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra-extension-info %}
+    <ul>
+      {% if user == extension.creator %}
+      <li><a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a></li>
+      {% endif %}
+    </ul>
+{% endblock %}
+
+
+{% block document-ready %}
+    require(['buttons'], function() {
+        $(".extension .button").addClass("insensitive");
+        $(".extension").buttonify();
+    });
+
+    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}", "{{ csrf_token }}");
+{% endblock %}
