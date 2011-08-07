@@ -4,7 +4,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 
-from django.views.generic import View
+from django.views.generic import View, DetailView
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.utils.safestring import mark_safe
@@ -43,3 +43,8 @@ class AjaxGetFilesView(SingleObjectMixin, View):
 
         return HttpResponse(mark_safe(json.dumps(files)),
                             content_type="application/json")
+
+class ReviewVersionView(DetailView):
+    model = models.ExtensionVersion
+    template_name = "review/review.html"
+    context_object_name = "version"

@@ -5,4 +5,5 @@ from review import views
 
 urlpatterns = patterns('',
     url('^ajax/v/(?P<pk>\d+)', views.AjaxGetFilesView.as_view(), name='review-ajax-files'),
+    url('^(?P<pk>\d+)', views.ReviewVersionView.as_view(), name='review-version'),
 )

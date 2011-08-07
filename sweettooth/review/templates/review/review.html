@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}Review "{{ version.extension.name }}" - {{ block.super }}{% endblock %}
+
+{% block body %}
+{% with extension=version.extension %}
+<h2 class="expanded"> Details Page Preview </h2>
+<div id="preview">
+  <div class="extension">
+    <div class="button insensitive"></div>
+      {% if extension.screenshot %}
+      {% thumbnail extension.screenshot "300x200" as th %}
+      <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
+      {% endthumbnail %}
+      {% else %}
+      {% block no-screenshot %}
+      {% endblock %}
+      {% endif %}
+
+      <h3>{{ extension.name }}</h3>
+      <span class="author">by {{ extension.creator }}</span>
+      <p class="description">
+        {{ extension.description }}
+      </p>
+      <hr>
+
+      No comments.
+  </div>
+</div>
+<h2 class="expanded"> Files </h2>
+<div id="files">
+</div>
+
+<h2 class="expanded"> Review </h2>
+<div id="review">
+  <form id="review_form">
+    <label for="comments">Overview</label>
+    <textarea id="comments"></textarea>
+  </form>
+</div>
+{% endwith %}
+{% endblock %}
+
+{% block document-ready %}
+  require(['review', 'switch'], function() {
+    $(".extension .button").switchify();
+    $("#files").reviewify("{% url review-ajax-files pk=version.pk %}");
+  });
+  $("h2").click(function() {
+    $(this).toggleClass("expanded").next().slideToggle();
+  }).not(".expanded").next().hide();
+{% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/static/css/review.css" />
+{% endblock %}
