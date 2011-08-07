@@ -100,6 +100,9 @@ class AjaxInlineEditView(SingleObjectMixin, View):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
+        if not self.object.user_has_access(request.user):
+            return HttpResponseForbidden()
+
         key = self.request.POST['id']
         value = self.request.POST['value']
         if key.startswith('extension_'):
