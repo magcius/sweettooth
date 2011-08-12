@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load thumbnail %}
 {% load manifest %}
-{% block title %} {{ version.extension.name }} - GNOME Shell Extensions {% endblock %}
+{% block title %}{{ version.extension.name }} - {{ block.super }}{% endblock %}
 
 {% block body %}
 {% with extension=version.extension %}
