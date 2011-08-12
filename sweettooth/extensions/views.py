@@ -1,5 +1,8 @@
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse

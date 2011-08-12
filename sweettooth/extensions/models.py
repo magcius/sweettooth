@@ -1,6 +1,10 @@
 
 import os
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 import uuid
 from zipfile import ZipFile, BadZipfile
 

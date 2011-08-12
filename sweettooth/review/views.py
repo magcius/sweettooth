@@ -1,5 +1,9 @@
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
