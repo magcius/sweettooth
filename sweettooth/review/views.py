@@ -52,3 +52,14 @@ class ReviewVersionView(DetailView):
     model = models.ExtensionVersion
     template_name = "review/review.html"
     context_object_name = "version"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not request.user.has_perm('extensions.can-modify-data'):
+            return HttpResponseForbidden()
+
+        if self.object.status != models.STATUS_LOCKED:
+            return HttpResponseForbidden()
+
+        return super(ReviewVersionView, self).get(request, *args, **kwargs)
