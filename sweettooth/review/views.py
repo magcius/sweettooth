@@ -59,7 +59,7 @@ class SubmitReviewView(SingleObjectMixin, View):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        if not request.user.has_perm('extensions.can-modify-data'):
+        if not request.user.has_perm("review.can-review-extensions"):
             return HttpResponseForbidden()
 
         if self.object.status != models.STATUS_LOCKED:
@@ -97,7 +97,7 @@ class ReviewVersionView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        if not request.user.has_perm('extensions.can-modify-data'):
+        if not request.user.has_perm("review.can-review-extensions"):
             return HttpResponseForbidden()
 
         if self.object.status != models.STATUS_LOCKED:
