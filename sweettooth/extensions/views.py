@@ -6,7 +6,6 @@ except ImportError:
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.views.generic import DetailView, View
@@ -80,7 +79,8 @@ class ExtensionVersionView(DetailView):
             raise Http404()
 
         is_preview = False
-        if self.object.status == models.STATUS_NEW:
+        status = self.object.status
+        if status == models.STATUS_NEW:
             # If it's unreviewed and unlocked, this is a preview
             # for pre-lock.
             is_preview = True
@@ -100,6 +100,9 @@ class ExtensionVersionView(DetailView):
         if slug == self.object.extension.slug and extpk == self.object.extension.pk:
             context = self.get_context_data(object=self.object)
             context['is_preview'] = is_preview
+            context['is_editable'] = status in models.EDITABLE_STATUSES
+            context['is_visible'] = status in models.VISIBLE_STATUSES
+            context['status'] = status
             return self.render_to_response(context)
 
         kwargs = dict(self.kwargs)
@@ -119,6 +122,9 @@ class AjaxSubmitAndLockView(SingleObjectMixin, View):
         if not self.object.extension.user_has_access(request.user):
             return HttpResponseForbidden()
 
+        if self.object.status != models.STATUS_NEW:
+            return HttpResponseForbidden()
+
         self.object.status = models.STATUS_LOCKED
         self.object.save()
 
@@ -136,6 +142,9 @@ class AjaxInlineEditView(SingleObjectMixin, View):
         self.object = self.get_object()
 
         if not self.object.user_has_access(request.user):
+            return HttpResponseForbidden()
+
+        if self.object.status not in models.EDITABLE_STATUSES:
             return HttpResponseForbidden()
 
         key = self.request.POST['id']

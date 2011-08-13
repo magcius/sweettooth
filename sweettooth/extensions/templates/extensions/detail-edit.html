@@ -11,10 +11,10 @@
 {% endif %}
 
 {% block comments %}
-  {% if is_preview %}
-    <p style="text-align: center;">Comments will appear here after review.</p>
-  {% else %}
+  {% if is_visible %}
     {% include "extensions/comments.html" %}
+  {% else %}
+    <p style="text-align: center;">Comments will appear here after review.</p>
   {% endif %}
 {% endblock %}
 
@@ -35,7 +35,9 @@
 
 {% block document-ready %}{{ block.super }}
     window._CSRF = "{{ csrf_token }}";
+    {% if is_editable %}
     $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}");
+    {% endif %}
 {% endblock %}
 
 {% block no-screenshot %}
