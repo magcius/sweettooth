@@ -11,5 +11,6 @@ urlpatterns = patterns('',
                                 template_name="review/list.html"), name='review-list'),
 
     url('^ajax/v/(?P<pk>\d+)', views.AjaxGetFilesView.as_view(), name='review-ajax-files'),
+    url('^submit/(?P<pk>\d+)', views.SubmitReviewView.as_view(), name='review-submit'),
     url('^(?P<pk>\d+)', views.ReviewVersionView.as_view(), name='review-version'),
 )

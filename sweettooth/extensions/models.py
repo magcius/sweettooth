@@ -184,3 +184,4 @@ class ExtensionVersion(models.Model):
         return extension, version
 
 submitted_for_review = Signal(providing_args=["version"])
+reviewed = Signal(providing_args=["version", "review"])

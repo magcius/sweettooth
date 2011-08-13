@@ -2,10 +2,11 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from extensions.models import ExtensionVersion
+from extensions import models as extensions_models
 
 class CodeReview(models.Model):
-    author = models.ForeignKey(User)
-    date = models.DateTimeField()
-    overview = models.TextField()
-    to = models.ForeignKey(ExtensionVersion)
+    reviewer = models.ForeignKey(User)
+    date = models.DateTimeField(auto_now_add=True)
+    comments = models.TextField()
+    version = models.ForeignKey(extensions_models.ExtensionVersion)
+    newstatus = models.PositiveIntegerField(choices=extensions_models.STATUSES.items())
