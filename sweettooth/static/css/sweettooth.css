@@ -220,7 +220,7 @@ p.message.info {
     float: right;
 }
 
-#new-comment-form p input, #new-comment-form p textarea, input[type=submit], button {
+#new-comment-form p input, textarea, input[type=submit], button {
     border: 1px solid #999;
     border-radius: 4px;
 }

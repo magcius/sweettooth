@@ -91,10 +91,33 @@ h2:before {
     border-width: .4em;
     margin-top: .4em;
     width: 0;
+
+    -webkit-transition: -moz-transform 0.4s ease-in-out;
+    -webkit-transform-origin: 25% 50%;
+
     -moz-transition: -moz-transform 0.4s ease-in-out;
     -moz-transform-origin: 25% 50%;
+
+    -o-transition: -moz-transform 0.4s ease-in-out;
+    -o-transform-origin: 25% 50%;
+
+    transition: -moz-transform 0.4s ease-in-out;
+    transform-origin: 25% 50%;
 }
 
 h2.expanded:before {
+    -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#comments {
+    resize: vertical;
+    width: 100%;
+    height: 6em;
+}
+
+#review_form input[type=submit] {
+    float: right;
 }
