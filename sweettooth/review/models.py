@@ -8,5 +8,5 @@ class CodeReview(models.Model):
     reviewer = models.ForeignKey(User)
     date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField()
-    version = models.ForeignKey(extensions_models.ExtensionVersion)
+    version = models.ForeignKey(extensions_models.ExtensionVersion, related_name="reviews")
     newstatus = models.PositiveIntegerField(choices=extensions_models.STATUSES.items())
