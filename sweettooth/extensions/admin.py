@@ -3,8 +3,21 @@ from django.contrib import admin
 from sorl.thumbnail.admin import AdminImageMixin
 
 from extensions.models import Extension, ExtensionVersion
+from review.models import CodeReview
 
-class ExtensionVersionAdmin(admin.TabularInline):
+class CodeReviewAdmin(admin.TabularInline):
+    model = CodeReview
+    fields = 'reviewer', 'comments',
+
+class ExtensionVersionAdmin(admin.ModelAdmin):
+    list_display = 'version', 'status',
+    list_display_links = 'version',
+
+    inlines = [CodeReviewAdmin]
+
+admin.site.register(ExtensionVersion, ExtensionVersionAdmin)
+
+class ExtensionVersionInline(admin.TabularInline):
     model = ExtensionVersion
     fields = 'version', 'status',
     extra = 0
@@ -17,6 +30,6 @@ class ExtensionAdmin(admin.ModelAdmin):
         return ext.versions.count()
     num_versions.short_description = "#V"
 
-    inlines = [ExtensionVersionAdmin]
+    inlines = [ExtensionVersionInline]
 
 admin.site.register(Extension, ExtensionAdmin)
