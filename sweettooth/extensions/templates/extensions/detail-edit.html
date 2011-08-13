@@ -12,9 +12,15 @@
 
 {% block comments %}
   {% if is_preview %}
-    Comments will appear here after review.
+    <p style="text-align: center;">Comments will appear here after review.</p>
   {% else %}
     {% include "extensions/comments.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra %}
+  {% if is_preview %}
+    <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">Submit and lock the extension for review.</button>
   {% endif %}
 {% endblock %}
 
@@ -27,13 +33,9 @@
 {% endblock %}
 
 
-{% block document-ready %}
-    require(['buttons'], function() {
-        $(".extension .button").addClass("insensitive");
-        $(".extension").buttonify();
-    });
-
-    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}", "{{ csrf_token }}");
+{% block document-ready %}{{ block.super }}
+    window._CSRF = "{{ csrf_token }}";
+    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}");
 {% endblock %}
 
 {% block no-screenshot %}

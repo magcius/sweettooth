@@ -6,9 +6,9 @@
     {% block head %} {% endblock %}
     <title>{% block title %}GNOME Shell Extensions{% endblock %}</title>
     <script>
-      window._SW = function() {
-        {% block document-ready %} {% endblock %}
-      }
+window._SW = function() {
+{% block document-ready %}{% endblock %}
+};
     </script>
     <script data-main="/static/js/main.js" src="/static/js/require.js"></script>
   </head>

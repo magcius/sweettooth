@@ -2,11 +2,12 @@
 
 define(['jquery'], function($) {
     function addMessage(tag, message) {
-        $('#message_container').append(
-            $('<p>')
-                .addClass('message')
-                .addClass(tag)
-                .text(message));
+        return $('<p>').addClass('message').addClass(tag)
+            .text(message).appendTo($('#message_container'));
+    }
+
+    function addInfo(message) {
+        return addMessage('info', message);
     }
 
     function addError(message) {
@@ -15,6 +16,7 @@ define(['jquery'], function($) {
 
     return {
         addMessage: addMessage,
-        addError: addError
+        addError: addError,
+        addInfo: addInfo
     };
 });

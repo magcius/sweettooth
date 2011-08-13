@@ -106,6 +106,7 @@ li.extension:hover {
     width: 300px;
     height: 200px;
     margin-left: 1em;
+    margin-bottom: 0.5em;
     font-size: 1.2em;
     font-weight: bold;
     background-color: #eee;
@@ -215,13 +216,16 @@ p.message.info {
     margin-left: -2px;
 }
 
-#new-comment-form p input, #new-comment-form p textarea, #new-comment-form .submit-post {
+#new-comment-form .submit-post {
+    float: right;
+}
+
+#new-comment-form p input, #new-comment-form p textarea, input[type=submit], button {
     border: 1px solid #999;
     border-radius: 4px;
 }
 
-#new-comment-form .submit-post {
-    float: right;
+input[type=submit], button {
     background-color: #ddd;
     color: #444;
     padding: .2em 2em;

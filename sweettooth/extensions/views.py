@@ -122,7 +122,7 @@ class AjaxSubmitAndLockView(SingleObjectMixin, View):
         self.object.status = models.STATUS_LOCKED
         self.object.save()
 
-        models.submitted_for_review.send(version=self)
+        models.submitted_for_review.send(sender=self, version=self.object)
 
         return HttpResponse()
 

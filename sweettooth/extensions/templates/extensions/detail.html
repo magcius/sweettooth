@@ -23,23 +23,26 @@
       <p class="description" id="extension_description">
         {{ extension.description }}
       </p>
-      <hr>
+      <hr style="clear: both;">
 
       {% block comments %}
       {% include "extensions/comments.html" %}
       {% endblock comments %}
+
+      {% block extra %}
+      {% endblock %}
 </div>
 {% endwith %}
 {% endblock %}
-{% block document-ready %}
-    {{ block.super }}
+{% block document-ready %}{{ block.super }}
     require(['jquery.timeago', 'jquery.rating', 'buttons'], function() {
         $("abbr.timestamp").timeago();
+        {% if is_review %}
+        $(".extension .button").addClass("insensitive");
+        {% endif %}
         $(".extension").buttonify();
         $(".comment .rating").each(function() {
             $(this).find('input').rating();
         });
     });
-
-    $("form .rating").rating();
 {% endblock %}
