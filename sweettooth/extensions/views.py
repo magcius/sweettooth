@@ -40,7 +40,14 @@ def download(request, uuid, ver):
 class ExtensionLatestVersionView(DetailView):
     model = models.Extension
     context_object_name = "version"
-    template_name = "extensions/detail.html"
+
+    @property
+    def template_name(self):
+        # If the user can edit the model, let him do so.
+        print self.object
+        if self.object.extension.user_has_access(self.request.user):
+            return "extensions/detail-edit.html"
+        return "extensions/detail.html"
 
     def get(self, request, **kwargs):
         # Redirect if we don't match the slug.
@@ -51,6 +58,10 @@ class ExtensionLatestVersionView(DetailView):
 
         if slug == self.object.extension.slug:
             context = self.get_context_data(object=self.object)
+            status = self.object.status
+            context['is_editable'] = status in models.EDITABLE_STATUSES
+            context['is_visible'] = status in models.VISIBLE_STATUSES
+            context['status'] = status
             return self.render_to_response(context)
 
         kwargs = dict(self.kwargs)
