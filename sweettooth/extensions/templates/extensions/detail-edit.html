@@ -1,14 +1,14 @@
 {% extends "extensions/detail.html" %}
 
-{% if is_preview %}
-  {% block extra-messages %}
+{% block extra-messages %}
+  {% if is_preview %}
     {{ block.super }}
     <p class="message info">
       This is a preview of how your extension's page will look.
       You can edit any of the things marked in yellow by clicking on them.
     </p>
-  {% endblock %}
-{% endif %}
+  {% endif %}
+{% endblock %}
 
 {% block comments %}
   {% if is_visible %}
