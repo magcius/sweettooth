@@ -35,7 +35,7 @@ REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
 
 class ExtensionManager(models.Manager):
     def visible(self):
-        return self.filter(versions__status__in=VISIBLE_STATUSES)
+        return self.filter(versions__status__in=VISIBLE_STATUSES).distinct()
 
 class Extension(models.Model):
     name = models.CharField(max_length=200)
