@@ -44,7 +44,6 @@ class ExtensionLatestVersionView(DetailView):
     @property
     def template_name(self):
         # If the user can edit the model, let him do so.
-        print self.object
         if self.object.extension.user_has_access(self.request.user):
             return "extensions/detail-edit.html"
         return "extensions/detail.html"
