@@ -13,10 +13,26 @@ must go through code review and testing.
 
 .. _sweettooth-plugin: https://github.com/magcius/sweettooth-plugin
 
+Getting Started
+---------------
+
+  $ git clone git://github.com/magcius/sweettooth.git
+  $ cd sweettooth
+  $ virtualenv_ --no-site-packages ./venv
+  $ . ./venv/bin/activate
+  $ pip_ install -r requirements.txt
+  $ # ... Database setup...
+  $ python sweettooth/manage.py runserver_plus
+
+Create a superuser, and log in. You should be able to upload extensions and
+review extensions. There isn't a link to the code review UI, but it's hidden
+at /review/.
+
+.. _virtualenv: http://www.virtualenv.org/
+.. _pip: http://www.pip-installer.org/
+
 Requirements
 ------------
-
-For now, we require:
 
   * django_
   * django-autoslug_
@@ -24,9 +40,10 @@ For now, we require:
   * django-tagging_
   * Pygments_
   * sorl-thumbnail_
+  * south_
 
-I develop with PostgreSQL_ at home, but Django should be able to use
-SQLite_, MySQL_, and others.
+I develop with PostgreSQL_ at home, but Django should be able to use SQLite_,
+MySQL_, and others. South_ is used for migrations.
 
 .. _django: http://www.djangoproject.com/
 .. _django-autoslug: http://packages.python.org/django-autoslug/
@@ -37,3 +54,4 @@ SQLite_, MySQL_, and others.
 .. _PostgreSQL: http://www.postgresql.org/
 .. _SQLite: http://www.sqlite.org/
 .. _MySQL: http://www.mysql.com/
+.. _south: http://south.aeracode.org/
