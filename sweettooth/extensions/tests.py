@@ -130,3 +130,56 @@ class ExtensionVersionTest(TestCase):
 
         self.assertEquals(list(extension.visible_versions.order_by('version')), [v1, v3])
         self.assertEquals(extension.latest_version, v3)
+
+    def test_shell_versions_simple(self):
+        metadata = {"name": "Test Metadata 4",
+                    "uuid": "test-4@gnome.org",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org",
+                    "shell-version": ["3.0.0", "3.0.1", "3.0.2"]}
+
+        extension = models.Extension(creator=self.user)
+
+        version = models.ExtensionVersion()
+        version.extension = extension
+        version.status = models.STATUS_ACTIVE
+        version.parse_metadata_json(metadata)
+
+        version.save()
+        shell_versions = sorted([sv.version_string for sv in version.shell_versions.all()])
+        self.assertEquals(shell_versions, ["3.0.0", "3.0.1", "3.0.2"])
+
+    def test_shell_versions_stable(self):
+        metadata = {"name": "Test Metadata 5",
+                    "uuid": "test-5@gnome.org",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org",
+                    "shell-version": ["3.0", "3.2"]}
+
+        extension = models.Extension(creator=self.user)
+
+        version = models.ExtensionVersion()
+        version.extension = extension
+        version.status = models.STATUS_ACTIVE
+        version.parse_metadata_json(metadata)
+
+        version.save()
+        shell_versions = sorted([sv.version_string for sv in version.shell_versions.all()])
+        self.assertEquals(shell_versions, ["3.0", "3.2"])
+
+class ShellVersionTest(TestCase):
+    def test_shell_version_parsing_basic(self):
+        get_version = models.ShellVersion.objects.get_for_version_string
+
+        version = get_version("3.0.0")
+        self.assertEquals(version.major, 3)
+        self.assertEquals(version.minor, 0)
+        self.assertEquals(version.point, 0)
+
+        version = get_version("3.2")
+        self.assertEquals(version.major, 3)
+        self.assertEquals(version.minor, 2)
+        self.assertEquals(version.point, -1)
+
+        with self.assertRaises(models.InvalidShellVersion):
+            version = get_version("3.1")

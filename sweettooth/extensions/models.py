@@ -76,6 +76,47 @@ class Extension(models.Model):
 
 tagging.register(Extension)
 
+class InvalidShellVersion(Exception):
+    pass
+
+class ShellVersionManager(models.Manager):
+    def get_for_version_string(self, version_string):
+        version = version_string.split('.', 2)
+        major, minor = version[:2]
+        major, minor = int(major), int(minor)
+
+        if len(version) >= 3:
+            # 3.0.1, 3.1.4
+            point = int(version[2])
+        elif len(version) == 2 and minor % 2 == 0:
+            # 3.0, 3.2
+            point = -1
+        else:
+            # Two-digit odd versions are illegal: 3.1, 3.3
+            raise InvalidShellVersion()
+
+        obj, created = self.get_or_create(major=major, minor=minor, point=point)
+        return obj
+
+class ShellVersion(models.Model):
+    major = models.PositiveIntegerField()
+    minor = models.PositiveIntegerField()
+
+    # -1 is a flag for the stable release matching
+    point = models.IntegerField()
+
+    objects = ShellVersionManager()
+
+    def __unicode__(self):
+        return self.version_string
+
+    @property
+    def version_string(self):
+        if self.point == -1:
+            return "%d.%d" % (self.major, self.minor)
+
+        return "%d.%d.%d" % (self.major, self.minor, self.point)
+
 class InvalidExtensionData(Exception):
     pass
 
@@ -84,6 +125,7 @@ class ExtensionVersion(models.Model):
     version = models.IntegerField(default=0)
     extra_json_fields = models.TextField()
     status = models.PositiveIntegerField(choices=STATUSES.items())
+    shell_versions = models.ManyToManyField(ShellVersion)
 
     class Meta:
         unique_together = ('extension', 'version'),
@@ -96,6 +138,10 @@ class ExtensionVersion(models.Model):
                             self.extension.slug + ".shell-extension.zip")
 
     source = models.FileField(upload_to=make_filename)
+
+    @property
+    def shell_versions_json(self):
+        return json.dumps([sv.version_string for sv in self.shell_versions.all()])
 
     def get_manifest_url(self, request):
         path = reverse('extensions-manifest',
@@ -114,6 +160,8 @@ class ExtensionVersion(models.Model):
             url         = self.extension.url,
             uuid        = self.extension.uuid,
         )
+
+        fields['shell-version'] = [sv.version_string for sv in self.extension.shell_versions]
 
         data.update(fields)
         return data
