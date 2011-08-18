@@ -131,36 +131,50 @@ class ExtensionVersion(models.Model):
         zipfile.writestr("metadata.json", json.dumps(metadata, sort_keys=True, indent=2))
         zipfile.close()
 
-    @classmethod
-    def from_metadata_json(cls, metadata, extension=None):
+    def parse_metadata_json(self, metadata):
         """
-        Given the contents of a metadata.json file, create an extension
-        and version with its data and return them.
+        Given the contents of a metadata.json file, fill in the fields
+        of the version and associated extension.
         """
-        if extension is None:
-            extension = Extension()
-            extension.name = metadata.pop('name', "")
-            extension.description = metadata.pop('description', "")
-            extension.url = metadata.pop('url', "")
-            extension.uuid = metadata.pop('uuid', str(uuid.uuid1()))
+        assert self.extension is not None
 
-        version = ExtensionVersion()
-        version.status = STATUS_NEW
-        version.extra_json_fields = json.dumps(metadata)
+        # Only parse the standard data for a new extension
+        if self.extension.pk is None:
+            self.extension.name = metadata.pop('name', "")
+            self.extension.description = metadata.pop('description', "")
+            self.extension.url = metadata.pop('url', "")
+            self.extension.uuid = metadata.pop('uuid', str(uuid.uuid1()))
+            self.extension.save()
+
+            # Due to Django ORM magic and stupidity, this is unfortunately necessary
+            self.extension = self.extension
+
+        # FIXME: We shouldn't do this, but Django saving requires it.
+        if self.status is None:
+            self.status = STATUS_NEW
+
+        self.extra_json_fields = json.dumps(metadata)
 
         # get version number
-        ver_ids = extension.versions.order_by('-version')
+        ver_ids = self.extension.versions.order_by('-version')
         try:
             ver_id = ver_ids[0].version + 1
         except IndexError:
             # New extension, no versions yet
             ver_id = 1
 
-        version.version = ver_id
-        return extension, version
+        self.version = ver_id
 
-    @classmethod
-    def from_zipfile(cls, uploaded_file, extension=None):
+        # ManyToManyField requires a PK, so we need to save.
+        self.save()
+
+        for sv_string in metadata.pop('shell-version', []):
+            sv = ShellVersion.objects.get_for_version_string(sv_string)
+            self.shell_versions.add(sv)
+
+        self.save()
+
+    def parse_zipfile(self, uploaded_file):
         """
         Given a file, create an extension and version, populated
         with the data from the metadata.json and return them.
@@ -179,9 +193,8 @@ class ExtensionVersion(models.Model):
             # invalid JSON file, raise error
             raise InvalidExtensionData("Invalid JSON data")
 
-        extension, version = cls.from_metadata_json(metadata, extension)
+        self.parse_metadata_json(metadata)
         zipfile.close()
-        return extension, version
 
 submitted_for_review = Signal(providing_args=["version"])
 reviewed = Signal(providing_args=["version", "review"])

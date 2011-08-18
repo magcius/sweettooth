@@ -174,7 +174,7 @@ class AjaxInlineEditView(SingleObjectMixin, View):
 @login_required
 def upload_file(request, pk):
     if pk is None:
-        extension = None
+        extension = models.Extension(creator=request.user)
     else:
         extension = models.Extension.objects.get(pk=pk)
         if extension.creator != request.user:
@@ -184,7 +184,10 @@ def upload_file(request, pk):
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             file_source = form.cleaned_data['source']
-            extension, version = models.ExtensionVersion.from_zipfile(file_source, extension)
+            version = models.ExtensionVersion()
+            version.extension = extension
+            version.parse_zipfile(file_source)
+
             extension.creator = request.user
             extension.save()
 
