@@ -78,28 +78,28 @@ define(['jquery', 'messages', 'dbus!_',
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
             $container.each(function () {
-                var elem = $(this);
-                var button = elem.find('.button');
-                var uuid = elem.data('uuid');
+                var $elem = $(this);
+                var $button = $elem.find('.button');
+                var uuid = $elem.data('uuid');
                 var _state = ExtensionState.UNINSTALLED;
                 if (extensions[uuid])
                     _state = extensions[uuid].state;
 
-                elem.data({'elem': elem,
-                           'state': _state});
+                $elem.data({'elem': $elem,
+                            'state': _state});
 
-                button.data('elem', elem);
-                button.switchify();
-                if (button.hasClass('insensitive'))
+                $button.data('elem', $elem);
+                $button.switchify();
+                if ($button.hasClass('insensitive'))
                     return;
 
-                button.bind('changed', function(e, newValue) {
-                    var oldState = elem.data('state');
+                $button.bind('changed', function(e, newValue) {
+                    var oldState = $elem.data('state');
                     if (newValue) {
                         if (oldState == ExtensionState.UNINSTALLED) {
                             // Extension is installed and we flick the switch on,
                             // install.
-                            dbusProxy.InstallExtension(elem.data('manifest'));
+                            dbusProxy.InstallExtension($elem.data('manifest'));
                         } else if (oldState == ExtensionState.DISABLED) {
                             dbusProxy.EnableExtension(uuid);
                         }
@@ -109,25 +109,25 @@ define(['jquery', 'messages', 'dbus!_',
                     }
                 });
 
-                elem.bind('state-changed', function(e, newState) {
-                    elem.data('state', newState);
-                    button.switchify('insensitive', false);
-                    button.tipsy({ gravity: 'e', fade: true });
+                $elem.bind('state-changed', function(e, newState) {
+                    $elem.data('state', newState);
+                    $button.switchify('insensitive', false);
+                    $button.tipsy({ gravity: 'e', fade: true });
                     if (newState == ExtensionState.DISABLED ||
                         newState == ExtensionState.UNINSTALLED) {
-                        button.switchify('activate', false);
+                        $button.switchify('activate', false);
                     } else if (newState == ExtensionState.ENABLED) {
-                        button.switchify('activate', true);
+                        $button.switchify('activate', true);
                     } else if (newState == ExtensionState.ERROR) {
-                        button.switchify('insensitive', true);
-                        button.attr('title', "This extension had an error");
+                        $button.switchify('insensitive', true);
+                        $button.attr('title', "This extension had an error");
                     } else if (newState == ExtensionState.OUT_OF_DATE) {
-                        button.switchify('insensitive', true);
-                        button.attr('title', "This extension is not compatible with your version of GNOME.");
+                        $button.switchify('insensitive', true);
+                        $button.attr('title', "This extension is not compatible with your version of GNOME.");
                     }
                 });
-                elem.trigger('state-changed', _state);
-                elems[uuid] = elem;
+                $elem.trigger('state-changed', _state);
+                elems[uuid] = $elem;
             });
         });
     };
