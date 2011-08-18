@@ -67,6 +67,24 @@ define(['jquery', 'messages', 'dbus!_',
             dbusProxy.GetErrors(elem.data('uuid')).done(callback);
     };
 
+    // This is stolen from the Shell:
+    // http://git.gnome.org/browse/gnome-shell/tree/js/ui/extensionSystem.js
+    function versionCheck(required, current) {
+        var currentArray = current.split('.');
+        var major = currentArray[0];
+        var minor = currentArray[1];
+        var point = currentArray[2];
+        for (var i = 0; i < required.length; i++) {
+            var requiredArray = required[i].split('.');
+            if (requiredArray[0] == major &&
+                requiredArray[1] == minor &&
+                (requiredArray[2] == point ||
+                 (requiredArray[2] == undefined && parseInt(minor) % 2 == 0)))
+                return true;
+        }
+        return false;
+    }
+
     // uuid => elem
     var elems = {};
 
@@ -79,11 +97,17 @@ define(['jquery', 'messages', 'dbus!_',
         dbusProxy.ListExtensions().done(function(extensions) {
             $container.each(function () {
                 var $elem = $(this);
+                var shellVersions = $elem.data('sv');
+
                 var $button = $elem.find('.button');
                 var uuid = $elem.data('uuid');
                 var _state = ExtensionState.UNINSTALLED;
-                if (extensions[uuid])
+
+                if (!versionCheck(shellVersions, dbusProxy.ShellVersion)) {
+                    _state = ExtensionState.OUT_OF_DATE;
+                } else if (extensions[uuid]) {
                     _state = extensions[uuid].state;
+                }
 
                 $elem.data({'elem': $elem,
                             'state': _state});
@@ -120,7 +144,7 @@ define(['jquery', 'messages', 'dbus!_',
                         $button.switchify('activate', true);
                     } else if (newState == ExtensionState.ERROR) {
                         $button.switchify('insensitive', true);
-                        $button.attr('title', "This extension had an error");
+                        $button.attr('title', "This extension had an error.");
                     } else if (newState == ExtensionState.OUT_OF_DATE) {
                         $button.switchify('insensitive', true);
                         $button.attr('title', "This extension is not compatible with your version of GNOME.");

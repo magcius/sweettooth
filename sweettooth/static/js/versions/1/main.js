@@ -32,7 +32,9 @@ define(['jquery', 'dbus!API'], function($, API) {
             API.installExtension(manifest);
         },
 
-        extensionStateChangedHandler: null
+        extensionStateChangedHandler: null,
+
+        ShellVersion: API.shellVersion
     };
 
     API.onchange = function(uuid, newState, error) {

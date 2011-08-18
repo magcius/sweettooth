@@ -7,6 +7,7 @@
 {% with extension=version.extension %}
     <div class="extension"
          data-uuid="{{ extension.uuid }}"
+         data-sv="{{ version.shell_versions_json }}"
          data-manifest="{% manifest_url version %}">
       <div class="button"></div>
       {% if extension.screenshot %}
