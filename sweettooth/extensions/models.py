@@ -161,7 +161,7 @@ class ExtensionVersion(models.Model):
             uuid        = self.extension.uuid,
         )
 
-        fields['shell-version'] = [sv.version_string for sv in self.extension.shell_versions]
+        fields['shell-version'] = [sv.version_string for sv in self.shell_versions.all()]
 
         data.update(fields)
         return data
