@@ -87,7 +87,7 @@ define(['jquery', 'messages', 'dbus!_',
                         if (oldState == ExtensionState.UNINSTALLED) {
                             // Extension is installed and we flick the switch on,
                             // install.
-                            dbusProxy.InstallExtension($elem.data('manifest'));
+                            dbusProxy.InstallExtension(uuid, $elem.data('manifest'));
                         } else if (oldState == ExtensionState.DISABLED) {
                             dbusProxy.EnableExtension(uuid);
                         }
