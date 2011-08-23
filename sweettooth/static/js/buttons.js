@@ -31,42 +31,6 @@ define(['jquery', 'messages', 'dbus!_',
         return {};
     }
 
-    var buttons = {};
-
-    function _wrapDBusProxyMethod(meth, attr) {
-        if (!meth)
-            return;
-
-        return function(event) {
-            var elem = $(this).data('elem');
-            meth.call(dbusProxy, elem.data(attr));
-            return false;
-        };
-    }
-
-    buttons.InstallExtension = _wrapDBusProxyMethod(dbusProxy.InstallExtension, 'manifest');
-    buttons.DisableExtension = _wrapDBusProxyMethod(dbusProxy.DisableExtension, 'uuid');
-    buttons.EnableExtension  = _wrapDBusProxyMethod(dbusProxy.EnableExtension, 'uuid');
-
-    buttons.GetErrors = function(event) {
-        var elem = $(this).data('elem');
-
-        function callback(data) {
-            var log = $('<div class="error-log"></div>');
-            $.each(data, function(idx, error) {
-                log.append($('<span class="line"></span>').text(error));
-            });
-            elem.append(log);
-            log.hide().slideDown();
-        }
-
-        var eventLog = elem.find('.error-log');
-        if (eventLog.length)
-            eventLog.slideToggle();
-        else
-            dbusProxy.GetErrors(elem.data('uuid')).done(callback);
-    };
-
     // This is stolen from the Shell:
     // http://git.gnome.org/browse/gnome-shell/tree/js/ui/extensionSystem.js
     function versionCheck(required, current) {
