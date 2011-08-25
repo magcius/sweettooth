@@ -35,7 +35,6 @@
 
 
 {% block document-ready %}{{ block.super }}
-    window._CSRF = "{{ csrf_token }}";
     {% if is_editable %}
     $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}");
     {% endif %}

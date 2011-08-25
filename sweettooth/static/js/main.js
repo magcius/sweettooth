@@ -1,6 +1,11 @@
 "use strict";
 
-require(['jquery', 'messages', 'jquery.jeditable'], function($, messages) {
+require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($, messages) {
+    if (!$.ajaxSettings.headers)
+        $.ajaxSettings.headers = {};
+
+    $.ajaxSettings.headers['X-CSRFToken'] = $.cookie('csrftoken');
+
     $.fn.csrfEditable = function(url) {
         var self = this;
 
@@ -10,12 +15,10 @@ require(['jquery', 'messages', 'jquery.jeditable'], function($, messages) {
             }
         }
 
-        self.editable(url,
-                      {submitdata: {csrfmiddlewaretoken: window._CSRF},
-                       ajaxoptions: {error: error},
-                       data: function(string, settings) {
-                           return $.trim(string, settings);
-                       }});
+        self.editable(url, { ajaxoptions: { error: error },
+                             data: function(string, settings) {
+                                 return $.trim(string, settings);
+                             }});
         self.addClass("editable");
     };
 
@@ -31,8 +34,7 @@ require(['jquery', 'messages', 'jquery.jeditable'], function($, messages) {
             var $elem = $(this);
 
             var df = $.ajax({ url: $elem.data('url'),
-                              type: 'POST',
-                              data: {csrfmiddlewaretoken: window._CSRF}});
+                              type: 'POST' });
             df.done(function() {
                 messages.addInfo("Your extension has been locked.").hide().slideDown();
                 $elem.attr('disabled', true);
