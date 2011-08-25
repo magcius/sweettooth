@@ -46,6 +46,11 @@ class Extension(models.Model):
     url = models.URLField(verify_exists=False)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+            ("can-modify-data", "Can modify extension data"),
+        )
+
     def make_screenshot_filename(self, filename):
         return os.path.join(self.uuid, filename)
 

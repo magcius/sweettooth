@@ -10,3 +10,8 @@ class CodeReview(models.Model):
     comments = models.TextField()
     version = models.ForeignKey(extensions_models.ExtensionVersion, related_name="reviews")
     newstatus = models.PositiveIntegerField(choices=extensions_models.STATUSES.items())
+
+    class Meta:
+        permissions = (
+            ("can-review-extensions", "Can review extensions"),
+        )
