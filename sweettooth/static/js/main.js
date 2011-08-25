@@ -15,7 +15,8 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
             }
         }
 
-        self.editable(url, { ajaxoptions: { error: error },
+        self.editable(url, { select: true,
+                             ajaxoptions: { error: error },
                              data: function(string, settings) {
                                  return $.trim(string, settings);
                              }});
