@@ -168,6 +168,23 @@ class AjaxInlineEditView(SingleObjectMixin, View):
 
         return HttpResponse(mark_for_escaping(value))
 
+class AjaxScreenshotUploadView(SingleObjectMixin, View):
+    model = models.Extension
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseForbidden()
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not self.object.user_has_access(request.user):
+            return HttpResponseForbidden()
+
+        self.object.screenshot = request.FILES['file']
+        self.object.save()
+
+        return HttpResponse()
+
 @login_required
 def upload_file(request, pk):
     if pk is None:

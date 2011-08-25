@@ -12,7 +12,9 @@
       <div class="button"></div>
       {% if extension.screenshot %}
       {% thumbnail extension.screenshot "300x200" as th %}
+      {% block screenshot %}
       <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
+      {% endblock screenshot %}
       {% endthumbnail %}
       {% else %}
       {% block no-screenshot %}

@@ -33,16 +33,27 @@
     </ul>
 {% endblock %}
 
+{% block screenshot %}
+<div class="screenshot upload">
+  <img src="{{ th.url }}" />
+  <input type="file" accept="image/*">
+</div>
+{% endblock %}
+
+{% block no-screenshot %}
+<div class="screenshot upload placeholder">
+  <div class="text">
+    <span>Upload a screenshot</span>
+  </div>
+  <input type="file" accept="image/*">
+</div>
+{% endblock %}
 
 {% block document-ready %}{{ block.super }}
     {% if is_editable %}
     $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}");
+    require(['uploader'], function() {
+        $(".screenshot.upload").uploadify("{% url extensions-ajax-screenshot pk=version.extension.pk %}");
+    });
     {% endif %}
-{% endblock %}
-
-{% block no-screenshot %}
-<div class="screenshot upload">
-  <span>Upload a screenshot</span>
-  <input type="file" accept="image/*">
-</div>
 {% endblock %}

@@ -22,6 +22,7 @@ data_patterns = patterns('',
 ajax_patterns = patterns('',
     url('^i/(?P<pk>\d+)', views.AjaxInlineEditView.as_view(), name='extensions-ajax-inline'),
     url('^l/(?P<pk>\d+)', views.AjaxSubmitAndLockView.as_view(), name='extensions-ajax-submit'),
+    url('^s/(?P<pk>\d+)', views.AjaxScreenshotUploadView.as_view(), name='extensions-ajax-screenshot'),
 )
 
 
