@@ -154,9 +154,6 @@ class AjaxInlineEditView(SingleObjectMixin, View):
         if not self.object.user_has_access(request.user):
             return HttpResponseForbidden()
 
-        if self.object.status not in models.EDITABLE_STATUSES:
-            return HttpResponseForbidden()
-
         key = self.request.POST['id']
         value = self.request.POST['value']
         if key.startswith('extension_'):
