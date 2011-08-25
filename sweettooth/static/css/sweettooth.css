@@ -232,15 +232,28 @@ p.message.info {
     float: left;
 }
 
+/* Forms */
+/* ==================================================================== */
+
+input, textarea, input[type=submit], button {
+    border: 1px solid #999;
+    border-radius: 4px;
+}
+
+input[type=submit], button {
+    background-color: #ddd;
+    color: #444;
+    padding: .2em 2em;
+    font-weight: bold;
+    padding: .1em 2em;
+}
+
+
 /* New comment form */
 /* ==================================================================== */
 
 #new-comment-form {
     overflow: hidden;
-}
-
-#new-comment-form p {
-    
 }
 
 #new-comment-form label {
@@ -263,9 +276,4 @@ p.message.info {
 
 #new-comment-form .submit-post {
     float: right;
-}
-
-input[type=submit], button {
-    padding: .1em 2em;
-    font: inherit;
 }

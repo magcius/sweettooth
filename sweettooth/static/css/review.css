@@ -115,7 +115,8 @@ h2.expanded:before {
 #comments {
     resize: vertical;
     width: 100%;
-    height: 6em;
+    height: 250px;
+    min-height: 150px;
 }
 
 #review_form input[type=submit] {
