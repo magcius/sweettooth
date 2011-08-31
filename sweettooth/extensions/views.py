@@ -5,6 +5,7 @@ except ImportError:
     import simplejson as json
 
 from django.shortcuts import get_object_or_404, render, redirect
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden, Http404
@@ -184,6 +185,38 @@ class AjaxScreenshotUploadView(SingleObjectMixin, View):
         self.object.save()
 
         return HttpResponse()
+
+class AjaxDetailsView(SingleObjectMixin, View):
+    model = models.Extension
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object is None:
+            raise Http404()
+
+        data = {
+            'uuid': self.object.uuid,
+            'name': self.object.name,
+            'creator': self.object.creator.username,
+            'link': reverse('extensions-detail', kwargs=dict(pk=self.object.pk)),
+        }
+
+        return HttpResponse(json.dumps(data))
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        uuid = self.request.GET.get('uuid', None)
+
+        if uuid is not None:
+            queryset = queryset.filter(uuid=uuid)
+
+        try:
+            return queryset.get()
+        except ObjectDoesNotExist:
+            pass
+
+        return None
 
 @login_required
 def upload_file(request, pk):

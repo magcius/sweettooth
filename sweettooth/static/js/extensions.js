@@ -122,10 +122,20 @@ function($, messages, dbusProxy) {
                 var $elem = $('<div>', {'class': 'extension'}).
                     append($('<div>', {'class': 'switch'})).
                     append($('<h3>').text(extension.name)).
+                    append($('<span>', {'class': 'author'})).
                     append($('<p>', {'class': 'description'}).text(extension.description));
 
-                // The DOM element won't be fully style,, so wait a little bit
-                // before continuing.
+                $.ajax({
+                    url: "/ajax/d/",
+                    dataType: "json",
+                    data: { uuid: uuid },
+                    type: "GET",
+                }).done(function(result) {
+                    $elem
+                        .find('span.author').text(" by " + result.creator).end()
+                        .find('h3').html($('<a>', {'href': result.link}).text(extension.name));
+                });
+
                 // The DOM element's CSS styles won't be fully
                 // computed, so the switch will be incorrectly
                 // positioned -- wait a bit before adding them.
