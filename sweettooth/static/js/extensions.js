@@ -57,66 +57,70 @@ function($, messages, dbusProxy) {
         elems[uuid].trigger('state-changed', newState);
     };
 
+    function addExtensionSwitch(extension, $elem) {
+        var shellVersions = $elem.data('sv');
+
+        var $switch = $elem.find('.switch');
+        var uuid = extension.uuid;
+        var _state = ExtensionState.UNINSTALLED;
+
+        if (shellVersions && !versionCheck(shellVersions, dbusProxy.ShellVersion)) {
+            _state = ExtensionState.OUT_OF_DATE;
+        } else if (extension) {
+            _state = extension.state;
+        }
+
+        $elem.data({'elem': $elem,
+                    'state': _state});
+
+        $switch.data('elem', $elem);
+        $switch.switchify();
+        if ($switch.hasClass('insensitive'))
+            return;
+
+        $switch.bind('changed', function(e, newValue) {
+            var oldState = $elem.data('state');
+            if (newValue) {
+                if (oldState == ExtensionState.UNINSTALLED) {
+                    // Extension is installed and we flick the switch on,
+                    // install.
+                    dbusProxy.InstallExtension(uuid, $elem.data('manifest'));
+                } else if (oldState == ExtensionState.DISABLED) {
+                    dbusProxy.EnableExtension(uuid);
+                }
+            } else {
+                if (oldState == ExtensionState.ENABLED)
+                    dbusProxy.DisableExtension(uuid);
+            }
+        });
+
+        $elem.bind('state-changed', function(e, newState) {
+            $elem.data('state', newState);
+            $switch.switchify('insensitive', false);
+            $switch.tipsy({ gravity: 'e', fade: true });
+            if (newState == ExtensionState.DISABLED ||
+                newState == ExtensionState.UNINSTALLED) {
+                $switch.switchify('activate', false);
+            } else if (newState == ExtensionState.ENABLED) {
+                $switch.switchify('activate', true);
+            } else if (newState == ExtensionState.ERROR) {
+                $switch.switchify('insensitive', true);
+                $switch.attr('title', "This extension had an error.");
+            } else if (newState == ExtensionState.OUT_OF_DATE) {
+                $switch.switchify('insensitive', true);
+                messages.addError("This extensions is not compatible with your version of GNOME.");
+            }
+        });
+        $elem.trigger('state-changed', _state);
+        elems[uuid] = $elem;
+    }
+
     $.fn.addExtensionsSwitches = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
             $container.each(function () {
-                var $elem = $(this);
-                var shellVersions = $elem.data('sv');
-
-                var $switch = $elem.find('.switch');
-                var uuid = $elem.data('uuid');
-                var _state = ExtensionState.UNINSTALLED;
-
-                if (!versionCheck(shellVersions, dbusProxy.ShellVersion)) {
-                    _state = ExtensionState.OUT_OF_DATE;
-                } else if (extensions[uuid]) {
-                    _state = extensions[uuid].state;
-                }
-
-                $elem.data({'elem': $elem,
-                            'state': _state});
-
-                $switch.data('elem', $elem);
-                $switch.switchify();
-                if ($switch.hasClass('insensitive'))
-                    return;
-
-                $switch.bind('changed', function(e, newValue) {
-                    var oldState = $elem.data('state');
-                    if (newValue) {
-                        if (oldState == ExtensionState.UNINSTALLED) {
-                            // Extension is installed and we flick the switch on,
-                            // install.
-                            dbusProxy.InstallExtension(uuid, $elem.data('manifest'));
-                        } else if (oldState == ExtensionState.DISABLED) {
-                            dbusProxy.EnableExtension(uuid);
-                        }
-                    } else {
-                        if (oldState == ExtensionState.ENABLED)
-                            dbusProxy.DisableExtension(uuid);
-                    }
-                });
-
-                $elem.bind('state-changed', function(e, newState) {
-                    $elem.data('state', newState);
-                    $switch.switchify('insensitive', false);
-                    $switch.tipsy({ gravity: 'e', fade: true });
-                    if (newState == ExtensionState.DISABLED ||
-                        newState == ExtensionState.UNINSTALLED) {
-                        $switch.switchify('activate', false);
-                    } else if (newState == ExtensionState.ENABLED) {
-                        $switch.switchify('activate', true);
-                    } else if (newState == ExtensionState.ERROR) {
-                        $switch.switchify('insensitive', true);
-                        $switch.attr('title', "This extension had an error.");
-                    } else if (newState == ExtensionState.OUT_OF_DATE) {
-                        $switch.switchify('insensitive', true);
-                        messages.addError("This extensions is not compatible with your version of GNOME.");
-                    }
-                });
-                $elem.trigger('state-changed', _state);
-                elems[uuid] = $elem;
+                var uuid = $(this).data('uuid');
+                addExtensionSwitch(extensions[uuid], $(this));
             });
         });
     };
