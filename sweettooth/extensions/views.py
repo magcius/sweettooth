@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.views.generic import DetailView, View
 from django.views.generic.detail import SingleObjectMixin
@@ -234,6 +235,16 @@ def upload_file(request, pk):
             version = models.ExtensionVersion()
             version.extension = extension
             version.parse_zipfile(file_source)
+
+            existing = models.Extension.objects.filter(uuid=extension.uuid)
+            if pk is None and existing.exists():
+                # Error out if we already have an extension with the same
+                # uuid -- or correct their mistake if they're the same user.
+                if request.user == existing.get().creator:
+                    return redirect('extensions-upload-file', pk=existing.pk, form=form)
+                else:
+                    messages.error(request, "An extension with that UUID has already been added.")
+                    return redirect('extensions-upload-file')
 
             extension.creator = request.user
             extension.save()
