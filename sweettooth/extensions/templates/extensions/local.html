@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Local Extensions &mdash; {{ block.super }}{% endblock %}
+{% block body %}
+<h2> My Local Extensions </h2>
+<div id="extensions">
+</div>
+{% endblock %}
+
+
+{% block document-ready %}
+require(['jquery', 'extensions'], function($) {
+    $("#extensions").addLocalExtensions();
+});
+{% endblock %}

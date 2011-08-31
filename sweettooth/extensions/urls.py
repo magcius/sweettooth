@@ -1,6 +1,6 @@
 
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 
 from tagging.views import tagged_object_list
 
@@ -45,4 +45,6 @@ urlpatterns = patterns('',
     url('^upload/', include(upload_patterns)),
     url('^extension-data/', include(data_patterns)),
     url('^ajax/', include(ajax_patterns)),
+
+    url(r'local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
 )

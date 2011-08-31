@@ -115,6 +115,29 @@ function($, messages, dbusProxy) {
         elems[uuid] = $elem;
     }
 
+    $.fn.addLocalExtensions = function () {
+        var $container = $(this);
+        dbusProxy.ListExtensions().done(function(extensions) {
+            $.each(extensions, function(uuid, extension) {
+                var $elem = $('<div>', {'class': 'extension'}).
+                    append($('<div>', {'class': 'switch'})).
+                    append($('<h3>').text(extension.name)).
+                    append($('<p>', {'class': 'description'}).text(extension.description));
+
+                // The DOM element won't be fully style,, so wait a little bit
+                // before continuing.
+                // The DOM element's CSS styles won't be fully
+                // computed, so the switch will be incorrectly
+                // positioned -- wait a bit before adding them.
+                setTimeout(function() {
+                    addExtensionSwitch(extension, $elem);
+                }, 0);
+
+                $container.append($elem);
+            });
+        });
+    };
+
     $.fn.addExtensionsSwitches = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
