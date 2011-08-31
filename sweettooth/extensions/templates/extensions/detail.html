@@ -9,7 +9,7 @@
          data-uuid="{{ extension.uuid }}"
          data-sv="{{ version.shell_versions_json }}"
          data-manifest="{% manifest_url version %}">
-      <div class="button"></div>
+      <div class="switch"></div>
       {% if extension.screenshot %}
       {% thumbnail extension.screenshot "300x200" as th %}
       {% block screenshot %}
@@ -38,12 +38,12 @@
 {% endwith %}
 {% endblock %}
 {% block document-ready %}{{ block.super }}
-    require(['jquery.timeago', 'jquery.rating', 'buttons'], function() {
+    require(['jquery.timeago', 'jquery.rating', 'extensions'], function() {
         $("abbr.timestamp").timeago();
         {% if is_review %}
         $(".extension .button").addClass("insensitive");
         {% endif %}
-        $(".extension").buttonify();
+        $(".extension").addExtensionsSwitches();
         $(".comment .rating").each(function() {
             $(this).find('input').rating();
         });

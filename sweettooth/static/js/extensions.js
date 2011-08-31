@@ -1,7 +1,8 @@
 "use strict";
 
 define(['jquery', 'messages', 'dbus!_',
-        'switch', 'jquery.tipsy'], function($, messages, dbusProxy) {
+        'switch', 'jquery.tipsy'],
+function($, messages, dbusProxy) {
     var ExtensionState = {
         // These constants should be kept in sync
         // with those in gnome-shell: see js/ui/extensionSystem.js
@@ -22,10 +23,10 @@ define(['jquery', 'messages', 'dbus!_',
         messages.addError("You do not appear to have an up " +
                           "to date version of GNOME3");
 
-        $.fn.buttonify = function() {
-            // Don't show our buttons -- CSS styles define a clickable
+        $.fn.addExtensionsSwitches = function() {
+            // Don't show our switches -- CSS styles define a clickable
             // area even with no content.
-            $(this).find('.button').hide();
+            $(this).find('.switch').hide();
         };
 
         return {};
@@ -56,14 +57,14 @@ define(['jquery', 'messages', 'dbus!_',
         elems[uuid].trigger('state-changed', newState);
     };
 
-    $.fn.buttonify = function () {
+    $.fn.addExtensionsSwitches = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
             $container.each(function () {
                 var $elem = $(this);
                 var shellVersions = $elem.data('sv');
 
-                var $button = $elem.find('.button');
+                var $switch = $elem.find('.switch');
                 var uuid = $elem.data('uuid');
                 var _state = ExtensionState.UNINSTALLED;
 
@@ -76,12 +77,12 @@ define(['jquery', 'messages', 'dbus!_',
                 $elem.data({'elem': $elem,
                             'state': _state});
 
-                $button.data('elem', $elem);
-                $button.switchify();
-                if ($button.hasClass('insensitive'))
+                $switch.data('elem', $elem);
+                $switch.switchify();
+                if ($switch.hasClass('insensitive'))
                     return;
 
-                $button.bind('changed', function(e, newValue) {
+                $switch.bind('changed', function(e, newValue) {
                     var oldState = $elem.data('state');
                     if (newValue) {
                         if (oldState == ExtensionState.UNINSTALLED) {
@@ -99,19 +100,19 @@ define(['jquery', 'messages', 'dbus!_',
 
                 $elem.bind('state-changed', function(e, newState) {
                     $elem.data('state', newState);
-                    $button.switchify('insensitive', false);
-                    $button.tipsy({ gravity: 'e', fade: true });
+                    $switch.switchify('insensitive', false);
+                    $switch.tipsy({ gravity: 'e', fade: true });
                     if (newState == ExtensionState.DISABLED ||
                         newState == ExtensionState.UNINSTALLED) {
-                        $button.switchify('activate', false);
+                        $switch.switchify('activate', false);
                     } else if (newState == ExtensionState.ENABLED) {
-                        $button.switchify('activate', true);
+                        $switch.switchify('activate', true);
                     } else if (newState == ExtensionState.ERROR) {
-                        $button.switchify('insensitive', true);
-                        $button.attr('title', "This extension had an error.");
+                        $switch.switchify('insensitive', true);
+                        $switch.attr('title', "This extension had an error.");
                     } else if (newState == ExtensionState.OUT_OF_DATE) {
-                        $button.switchify('insensitive', true);
-                        $button.attr('title', "This extension is not compatible with your version of GNOME.");
+                        $switch.switchify('insensitive', true);
+                        messages.addError("This extensions is not compatible with your version of GNOME.");
                     }
                 });
                 $elem.trigger('state-changed', _state);
