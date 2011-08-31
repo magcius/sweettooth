@@ -214,13 +214,13 @@ p.message {
 
 p.message.error {
     background-color: #fcc;
-    background-image: url(http://git.gnome.org/browse/gnome-icon-theme/plain/gnome/48x48/status/dialog-error.png);
+    background-image: url(../images/error.png);
     border-bottom: 1px solid #b44;
 }
 
 p.message.info {
     background-color: #ccf;
-    background-image: url(http://git.gnome.org/browse/gnome-icon-theme/plain/gnome/48x48/status/dialog-information.png);
+    background-image: url(../images/info.png);
     border-bottom: 1px solid #aad;
 }
 
