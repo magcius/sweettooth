@@ -5,7 +5,10 @@
   {% for extension in extensions %}
   {% with version=extension.latest_version %}
     <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{% manifest_url version %}">
-      <div class="button"></div>
+      {% if extension.icon %}
+      <img src="{{ extension.icon.url }}" class="icon">
+      {% endif %}
+
       <h3><a href="{% url extensions-detail pk=extension.pk %}" class="title-link">{{ extension.name }}</a></h3>
       <span class="author">by {{ extension.creator }}</span>
       <p class="description">

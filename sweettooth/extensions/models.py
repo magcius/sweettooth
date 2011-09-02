@@ -56,6 +56,11 @@ class Extension(models.Model):
 
     screenshot = thumbnail.ImageField(upload_to=make_screenshot_filename, blank=True)
 
+    def make_icon_filename(self, filename):
+        return os.path.join(self.uuid, "icons/", filename)
+
+    icon = models.ImageField(upload_to=make_icon_filename, blank=True, default="")
+
     objects = ExtensionManager()
 
     def __unicode__(self):

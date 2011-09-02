@@ -150,6 +150,7 @@ li.extension {
     height: 32px;
     position: absolute;
     margin-top: 4px;
+    padding: 2px;
 }
 
 .extension .upload {
@@ -158,6 +159,7 @@ li.extension {
 
 .extension .upload.placeholder {
     border: 2px dashed #ccc;
+    padding: 0;
     background-color: #eee;
 }
 

@@ -49,11 +49,26 @@
 </div>
 {% endblock %}
 
+
+{% block icon %}
+<div class="icon upload">
+  <img src="{{ extension.icon.url }}" />
+  <input type="file" accept="image/*">
+</div>
+{% endblock %}
+
+{% block no-icon %}
+<div class="icon upload placeholder">
+  <input type="file" accept="image/*">
+</div>
+{% endblock %}
+
 {% block document-ready %}{{ block.super }}
     {% if is_editable %}
     $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}");
     require(['uploader'], function() {
         $(".screenshot.upload").uploadify("{% url extensions-ajax-screenshot pk=version.extension.pk %}");
+        $(".icon.upload").uploadify("{% url extensions-ajax-icon pk=version.extension.pk %}");
     });
     {% endif %}
 {% endblock %}
