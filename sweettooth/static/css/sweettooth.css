@@ -76,31 +76,36 @@ hr.bottom_shadow {
     transform: rotate(180deg);
 }
 
-
+ul.extensions {
+    margin-top: 0;
+}
 
 li.extension {
     list-style-type: none;
     list-style-position: inner;
-}
-
-li.extension:hover {
-    background-color: #ddd;
+    margin-left: 0px;
 }
 
 .extension {
     padding: 0;
-    margin-left: 100px;
     position: relative;
 }
 
-.extension .title-link, .extension h3 {
-    display: inline;
+.extension h3 {
     font-size: 2em;
+}
+
+.extension h3, .extension h3 a {
+    display: inline;
     text-decoration: none;
     color: #000;
 }
 
-.extension .author  {
+.extension h3 a:hover {
+    color: #445;
+}
+
+.extension .author {
     color: #888;
 }
 
