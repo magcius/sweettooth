@@ -76,6 +76,9 @@ hr.bottom_shadow {
     transform: rotate(180deg);
 }
 
+/* Extension view */
+/* ==================================================================== */
+
 ul.extensions {
     margin-top: 0;
 }
@@ -88,10 +91,12 @@ li.extension {
 
 .extension {
     padding: 0;
+    margin-top: 10px;
     position: relative;
 }
 
 .extension h3 {
+    margin-left: 48px;
     font-size: 2em;
 }
 
@@ -112,6 +117,7 @@ li.extension {
 .extension .switch {
     position: absolute;
     margin-left: -100px;
+    margin-top: 8px;
 }
 
 .extension .description {
@@ -128,7 +134,6 @@ li.extension {
     position: relative;
     font-size: 1.2em;
     font-weight: bold;
-    cursor: pointer;
 }
 
 .extension .screenshot.upload .drop {
@@ -140,7 +145,18 @@ li.extension {
     top: 0;
 }
 
-.extension .screenshot.upload.placeholder {
+.extension .icon {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    margin-top: 4px;
+}
+
+.extension .upload {
+    cursor: pointer;
+}
+
+.extension .upload.placeholder {
     border: 2px dashed #ccc;
     background-color: #eee;
 }
@@ -157,7 +173,7 @@ li.extension {
     text-align: center;
 }
 
-.extension .screenshot.upload input {
+.extension .upload input {
     display: none;
 }
 
