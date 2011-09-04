@@ -57,11 +57,10 @@ function($, messages, dbusProxy) {
         elems[uuid].trigger('state-changed', newState);
     };
 
-    function addExtensionSwitch(extension, $elem) {
+    function addExtensionSwitch(uuid, extension, $elem) {
         var shellVersions = $elem.data('sv');
 
         var $switch = $elem.find('.switch');
-        var uuid = extension.uuid;
         var _state = ExtensionState.UNINSTALLED;
 
         if (shellVersions && !versionCheck(shellVersions, dbusProxy.ShellVersion)) {
@@ -140,7 +139,7 @@ function($, messages, dbusProxy) {
                 // computed, so the switch will be incorrectly
                 // positioned -- wait a bit before adding them.
                 setTimeout(function() {
-                    addExtensionSwitch(extension, $elem);
+                    addExtensionSwitch(uuid, extension, $elem);
                 }, 0);
 
                 $container.append($elem);
@@ -153,7 +152,7 @@ function($, messages, dbusProxy) {
         dbusProxy.ListExtensions().done(function(extensions) {
             $container.each(function () {
                 var uuid = $(this).data('uuid');
-                addExtensionSwitch(extensions[uuid], $(this));
+                addExtensionSwitch(uuid, extensions[uuid], $(this));
             });
         });
     };
