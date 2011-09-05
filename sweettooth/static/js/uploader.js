@@ -21,10 +21,10 @@ define(['jquery'], function($) {
         function upload(e) {
             function replaceImage($img) {
                 var $old = $elem.children().first();
-                if ($old.width() < $old.height())
-                    $img.width($old.width());
+                if ($elem.width() < $elem.height())
+                    $img.width($elem.width());
                 else
-                    $img.height($old.height());
+                    $img.height($elem.height());
                 $img.replaceAll($old);
             }
 
