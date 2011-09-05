@@ -20,7 +20,6 @@ define(['jquery'], function($) {
 
         function upload(e) {
             function uploadCompleteObjectURL() {
-                console.log("BBB");
                 var $img = $("<img>", { src: window.URL.createObjectURL(file) });
                 $img.bind('load', function() {
                     window.URL.revokeObjectURL(this.src);
@@ -33,7 +32,6 @@ define(['jquery'], function($) {
             }
 
             function uploadCompleteFileReader(url) {
-                console.log("CCC");
                 function _img(url) {
                     var $img = $("<img>", { src: url });
                     $img.bind('load', function() {
@@ -79,7 +77,6 @@ define(['jquery'], function($) {
                                        processData: false,
                                        data: fd });
                 df.done(function() {
-                    console.log("AAA");
                     uploadComplete();
                 });
             } else {
