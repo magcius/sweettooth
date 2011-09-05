@@ -49,7 +49,7 @@ define(['jquery'], function($) {
                 }
 
                 $elem
-                    .addClass('switch')
+                    .addClass('_gnome-switch')
                     .append($('<span>', {'class': 'on'}).text("ON"))
                     .append($('<span>', {'class': 'off'}).text("OFF"))
                     .append($slider)

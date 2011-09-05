@@ -1,5 +1,5 @@
 
-.switch {
+._gnome-switch {
     background-color: #000;
     border: 2px solid #2e3436;
     color: white;
@@ -20,25 +20,25 @@
 
 /* create a new BFC to have floating label work correctly.
  * http://colinaarts.com/articles/float-containment/ */
-.switch:before, .switch:after {
+._gnome-switch:before, ._gnome-switch:after {
   content    : '';
   display    : table;
 }
 
-.switch:after {
+._gnome-switch:after {
   clear: both;
 }
 
 ,switch { display : inline-block; }
-.switch { display : block; }
+._gnome-switch { display : block; }
 
 
 
-.switch, .switch * {
+._gnome-switch, ._gnome-switch * {
     display: block;
 }
 
-.switch .slider.not-dragging {
+._gnome-switch .slider.not-dragging {
     -webkit-transition: left 0.2s ease-in-out;
     -moz-transition: left 0.2s ease-in-out;
     -ms-transition: left 0.2s ease-in-out;
@@ -46,7 +46,7 @@
     transition: left 0.2s ease-in-out;
 }
 
-.switch .slider {
+._gnome-switch .slider {
     position: absolute;
     width: 50%;
     top: -4px;
@@ -57,7 +57,7 @@
     border-radius: 4px;
 }
 
-.switch .slider .handle {
+._gnome-switch .slider .handle {
     display: block;
     position: absolute;
     top: 50%;
@@ -71,7 +71,7 @@
     border-color: #5f5f5f;
 }
 
-.switch .off, .switch .on {
+._gnome-switch .off, ._gnome-switch .on {
     font-weight: bold;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6),
                  0 1px 0   rgba(0, 0, 0, 0.6);
@@ -80,45 +80,45 @@
     text-align: center;
 }
 
-.switch .off {
+._gnome-switch .off {
     float: right;
 }
 
-.switch .on {
+._gnome-switch .on {
     float: left;
 }
 
-.switch.insensitive .off {
+._gnome-switch.insensitive .off {
     visibility: visible;
     color: #666;
 }
 
-.switch.insensitive.activated .off {
+._gnome-switch.insensitive.activated .off {
     visibility: hidden;
 }
 
-.switch.insensitive .on {
+._gnome-switch.insensitive .on {
     visibility: hidden;
 }
 
-.switch.insensitive.activated .on {
+._gnome-switch.insensitive.activated .on {
     visibility: visible;
     color: #235493;
     text-shadow: none;
 }
 
-.switch.activated {
+._gnome-switch.activated {
     border-color: #3465a4;
     background-color: #4a90d9;
 }
 
-.switch.insensitive .slider {
+._gnome-switch.insensitive .slider {
     margin-top: 1px;
     margin-left: 1px;
     background: none;
     border-color: transparent;
 }
 
-.switch.insensitive.activated .slider .handle {
+._gnome-switch.insensitive.activated .slider .handle {
     border-color: #235493;
 }
