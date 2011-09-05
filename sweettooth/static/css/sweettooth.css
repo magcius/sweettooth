@@ -246,7 +246,7 @@ p.message.info {
 }
 
 .editable {
-    background-color: #F4F0D4;
+    background-color: rgba(255, 255, 200, 0.4);
 }
 
 #comments {
