@@ -26,6 +26,7 @@ define(['jquery'], function($) {
                 else
                     $img.height($elem.height());
                 $img.replaceAll($old);
+                $elem.removeClass('placeholder');
             }
 
             function uploadCompleteObjectURL() {
