@@ -19,15 +19,20 @@ define(['jquery'], function($) {
         }
 
         function upload(e) {
+            function replaceImage($img) {
+                var $old = $elem.children().first();
+                if ($old.width() < $old.height())
+                    $img.width($old.width());
+                else
+                    $img.height($old.height());
+                $img.replaceAll($old);
+            }
+
             function uploadCompleteObjectURL() {
                 var $img = $("<img>", { src: window.URL.createObjectURL(file) });
                 $img.bind('load', function() {
                     window.URL.revokeObjectURL(this.src);
-                    if ($img[0].width > $img[0].height)
-                        $img.attr('width', '300');
-                    else
-                        $img.attr('height', '200');
-                    $elem.children().first().replaceWith($img);
+                    replaceImage($img);
                 });
             }
 
@@ -35,7 +40,7 @@ define(['jquery'], function($) {
                 function _img(url) {
                     var $img = $("<img>", { src: url });
                     $img.bind('load', function() {
-                        $elem.children().first().replaceWith($img);
+                        replaceImage($img);
                     });
                 }
 
