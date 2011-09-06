@@ -7,8 +7,6 @@ from django.contrib import admin
 from django.views import static
 admin.autodiscover()
 
-from extensions import urls
-
 urlpatterns = patterns('',
     # 'login' and 'register'
     url(r'^', include('auth.urls')),
