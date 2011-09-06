@@ -52,7 +52,7 @@
     require(['jquery.timeago', 'jquery.rating', 'extensions'], function() {
         $("abbr.timestamp").timeago();
         {% if is_review %}
-        $(".extension .button").addClass("insensitive");
+        $(".extension .switch").addClass("insensitive");
         {% endif %}
         $(".extension").addExtensionsSwitches();
         $(".comment .rating").each(function() {
