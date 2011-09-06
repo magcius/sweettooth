@@ -1,8 +1,8 @@
 {% if user.is_authenticated %}
-  <a href="/logout">Log out</a>
+  <a href="{% url auth-logout %}">Log out</a>
 {% else %}
-  <a href="/login/" id="login_link">Login?</a>
-  <form action="{% url login %}" method="POST" id="login_popup_form">
+  <a href="{% url auth-login %}" id="login_link">Login?</a>
+  <form action="{% url auth-login %}" method="POST" id="login_popup_form">
     {% csrf_token %}
     <input type="hidden" name="next" value="/">
     <input type="text" placeholder="Username" name="username">

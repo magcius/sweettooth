@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-<form action="{% url login %}" method="POST" id="login_form">
+<form action="{% url auth-login %}" method="POST" id="login_form">
   <input type="hidden" name="next" value="{{ next }}">
   {% csrf_token %}
 
