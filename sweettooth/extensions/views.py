@@ -15,7 +15,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.utils.safestring import mark_for_escaping
 
 from extensions import models
-from extensions.forms import UploadForm, ExtensionDataForm
+from extensions.forms import UploadForm
 
 def manifest(request, uuid, ver):
     version = get_object_or_404(models.ExtensionVersion, pk=ver)
