@@ -8,24 +8,27 @@
 <h2 class="expanded"> Details Page Preview </h2>
 <div id="preview">
   <div class="extension">
-    <div class="button insensitive"></div>
-      {% if extension.screenshot %}
-      {% thumbnail extension.screenshot "300x200" as th %}
-      <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
-      {% endthumbnail %}
-      {% else %}
-      {% block no-screenshot %}
-      {% endblock %}
-      {% endif %}
+    <div class="switch insensitive"></div>
 
-      <h3>{{ extension.name }}</h3>
-      <span class="author">by {{ extension.creator }}</span>
-      <p class="description">
-        {{ extension.description }}
-      </p>
-      <hr>
+    {% if extension.icon %}
+    <img src="{{ extension.icon.url }}" class="icon">
+    {% endif %}
 
-      No comments.
+    {% if extension.screenshot %}
+    {% thumbnail extension.screenshot "300x200" as th %}
+    <a href="{{ screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
+    {% endthumbnail %}
+    {% endif %}
+
+    <h3>{{ extension.name }}</h3>
+    <span class="author">by {{ extension.creator }}</span>
+    <p class="description">
+      {{ extension.description }}
+    </p>
+    <hr>
+
+    No comments.
+    <br clear="both">
   </div>
 </div>
 <h2 class="expanded"> Files </h2>
