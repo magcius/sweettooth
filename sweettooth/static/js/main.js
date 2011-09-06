@@ -1,6 +1,6 @@
 "use strict";
 
-require(['messages', 'jquery.cookie', 'jquery.jeditable'], function($, messages) {
+require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($, messages) {
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 
