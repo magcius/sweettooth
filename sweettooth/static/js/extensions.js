@@ -107,7 +107,7 @@ function($, messages, dbusProxy) {
                 $switch.attr('title', "This extension had an error.");
             } else if (newState == ExtensionState.OUT_OF_DATE) {
                 $switch.switchify('insensitive', true);
-                messages.addError("This extensions is not compatible with your version of GNOME.");
+                messages.addError("This extension is not compatible with your version of GNOME.");
             }
         });
         $elem.trigger('state-changed', _state);
