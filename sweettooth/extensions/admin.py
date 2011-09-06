@@ -10,8 +10,12 @@ class CodeReviewAdmin(admin.TabularInline):
     fields = 'reviewer', 'comments',
 
 class ExtensionVersionAdmin(admin.ModelAdmin):
-    list_display = 'version', 'status',
-    list_display_links = 'version',
+    list_display = 'title', 'status',
+    list_display_links = 'title',
+
+    def title(self, ver):
+        return "%s (%d)" % (ver.extension.uuid, ver.version)
+    title.short_description = "Extension (version)"
 
     inlines = [CodeReviewAdmin]
 
