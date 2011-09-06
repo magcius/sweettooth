@@ -122,3 +122,39 @@ h2.expanded:before {
 #review_form input[type=submit] {
     float: right;
 }
+
+#previous table {
+    width: 100%;
+}
+
+#previous thead, #previous tbody {
+    border-bottom: 1px solid #ccc;
+}
+
+#previous th {
+    border-left: 1px solid #eee;
+}
+
+#previous td {
+    border-left: 1px solid #ccc;
+}
+
+#previous tr {
+    line-height: 2em;
+    text-align: left;
+    text-indent: 1em;
+}
+
+#previous tbody tr:nth-child(odd) {
+    background-color: #eee;
+}
+
+#previous .rejected {
+    color: #c00;
+    font-weight: bold;
+}
+
+#previous .active {
+    color: #0a0;
+    font-weight: bold;
+}

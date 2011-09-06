@@ -104,3 +104,9 @@ class ReviewVersionView(DetailView):
             return HttpResponseForbidden()
 
         return super(ReviewVersionView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewVersionView, self).get_context_data(**kwargs)
+        previous_reviews = CodeReview.objects.filter(version__extension=self.object.extension)
+        context['previous_reviews'] = previous_reviews
+        return context

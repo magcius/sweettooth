@@ -31,8 +31,51 @@
     <br clear="both">
   </div>
 </div>
+
 <h2 class="expanded"> Files </h2>
 <div id="files">
+</div>
+
+<h2 class="expanded"> Previous Reviews </h2>
+<div id="previous">
+  <table>
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Reviewer</th>
+        <th>Date</th>
+        <th>Comments</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for review in previous_reviews %}
+      <tr>
+        <td>
+          <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension pk=review.version.pk %}">
+            {{ review.version.version }}
+          </a>
+        </td>
+        <td>{{ review.reviewer }}</td>
+        <td>{{ review.date }}</td>
+        <td>{{ review.comments }}</td>
+        <td>
+          {% if review.is_rejected %}
+          <span class="rejected">
+          {% else %}{% if review.is_active %}
+          <span class="active">
+          {% else %}
+          <span>
+          {% endif %}{% endif %}
+          {{ review.get_newstatus_display }}
+          </span>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5"> There were no previous reviews of this extension </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <h2 class="expanded"> Review </h2>
@@ -50,7 +93,7 @@
 
 {% block document-ready %}
   require(['review', 'switch'], function() {
-    $(".extension .button").switchify();
+    $(".extension .switch").switchify();
     $("#files").reviewify("{% url review-ajax-files pk=version.pk %}");
   });
   $("h2").click(function() {
@@ -59,6 +102,6 @@
 {% endblock %}
 
 {% block head %}
-    {{ block.super }}
-    <link rel="stylesheet" href="/static/css/review.css" />
+  {{ block.super }}
+  <link rel="stylesheet" href="/static/css/review.css" />
 {% endblock %}

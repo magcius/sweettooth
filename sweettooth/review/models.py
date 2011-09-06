@@ -11,6 +11,14 @@ class CodeReview(models.Model):
     version = models.ForeignKey(extensions_models.ExtensionVersion, related_name="reviews")
     newstatus = models.PositiveIntegerField(choices=extensions_models.STATUSES.items())
 
+    @property
+    def is_rejected(self):
+        return self.newstatus == extensions_models.STATUS_REJECTED
+
+    @property
+    def is_active(self):
+        return self.newstatus == extensions_models.STATUS_ACTIVE
+
     class Meta:
         permissions = (
             ("can-review-extensions", "Can review extensions"),
