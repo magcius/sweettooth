@@ -114,7 +114,7 @@ li.extension {
     color: #888;
 }
 
-.extension .switch {
+.extension ._gnome-switch {
     position: absolute;
     margin-left: -100px;
     margin-top: 8px;
