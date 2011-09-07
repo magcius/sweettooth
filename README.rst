@@ -48,7 +48,6 @@ MySQL_, and others. South_ is used for migrations.
 .. _django: http://www.djangoproject.com/
 .. _django-autoslug: http://packages.python.org/django-autoslug/
 .. _django-extensions: http://packages.python.org/django-extensions/
-.. _django-tagging: http://code.google.com/p/django-tagging/
 .. _Pygments: http://www.pygments.org/
 .. _sorl-thumbnail: http://thumbnail.sorl.net/
 .. _PostgreSQL: http://www.postgresql.org/

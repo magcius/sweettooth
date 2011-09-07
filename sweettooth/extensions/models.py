@@ -14,7 +14,6 @@ from django.db import models
 from django.dispatch import Signal
 
 import autoslug
-import tagging
 from sorl import thumbnail
 
 (STATUS_NEW, STATUS_LOCKED,
@@ -83,8 +82,6 @@ class Extension(models.Model):
         if user.has_perm('extensions.can-modify-data'):
             return True
         return False
-
-tagging.register(Extension)
 
 class InvalidShellVersion(Exception):
     pass

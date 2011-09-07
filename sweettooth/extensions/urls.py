@@ -2,8 +2,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.views.generic import ListView, TemplateView
 
-from tagging.views import tagged_object_list
-
 from extensions import views, models
 
 upload_patterns = patterns('',
@@ -32,8 +30,6 @@ urlpatterns = patterns('',
     url(r'^$', ListView.as_view(queryset=models.Extension.objects.visible(),
                                 context_object_name="extensions",
                                 template_name="extensions/list.html"), name='extensions-index'),
-
-    url(r'^extensions/tags/(?P<tag>.+)/$', tagged_object_list, name='extensions-tags'),
 
     # we ignore PK of extension, and get extension from version PK
     url(r'^extension/(?P<ext_pk>\d+)/(?P<slug>.+)/version/(?P<pk>\d+)/$',
