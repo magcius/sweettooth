@@ -49,7 +49,8 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
             try {
                 window._SW();
             } catch(e) {
-                console.error(e);
+                if (console && console.error)
+                    console.error(e);
             }
     });
 });
