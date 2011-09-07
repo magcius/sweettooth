@@ -201,6 +201,7 @@ class AjaxDetailsView(SingleObjectMixin, View):
             'name': self.object.name,
             'creator': self.object.creator.username,
             'link': reverse('extensions-detail', kwargs=dict(pk=self.object.pk)),
+            'icon': self.object.icon.url,
         }
 
         return HttpResponse(json.dumps(data))

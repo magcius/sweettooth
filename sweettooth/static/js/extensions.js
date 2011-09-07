@@ -120,6 +120,7 @@ function($, messages, dbusProxy) {
             $.each(extensions, function(uuid, extension) {
                 var $elem = $('<div>', {'class': 'extension'}).
                     append($('<div>', {'class': 'switch'})).
+                    append($('<img>', {'class': 'icon'})).
                     append($('<h3>').text(extension.name)).
                     append($('<span>', {'class': 'author'})).
                     append($('<p>', {'class': 'description'}).text(extension.description));
@@ -130,9 +131,10 @@ function($, messages, dbusProxy) {
                     data: { uuid: uuid },
                     type: "GET",
                 }).done(function(result) {
-                    $elem
-                        .find('span.author').text(" by " + result.creator).end()
-                        .find('h3').html($('<a>', {'href': result.link}).text(extension.name));
+                    $elem.
+                        find('span.author').text(" by " + result.creator).end().
+                        find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
+                        find('img.icon').attr('src', result.icon);
                 });
 
                 // The DOM element's CSS styles won't be fully
