@@ -22,12 +22,13 @@ Getting Started
   $ . ./venv/bin/activate
   $ pip_ install -r requirements.txt
   $ # ... Database setup...
-  $ python sweettooth/manage.py runserver_plus
+  $ python sweettooth/manage.py `runserver_plus`_
 
 Create a superuser, and log in. You should be able to upload extensions and
 review extensions. There isn't a link to the code review UI, but it's hidden
 at /review/.
 
+.. _runserver_plus: http://packages.python.org/django-extensions/
 .. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org/
 
@@ -36,7 +37,6 @@ Requirements
 
   * django_
   * django-autoslug_
-  * django-extensions_
   * django-tagging_
   * Pygments_
   * sorl-thumbnail_
@@ -47,7 +47,6 @@ MySQL_, and others. South_ is used for migrations.
 
 .. _django: http://www.djangoproject.com/
 .. _django-autoslug: http://packages.python.org/django-autoslug/
-.. _django-extensions: http://packages.python.org/django-extensions/
 .. _Pygments: http://www.pygments.org/
 .. _sorl-thumbnail: http://thumbnail.sorl.net/
 .. _PostgreSQL: http://www.postgresql.org/
