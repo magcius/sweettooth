@@ -130,6 +130,28 @@ class ShellVersion(models.Model):
 class InvalidExtensionData(Exception):
     pass
 
+
+def parse_zipfile_metadata(uploaded_file):
+    """
+    Given a file, extract out the metadata.json, parse, and return it.
+    """
+    try:
+        zipfile = ZipFile(uploaded_file, 'r')
+    except BadZipfile:
+        raise InvalidExtensionData("Invalid zip file")
+
+    try:
+        metadata = json.load(zipfile.open('metadata.json', 'r'))
+    except KeyError:
+        # no metadata.json in archive, return nothing
+        metadata = {}
+    except ValueError:
+        # invalid JSON file, raise error
+        raise InvalidExtensionData("Invalid JSON data")
+
+    zipfile.close()
+    return metadata
+
 class ExtensionVersion(models.Model):
     extension = models.ForeignKey(Extension, related_name="versions")
     version = models.IntegerField(default=0)
@@ -231,28 +253,6 @@ class ExtensionVersion(models.Model):
             self.shell_versions.add(sv)
 
         self.save()
-
-    def parse_zipfile(self, uploaded_file):
-        """
-        Given a file, create an extension and version, populated
-        with the data from the metadata.json and return them.
-        """
-        try:
-            zipfile = ZipFile(uploaded_file, 'r')
-        except BadZipfile:
-            raise InvalidExtensionData("Invalid zip file")
-
-        try:
-            metadata = json.load(zipfile.open('metadata.json', 'r'))
-        except KeyError:
-            # no metadata.json in archive, use web editor
-            metadata = {}
-        except ValueError:
-            # invalid JSON file, raise error
-            raise InvalidExtensionData("Invalid JSON data")
-
-        self.parse_metadata_json(metadata)
-        zipfile.close()
 
 submitted_for_review = Signal(providing_args=["version"])
 reviewed = Signal(providing_args=["version", "review"])

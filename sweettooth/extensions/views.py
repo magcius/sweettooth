@@ -234,19 +234,28 @@ def upload_file(request, pk):
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             file_source = form.cleaned_data['source']
-            version = models.ExtensionVersion()
-            version.extension = extension
-            version.parse_zipfile(file_source)
 
-            existing = models.Extension.objects.filter(uuid=extension.uuid)
+            try:
+                metadata = models.parse_zipfile_metadata(file_source)
+                uuid = metadata['uuid']
+            except (models.InvalidExtensionData, KeyError), e:
+                messages.error(request, "Invalid extension data.")
+                return redirect('extensions-upload-file', pk=pk)
+
+            existing = models.Extension.objects.filter(uuid=uuid)
             if pk is None and existing.exists():
                 # Error out if we already have an extension with the same
                 # uuid -- or correct their mistake if they're the same user.
-                if request.user == existing.get().creator:
-                    return redirect('extensions-upload-file', pk=existing.pk, form=form)
+                ext = existing.get()
+                if request.user == ext.creator:
+                    return redirect('extensions-upload-file', pk=ext.pk)
                 else:
                     messages.error(request, "An extension with that UUID has already been added.")
                     return redirect('extensions-upload-file')
+
+            version = models.ExtensionVersion()
+            version.extension = extension
+            version.parse_metadata_json(metadata)
 
             extension.creator = request.user
             extension.save()

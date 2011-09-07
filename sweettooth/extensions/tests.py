@@ -33,7 +33,9 @@ class UploadTest(TestCase):
         extension = models.Extension(creator=self.user)
         version = models.ExtensionVersion()
         version.extension = extension
-        version.parse_zipfile(get_test_zipfile('SimpleExtension'))
+
+        metadata = models.parse_zipfile(get_test_zipfile('SimpleExtension'))
+        version.parse_metadata(metadata)
 
         self.assertEquals(extension.name, "Test Extension")
         self.assertEquals(extension.description, "Simple test metadata")
@@ -43,7 +45,9 @@ class UploadTest(TestCase):
         extension = models.Extension(creator=self.user)
         version = models.ExtensionVersion()
         version.extension = extension
-        version.parse_zipfile(get_test_zipfile('ExtraMetadata'))
+
+        metadata = models.parse_zipfile(get_test_zipfile('ExtraMetadata'))
+        version.parse_metadata(metadata)
 
         extra = json.loads(version.extra_json_fields)
         self.assertEquals(extra["extra"], "This is some good data")
