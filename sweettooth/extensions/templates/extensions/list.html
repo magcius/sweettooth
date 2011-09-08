@@ -4,7 +4,7 @@
   <ul class="extensions">
   {% for extension in extensions %}
   {% with version=extension.latest_version %}
-    <li class="extension" data-uuid="{{ extension.uuid }}" data-manifest="{% manifest_url version %}">
+    <li class="extension">
       {% if extension.icon %}
       <img src="{{ extension.icon.url }}" class="icon">
       {% endif %}
