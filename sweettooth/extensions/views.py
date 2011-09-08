@@ -17,22 +17,9 @@ from django.utils.safestring import mark_for_escaping
 from extensions import models
 from extensions.forms import UploadForm
 
-def manifest(request, uuid, ver):
-    version = get_object_or_404(models.ExtensionVersion, pk=ver)
-
-    if version.status != models.STATUS_ACTIVE:
-        return HttpResponseForbidden()
-
-    url = reverse('extensions-download', kwargs=dict(uuid=uuid, ver=ver))
-
-    manifestdata = version.make_metadata_json()
-    manifestdata['__installer'] = request.build_absolute_uri(url)
-
-    return HttpResponse(json.dumps(manifestdata),
-                        content_type="application/json")
-
-def download(request, uuid, ver):
-    version = get_object_or_404(models.ExtensionVersion, pk=ver)
+def download(request, uuid):
+    pk = request.GET['server_uuid']
+    version = get_object_or_404(models.ExtensionVersion, pk=pk)
 
     if version.status != models.STATUS_ACTIVE:
         return HttpResponseForbidden()

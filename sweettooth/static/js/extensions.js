@@ -81,9 +81,9 @@ function($, messages, dbusProxy) {
             var oldState = $elem.data('state');
             if (newValue) {
                 if (oldState == ExtensionState.UNINSTALLED) {
-                    // Extension is installed and we flick the switch on,
-                    // install.
-                    dbusProxy.InstallExtension(uuid, $elem.data('manifest'));
+                    // If the extension is uninstalled and we
+                    // flick the switch on, install.
+                    dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
                 } else if (oldState == ExtensionState.DISABLED) {
                     dbusProxy.EnableExtension(uuid);
                 }

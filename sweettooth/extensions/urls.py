@@ -10,11 +10,6 @@ upload_patterns = patterns('',
 )
 
 data_patterns = patterns('',
-    url(r'^manifests/(?P<uuid>.+)\.(?P<ver>\d+)\.json$',
-        views.manifest, name='extensions-manifest'),
-
-    url(r'^downloads/(?P<uuid>.+)\.(?P<ver>\d+)\.shell-extension\.zip$',
-        views.download, name='extensions-download'),
 )
 
 ajax_patterns = patterns('',
@@ -40,8 +35,10 @@ urlpatterns = patterns('',
     url(r'^extension/(?P<pk>\d+)/$',
         views.ExtensionLatestVersionView.as_view(), dict(slug=None), name='extensions-detail'),
 
+    url(r'^download-extension/(?P<uuid>.+)\.shell-extension\.zip$',
+        views.download, name='extensions-download'),
+
     url('^upload/', include(upload_patterns)),
-    url('^extension-data/', include(data_patterns)),
     url('^ajax/', include(ajax_patterns)),
 
     url(r'local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
