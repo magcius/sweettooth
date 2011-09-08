@@ -151,7 +151,8 @@ def parse_zipfile_metadata(uploaded_file):
 
 class ExtensionVersion(models.Model):
     extension = models.ForeignKey(Extension, related_name="versions")
-    version = models.IntegerField(default=0)
+    version = models.IntegerField(default=0,
+                                  max_length=Extension._meta.get_field('uuid').max_length + len(".v000.shell-version.zip"))
     extra_json_fields = models.TextField()
     status = models.PositiveIntegerField(choices=STATUSES.items())
     shell_versions = models.ManyToManyField(ShellVersion)
@@ -163,8 +164,7 @@ class ExtensionVersion(models.Model):
         return "Version %d of %s" % (self.version, self.extension)
 
     def make_filename(self, filename):
-        return os.path.join(self.extension.uuid, str(self.version),
-                            self.extension.slug + ".shell-extension.zip")
+        return "%s.v%d.shell-extension.zip" % (self.extension.uuid, self.version)
 
     source = models.FileField(upload_to=make_filename)
 
