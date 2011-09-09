@@ -9,9 +9,6 @@ upload_patterns = patterns('',
     url(r'^new-version/(?P<pk>\d+)/$', views.upload_file, name='extensions-upload-file'),
 )
 
-data_patterns = patterns('',
-)
-
 ajax_patterns = patterns('',
     url('^i/(?P<pk>\d+)', views.AjaxInlineEditView.as_view(), name='extensions-ajax-inline'),
     url('^l/(?P<pk>\d+)', views.AjaxSubmitAndLockView.as_view(), name='extensions-ajax-submit'),
