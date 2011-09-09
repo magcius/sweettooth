@@ -172,11 +172,6 @@ class ExtensionVersion(models.Model):
     def shell_versions_json(self):
         return json.dumps([sv.version_string for sv in self.shell_versions.all()])
 
-    def get_manifest_url(self, request):
-        path = reverse('extensions-manifest',
-                       kwargs=dict(uuid=self.extension.uuid, ver=self.pk))
-        return request.build_absolute_uri(path)
-
     def make_metadata_json(self):
         """
         Return generated contents of metadata.json
