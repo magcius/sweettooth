@@ -17,6 +17,12 @@ ajax_patterns = patterns('',
     url(r'^d/', views.AjaxDetailsView.as_view(), name='extensions-ajax-details'),
 )
 
+shell_patterns = patterns('',
+    url(r'^extension-info/', views.AjaxDetailsView.as_view()),
+
+    url(r'^download-extension/(?P<uuid>.+)\.shell-extension\.zip$',
+        views.download),
+)
 
 urlpatterns = patterns('',
     url(r'^$', ListView.as_view(queryset=models.Extension.objects.visible(),
@@ -32,11 +38,9 @@ urlpatterns = patterns('',
     url(r'^extension/(?P<pk>\d+)/$',
         views.ExtensionLatestVersionView.as_view(), dict(slug=None), name='extensions-detail'),
 
-    url(r'^download-extension/(?P<uuid>.+)\.shell-extension\.zip$',
-        views.download, name='extensions-download'),
-
     url(r'^upload/', include(upload_patterns)),
     url(r'^ajax/', include(ajax_patterns)),
+    url(r'', include(shell_patterns)),
 
     url(r'local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
 )
