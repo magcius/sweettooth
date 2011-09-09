@@ -18,7 +18,7 @@ from extensions import models
 from extensions.forms import UploadForm
 
 def download(request, uuid):
-    pk = request.GET['server_uuid']
+    pk = request.GET['version_tag']
     version = get_object_or_404(models.ExtensionVersion, pk=pk)
 
     if version.status != models.STATUS_ACTIVE:
@@ -200,8 +200,10 @@ class AjaxDetailsView(SingleObjectMixin, View):
             queryset = self.get_queryset()
         uuid = self.request.GET.get('uuid', None)
 
-        if uuid is not None:
-            queryset = queryset.filter(uuid=uuid)
+        if uuid is None:
+            return None
+
+        queryset = queryset.filter(uuid=uuid)
 
         try:
             return queryset.get()
