@@ -1,0 +1,9 @@
+<VirtualHost 127.0.0.1:443>
+        ServerName extensions.gnome.org
+
+        WSGIScriptAlias / /home/jstpierre/Source/sweettooth/sweettooth.wsgi
+
+        SSLEngine on
+        SSLCertificateFile    /etc/pki/tls/certs/extensions.gnome.org.crt
+        SSLCertificateKeyFile /etc/pki/tls/private/extensions.gnome.org.key
+</VirtualHost>

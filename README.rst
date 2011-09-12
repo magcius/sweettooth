@@ -16,6 +16,8 @@ must go through code review and testing.
 Getting Started
 ---------------
 
+You can get started developing the website with::
+
   $ git clone git://github.com/magcius/sweettooth.git
   $ cd sweettooth
   $ virtualenv_ --no-site-packages ./venv
@@ -31,6 +33,45 @@ at /review/.
 .. _runserver_plus: http://packages.python.org/django-extensions/
 .. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org/
+
+Testing with the Shell
+======================
+
+If you have GNOME Shell, and you want to test the installation system, you're
+going to have to hack your system. For security reasons, the browser plugin and
+GNOME Shell both ping the URL https://extensions.gnome.org directly. The
+easiest way to get around this is to make a development environment with the
+proper things that it needs. Since the Django development server doesn't
+natively support SSL connections, we need to install Apache. Follow the
+instructions above to get a proper SweetTooth checkout, and then::
+
+  # Install Apache
+  $ sudo yum install httpd mod_wsgi mod_ssl
+
+  # Generate a self-signed cert
+  $ openssl req -new -x509 -nodes -out extensions.gnome.org.crt -keyfile extensions.gnome.org.key
+  # ... answer questions or just use blanks
+
+  # Install it on your system.
+  $ sudo cp extensions.gnome.org.crt /etc/pki/tls/certs/
+  $ sudo cp --preserve=mode extensions.gnome.org.key /etc/pki/tls/private/
+
+  # The shell will look for a special file called 'extensions.gnome.org.crt',
+  # for development purposes. Otherwise it will use your system's CA bundle.
+  $ mkdir -p ~/.local/share/gnome-shell
+  $ cp extensions.gnome.org.crt ~/.local/share/gnome-shell/
+
+  # Configure Apache.
+  $ cp etc/sweettooth.wsgi.example ./sweettooth.wsgi
+  $ $EDITOR ./sweettooth.wsgi
+
+  $ cp etc/sweettooth.httpd.conf.example ./sweettooth.httpd.conf
+  $ $EDITOR ./sweettooth.httpd.conf
+  $ sudo cp sweettooth.httpd.conf /etc/httpd/conf.d/sweettooth.conf
+
+  # Edit /etc/hosts
+  $ sudo tee -a /etc/hosts <<< 'extensions.gnome.org 127.0.0.1'
+
 
 Requirements
 ------------
