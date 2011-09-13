@@ -1,0 +1,36 @@
+
+table.reviews {
+    width: 100%;
+}
+
+table.reviews thead, table.reviews tbody {
+    border-bottom: 1px solid #ccc;
+}
+
+table.reviews th {
+    border-left: 1px solid #eee;
+}
+
+table.reviews td {
+    border-left: 1px solid #ccc;
+}
+
+table.reviews tr {
+    line-height: 2em;
+    text-align: left;
+    text-indent: 1em;
+}
+
+table.reviews tbody tr:nth-child(odd) {
+    background-color: #eee;
+}
+
+table.reviews .rejected {
+    color: #c00;
+    font-weight: bold;
+}
+
+table.reviews .active {
+    color: #0a0;
+    font-weight: bold;
+}

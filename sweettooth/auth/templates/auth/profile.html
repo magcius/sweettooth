@@ -17,5 +17,22 @@
       <td>{{ request.user.email }}</td>
     </tr>
   </table>
+
+  <h3> {{ display_name }} has authored </h3>
+  <ul>
+    {% for extension in extensions %}
+      <li><a href="{% url extensions-detail pk=extension.pk %}">{{ extension.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h3> {{ display_name }} has reviewed </h3>
+  <ul>
+    {% include "review/review_table.html" with reviews=reviews %}
+  </ul>
 </div>
+{% endblock %}
+
+{% block head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="/static/css/review-table.css" />
 {% endblock %}
