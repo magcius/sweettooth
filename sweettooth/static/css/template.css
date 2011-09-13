@@ -79,19 +79,17 @@ a:visited {
     padding-left: 18px;
     border-right: 1px solid #ccc;
     padding-right: 6px;
-    margin-right: 3px;
 }
 #global_domain_bar .tab a.root:last-child {
     border-right: 0;
     padding-right: 0;
-    margin-right: 0;
 }
 #global_domain_bar .tab a.root:hover {
     text-decoration: underline;
 }
 #global_domain_bar .tab a.user {
     padding: 2px 14px 2px 4px;
-    margin: -2px -4px -2px -2px;
+    margin: -2px -4px -2px 2px;
     color: inherit !important;
     text-decoration: none;
     -moz-border-radius: 4px;

@@ -4,6 +4,19 @@
 @import url("tipsy.css");
 @import url("jquery.rating.css");
 
+/* Unreviewed Extension Counter */
+
+#unreviewed_counter {
+    border-right: 1px solid #ccc;
+    color: #555753;
+    text-decoration: none;
+    padding: 0 4px;
+}
+
+#unreviewed_counter:hover {
+    background-color: #ececec;
+}
+
 /* Login Area */
 /* ==================================================================== */
 

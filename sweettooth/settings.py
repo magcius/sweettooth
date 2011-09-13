@@ -121,7 +121,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     "django.core.context_processors.static",
-    "django.contrib.messages.context_processors.messages")
+    "django.contrib.messages.context_processors.messages",
+    "sweettooth.review.context_processors.n_unreviewed_extensions",
+)
 
 LOGIN_URL = '/accounts/login/'
 

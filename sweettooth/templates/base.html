@@ -17,12 +17,19 @@ window._SW = function() {
     <div id="global_domain_bar">
       <div class="maxwidth">
         <div class="tab">
+          {% spaceless %}
+
           <a class="root" href="http://www.gnome.org/">GNOME.org</a>
+          {% if n_unreviewed_extensions %}
+          <a id="unreviewed_counter" href="{% url review-list %}">{{ n_unreviewed_extensions }}</a>
+          {% endif %}
           {% if request.user.is_authenticated %}
           <a class="user" href="#">{{ request.user.username }}</a>
           {% else %}
           <a href="{% url auth-login %}">Login</a>
           {% endif %}
+
+          {% endspaceless %}
         </div>
         <div class="user_settings">
           <ul>
