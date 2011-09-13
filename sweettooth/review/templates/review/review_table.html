@@ -17,7 +17,7 @@
           {{ review.version.version }}
         </a>
       </td>
-      <td>{{ review.reviewer }}</td>
+      <td><a href="{% url auth-profile user=review.reviewer.username %}">{{ review.reviewer }}</a></td>
       <td>{{ review.date }}</td>
       <td>{{ review.comments }}</td>
       <td>

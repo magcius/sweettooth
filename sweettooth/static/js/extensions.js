@@ -140,7 +140,7 @@ function($, messages, dbusProxy) {
                     type: "GET",
                 }).done(function(result) {
                     $elem.
-                        find('span.author').text(" by " + result.creator).end().
+                        find('span.author').html(" by <a href=\"/accounts/profile/"+result.creator+"\">"+result.creator+"</a>").end().
                         find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
                         find('img.icon').attr('src', result.icon);
                 });
