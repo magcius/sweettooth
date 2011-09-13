@@ -118,12 +118,20 @@ function($, messages, dbusProxy) {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
             $.each(extensions, function(uuid, extension) {
+                function uninstall() {
+                    dbusProxy.UninstallExtension(uuid).done(function(result) {
+                        if (result)
+                            $elem.fadeOut(function() { $elem.detach(); });
+                    });
+                }
+
                 var $elem = $('<div>', {'class': 'extension'}).
                     append($('<div>', {'class': 'switch'})).
                     append($('<img>', {'class': 'icon'})).
                     append($('<h3>').text(extension.name)).
                     append($('<span>', {'class': 'author'})).
-                    append($('<p>', {'class': 'description'}).text(extension.description));
+                    append($('<p>', {'class': 'description'}).text(extension.description)).
+                    append($('<button>', {'class': 'uninstall'}).text("Uninstall").bind('click', uninstall));
 
                 $.ajax({
                     url: "/ajax/d/",

@@ -32,6 +32,10 @@ define(['jquery', 'dbus!API'], function($, API) {
             API.installExtension(uuid, server_uuid);
         },
 
+        UninstallExtension: function(uuid) {
+            return _makePromise(API.uninstallExtension(uuid));
+        },
+
         extensionStateChangedHandler: null,
 
         ShellVersion: API.shellVersion
