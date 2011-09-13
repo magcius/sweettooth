@@ -49,8 +49,12 @@ instructions above to get a proper SweetTooth checkout, and then::
   $ sudo yum install httpd mod_wsgi mod_ssl
 
   # Generate a self-signed cert
-  $ openssl req -new -x509 -nodes -out extensions.gnome.org.crt -keyfile extensions.gnome.org.key
-  # ... answer questions or just use blanks
+  $ openssl req -new -nodes -out ego.csr -keyout extensions.gnome.org.key
+  # Answer questions. The only one required is the Common Name. You must put
+  # extensions.gnome.org -- the hostname -- as the answer.
+
+  $ openssl x509 -req -in ego.csr -signkey extensions.gnome.org.key -out extensions.gnome.org.crt
+  $ rm ego.csr
 
   # Install it on your system.
   $ sudo cp extensions.gnome.org.crt /etc/pki/tls/certs/
