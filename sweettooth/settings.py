@@ -123,7 +123,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages")
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 
 INSTALLED_APPS = (
     'django.contrib.auth',

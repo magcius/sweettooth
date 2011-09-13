@@ -14,8 +14,9 @@ import urllib, hashlib
 register = template.Library()
 
 class GravatarUrlNode(template.Node):
-    def __init__(self, email):
+    def __init__(self, email, size):
         self.email = template.Variable(email)
+        self.size = size
 
     def render(self, context):
         try:
@@ -24,19 +25,19 @@ class GravatarUrlNode(template.Node):
             return ''
 
         default = "http://planet.gnome.org/heads/nobody.png"
-        size = 70
 
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+        gravatar_url += urllib.urlencode({'d':default, 's':str(self.size)})
 
         return gravatar_url
 
 @register.tag
 def gravatar_url(parser, token):
     try:
-        tag_name, email = token.split_contents()
+        # Default of 70 px
+        tag_name, email, size = (token.split_contents() + [70])[:3]
 
     except ValueError:
-        raise template.TemplateSyntaxError, "%r tag requires a single argument" % token.contents.split()[0]
+        raise template.TemplateSyntaxError, "%r tag requires one or two arguments" % token.contents.split()[0]
 
-    return GravatarUrlNode(email)
+    return GravatarUrlNode(email, size)

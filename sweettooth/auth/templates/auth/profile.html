@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ display_name }}'s Profile - {{ block.super }}{% endblock %}
+
+{% block body %}
+{% load gravatar %}
+<div class="profile">
+  <h2>{{ display_name }}</h2>
+  <img class="gravatar" src="{% gravatar_url request.user.email 128 %}">
+
+  <table>
+    <tr>
+      <td>Name</td>
+      <td>{{ request.user.full_name }}</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>{{ request.user.email }}</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # 'login' and 'register'
-    url(r'^', include('auth.urls')),
+    url(r'^accounts/', include('auth.urls')),
     url(r'^', include('extensions.urls'), name='index'),
 
     url(r'^review/', include('review.urls')),

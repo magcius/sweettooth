@@ -31,6 +31,41 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
             return false;
         });
 
+        function closeUserSettings() {
+            var needsClose = $('#global_domain_bar .user').hasClass('active');
+            if (!needsClose)
+                return false;
+
+            $('#global_domain_bar .user').removeClass('active');
+            $('#global_domain_bar .user_settings').animate({ top: '10px', opacity: 0 }, 200, function() {
+                $(this).hide();
+            });
+            return true;
+        }
+
+        function openUserSettings() {
+            $('#global_domain_bar .user').addClass('active');
+            $('#global_domain_bar .user_settings').show().css({ top: '-10px', opacity: 0 }).animate({ top: '0', opacity: 1 }, 200);
+        }
+
+        $(document.body).click(function() {
+            if (closeUserSettings())
+                return false;
+        });
+
+        $('#global_domain_bar .user_settings').click(function(e) {
+            e.stopPropagation();
+        });
+
+        $('#global_domain_bar .user').click(function() {
+            if ($(this).hasClass('active')) {
+                closeUserSettings();
+            } else {
+                openUserSettings();
+            }
+            return false;
+        });
+
         $('#submit-ajax').click(function() {
             var $elem = $(this);
 
