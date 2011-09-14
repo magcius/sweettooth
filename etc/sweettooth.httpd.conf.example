@@ -2,6 +2,8 @@
         ServerName extensions.gnome.org
 
         WSGIScriptAlias / /home/jstpierre/Source/sweettooth/sweettooth.wsgi
+        Alias /static/extension-data/ /home/jstpierre/Source/sweettooth/sweettooth/uploaded-files/
+        Alias /static/ /home/jstpierre/Source/sweettooth/sweettooth/static/
 
         SSLEngine on
         SSLCertificateFile    /etc/pki/tls/certs/extensions.gnome.org.crt
