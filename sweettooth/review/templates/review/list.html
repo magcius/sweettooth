@@ -9,6 +9,6 @@
 {% with extension=version.extension %}
   <li><a href="{% url review-version pk=version.pk %}">{{ extension.name }}</a> ({{ version.version }}) by {{ extension.creator }}</li>
 {% endwith %}
-</ul>
 {% endfor %}
+</ul>
 {% endblock %}
