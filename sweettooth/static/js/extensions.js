@@ -174,7 +174,7 @@ function($, messages, dbusProxy) {
                         find('span.author').html(" by <a href=\"/accounts/profile/"+result.creator+"\">"+result.creator+"</a>").end().
                         find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
                         find('img.icon').attr('src', result.icon).end().
-                        append($('<button>', {'class': 'uninstall'}).text("Uninstall").bind('click', uninstall)).
+                        append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
                         data('pk', result.pk);
                 });
 
