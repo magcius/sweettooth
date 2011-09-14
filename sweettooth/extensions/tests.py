@@ -3,6 +3,8 @@ import json
 import os.path
 
 from django.test import TestCase
+from django.test.client import Client
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from extensions import models
 
@@ -38,6 +40,28 @@ class UploadTest(TestCase):
             metadata = models.parse_zipfile_metadata(f)
         version.parse_metadata_json(metadata)
 
+        self.assertEquals(extension.uuid, "test-extension@gnome.org")
+        self.assertEquals(extension.name, "Test Extension")
+        self.assertEquals(extension.description, "Simple test metadata")
+        self.assertEquals(extension.url, "http://test-metadata.gnome.org")
+
+    def test_upload_parsing(self):
+        client = Client()
+        client.login(username='testing', password='jjj')
+
+        with get_test_zipfile('SimpleExtension') as f:
+            response = client.post(reverse('extensions-upload-file'),
+                                   dict(source=f), follow=True)
+
+        extension = models.Extension.objects.get(uuid="test-extension@gnome.org")
+        version = extension.versions.order_by("-version")[0]
+
+        url = reverse('extensions-version-detail', kwargs=dict(pk=version.pk,
+                                                               ext_pk=extension.pk,
+                                                               slug=extension.slug))
+        self.assertRedirects(response, url)
+
+        self.assertEquals(extension.creator, self.user)
         self.assertEquals(extension.name, "Test Extension")
         self.assertEquals(extension.description, "Simple test metadata")
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
@@ -52,6 +76,7 @@ class UploadTest(TestCase):
         version.parse_metadata_json(metadata)
 
         extra = json.loads(version.extra_json_fields)
+        self.assertEquals(extension.uuid, "test-extension-2@gnome.org")
         self.assertEquals(extra["extra"], "This is some good data")
         self.assertTrue("description" not in extra)
         self.assertTrue("url" not in extra)

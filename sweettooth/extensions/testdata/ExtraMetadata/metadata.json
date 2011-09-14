@@ -1,4 +1,5 @@
 {
+    "uuid": "test-extension-2@gnome.org",
     "name": "Test Extension",
     "description": "Fingertips",
     "url": "http://extra-metadata.gnome.org",
