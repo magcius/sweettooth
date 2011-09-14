@@ -130,8 +130,7 @@ function($, messages, dbusProxy) {
                     append($('<img>', {'class': 'icon'})).
                     append($('<h3>').text(extension.name)).
                     append($('<span>', {'class': 'author'})).
-                    append($('<p>', {'class': 'description'}).text(extension.description)).
-                    append($('<button>', {'class': 'uninstall'}).text("Uninstall").bind('click', uninstall));
+                    append($('<p>', {'class': 'description'}).text(extension.description));
 
                 $.ajax({
                     url: "/ajax/d/",
@@ -142,7 +141,8 @@ function($, messages, dbusProxy) {
                     $elem.
                         find('span.author').html(" by <a href=\"/accounts/profile/"+result.creator+"\">"+result.creator+"</a>").end().
                         find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
-                        find('img.icon').attr('src', result.icon);
+                        find('img.icon').attr('src', result.icon).end().
+                        append($('<button>', {'class': 'uninstall'}).text("Uninstall").bind('click', uninstall));
                 });
 
                 // The DOM element's CSS styles won't be fully
