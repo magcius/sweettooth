@@ -184,6 +184,7 @@ class AjaxDetailsView(SingleObjectMixin, View):
             raise Http404()
 
         data = {
+            'pk': self.object.pk,
             'uuid': self.object.uuid,
             'name': self.object.name,
             'creator': self.object.creator.username,

@@ -70,7 +70,8 @@ function($, messages, dbusProxy) {
         }
 
         $elem.data({'elem': $elem,
-                    'state': _state});
+                    'state': _state,
+                    'uninstalled': false});
 
         $switch.data('elem', $elem);
         $switch.switchify();
@@ -109,6 +110,14 @@ function($, messages, dbusProxy) {
                 $switch.switchify('insensitive', true);
                 messages.addError("This extension is not compatible with your version of GNOME.");
             }
+
+            if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||
+                                              newState == ExtensionState.ERROR ||
+                                              newState == ExtensionState.OUT_OF_DATE)) {
+                $elem.fadeIn({ queue: false }).slideDown();
+                $elem.data('uninstalled', false);
+            }
+
         });
         $elem.trigger('state-changed', _state);
         elems[uuid] = $elem;
@@ -118,10 +127,33 @@ function($, messages, dbusProxy) {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
             $.each(extensions, function(uuid, extension) {
+                function reinstall() {
+                    dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
+
+                    // If the user clicks "Install" we need to show that we
+                    // installed it by reattaching the element, but we can't do
+                    // that here -- the user might click "Cancel".
+                    $elem.data('uninstalled', true);
+
+                    message.slideUp();
+                }
+
                 function uninstall() {
                     dbusProxy.UninstallExtension(uuid).done(function(result) {
-                        if (result)
-                            $elem.fadeOut(function() { $elem.detach(); });
+                        if (result) {
+                            $elem.fadeOut({ queue: false }).slideUp({ queue: false });
+
+                            // Construct a dummy <p> node as we need something
+                            // to stuff everything else in...
+                            var messageHTML = $("<p>You uninstalled </p>").
+                                append($('<b>').text(extension.name)).
+                                append(". ").
+                                append($('<a>', {'href': '#'}).text("Undo?")).html();
+
+                            var message = messages.addInfo(messageHTML);
+                            message.find('a').click(reinstall);
+                            $elem.data('undo-uninstall-message', message);
+                        }
                     });
                 }
 
@@ -142,7 +174,8 @@ function($, messages, dbusProxy) {
                         find('span.author').html(" by <a href=\"/accounts/profile/"+result.creator+"\">"+result.creator+"</a>").end().
                         find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
                         find('img.icon').attr('src', result.icon).end().
-                        append($('<button>', {'class': 'uninstall'}).text("Uninstall").bind('click', uninstall));
+                        append($('<button>', {'class': 'uninstall'}).text("Uninstall").bind('click', uninstall)).
+                        data('pk', result.pk);
                 });
 
                 // The DOM element's CSS styles won't be fully
