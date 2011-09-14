@@ -11,3 +11,6 @@ Demos
 sweettooth/uploaded-files
 local_settings.py
 sweettooth.wsgi
+*.crt
+*.csr
+*.key
