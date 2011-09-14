@@ -27,11 +27,12 @@ window._SW = function() {
           {% if request.user.is_authenticated %}
           <a class="user" href="#">{{ request.user.username }}</a>
           {% else %}
-          <a href="{% url auth-login %}">Login</a>
+          <a class="user" href="{% url auth-login %}">Login</a>
           {% endif %}
 
           {% endspaceless %}
         </div>
+        {% if request.user.is_authenticated %}
         <div class="user_settings">
           <ul>
             <li><a href="{% url auth-profile user=request.user.username %}">Your profile</a></li>
@@ -39,6 +40,9 @@ window._SW = function() {
             <li><a href="{% url auth-logout %}">Log out</a></li>
           </ul>
         </div>
+        {% else %}
+        {% include "auth/login_popup_form.html" %}
+        {% endif %}
       </div>
     </div>
 

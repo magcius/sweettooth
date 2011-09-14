@@ -37,7 +37,7 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
                 return false;
 
             $('#global_domain_bar .user').removeClass('active');
-            $('#global_domain_bar .user_settings').animate({ top: '10px', opacity: 0 }, 200, function() {
+            $('#global_domain_bar .user_settings, #global_domain_bar .login_popup_form').animate({ top: '10px', opacity: 0 }, 200, function() {
                 $(this).hide();
             });
             return true;
@@ -45,7 +45,7 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
 
         function openUserSettings() {
             $('#global_domain_bar .user').addClass('active');
-            $('#global_domain_bar .user_settings').show().css({ top: '-10px', opacity: 0 }).animate({ top: '0', opacity: 1 }, 200);
+            $('#global_domain_bar .user_settings, #global_domain_bar .login_popup_form').show().css({ top: '-10px', opacity: 0 }).animate({ top: '0', opacity: 1 }, 200);
         }
 
         $(document.body).click(function() {
@@ -53,7 +53,7 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
                 return false;
         });
 
-        $('#global_domain_bar .user_settings').click(function(e) {
+        $('#global_domain_bar .user_settings, #global_domain_bar .login_popup_form').click(function(e) {
             e.stopPropagation();
         });
 
