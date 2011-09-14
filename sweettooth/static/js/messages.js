@@ -3,7 +3,7 @@
 define(['jquery'], function($) {
     function addMessage(tag, message) {
         return $('<p>').addClass('message').addClass(tag)
-            .text(message).appendTo($('#message_container'));
+            .append(message).appendTo($('#message_container'));
     }
 
     function addInfo(message) {
