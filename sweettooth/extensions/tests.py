@@ -54,17 +54,31 @@ class UploadTest(TestCase):
                                    dict(source=f), follow=True)
 
         extension = models.Extension.objects.get(uuid="test-extension@gnome.org")
-        version = extension.versions.order_by("-version")[0]
+        version1 = extension.versions.order_by("-version")[0]
 
-        url = reverse('extensions-version-detail', kwargs=dict(pk=version.pk,
-                                                               ext_pk=extension.pk,
-                                                               slug=extension.slug))
-        self.assertRedirects(response, url)
-
+        self.assertEquals(version1.status, models.STATUS_NEW)
         self.assertEquals(extension.creator, self.user)
         self.assertEquals(extension.name, "Test Extension")
         self.assertEquals(extension.description, "Simple test metadata")
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
+
+        url = reverse('extensions-version-detail', kwargs=dict(pk=version1.pk,
+                                                               ext_pk=extension.pk,
+                                                               slug=extension.slug))
+        self.assertRedirects(response, url)
+
+        version1.status = models.STATUS_ACTIVE
+        version1.save()
+
+        # Try again, hoping to get a new version
+        with get_test_zipfile('SimpleExtension') as f:
+            response = client.post(reverse('extensions-upload-file'),
+                                   dict(source=f), follow=True)
+
+        version2 = extension.versions.order_by("-version")[0]
+        self.assertNotEquals(version1, version2)
+        self.assertEquals(version2.status, models.STATUS_NEW)
+        self.assertEquals(version2.version, version1.version+1)
 
     def test_extra_metadata(self):
         extension = models.Extension(creator=self.user)

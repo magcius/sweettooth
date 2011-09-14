@@ -240,7 +240,7 @@ def upload_file(request, pk):
                 # uuid -- or correct their mistake if they're the same user.
                 ext = existing.get()
                 if request.user == ext.creator:
-                    return redirect('extensions-upload-file', pk=ext.pk)
+                    return upload_file(request, ext.pk)
                 else:
                     messages.error(request, "An extension with that UUID has already been added.")
                     return redirect('extensions-upload-file')
