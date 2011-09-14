@@ -55,6 +55,7 @@ instructions above to get a proper SweetTooth checkout, and then::
 
   $ openssl x509 -req -in ego.csr -signkey extensions.gnome.org.key -out extensions.gnome.org.crt
   $ rm ego.csr
+  $ chmod 600 extensions.gnome.org.key
 
   # Install it on your system.
   $ sudo cp extensions.gnome.org.crt /etc/pki/tls/certs/
