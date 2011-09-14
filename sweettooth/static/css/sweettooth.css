@@ -123,8 +123,12 @@ li.extension {
     color: #445;
 }
 
-.extension .author {
+.extension .author, .extension .author a {
     color: #888;
+}
+
+.extension .author a:hover {
+    color: #666;
 }
 
 .extension ._gnome-switch {
