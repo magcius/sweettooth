@@ -24,7 +24,7 @@ STATUSES = {
     STATUS_NEW: u"New",
     STATUS_LOCKED: u"Unreviewed and Locked",
     STATUS_REJECTED: u"Rejected",
-    STATUS_INACTIVE: u"Invactive",
+    STATUS_INACTIVE: u"Inactive",
     STATUS_ACTIVE: u"Active",
 }
 
