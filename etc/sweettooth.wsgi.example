@@ -1,3 +1,4 @@
+
 import os
 import site
 import sys
@@ -12,5 +13,26 @@ if os.path.exists(_venv):
 
 sys.path.extend([_path, os.path.join(_path, 'sweettooth')])
 
+USE_DONT_PANIC = True
+
+def _DONT_PANIC(application):
+    """
+    Try to use DON'T PANIC, your friendly Werkzeug debugger
+    """
+    try:
+        from werkzeug import DebuggedApplication
+    except ImportError:
+        return application
+
+    from django.views import debug
+    def null_technical_500_response(request, exc_type, exc_value, tb):
+        raise exc_type, exc_value, tb
+    debug.technical_500_response = null_technical_500_response
+
+    return DebuggedApplication(application, True)
+
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
+
+if USE_DONT_PANIC:
+    application = _DONT_PANIC(application)
