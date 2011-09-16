@@ -239,6 +239,12 @@ li.extension {
     height: 32px;
 }
 
+.extension dt, .extension dd {
+    font-size: 1em;
+    display: inline-block;
+    padding: 0 1em;
+}
+
 /* Comments */
 /* ==================================================================== */
 

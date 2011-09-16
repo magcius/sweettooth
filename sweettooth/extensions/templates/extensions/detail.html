@@ -36,6 +36,14 @@
       <p class="description" id="extension_description">
         {{ extension.description }}
       </p>
+
+      <dl>
+      {% if extension.url %}
+        <dt>Extension Homepage</dt>
+        <dd><a href="{{ extension.url }}">{{ extension.url }}</a></dd>
+      {% endif %}
+      </dl>
+
       <hr style="clear: both;">
 
       {% block comments %}
