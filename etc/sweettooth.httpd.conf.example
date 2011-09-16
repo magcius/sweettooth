@@ -2,6 +2,10 @@
         ServerName extensions.gnome.org
 
         WSGIScriptAlias / /home/jstpierre/Source/sweettooth/sweettooth.wsgi
+
+        WSGIDaemonProcess extensions.gnome.org processes=1 threads=10
+        WSGIProcessGroup extensions.gnome.org
+
         Alias /static/extension-data/ /home/jstpierre/Source/sweettooth/sweettooth/uploaded-files/
         Alias /static/ /home/jstpierre/Source/sweettooth/sweettooth/static/
 
