@@ -83,7 +83,6 @@ Requirements
 
   * django_
   * django-autoslug_
-  * django-tagging_
   * Pygments_
   * sorl-thumbnail_
   * south_
