@@ -17,7 +17,8 @@ function($, messages, dbusProxy) {
         UNINSTALLED: 99
     };
 
-    if (!dbusProxy) {
+    if (dbusProxy === undefined ||
+        dbusProxy.apiVersion === undefined) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
         messages.addError("You do not appear to have an up " +
@@ -27,6 +28,9 @@ function($, messages, dbusProxy) {
             // Don't show our switches -- CSS styles define a clickable
             // area even with no content.
             $(this).find('.switch').hide();
+        };
+
+        $.fn.addLocalExtensions = function() {
         };
 
         return {};
