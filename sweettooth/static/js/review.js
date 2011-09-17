@@ -10,16 +10,16 @@ define(['jquery'], function($) {
         if (rawLines[0] == "")
             count --;
 
-        var lines = "";
-        lines += "<td class=\"linenumbers\"><pre>";
+        var lines = [];
+        lines.push("<td class=\"linenumbers\"><pre>");
         for (var i = 1; i < (count + 1); i ++) {
-            lines += "<span rel=\"L" + i + "\">" + i + "</span>\n";
+            lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
         }
-        lines += "</pre></td>";
+        lines.push("</pre></td>");
 
         var file = "<td width=\"100%\"><div class=\"file\">" + data.html + "</div></td>";
 
-        return $("<table><tr>" + lines + file + "</tr></div>");
+        return $("<table><tr>" + lines.join('') + file + "</tr></table>");
     }
 
     $.fn.reviewify = function(fileurl) {
