@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Report Error for "{{ version.extension.name }}" &mdash; {{ block.super }}{% endblock %}
+{% block body %}
+<h2><em>{{ version.extension.name }}</em> is malfunctioning?</h2>
+
+<p>Please look through the information below and edit out
+  any private information.</p>
+<form action="" method="POST" id="error_report">
+  <h3> Detected errors with this extension </h3>
+  <textarea name="error" id="error_log"></textarea>
+
+  <h3> Additional comments for the author </h3>
+  <textarea name="comment" id="comment"></textarea>
+
+  <input type="submit" value="Report Errors">
+</form>
+{% endblock %}
+
+{% block document-ready %}
+require(['jquery', 'extensions'], function($) {
+    $("#error_log").fillInErrors("{{ version.extension.uuid }}");
+});
+{% endblock %}

@@ -245,6 +245,52 @@ li.extension {
     padding: 0 1em;
 }
 
+.extension .report {
+    display: block;
+    height: 32px;
+    padding-left: 36px;
+    font-size: 16pt;
+    background-repeat: no-repeat;
+    margin-top: 1em;
+}
+
+.extension .report.error {
+    background-image: url(../images/face-angry.png);
+}
+
+.extension .report + p {
+    padding-left: 16px;
+    line-height: 1.7em;
+}
+
+.extension .report.rating {
+    background-image: url(../images/face-smile.png);
+}
+
+#error_report input {
+    float: right;
+}
+
+#error_report textarea {
+    display: block;
+    width: 97%;
+    resize: vertical;
+    height: 300px;
+    min-height: 80px;
+    padding: 0.5em;
+    margin: 1em;
+}
+
+#error_report textarea.no-errors {
+    color: #888;
+    font: inherit;
+    text-align: center;
+    height: 1.6em;
+    min-height: 1.6em;
+    line-height: 1.6em;
+    resize: none;
+}
+
 /* Comments */
 /* ==================================================================== */
 

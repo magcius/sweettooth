@@ -1,6 +1,6 @@
 
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 
 from extensions import views, models
 
@@ -43,4 +43,9 @@ urlpatterns = patterns('',
     url(r'', include(shell_patterns)),
 
     url(r'local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
+
+    url(r'^error-report/(?P<pk>\d+)',
+        DetailView.as_view(model=models.ExtensionVersion,
+                           context_object_name="version",
+                           template_name="extensions/error-report.html"), name='extensions-error'),
 )

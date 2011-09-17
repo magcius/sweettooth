@@ -197,6 +197,16 @@ function($, messages, dbusProxy) {
         });
     };
 
+    $.fn.fillInErrors = function (uuid) {
+        var $textarea = $(this);
+        dbusProxy.GetErrors(uuid).done(function(errors) {
+            if (errors && errors.length)
+                $textarea.text(errors.join('\n\n'));
+            else
+                $textarea.text("Could not detect any errors").addClass('no-errors').attr('disabled', 'disabled');
+        });
+    };
+
     $.fn.addExtensionsSwitches = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
