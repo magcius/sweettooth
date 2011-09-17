@@ -36,7 +36,7 @@ define({
 
             var apiVersion = window.SweetTooth.apiVersion;
             var scriptname = null;
-            if (apiVersion){
+            if (apiVersion) {
                 scriptname = './versions/' + apiVersion + '/main';
                 // requirejs caches response.
                 req([scriptname], function(module) {
