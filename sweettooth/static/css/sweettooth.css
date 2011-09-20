@@ -253,25 +253,44 @@ li.extension {
 }
 
 .extension .report {
+    overflow: auto;
+}
+
+.extension .report .txt {
     display: block;
     height: 32px;
     padding-left: 36px;
     font-size: 16pt;
     background-repeat: no-repeat;
-    margin-top: 1em;
 }
 
-.extension .report.error {
+.extension .report.error .txt {
     background-image: url(../images/face-angry.png);
 }
 
-.extension .report + p {
+.extension .report.rating .txt {
+    background-image: url(../images/face-smile.png);
+    margin-left: 24px;
+    margin-bottom: 10px;
+}
+
+.extension .report p {
     padding-left: 16px;
     line-height: 1.7em;
 }
 
-.extension .report.rating {
-    background-image: url(../images/face-smile.png);
+.extension .report.error {
+    background: #EEEEEC;
+    border: 1px solid #BABDB6;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    clear: both;
+    padding: 20px;
+
+    /* Extra margin on the bottom, left and right is for
+     * the shadow -- we use overflow: hidden on the parent
+     * to establish a BFC, so it will clip the shadow. */
+    margin: 20px 4px 4px 4px;
 }
 
 #error_report input {
