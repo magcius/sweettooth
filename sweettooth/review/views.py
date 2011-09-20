@@ -9,7 +9,7 @@ import pygments.util
 import pygments.lexers
 import pygments.formatters
 
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.utils.safestring import mark_safe
@@ -114,3 +114,14 @@ class ReviewVersionView(DetailView):
         previous_reviews = CodeReview.objects.filter(version__extension=self.object.extension)
         context['previous_reviews'] = previous_reviews
         return context
+
+class ReviewListView(ListView):
+    queryset=models.ExtensionVersion.objects.filter(status=models.STATUS_LOCKED)
+    context_object_name="versions"
+    template_name="review/list.html"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.has_perm("review.can-review-extensions"):
+            return HttpResponseForbidden()
+
+        return super(ReviewListView, self).get(request, *args, **kwargs)
