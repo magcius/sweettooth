@@ -70,17 +70,22 @@
     background: rgba(100%, 100%, 100%, 0.2);
 }
 
-#login_form ol {
+#auth_form ol {
     list-style-type: none;
-    font-size: 200%;
+    font-size: 2em;
 }
 
-#login_form li.submit input {
+#auth_form .helptext {
+    font-size: 0.5em;
+    display: block;
+}
+
+#auth_form li.submit input {
     width: 86.5%;
     margin: 0 5%;
 }
 
-#login_form label {
+#auth_form label {
     display: inline-block;
     display: -moz-inline-block;
     width: 45%;
@@ -89,7 +94,7 @@
     vertical-align: top;
 }
 
-#login_form input {
+#auth_form input {
     width: 40%;
 }
 

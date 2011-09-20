@@ -1,5 +1,5 @@
 
-from django.contrib.auth import forms
+from django.contrib.auth import forms, models
 
 class PlainOutputForm(object):
     def as_plain(self):
@@ -26,4 +26,12 @@ class InlineAuthenticationForm(PlainOutputForm, AutoFocusForm,
     pass
 
 class AuthenticationForm(AutoFocusForm, forms.AuthenticationForm):
+    pass
+
+class UserCreationEmailForm(forms.UserCreationForm):
+    class Meta:
+        model = models.User
+        fields = 'username', 'email'
+
+class UserCreationForm(AutoFocusForm, UserCreationEmailForm):
     pass
