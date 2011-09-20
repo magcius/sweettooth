@@ -4,9 +4,10 @@ try:
 except ImportError:
     import simplejson as json
 
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name
-from pygments.formatters import HtmlFormatter
+import pygments
+import pygments.util
+import pygments.lexers
+import pygments.formatters
 
 from django.views.generic import View, DetailView
 from django.views.generic.detail import SingleObjectMixin
@@ -20,7 +21,7 @@ from extensions import models
 
 class AjaxGetFilesView(SingleObjectMixin, View):
     model = models.ExtensionVersion
-    formatter = HtmlFormatter(style="borland", cssclass="code")
+    formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -32,20 +33,23 @@ class AjaxGetFilesView(SingleObjectMixin, View):
 
         zipfile = self.object.get_zipfile('r')
 
-        # Currently, we only care about these three files.
-        wanted = (('metadata.json', 'js'), ('extension.js', 'js'), ('stylesheet.css', 'css'))
-
         # filename => { raw, html, filename }
         files = []
-        for filename, lexer in wanted:
-            try:
-                raw = zipfile.open(filename, 'r').read()
-                html = highlight(raw, get_lexer_by_name(lexer), self.formatter)
+        for filename in zipfile.namelist():
+            raw = zipfile.open(filename, 'r').read()
 
-                files.append(dict(filename=filename, raw=raw, html=html))
-            except KeyError:
-                # File doesn't exist in the zipfile.
-                pass
+            try:
+                lexer = pygments.lexers.guess_lexer_for_filename(filename, raw)
+            except pygments.util.ClassNotFound:
+                # released pygments doesn't yet have .json
+                # so hack around it here.
+                if filename.endswith('.json'):
+                    lexer = pygments.lexers.get_lexer_by_name('js')
+                else:
+                    lexer = pygments.lexers.get_lexer_by_name('text')
+
+            html = pygments.highlight(raw, lexer, self.formatter)
+            files.append(dict(filename=filename, raw=raw, html=html))
 
         return HttpResponse(mark_safe(json.dumps(files)),
                             content_type="application/json")
