@@ -51,10 +51,10 @@ window._SW = function() {
       <div class="maxwidth">
         <h1><a href="/"><img src="{{ STATIC_URL }}images/foot.png" alt="GNOME" /> Shell Extensions</a></h1>
         
-        <ul id="globalnav">
-          <li><a href="{% url extensions-index %}">Extensions</a></li>
-          <li><a href="{% url extensions-upload-file %}">Add extension</a></li>
-          <li><a href="{% url extensions-local %}">Installed extensions</a></li>
+        <ul id="globalnav" class="{% block navclass %}{% endblock %}">
+          <li class="main"><a href="{% url extensions-index %}">Extensions</a></li>
+          <li class="upload"><a href="{% url extensions-upload-file %}">Add extension</a></li>
+          <li class="local"><a href="{% url extensions-local %}">Installed extensions</a></li>
         </ul>
         
         <div class="right">
