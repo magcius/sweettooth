@@ -109,7 +109,7 @@ class ReviewVersionView(DetailView):
         # Other reviews on the same version
         previous_reviews = self.object.reviews
 
-        context.extend(dict(previous_versions=previous_versions,
+        context.update(dict(previous_versions=previous_versions,
                             previous_reviews=previous_reviews))
         return context
 
