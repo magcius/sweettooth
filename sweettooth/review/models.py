@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Permission, Group
 from django.db import models
 from django.db.models import Q
 
-from extensions import models as extensions_models
+from extensions.models import ExtensionVersion
 
 def get_all_reviewers():
     perm = Permission.objects.get(codename="can-review-extensions")
@@ -17,16 +17,7 @@ class CodeReview(models.Model):
     reviewer = models.ForeignKey(User)
     date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField()
-    version = models.ForeignKey(extensions_models.ExtensionVersion, related_name="reviews")
-    newstatus = models.PositiveIntegerField(choices=extensions_models.STATUSES.items())
-
-    @property
-    def is_rejected(self):
-        return self.newstatus == extensions_models.STATUS_REJECTED
-
-    @property
-    def is_active(self):
-        return self.newstatus == extensions_models.STATUS_ACTIVE
+    version = models.ForeignKey(ExtensionVersion, related_name="reviews")
 
     class Meta:
         permissions = (

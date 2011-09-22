@@ -6,9 +6,7 @@
   <form id="review_form" action="{% url review-submit pk=version.pk %}" method="POST">
     {% csrf_token %}
     <textarea id="comments" name="comments"></textarea>
-    <input type="radio" value="Accept" name="newstatus" id="accept"> <label for="accept">Accept</label>
-    <input type="radio" value="Reject" name="newstatus" id="reject"> <label for="reject">Reject</label>
-    <input type="submit" value="Review">
+    <input type="submit" value="Add review">
   </form>
 </div>
 {% endblock %}

@@ -73,28 +73,13 @@ class SubmitReviewView(SingleObjectMixin, View):
         if self.object.status != models.STATUS_LOCKED:
             return HttpResponseForbidden()
 
-        newstatus = request.POST.get('newstatus')
-        statuses = dict(Accept=models.STATUS_ACTIVE,
-                        Reject=models.STATUS_REJECTED)
-
-        if newstatus not in statuses:
-            return HttpResponseForbidden()
-
-        self.object.status = statuses[newstatus]
-        self.object.save()
-
         review = CodeReview(version=self.object,
                             reviewer=request.user,
-                            comments=request.POST.get('comments'),
-                            newstatus=self.object.status)
+                            comments=request.POST.get('comments'))
         review.save()
 
         models.reviewed.send(sender=self, version=self.object, review=review)
 
-        verb_past_progressive = dict(Accept="accepted",
-                                     Reject="rejected")[newstatus]
-
-        messages.info(request, "The extension was successfully %s. Thanks!" % (verb_past_progressive,))
         return redirect('review-list')
 
 class ReviewVersionView(DetailView):
