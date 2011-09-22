@@ -4,15 +4,15 @@ try:
 except ImportError:
     import simplejson as json
 
-from django.shortcuts import get_object_or_404, render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.shortcuts import get_object_or_404, render, redirect
+from django.utils.safestring import mark_for_escaping
 from django.views.generic import DetailView, View
 from django.views.generic.detail import SingleObjectMixin
-from django.utils.safestring import mark_for_escaping
 
 from extensions import models
 from extensions.forms import UploadForm

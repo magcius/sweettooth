@@ -9,12 +9,12 @@ import pygments.util
 import pygments.lexers
 import pygments.formatters
 
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.shortcuts import redirect
+from django.utils.safestring import mark_safe
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.detail import SingleObjectMixin
-from django.http import HttpResponse, HttpResponseForbidden, Http404
-from django.utils.safestring import mark_safe
-from django.contrib import messages
-from django.shortcuts import redirect
 
 from review.models import CodeReview
 from extensions import models

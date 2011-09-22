@@ -8,7 +8,6 @@ except ImportError:
 import uuid
 from zipfile import ZipFile, BadZipfile
 
-from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.db import models
 from django.dispatch import Signal
