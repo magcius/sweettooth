@@ -108,15 +108,18 @@ class ReviewVersionView(DetailView):
         if not request.user.has_perm("review.can-review-extensions"):
             return HttpResponseForbidden()
 
-        if self.object.status != models.STATUS_LOCKED:
-            return HttpResponseForbidden()
-
         return super(ReviewVersionView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ReviewVersionView, self).get_context_data(**kwargs)
-        previous_reviews = CodeReview.objects.filter(version__extension=self.object.extension)
-        context['previous_reviews'] = previous_reviews
+        # Reviews on previous versions of the same extension.
+        previous_versions = CodeReview.objects.filter(version__extension=self.object.extension)
+
+        # Other reviews on the same version
+        previous_reviews = self.object.reviews
+
+        context.extend(dict(previous_versions=previous_versions,
+                            previous_reviews=previous_reviews))
         return context
 
 class ReviewListView(ListView):
