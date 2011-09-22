@@ -20,7 +20,7 @@ from django.utils.safestring import mark_safe
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.detail import SingleObjectMixin
 
-from review.models import CodeReview, get_all_reviewers
+from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
 
 def can_review_extension(user, extension):
@@ -66,6 +66,33 @@ class AjaxGetFilesView(SingleObjectMixin, View):
 
         return HttpResponse(mark_safe(json.dumps(files)),
                             content_type="application/json")
+
+class AjaxChangeStatusView(SingleObjectMixin, View):
+    model = models.ExtensionVersion
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseForbidden()
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not can_review_extension(request.user, self.object.extension):
+            return HttpResponseForbidden()
+
+        # Do not let reviewers change the status of their own extension
+        if request.user == self.object.extension:
+            return HttpResponseForbidden()
+
+        newstatus = request.POST.get('newstatus')
+
+        log = ChangeStatusLog(user=request.user,
+                              version=self.object,
+                              newstatus=newstatus)
+        log.save()
+
+        models.status_changed.send(sender=self, version=self.object, log=log)
+
+        self.object.status = newstatus
 
 class SubmitReviewView(SingleObjectMixin, View):
     model = models.ExtensionVersion

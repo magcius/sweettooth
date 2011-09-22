@@ -248,3 +248,4 @@ class ExtensionVersion(models.Model):
 
 submitted_for_review = Signal(providing_args=["version"])
 reviewed = Signal(providing_args=["version", "review"])
+status_changed = Signal(providing_args=["version", "log"])

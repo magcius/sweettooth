@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Permission, Group
 from django.db import models
 from django.db.models import Q
 
-from extensions.models import ExtensionVersion
+from extensions.models import ExtensionVersion, STATUSES
 
 def get_all_reviewers():
     perm = Permission.objects.get(codename="can-review-extensions")
@@ -23,3 +23,9 @@ class CodeReview(models.Model):
         permissions = (
             ("can-review-extensions", "Can review extensions"),
         )
+
+class ChangeStatusLog(models.Model):
+    user = models.ForeignKey(User)
+    date = models.DateTimeField(auto_now_add=True)
+    newstatus = models.PositiveIntegerField(choices=STATUSES.items())
+    version = models.ForeignKey(ExtensionVersion, related_name="status_log")
