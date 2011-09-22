@@ -160,3 +160,33 @@ def send_email_on_submitted(sender, version):
               message=on_submitted_template % data,
               from_email=settings.EMAIL_SENDER,
               recipient_list=reviewers)
+
+on_reviewed_subject = u"""
+GNOME Shell Extensions \N{EM DASH} Your extension, "%(name)s", v%(ver)d has been reviewed.
+""".strip()
+
+on_reviewed_template = u"""
+Your extension, "%(name)s", version %(ver)d has been reviewed. You can see the review here:
+
+%(url)s
+
+Please use the review page to follow up with any comments or concerns.
+""".strip()
+
+@receiver(models.reviewed)
+def send_email_on_reviewed(sender, version, review):
+    if review.reviewer == version.creator:
+        # Don't spam the creator with his own review
+        return
+
+    extension = version.extension
+
+    data = dict(ver=version.version,
+                name=extension.name,
+                creator=extension.creator,
+                url=reverse('review-version', kwargs=dict(pk=version.pk)))
+
+    send_mail(subject=on_reviewed_subject % data,
+              message=on_reviewed_template % data,
+              from_email=settings.EMAIL_SENDER,
+              recipient_list=[extension.creator.email])
