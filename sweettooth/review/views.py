@@ -99,16 +99,7 @@ class SubmitReviewView(SingleObjectMixin, View):
 
 class ReviewVersionView(DetailView):
     model = models.ExtensionVersion
-    template_name = "review/review.html"
     context_object_name = "version"
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        if not request.user.has_perm("review.can-review-extensions"):
-            return HttpResponseForbidden()
-
-        return super(ReviewVersionView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ReviewVersionView, self).get_context_data(**kwargs)
@@ -121,6 +112,12 @@ class ReviewVersionView(DetailView):
         context.extend(dict(previous_versions=previous_versions,
                             previous_reviews=previous_reviews))
         return context
+
+    @property
+    def template_name(self):
+        if self.request.user.has_perm("review.can-review-extensions"):
+            return "review/review_reviewer.html"
+        return "review/review.html"
 
 class ReviewListView(ListView):
     queryset=models.ExtensionVersion.objects.filter(status=models.STATUS_LOCKED)
