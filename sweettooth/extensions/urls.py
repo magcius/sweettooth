@@ -38,14 +38,15 @@ urlpatterns = patterns('',
     url(r'^extension/(?P<pk>\d+)/$',
         views.ExtensionLatestVersionView.as_view(), dict(slug=None), name='extensions-detail'),
 
-    url(r'^upload/', include(upload_patterns)),
-    url(r'^ajax/', include(ajax_patterns)),
-    url(r'', include(shell_patterns)),
-
-    url(r'local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
+    url(r'^local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
 
     url(r'^error-report/(?P<pk>\d+)',
         DetailView.as_view(model=models.ExtensionVersion,
                            context_object_name="version",
                            template_name="extensions/error-report.html"), name='extensions-error'),
+
+    url(r'^upload/', include(upload_patterns)),
+    url(r'^ajax/', include(ajax_patterns)),
+    url(r'', include(shell_patterns)),
+
 )
