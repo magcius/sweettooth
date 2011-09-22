@@ -107,7 +107,7 @@ class ReviewVersionView(DetailView):
         previous_versions = CodeReview.objects.filter(version__extension=self.object.extension)
 
         # Other reviews on the same version
-        previous_reviews = self.object.reviews
+        previous_reviews = self.object.reviews.all()
 
         context.update(dict(previous_versions=previous_versions,
                             previous_reviews=previous_reviews))
