@@ -1,8 +1,17 @@
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission, Group
 from django.db import models
+from django.db.models import Q
 
 from extensions import models as extensions_models
+
+def get_all_reviewers():
+    perm = Permission.objects.get(codename="can-review-extensions")
+
+    # Dark magic to get all the users with a specific permission
+    # Thanks to <schinckel> in #django
+    groups = Group.objects.filter(permissions=perm)
+    return User.objects.filter(Q(is_superuser=True)|Q(user_permissions=perm)|Q(groups__in=groups)).distinct()
 
 class CodeReview(models.Model):
     reviewer = models.ForeignKey(User)

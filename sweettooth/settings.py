@@ -180,6 +180,8 @@ LOGGING = {
     }
 }
 
+EMAIL_SENDER = "noreply@extensions.gnome.org"
+
 try:
     from local_settings import *
 except ImportError:

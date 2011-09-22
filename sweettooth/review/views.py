@@ -9,14 +9,18 @@ import pygments.util
 import pygments.lexers
 import pygments.formatters
 
+from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
+from django.dispatch import receiver
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.detail import SingleObjectMixin
 
-from review.models import CodeReview
+from review.models import CodeReview, get_all_reviewers
 from extensions import models
 
 class AjaxGetFilesView(SingleObjectMixin, View):
@@ -125,3 +129,34 @@ class ReviewListView(ListView):
             return HttpResponseForbidden()
 
         return super(ReviewListView, self).get(request, *args, **kwargs)
+
+
+on_submitted_subject = u"""
+GNOME Shell Extensions \N{EM DASH} New review request: "%(name)s", v%(ver)d
+""".strip()
+
+on_submitted_template = u"""
+A new extension version, "%(name)s", version %(ver)d has been submitted for review by %(creator)s.
+
+Review the extension at %(url)s
+
+\N{EM DASH}
+
+This email was sent automatically by GNOME Shell Extensions. Do not reply.
+""".strip()
+
+@receiver(models.submitted_for_review)
+def send_email_on_submitted(sender, version):
+    extension = version.extension
+
+    data = dict(ver=version.version,
+                name=extension.name,
+                creator=extension.creator,
+                url=reverse('review-version', kwargs=dict(pk=version.pk)))
+
+    reviewers = get_all_reviewers().values_list('email', flat=True)
+
+    send_mail(subject=on_submitted_subject % data,
+              message=on_submitted_template % data,
+              from_email=settings.EMAIL_SENDER,
+              recipient_list=reviewers)
