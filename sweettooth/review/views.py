@@ -23,6 +23,15 @@ from django.views.generic.detail import SingleObjectMixin
 from review.models import CodeReview, get_all_reviewers
 from extensions import models
 
+def can_review_extension(user, extension):
+    if user == extension.creator:
+        return True
+
+    if user.has_perm("review.can-review-extensions"):
+        return True
+
+    return False
+
 class AjaxGetFilesView(SingleObjectMixin, View):
     model = models.ExtensionVersion
     formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
@@ -32,7 +41,7 @@ class AjaxGetFilesView(SingleObjectMixin, View):
         if self.object is None:
             raise Http404()
 
-        if not request.user.has_perm("review.can-review-extensions"):
+        if not can_review_extension(request.user, self.object.extension):
             return HttpResponseForbidden()
 
         zipfile = self.object.get_zipfile('r')
@@ -67,10 +76,7 @@ class SubmitReviewView(SingleObjectMixin, View):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        if not request.user.has_perm("review.can-review-extensions"):
-            return HttpResponseForbidden()
-
-        if self.object.status != models.STATUS_LOCKED:
+        if not can_review_extension(request.user, self.object.extension):
             return HttpResponseForbidden()
 
         review = CodeReview(version=self.object,
@@ -100,7 +106,7 @@ class ReviewVersionView(DetailView):
 
     @property
     def template_name(self):
-        if self.request.user.has_perm("review.can-review-extensions"):
+        if can_review_extension(self.request.user, self.object.extension):
             return "review/review_reviewer.html"
         return "review/review.html"
 
