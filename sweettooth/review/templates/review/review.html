@@ -36,10 +36,17 @@
 <div id="files">
 </div>
 
-<h2 class="expanded"> Previous Reviews </h2>
-<div id="previous">
-  {% include "review/review_table.html" with reviews=previous_versions empty="There were no previous reviews of this extension." %}
+<h2 class="expanded"> Previous Versions </h2>
+<div id="previous_versions">
+  {% include "review/review_table.html" with reviews=previous_versions empty="There were no previous versions of this extension." %}
 </div>
+
+{% if previous_reviews %}
+<h2 class="expanded"> Previous Reviews on this Version </h2>
+<div id="previous_reviews">
+  {% include "review/review_table.html" with reviews=previous_reviews %}
+</div>
+{% endif %}
 
 {% block extra %}
 {% endblock %}
