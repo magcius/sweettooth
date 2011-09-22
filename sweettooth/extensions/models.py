@@ -21,7 +21,7 @@ from sorl import thumbnail
 
 STATUSES = {
     STATUS_NEW: u"New",
-    STATUS_LOCKED: u"Unreviewed and Locked",
+    STATUS_LOCKED: u"Unreviewed",
     STATUS_REJECTED: u"Rejected",
     STATUS_INACTIVE: u"Inactive",
     STATUS_ACTIVE: u"Active",

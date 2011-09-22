@@ -20,7 +20,7 @@
 
 {% block extra %}
   {% if is_preview %}
-    <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">Submit and lock the extension for review.</button>
+    <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">Submit the extension for review.</button>
   {% endif %}
   <a href="{% url extensions-upload-file pk=version.extension.pk %}">Upload a new version</a>
 {% endblock %}
