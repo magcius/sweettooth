@@ -97,11 +97,11 @@ class ExtensionVersionView(DetailView):
             extpk = None
 
         if slug == self.object.extension.slug and extpk == self.object.extension.pk:
-
             context = self.get_context_data(object=self.object)
             context['is_preview'] = is_preview
             context['is_editable'] = status in models.EDITABLE_STATUSES
             context['is_visible'] = status in models.VISIBLE_STATUSES
+            context['is_rejected'] = status in models.REJECTED_STATUSES
             context['old_version'] = self.object != self.object.extension.latest_version
             context['status'] = status
             return self.render_to_response(context)
