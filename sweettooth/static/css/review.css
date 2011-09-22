@@ -55,10 +55,6 @@
     padding: 0.5em;
 }
 
-#files .file {
-    overflow-x: scroll;
-}
-
 #files .code {
     padding-left: 1em;
     background-color: #fff;
