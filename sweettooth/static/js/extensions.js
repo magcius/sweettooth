@@ -198,12 +198,19 @@ function($, messages, dbusProxy) {
     };
 
     $.fn.fillInErrors = function (uuid) {
-        var $textarea = $(this);
+        var $form = $(this);
+        var $textarea = $form.find('textarea[name=error]');
+        var $hidden = $form.find('input:hidden[name=has_errors]');
         dbusProxy.GetErrors(uuid).done(function(errors) {
-            if (errors && errors.length)
-                $textarea.text(errors.join('\n\n'));
-            else
-                $textarea.text("Could not detect any errors").addClass('no-errors').attr('disabled', 'disabled');
+            if (errors && errors.length) {
+                $textarea.text(errors.join('\n\n')).
+                    removeClass('no-errors').removeAttr('disabled');
+                $hidden.val('true');
+            } else {
+                $textarea.text("Could not detect any errors").
+                    addClass('no-errors').attr('disabled', 'disabled');
+                $hidden.val('');
+            }
         });
     };
 

@@ -41,9 +41,7 @@ urlpatterns = patterns('',
     url(r'^local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
 
     url(r'^error-report/(?P<pk>\d+)',
-        DetailView.as_view(model=models.ExtensionVersion,
-                           context_object_name="version",
-                           template_name="extensions/error-report.html"), name='extensions-error'),
+        views.ReportErrorView.as_view(), name='extensions-error'),
 
     url(r'^upload/', include(upload_patterns)),
     url(r'^ajax/', include(ajax_patterns)),

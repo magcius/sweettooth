@@ -6,11 +6,22 @@
 <p>Please look through the information below and edit out
   any private information.</p>
 <form action="" method="POST" id="error_report">
+  {% csrf_token %}
   <h3> Detected errors with this extension </h3>
+  <input type="hidden" name="has_errors" value="">
   <textarea name="error" id="error_log"></textarea>
 
   <h3> Additional comments for the author </h3>
   <textarea name="comment" id="comment"></textarea>
+
+  {% if not request.user.is_authenticated %}
+  <h3> Email address </h3>
+  <p>You're not <a href="{% url auth-login %}">logged in</a>.
+    In order for the extension author to contact you, you need to provide an email address.
+  </p>
+
+  <input type="email" name="email" value="">
+  {% endif %}
 
   <input type="submit" value="Report Errors">
 </form>
@@ -18,7 +29,7 @@
 
 {% block document-ready %}
 require(['jquery', 'extensions'], function($) {
-    $("#error_log").fillInErrors("{{ version.extension.uuid }}");
+    $("#error_report").fillInErrors("{{ version.extension.uuid }}");
 });
 {% endblock %}
 
