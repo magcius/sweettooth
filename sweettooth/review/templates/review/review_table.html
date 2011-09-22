@@ -1,6 +1,7 @@
 <table class="reviews">
   <thead>
     <tr>
+      <th>Extension</th>
       <th>Version</th>
       <th>Reviewer</th>
       <th>Date</th>
@@ -12,6 +13,9 @@
   <tbody>
     {% for review in reviews %}
     <tr>
+      <td>
+        <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension pk=review.version.pk %}">{{ review.version.extension.name }}</a>
+      </td>
       <td>
         <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension pk=review.version.pk %}">
           {{ review.version.version }}
