@@ -355,14 +355,6 @@ li.extension {
 /* Error & Messages */
 /* ==================================================================== */
 
-.error-log {
-    font-family: "Droid Sans", "Deja Vu Sans Mono", monospace;
-    line-height 1.4;
-    color: #00CC00;
-    background-color: #121212;
-    padding: 1em;
-}
-
 p.message {
     display: block;
     padding: .5em;
@@ -383,6 +375,12 @@ p.message.info {
     background-color: #ccf;
     background-image: url(../images/info.png);
     border-bottom: 1px solid #aad;
+}
+
+p.message.warning {
+    background-color: #EBDE71;
+    background-image: url(../images/warning.png);
+    border-bottom: 1px solid #D1C466;
 }
 
 .editable {

@@ -2,6 +2,15 @@
 {% load thumbnail %}
 {% block title %}{{ version.extension.name }} - {{ block.super }}{% endblock %}
 
+{% block extra-messages %}
+  {{ block.super }}
+  {% if old_version %}
+    <p class="message warning">
+      You are viewing an old version of <a href="{% url extension-detail pk=version.extension.pk %}">{{ version.extension.name }}</a>
+    </p>
+  {% endif %}
+{% endblock %}
+
 {% block body %}
 {% with extension=version.extension %}
     <div class="extension"
