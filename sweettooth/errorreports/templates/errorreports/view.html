@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Error report on "{{ report.version.extension.name }}" &mdash; {{ block.super }}{% endblock %}
+{% block body %}
+<h2><em>{{ report.user_display }}'s report for "{{ report.version.extension.name }}"</em></h2>
+
+<div id="error_report">
+<h3> Detected errors with this extension </h3>
+
+{% if report.no_errors %}
+<div class="no-errors">
+Could not detect any errors
+{% else %}
+<div>
+{{ report.errors }}
+{% endif %}
+</div>
+
+<h3> Additional comments for the author </h3>
+<div>{{ report.comment|default:"No comments" }}</div>
+</div>
+{% endblock %}
+
+{% block navclass %}main{% endblock %}

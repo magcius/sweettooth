@@ -297,7 +297,8 @@ li.extension {
     float: right;
 }
 
-#error_report textarea {
+#error_report textarea,
+#error_report div {
     display: block;
     width: 97%;
     resize: vertical;
@@ -307,7 +308,16 @@ li.extension {
     margin: 1em;
 }
 
-#error_report textarea.no-errors {
+#error_report div {
+    border: 1px solid #999;
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+    font-family: monospace;
+    white-space: pre;
+}
+
+#error_report .no-errors {
     color: #888;
     font: inherit;
     text-align: center;

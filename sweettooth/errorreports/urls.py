@@ -6,4 +6,7 @@ from errorreports import views
 urlpatterns = patterns('',
     url(r'^report/(?P<pk>\d+)',
         views.ReportErrorView.as_view(), name='errorreports-report'),
+
+    url(r'^view/(?P<pk>\d+)',
+        views.ViewErrorReportView.as_view(), name='errorreports-view'),
 )

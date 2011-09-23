@@ -41,3 +41,8 @@ class ReportErrorView(DetailView):
                         pk=self.object.pk,
                         ext_pk=self.object.extension.pk,
                         slug=self.object.extension.slug)
+
+class ViewErrorReportView(DetailView):
+    model = ErrorReport
+    context_object_name = "report"
+    template_name = "errorreports/view.html"

@@ -1,5 +1,6 @@
 
 from django.contrib import auth
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import Signal
 from extensions.models import ExtensionVersion
@@ -22,5 +23,16 @@ class ErrorReport(models.Model):
             return self.user.email
         else:
             return self.email
+
+    @property
+    def user_display(self):
+        if self.user:
+            return self.user.username
+        else:
+            return self.email
+
+    @property
+    def no_errors(self):
+        return self.errors == ""
 
 error_reported = Signal(providing_args=["version", "report"])
