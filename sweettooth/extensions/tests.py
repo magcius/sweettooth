@@ -15,7 +15,10 @@ def get_test_zipfile(testname):
 
 class UploadTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user('testing', 'a@a.aa', 'jjj')
+        self.username = 'TestUser1'
+        self.email = 'non-existant@non-existant.tld'
+        self.password = 'a random password'
+        self.user = User.objects.create_user(self.username, self.email, self.password)
 
     def test_simple_metadata(self):
         metadata = {"name": "Test Metadata",
@@ -45,9 +48,31 @@ class UploadTest(TestCase):
         self.assertEquals(extension.description, "Simple test metadata")
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
+    def test_extra_metadata(self):
+        extension = models.Extension(creator=self.user)
+        version = models.ExtensionVersion()
+        version.extension = extension
+
+        with get_test_zipfile('ExtraMetadata') as f:
+            metadata = models.parse_zipfile_metadata(f)
+        version.parse_metadata_json(metadata)
+
+        extra = json.loads(version.extra_json_fields)
+        self.assertEquals(extension.uuid, "test-extension-2@gnome.org")
+        self.assertEquals(extra["extra"], "This is some good data")
+        self.assertTrue("description" not in extra)
+        self.assertTrue("url" not in extra)
+
+class UploadTest(TestCase):
+    def setUp(self):
+        self.username = 'TestUser1'
+        self.email = 'non-existant@non-existant.tld'
+        self.password = 'a random password'
+        self.user = User.objects.create_user(self.username, self.email, self.password)
+
     def test_upload_parsing(self):
         client = Client()
-        client.login(username='testing', password='jjj')
+        client.login(username=self.username, password=self.password)
 
         with get_test_zipfile('SimpleExtension') as f:
             response = client.post(reverse('extensions-upload-file'),
@@ -80,24 +105,33 @@ class UploadTest(TestCase):
         self.assertEquals(version2.status, models.STATUS_NEW)
         self.assertEquals(version2.version, version1.version+1)
 
-    def test_extra_metadata(self):
-        extension = models.Extension(creator=self.user)
-        version = models.ExtensionVersion()
-        version.extension = extension
 
-        with get_test_zipfile('ExtraMetadata') as f:
-            metadata = models.parse_zipfile_metadata(f)
-        version.parse_metadata_json(metadata)
 
-        extra = json.loads(version.extra_json_fields)
-        self.assertEquals(extension.uuid, "test-extension-2@gnome.org")
-        self.assertEquals(extra["extra"], "This is some good data")
-        self.assertTrue("description" not in extra)
-        self.assertTrue("url" not in extra)
+    def test_upload_large_uuid(self):
+        client = Client()
+        client.login(username=self.username, password=self.password)
+
+        with get_test_zipfile('LargeUUID') as f:
+            response = client.post(reverse('extensions-upload-file'),
+                                   dict(source=f), follow=True)
+
+        large_uuid = '1234567890'*9 + '@gnome.org'
+        extension = models.Extension.objects.get(uuid=large_uuid)
+        version1 = extension.versions.order_by("-version")[0]
+
+        self.assertEquals(version1.status, models.STATUS_NEW)
+        self.assertEquals(extension.creator, self.user)
+        self.assertEquals(extension.name, "Large UUID test")
+        self.assertEquals(extension.description, "Simple test metadata")
+        self.assertEquals(extension.url, "http://test-metadata.gnome.org")
+
 
 class ExtensionVersionTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user('testing', 'a@a.aa', 'jjj')
+        self.username = 'TestUser1'
+        self.email = 'non-existant@non-existant.tld'
+        self.password = 'a random password'
+        self.user = User.objects.create_user(self.username, self.email, self.password)
 
     def test_single_version(self):
         metadata = {"name": "Test Metadata",
