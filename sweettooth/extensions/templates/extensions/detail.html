@@ -8,12 +8,12 @@
    {% spaceless %}
     <p class="message error">
       This version of {{ version.extension.name }} was rejected.
-      <a href="{% url extension-detail pk=version.extension.pk %}">View the latest accepted version.</a>
+      <a href="{% url extensions-detail pk=version.extension.pk %}">View the latest accepted version.</a>
     </p>
     {% endspaceless %}
   {% else %} {% if old_version %}
     <p class="message warning">
-      You are viewing an old version of <a href="{% url extension-detail pk=version.extension.pk %}">{{ version.extension.name }}</a>
+      You are viewing an old version of <a href="{% url extensions-detail pk=version.extension.pk %}">{{ version.extension.name }}</a>
     </p>
   {% endif %} {% endif %}
 {% endblock %}
