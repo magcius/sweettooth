@@ -3,6 +3,7 @@ from django.contrib import admin
 from sorl.thumbnail.admin import AdminImageMixin
 
 from extensions.models import Extension, ExtensionVersion
+from extensions.models import STATUS_ACTIVE, STATUS_REJECTED
 from review.models import CodeReview
 
 class CodeReviewAdmin(admin.TabularInline):
@@ -12,12 +13,19 @@ class CodeReviewAdmin(admin.TabularInline):
 class ExtensionVersionAdmin(admin.ModelAdmin):
     list_display = 'title', 'status',
     list_display_links = 'title',
+    actions = 'approve', 'reject',
 
     def title(self, ver):
         return "%s (%d)" % (ver.extension.uuid, ver.version)
     title.short_description = "Extension (version)"
 
     inlines = [CodeReviewAdmin]
+
+    def approve(self, request, queryset):
+        queryset.update(status=STATUS_ACTIVE)
+
+    def reject(self, request, queryset):
+        queryset.update(status=STATUS_REJECTED)
 
 admin.site.register(ExtensionVersion, ExtensionVersionAdmin)
 
