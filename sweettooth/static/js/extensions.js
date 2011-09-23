@@ -36,7 +36,8 @@ function($, messages, dbusProxy) {
         $.fn.addLocalExtensions = function() {
         };
 
-        return {};
+        $.fn.fillInErrors = function() {
+        };
     }
 
     // This is stolen from the Shell:
