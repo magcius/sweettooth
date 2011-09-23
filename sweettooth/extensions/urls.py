@@ -1,6 +1,6 @@
 
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic import ListView, TemplateView, DetailView
+from django.views.generic import ListView, TemplateView
 
 from extensions import views, models
 
@@ -39,9 +39,6 @@ urlpatterns = patterns('',
         views.ExtensionLatestVersionView.as_view(), dict(slug=None), name='extensions-detail'),
 
     url(r'^local/', TemplateView.as_view(template_name="extensions/local.html"), name='extensions-local'),
-
-    url(r'^error-report/(?P<pk>\d+)',
-        views.ReportErrorView.as_view(), name='extensions-error'),
 
     url(r'^upload/', include(upload_patterns)),
     url(r'^ajax/', include(ajax_patterns)),

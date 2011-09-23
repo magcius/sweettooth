@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     # 'ratings' goes before django's comments
     # app so it will find our templates
     'ratings',
+
     'django.contrib.comments',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -146,6 +147,7 @@ INSTALLED_APPS = (
     'extensions',
     'auth',
     'review',
+    'errorreports',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

@@ -246,26 +246,6 @@ class ExtensionVersion(models.Model):
 
         self.save()
 
-class ErrorReport(models.Model):
-    comment = models.TextField(blank=True)
-    errors = models.TextField(blank=True)
-
-    # In the case that a user isn't logged in, they can supply an optional
-    # email address for the extension author to reply to.
-    email = models.EmailField(blank=True)
-
-    user = models.ForeignKey(auth.models.User, blank=True, related_name="+")
-
-    version = models.ForeignKey(ExtensionVersion)
-
-    @property
-    def user_email(self):
-        if self.user:
-            return self.user.email
-        else:
-            return self.email
-
 submitted_for_review = Signal(providing_args=["version"])
 reviewed = Signal(providing_args=["version", "review"])
 status_changed = Signal(providing_args=["version", "log"])
-error_reported = Signal(providing_args=["version", "report"])
