@@ -20,11 +20,12 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     # Use static.serve for development...
-    urlpatterns += url(r'^static/extension-data/(?P<path>.*)', static.serve,
-                       dict(document_root=settings.MEDIA_ROOT), name='extension-data'),
+    urlpatterns.append(url(r'^static/extension-data/(?P<path>.*)', static.serve,
+                           dict(document_root=settings.MEDIA_ROOT), name='extension-data'))
 else:
     # and a dummy to reverse on for production.
-    urlpatterns += url(r'^static/extension-data/(?P<path>.*)', lambda n: None,
-                       name='extension-data'),
+    urlpatterns.append(url(r'^static/extension-data/(?P<path>.*)', lambda n: None,
+                           name='extension-data'))
+
 
 urlpatterns += staticfiles_urlpatterns()
