@@ -27,5 +27,4 @@ else:
     urlpatterns += url(r'^static/extension-data/(?P<path>.*)', lambda n: None,
                        name='extension-data'),
 
-
 urlpatterns += staticfiles_urlpatterns()

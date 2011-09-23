@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/static/css/sweettooth.css" />
-    <link rel="shortcut icon" href="/static/images/favicon.png" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/sweettooth.css" />
+    <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.png" />
     {% block head %} {% endblock %}
     <title>{% block title %}GNOME Shell Extensions{% endblock %}</title>
     <script>
@@ -11,8 +11,8 @@ window._SW = function() {
 {% block document-ready %}{% endblock %}
 };
     </script>
-    <script src="/static/js/jquery.js"></script>
-    <script data-main="/static/js/main.js" src="/static/js/require.js"></script>
+    <script src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script data-main="{{ STATIC_URL }}js/main.js" src="{{ STATIC_URL }}js/require.js"></script>
   </head>
   <body>
     <div id="global_domain_bar">
