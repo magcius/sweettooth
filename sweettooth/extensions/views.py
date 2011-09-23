@@ -102,7 +102,9 @@ class ExtensionVersionView(DetailView):
             context['is_editable'] = status in models.EDITABLE_STATUSES
             context['is_visible'] = status in models.VISIBLE_STATUSES
             context['is_rejected'] = status in models.REJECTED_STATUSES
-            context['old_version'] = self.object != self.object.extension.latest_version
+
+            if not is_preview:
+                context['old_version'] = self.object != self.object.extension.latest_version
             context['status'] = status
             return self.render_to_response(context)
 
