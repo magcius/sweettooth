@@ -1,4 +1,6 @@
 
+import os.path
+
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
@@ -27,5 +29,14 @@ else:
     urlpatterns.append(url(r'^static/extension-data/(?P<path>.*)', lambda n: None,
                            name='extension-data'))
 
+if settings.DEBUG:
+    # XXX - I need to be shot for this
+    # Because we need HTTPS + Apache to test, in debug use
+    # static.serve to serve admin media
+    admin_media_dir = os.path.join(os.path.dirname(admin.__file__), 'media')
+    admin_media_prefix = settings.ADMIN_MEDIA_PREFIX.strip('/')
+
+    urlpatterns.append(url(r'^%s(?P<path>.*)' % (admin_media_prefix,),
+                           static.serve, dict(document_root=admin_media_dir)))
 
 urlpatterns += staticfiles_urlpatterns()
