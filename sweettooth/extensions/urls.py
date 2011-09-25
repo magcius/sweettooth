@@ -10,11 +10,11 @@ upload_patterns = patterns('',
 )
 
 ajax_patterns = patterns('',
-    url(r'^i/(?P<pk>\d+)', views.AjaxInlineEditView.as_view(), name='extensions-ajax-inline'),
-    url(r'^l/(?P<pk>\d+)', views.AjaxSubmitAndLockView.as_view(), name='extensions-ajax-submit'),
-    url(r'^us/(?P<pk>\d+)', views.AjaxImageUploadView.as_view(field='screenshot'), name='extensions-ajax-screenshot'),
-    url(r'^ui/(?P<pk>\d+)', views.AjaxImageUploadView.as_view(field='icon'), name='extensions-ajax-icon'),
-    url(r'^d/', views.AjaxDetailsView.as_view(), name='extensions-ajax-details'),
+    url(r'^edit/(?P<pk>\d+)', views.AjaxInlineEditView.as_view(), name='extensions-ajax-inline'),
+    url(r'^submit/(?P<pk>\d+)', views.AjaxSubmitAndLockView.as_view(), name='extensions-ajax-submit'),
+    url(r'^upload/screenshot/(?P<pk>\d+)', views.AjaxImageUploadView.as_view(field='screenshot'), name='extensions-ajax-screenshot'),
+    url(r'^upload/icon/(?P<pk>\d+)', views.AjaxImageUploadView.as_view(field='icon'), name='extensions-ajax-icon'),
+    url(r'^detail/', views.AjaxDetailsView.as_view(), name='extensions-ajax-details'),
 )
 
 shell_patterns = patterns('',
@@ -43,5 +43,4 @@ urlpatterns = patterns('',
     url(r'^upload/', include(upload_patterns)),
     url(r'^ajax/', include(ajax_patterns)),
     url(r'', include(shell_patterns)),
-
 )

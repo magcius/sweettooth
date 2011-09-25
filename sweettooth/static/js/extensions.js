@@ -175,7 +175,7 @@ function($, messages, dbusProxy) {
                     append($('<p>', {'class': 'description'}).text(extension.description));
 
                 $.ajax({
-                    url: "/ajax/d/",
+                    url: "/ajax/detail/",
                     dataType: "json",
                     data: { uuid: uuid },
                     type: "GET",
