@@ -270,12 +270,10 @@ li.extension {
 
 .extension .report.rating .txt {
     background-image: url(../images/face-smile.png);
-    margin-left: 24px;
     margin-bottom: 10px;
 }
 
 .extension .report p {
-    padding-left: 16px;
     line-height: 1.7em;
 }
 
@@ -291,6 +289,10 @@ li.extension {
      * the shadow -- we use overflow: hidden on the parent
      * to establish a BFC, so it will clip the shadow. */
     margin: 20px 4px 4px 4px;
+}
+
+.extension .report.error p {
+    padding-left: 16px;
 }
 
 #error_report input {
