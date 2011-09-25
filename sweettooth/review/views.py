@@ -10,7 +10,6 @@ import pygments.lexers
 import pygments.formatters
 
 from django.conf import settings
-from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
