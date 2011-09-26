@@ -261,6 +261,8 @@ def upload_file(request, pk):
             version.status = models.STATUS_NEW
             version.save()
 
+            version.replace_metadata_json()
+
             return redirect('extensions-version-detail',
                             pk=version.pk,
                             ext_pk=extension.pk,
