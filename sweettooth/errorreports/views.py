@@ -9,7 +9,7 @@ from extensions.models import ExtensionVersion, VISIBLE_STATUSES
 class ReportErrorView(DetailView):
     queryset = ExtensionVersion.objects.filter(status__in=VISIBLE_STATUSES)
     context_object_name = "version"
-    template_name = "errorreports/error-report.html"
+    template_name = "errorreports/report.html"
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
