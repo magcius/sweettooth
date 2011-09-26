@@ -249,6 +249,9 @@ class ExtensionVersion(models.Model):
 
         self.save()
 
+    def get_status_class(self):
+        return STATUSES[self.status].lower()
+
 submitted_for_review = Signal(providing_args=["version"])
 reviewed = Signal(providing_args=["version", "review"])
 status_changed = Signal(providing_args=["version", "log"])

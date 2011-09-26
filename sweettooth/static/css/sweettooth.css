@@ -449,3 +449,50 @@ input[type=submit], button {
 #new-comment-form .submit-post {
     float: right;
 }
+
+/* Review List */
+/* ==================================================================== */
+
+.review {
+    background: #EEEEEC;
+    border: 1px solid #BABDB6;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    clear: both;
+    padding: 20px;
+
+    margin-top: 20px;
+}
+
+.review a {
+    text-decoration: none;
+}
+
+.review a .extension-name {
+    font-size: 1.4em;
+    color: #000;
+}
+
+.review a:hover .extension-name {
+    color: #445;
+}
+
+.review abbr, .review .extension-version {
+    color: #666;
+    font-size: smaller;
+}
+
+.review abbr {
+    float: right;
+}
+
+.review blockquote {
+    line-height: 1.8em;
+    text-indent: 2em;
+    font-size: larger;
+    font-style: italic;
+}
+
+.reivew blockquote.empty {
+    color: #888;
+}

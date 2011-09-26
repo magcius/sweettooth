@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($, messages) {
+require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable', 'jquery.timeago'], function($, messages) {
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 
@@ -30,6 +30,8 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable'], function($,
             $("#login_popup_form").slideToggle();
             return false;
         });
+
+        $("abbr.timestamp").timeago();
 
         function closeUserSettings() {
             var needsClose = $('#global_domain_bar .user').hasClass('active');

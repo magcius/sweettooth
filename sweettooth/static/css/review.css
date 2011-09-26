@@ -123,3 +123,26 @@ h2.expanded:before {
 #review_form input[type=submit] {
     float: right;
 }
+
+#previous_versions table {
+    width: 100%;
+}
+
+#previous_versions p span {
+    font-weight: bold;
+}
+
+#previous_versions p {
+    text-align: center;
+    font-size: larger;
+}
+
+.rejected {
+    color: #c00;
+    font-weight: bold;
+}
+
+.active {
+    color: #0a0;
+    font-weight: bold;
+}

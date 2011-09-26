@@ -72,8 +72,7 @@
 {% endwith %}
 {% endblock %}
 {% block document-ready %}{{ block.super }}
-    require(['jquery.timeago', 'jquery.rating', 'extensions'], function() {
-        $("abbr.timestamp").timeago();
+    require(['jquery.rating', 'extensions'], function() {
         {% if is_review or is_rejected %}
         $(".extension .switch").addClass("insensitive");
         {% endif %}

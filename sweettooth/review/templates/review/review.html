@@ -38,13 +38,41 @@
 
 <h2 class="expanded"> Previous Versions </h2>
 <div id="previous_versions">
-  {% include "review/review_table.html" with reviews=previous_versions empty="There were no previous versions of this extension." %}
+  {% if previous_versions %}
+  <table>
+    <thead>
+      <th>Version</th>
+      <th>Status</th>
+    </thead>
+    <tbody>
+      {% for version in previous_versions %}
+      <tr>
+        <td>{{ version.version }}</td>
+        <td>
+          <span class="{{ version.get_status_class }}">{{ version.get_status_display }}</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>There are no previous versions of <span>{{ version.extension.name }}</span></p>
+  {% endif %}
 </div>
 
 {% if previous_reviews %}
 <h2 class="expanded"> Previous Reviews on this Version </h2>
 <div id="previous_reviews">
-  {% include "review/review_table.html" with reviews=previous_reviews %}
+  {% for review in previous_reviews %}
+  <div class="review">
+    <a class="review-author" href="{% url auth-profile user=review.reviewer.username %}">{{ review.reviewer }}</a>
+    reviewed
+    <abbr class="timestamp" title="{{ review.date|date:"c" }}">{{ review.date|date:"F j, Y" }}</abbr>
+    <blockquote>{{ review.comments }}</blockquote>
+    {% empty %}
+    <p>{{ empty|default:"No reviews." }}</p>
+  </div>
+  {% endfor %}
 </div>
 {% endif %}
 
