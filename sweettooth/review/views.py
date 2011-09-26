@@ -12,6 +12,7 @@ import pygments.formatters
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 from django.dispatch import receiver
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import redirect
@@ -109,6 +110,8 @@ class SubmitReviewView(SingleObjectMixin, View):
                             reviewer=request.user,
                             comments=request.POST.get('comments'))
         review.save()
+
+        messages.info("Thank you for reviewing %s" % (self.object.extension.name,))
 
         models.reviewed.send(sender=self, version=self.object, review=review)
 
