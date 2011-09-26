@@ -6,7 +6,6 @@
       <th>Reviewer</th>
       <th>Date</th>
       <th>Comments</th>
-      <th>Result</th>
     </tr>
   </thead>
 
@@ -14,7 +13,9 @@
     {% for review in reviews %}
     <tr>
       <td>
-        <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension pk=review.version.pk %}">{{ review.version.extension.name }}</a>
+        <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension pk=review.version.pk %}">
+          {{ review.version.extension.name }}
+        </a>
       </td>
       <td>
         <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension pk=review.version.pk %}">
@@ -24,16 +25,6 @@
       <td><a href="{% url auth-profile user=review.reviewer.username %}">{{ review.reviewer }}</a></td>
       <td>{{ review.date }}</td>
       <td>{{ review.comments }}</td>
-      <td>
-        {% if review.is_rejected %}
-        <span class="rejected">
-        {% else %}{% if review.is_active %}
-        <span class="active">
-        {% else %}
-        <span>
-        {% endif %}{% endif %}
-        {{ review.get_newstatus_display }}
-        </span>
     </tr>
     {% empty %}
     <tr><td colspan="5"> {{ empty|default:"No reviews." }} </td></tr>
