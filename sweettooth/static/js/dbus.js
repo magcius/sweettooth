@@ -28,7 +28,7 @@ define({
 
                     // The API is defined on the plugin itself.
                     window.SweetTooth = $plg[0];
-                } except (e) {
+                } catch (e) {
                     // In this case we probably failed the origin checks and
                     // the NPAPI plugin spat out an error. Explicitly set the
                     // plugin to NULL
