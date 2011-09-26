@@ -46,7 +46,7 @@ define({
             try {
                 if (window.SweetTooth)
                     apiVersion = window.SweetTooth.apiVersion;
-            } except (e) {
+            } catch (e) {
                 apiVersion = null;
             }
 
