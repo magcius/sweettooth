@@ -141,18 +141,18 @@ li.extension {
     position: relative;
 }
 
-.extension h3 {
+.extension .extension-name {
     margin-left: 48px;
     font-size: 2em;
 }
 
-.extension h3, .extension h3 a {
+.extension .extension-name, .extension .extension-name a {
     display: inline;
     text-decoration: none;
     color: #000;
 }
 
-.extension h3 a:hover {
+.extension .extension-name a:hover {
     color: #445;
 }
 
@@ -457,10 +457,7 @@ input[type=submit], button {
     background: #EEEEEC;
     border: 1px solid #BABDB6;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    clear: both;
-    padding: 20px;
-
+    padding: 10px;
     margin-top: 20px;
 }
 

@@ -2,6 +2,7 @@
 {% block title %}{{ display_name }}'s Profile - {{ block.super }}{% endblock %}
 
 {% block body %}
+{% load thumbnail %}
 {% load gravatar %}
 <div class="profile">
   <h2>{{ display_name }}</h2>
@@ -10,7 +11,25 @@
   <h3> {{ display_name }} has authored </h3>
   <ul>
     {% for extension in extensions %}
-      <li><a href="{% url extensions-detail pk=extension.pk %}">{{ extension.name }}</a></li>
+    <li class="extension profile">
+      <div class="switch insensitive"></div>
+
+      {% if extension.icon %}
+      <img src="{{ extension.icon.url }}" class="icon">
+      {% endif %}
+
+      {% if extension.screenshot %}
+      {% thumbnail extension.screenshot "300x200" as th %}
+      <img src="{{ th.url }}" />
+      {% endthumbnail %}
+      {% endif %}
+
+      <h4 class="extension-name"><a href="{% url extensions-detail pk=extension.pk %}">{{ extension.name }}</a></h4>
+      <span class="author">by {{ extension.creator }}</span>
+      <p class="description">
+        {{ extension.description }}
+      </p>
+    </li>
     {% endfor %}
   </ul>
 
