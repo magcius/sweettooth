@@ -20,17 +20,14 @@
 
 {% block extra %}
   {% if is_preview %}
-    <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">Submit the extension for review.</button>
-  <a href="{% url extensions-upload-file pk=version.extension.pk %}">Upload a new version</a>
+    <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">
+      Submit the extension for review.
+    </button>
   {% endif %}
-{% endblock %}
 
-{% block extra-extension-info %}
-    <ul>
-      {% if user == extension.creator %}
-      <li><a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a></li>
-      {% endif %}
-    </ul>
+  {% if request.user == version.extension.creator and not is_preview %}
+    <a href="{% url extensions-upload-file pk=version.extension.pk %}">Upload a new version</a>
+  {% endif %}
 {% endblock %}
 
 {% block screenshot %}
