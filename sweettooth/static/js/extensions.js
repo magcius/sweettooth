@@ -58,6 +58,8 @@ function($, messages, dbusProxy) {
 
         $.fn.fillInErrors = function() {
         };
+
+        return;
     }
 
     // uuid => elem

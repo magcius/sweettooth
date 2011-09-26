@@ -42,8 +42,13 @@ define({
             }
 
             var apiVersion;
-            if (window.SweetTooth)
-                apiVersion = window.SweetTooth.apiVersion;
+
+            try {
+                if (window.SweetTooth)
+                    apiVersion = window.SweetTooth.apiVersion;
+            } except (e) {
+                apiVersion = null;
+            }
 
             if (apiVersion) {
                 var scriptname = './versions/' + apiVersion + '/main';
