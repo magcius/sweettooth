@@ -34,7 +34,7 @@ class ExtensionLatestVersionView(DetailView):
     def template_name(self):
         # If the user can edit the model, let him do so.
         if self.object.extension.user_has_access(self.request.user):
-            return "extensions/detail-edit.html"
+            return "extensions/detail_edit.html"
         return "extensions/detail.html"
 
     def get(self, request, **kwargs):
@@ -68,7 +68,7 @@ class ExtensionVersionView(DetailView):
     def template_name(self):
         # If the user can edit the model, let him do so.
         if self.object.extension.user_has_access(self.request.user):
-            return "extensions/detail-edit.html"
+            return "extensions/detail_edit.html"
         return "extensions/detail.html"
 
     def get(self, request, **kwargs):
