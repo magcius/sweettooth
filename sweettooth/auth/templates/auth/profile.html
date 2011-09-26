@@ -7,17 +7,6 @@
   <h2>{{ display_name }}</h2>
   <img class="gravatar" src="{% gravatar_url request.user.email 128 %}">
 
-  <table>
-    <tr>
-      <td>Name</td>
-      <td>{{ request.user.full_name }}</td>
-    </tr>
-    <tr>
-      <td>Email</td>
-      <td>{{ request.user.email }}</td>
-    </tr>
-  </table>
-
   <h3> {{ display_name }} has authored </h3>
   <ul>
     {% for extension in extensions %}
