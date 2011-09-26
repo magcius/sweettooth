@@ -172,7 +172,7 @@ function($, messages, dbusProxy) {
                 var $elem = $('<div>', {'class': 'extension'}).
                     append($('<div>', {'class': 'switch'})).
                     append($('<img>', {'class': 'icon'})).
-                    append($('<h3>').text(extension.name)).
+                    append($('<h3>', {'class': 'extension-name'}).text(extension.name)).
                     append($('<span>', {'class': 'author'})).
                     append($('<p>', {'class': 'description'}).text(extension.description));
 
