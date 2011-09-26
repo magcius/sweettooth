@@ -5,6 +5,7 @@
 @import url("jquery.rating.css");
 
 /* Unreviewed Extension Counter */
+/* ==================================================================== */
 
 #unreviewed_counter {
     border-right: 1px solid #ccc;
