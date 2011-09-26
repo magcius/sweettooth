@@ -32,6 +32,12 @@ def can_review_extension(user, extension):
 
     return False
 
+def can_approve_extension(user, extension):
+    if user.has_perm("review.can-review-extensions"):
+        return user != extension.creator
+
+    return False
+
 class AjaxGetFilesView(SingleObjectMixin, View):
     model = models.ExtensionVersion
     formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
@@ -67,7 +73,7 @@ class AjaxGetFilesView(SingleObjectMixin, View):
         return HttpResponse(mark_safe(json.dumps(files)),
                             content_type="application/json")
 
-class AjaxChangeStatusView(SingleObjectMixin, View):
+class ChangeStatusView(SingleObjectMixin, View):
     model = models.ExtensionVersion
 
     def get(self, request, *args, **kwargs):
@@ -76,23 +82,24 @@ class AjaxChangeStatusView(SingleObjectMixin, View):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        if not can_review_extension(request.user, self.object.extension):
+        if not can_approve_extension(request.user, self.object.extension):
             return HttpResponseForbidden()
 
-        # Do not let reviewers change the status of their own extension
-        if request.user == self.object.extension:
-            return HttpResponseForbidden()
-
-        newstatus = request.POST.get('newstatus')
+        newstatus_string = request.POST.get('newstatus')
+        newstatus = dict(Approve=models.STATUS_ACTIVE,
+                         Reject=models.STATUS_REJECTED)[newstatus_string]
 
         log = ChangeStatusLog(user=request.user,
                               version=self.object,
                               newstatus=newstatus)
         log.save()
 
+        self.object.status = newstatus
+        self.object.save()
+
         models.status_changed.send(sender=self, version=self.object, log=log)
 
-        self.object.status = newstatus
+        return redirect('review-list')
 
 class SubmitReviewView(SingleObjectMixin, View):
     model = models.ExtensionVersion
@@ -129,8 +136,11 @@ class ReviewVersionView(DetailView):
         # Other reviews on the same version
         previous_reviews = self.object.reviews.all()
 
+        can_approve = can_approve_extension(self.request.user, self.object.extension)
+
         context.update(dict(previous_versions=previous_versions,
-                            previous_reviews=previous_reviews))
+                            previous_reviews=previous_reviews,
+                            can_approve=can_approve))
         return context
 
     @property

@@ -1,6 +1,8 @@
 {% extends "review/review.html" %}
 
 {% block extra %}
+{{ block.super }}
+
 <h2 class="expanded"> Review </h2>
 <div id="review">
   <form id="review_form" action="{% url review-submit pk=version.pk %}" method="POST">
@@ -9,4 +11,16 @@
     <input type="submit" value="Add review">
   </form>
 </div>
+
+{% if can_approve %}
+<div id="approve">
+  <hr>
+  <form id="approve_form" action="{% url review-approve pk=version.pk %}" method="POST">
+    {% csrf_token %}
+    <input name="newstatus" type="submit" class="approve" value="Approve">
+    <input name="newstatus" type="submit" class="reject" value="Reject">
+  </form>
+</div>
+{% endif %}
+
 {% endblock %}
