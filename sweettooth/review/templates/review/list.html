@@ -4,10 +4,22 @@
 
 {% block body %}
 <h2> Unreviewed Extensions </h2>
-<ul>
+<ul class="extensions">
 {% for version in versions %}
 {% with extension=version.extension %}
-  <li><a href="{% url review-version pk=version.pk %}">{{ extension.name }}</a> ({{ version.version }}) by {{ extension.creator }}</li>
+<li class="extension">
+  <div class="switch insensitive"></div>
+
+  {% if extension.icon %}
+  <img src="{{ extension.icon.url }}" class="icon">
+  {% endif %}
+
+  <h3 class="extension-name"><a href="{% url review-version pk=version.pk %}">{{ extension.name }}</a></h3>
+  <span class="author">by {{ extension.creator }}</span>
+  <p class="description">
+    {{ extension.description }}
+  </p>
+</li>
 {% endwith %}
 {% endfor %}
 </ul>
