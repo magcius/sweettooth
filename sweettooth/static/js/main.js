@@ -74,7 +74,7 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable', 'jquery.time
             var df = $.ajax({ url: $elem.data('url'),
                               type: 'POST' });
             df.done(function() {
-                messages.addInfo("Your extension has been locked.").hide().slideDown();
+                messages.addInfo("Your extension has been submitted.").hide().slideDown();
                 $elem.attr('disabled', true);
                 $('h3, p.description').csrfEditable('disable').removeClass('editable');
             });
