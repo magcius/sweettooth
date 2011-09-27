@@ -4,6 +4,9 @@ try:
 except ImportError:
     import simplejson as json
 
+import base64
+import os.path
+
 import pygments
 import pygments.util
 import pygments.lexers
@@ -22,6 +25,15 @@ from django.views.generic.detail import SingleObjectMixin
 
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
+
+IMAGE_TYPES = {
+    '.png':  'image/png',
+    '.jpg':  'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif':  'image/gif',
+    '.bmp':  'image/bmp',
+    '.svg':  'image/svg+xml',
+}
 
 def can_review_extension(user, extension):
     if user == extension.creator:
@@ -57,17 +69,27 @@ class AjaxGetFilesView(SingleObjectMixin, View):
         for filename in zipfile.namelist():
             raw = zipfile.open(filename, 'r').read()
 
-            try:
-                lexer = pygments.lexers.guess_lexer_for_filename(filename, raw)
-            except pygments.util.ClassNotFound:
-                # released pygments doesn't yet have .json
-                # so hack around it here.
-                if filename.endswith('.json'):
-                    lexer = pygments.lexers.get_lexer_by_name('js')
-                else:
-                    lexer = pygments.lexers.get_lexer_by_name('text')
+            base, extension = os.path.splitext(filename)
 
-            html = pygments.highlight(raw, lexer, self.formatter)
+            if extension in IMAGE_TYPES:
+                mime = IMAGE_TYPES[extension]
+                raw_base64 = base64.standard_b64encode(raw)
+
+                html = '<img src="data:%s;base64,%s">' % (mime, raw_base64,)
+
+            else:
+                try:
+                    lexer = pygments.lexers.guess_lexer_for_filename(filename, raw)
+                except pygments.util.ClassNotFound:
+                    # released pygments doesn't yet have .json
+                    # so hack around it here.
+                    if filename.endswith('.json'):
+                        lexer = pygments.lexers.get_lexer_by_name('js')
+                    else:
+                        lexer = pygments.lexers.get_lexer_by_name('text')
+
+                html = pygments.highlight(raw, lexer, self.formatter)
+
             files.append(dict(filename=filename, raw=raw, html=html))
 
         return HttpResponse(mark_safe(json.dumps(files)),
