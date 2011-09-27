@@ -19,6 +19,9 @@
 {% endblock %}
 
 {% block body %}
+{% block extra-body-header %}
+{% endblock %}
+
 {% with extension=version.extension %}
     <div class="extension"
          data-uuid="{{ extension.uuid }}"

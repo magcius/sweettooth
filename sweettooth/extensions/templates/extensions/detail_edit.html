@@ -1,12 +1,20 @@
 {% extends "extensions/detail.html" %}
 
-{% block extra-messages %}
+{% block extra-body-header %}
   {{ block.super }}
   {% if is_preview %}
-    <p class="message info">
-      This is a preview of how your extension's page will look.
-      You can edit any of the things marked in yellow by clicking on them.
+  <div class="step edit">
+    <h2 class="steptitle">Step <span>2</span></h2>
+    <p>
+      We extracted this metadata from the file you uploaded.
+      Edit anything in yellow clicking on it.
     </p>
+
+    <p>
+      Give your extension some personality by uploading a screenshot
+      and icon. Make them identifiable!
+    </p>
+  </div>
   {% endif %}
 {% endblock %}
 
@@ -20,9 +28,18 @@
 
 {% block extra %}
   {% if is_preview %}
-    <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">
-      Submit the extension for review.
-    </button>
+  <div class="step lock">
+    <h2 class="steptitle">Step <span>3</span></h2>
+    <p>
+      After you're satisfied with how your extension looks, submit the extension for review.
+      A reviewer will review the extension you submitted to make sure there's nothing too
+      dangerous. You'll be emailed the result of the review.
+
+      <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">
+        Submit the extension for review.
+      </button>
+    </p>
+  </div>
   {% endif %}
 
   {% if request.user == version.extension.creator and not is_preview %}
