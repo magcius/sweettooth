@@ -1,9 +1,12 @@
 
 import json
 import os.path
+import tempfile
+from zipfile import ZipFile
 
 from django.test import TestCase
 from django.test.client import Client
+from django.core.files.base import File
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from extensions import models
@@ -11,7 +14,13 @@ from extensions import models
 testdata_dir = os.path.join(os.path.dirname(__file__), 'testdata')
 
 def get_test_zipfile(testname):
-    return open(os.path.join(testdata_dir, testname, testname + ".zip"), 'rb')
+    original = open(os.path.join(testdata_dir, testname, testname + ".zip"), 'rb')
+    new_temp = tempfile.NamedTemporaryFile(suffix=testname + ".zip.temp")
+    new_temp.write(original.read())
+    new_temp.seek(0)
+    original.close()
+
+    return new_temp
 
 class UploadTest(TestCase):
     def setUp(self):
@@ -62,6 +71,45 @@ class UploadTest(TestCase):
         self.assertEquals(extra["extra"], "This is some good data")
         self.assertTrue("description" not in extra)
         self.assertTrue("url" not in extra)
+
+class ReplaceMetadataTest(TestCase):
+    def setUp(self):
+        self.username = 'TestUser1'
+        self.email = 'non-existant@non-existant.tld'
+        self.password = 'a random password'
+        self.user = User.objects.create_user(self.username, self.email, self.password)
+
+    def test_replace_metadata(self):
+        extension = models.Extension(creator=self.user)
+        version = models.ExtensionVersion()
+        version.extension = extension
+
+        old_zip_file = get_test_zipfile('LotsOfFiles')
+
+        metadata = models.parse_zipfile_metadata(old_zip_file)
+        old_zip_file.seek(0)
+
+        version.source = File(old_zip_file)
+
+        version.parse_metadata_json(metadata)
+        version.replace_metadata_json()
+        new_zip = version.get_zipfile('r')
+
+        old_zip = ZipFile(File(old_zip_file), 'r')
+        self.assertEqual(len(old_zip.infolist()), len(new_zip.infolist()))
+        self.assertEqual(new_zip.read("metadata.json"),
+                         version.make_metadata_json_string())
+
+        for old_info in old_zip.infolist():
+            if old_info.filename == "metadata.json":
+                continue
+
+            new_info = new_zip.getinfo(old_info.filename)
+            self.assertEqual(old_zip.read(old_info), new_zip.read(new_info))
+            self.assertEqual(old_info.date_time, new_info.date_time)
+
+        old_zip.close()
+        new_zip.close()
 
 class UploadTest(TestCase):
     def setUp(self):

@@ -193,6 +193,9 @@ class ExtensionVersion(models.Model):
         data.update(fields)
         return data
 
+    def make_metadata_json_string(self):
+        return json.dumps(self.make_metadata_json(), sort_keys=True, indent=2)
+
     def get_zipfile(self, mode):
         return ZipFile(self.source.storage.path(self.source.name), mode)
 
@@ -201,9 +204,28 @@ class ExtensionVersion(models.Model):
         In the uploaded extension zipfile, edit metadata.json
         to reflect the new contents.
         """
-        zipfile = self.get_zipfile("a")
+
+        # We can't easily *replace* files in a zipfile
+        # archive. See http://bugs.python.org/issue6818.
+        # Just read all the contents from the old zipfile
+        # into memory and then emit a new one with the
+        # generated metadata.json
+        zipfile_in = self.get_zipfile("r")
+
+        filemap = {}
+        for info in zipfile_in.infolist():
+            if info.filename == "metadata.json":
+                continue
+
+            contents = zipfile_in.read(info)
+            filemap[info] = contents
+
+        zipfile = self.get_zipfile("w")
+        for info, contents in filemap.iteritems():
+            zipfile.writestr(info, contents)
+
         metadata = self.make_metadata_json()
-        zipfile.writestr("metadata.json", json.dumps(metadata, sort_keys=True, indent=2))
+        zipfile.writestr("metadata.json", self.make_metadata_json_string())
         zipfile.close()
 
     def parse_metadata_json(self, metadata):
