@@ -270,4 +270,4 @@ def upload_file(request, pk):
     else:
         form = UploadForm()
 
-    return render(request, 'extensions/upload-file.html', dict(form=form))
+    return render(request, 'extensions/upload.html', dict(form=form))

@@ -15,7 +15,7 @@ def profile(request, user):
 
     template = 'auth/profile.html'
     if request.user == user:
-        template = 'auth/profile-edit.html'
+        template = 'auth/profile_edit.html'
 
     display_name = userobj.get_full_name() or userobj.username
     extensions = Extension.objects.filter(creator=userobj)
