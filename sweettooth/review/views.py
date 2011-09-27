@@ -64,6 +64,8 @@ class AjaxGetFilesView(SingleObjectMixin, View):
 
         zipfile = self.object.get_zipfile('r')
 
+        show_linenum = False
+
         # filename => { raw, html, filename }
         files = []
         for filename in zipfile.namelist():
@@ -89,8 +91,12 @@ class AjaxGetFilesView(SingleObjectMixin, View):
                         lexer = pygments.lexers.get_lexer_by_name('text')
 
                 html = pygments.highlight(raw, lexer, self.formatter)
+                show_linenum = True
 
-            files.append(dict(filename=filename, raw=raw, html=html))
+            files.append(dict(filename=filename,
+                              raw=raw,
+                              html=html,
+                              show_linenum=show_linenum))
 
         return HttpResponse(mark_safe(json.dumps(files)),
                             content_type="application/json")

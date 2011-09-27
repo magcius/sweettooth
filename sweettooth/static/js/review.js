@@ -3,19 +3,22 @@
 define(['jquery'], function($) {
 
     function createFileView(data) {
-        var rawLines = data.raw.split("\n");
-        var count = rawLines.length;
-        if (rawLines[count-1] == "")
-            count --;
-        if (rawLines[0] == "")
-            count --;
-
         var lines = [];
-        lines.push("<td class=\"linenumbers\"><pre>");
-        for (var i = 1; i < (count + 1); i ++) {
-            lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
+        if (data.show_linenum) {
+            var rawLines = data.raw.split("\n");
+            var count = rawLines.length;
+
+            if (rawLines[count-1] == "")
+                count --;
+            if (rawLines[0] == "")
+                count --;
+
+            lines.push("<td class=\"linenumbers\"><pre>");
+            for (var i = 1; i < (count + 1); i ++) {
+                lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
+            }
+            lines.push("</pre></td>");
         }
-        lines.push("</pre></td>");
 
         var file = "<td width=\"100%\"><div class=\"file\">" + data.html + "</div></td>";
 
