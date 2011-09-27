@@ -495,3 +495,39 @@ input[type=submit], button {
     font-weight: bold;
     text-align: center;
 }
+
+
+/* Instruction steps */
+/* ==================================================================== */
+
+.step {
+    background-color: #EEEEEC;
+    border: 1px solid #aaa;
+    padding: 1em;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.step .steptitle {
+    color: #666;
+    margin: 0;
+}
+
+.step .steptitle span {
+    display: inline-block;
+
+    border-radius: 0.7em;
+    width: 1.4em;
+    height: 1.4em;
+    line-height: 1.4em;
+
+    color: #fff;
+    background-color: #666;
+    text-shadow: 1px 1px 0 #333;
+    text-align: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.step .warning {
+    color: #cc0000;
+    font-weight: bold;
+}
