@@ -22,7 +22,7 @@ def get_test_zipfile(testname):
 
     return new_temp
 
-class UploadTest(TestCase):
+class ParseZipfileTest(TestCase):
     def setUp(self):
         self.username = 'TestUser1'
         self.email = 'non-existant@non-existant.tld'
