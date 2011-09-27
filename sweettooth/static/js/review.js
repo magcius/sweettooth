@@ -3,7 +3,11 @@
 define(['jquery'], function($) {
 
     function createFileView(data) {
-        var lines = [];
+        var $fileView, $table, $tr;
+
+        $tr = $('<tr>');
+        $table = $('<table>').append($tr);
+
         if (data.show_linenum) {
             var rawLines = data.raw.split("\n");
             var count = rawLines.length;
@@ -13,16 +17,26 @@ define(['jquery'], function($) {
             if (rawLines[0] == "")
                 count --;
 
+            var lines = [];
             lines.push("<td class=\"linenumbers\"><pre>");
             for (var i = 1; i < (count + 1); i ++) {
                 lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
             }
             lines.push("</pre></td>");
+
+            $tr.append(lines.join(''));
         }
 
-        var file = "<td width=\"100%\"><div class=\"file\">" + data.html + "</div></td>";
+        $fileView = $('<div>', {'class': 'file'}).
+            appendTo($('<td>', {'width': '100%'}).appendTo($tr));
 
-        return $("<table><tr>" + lines.join('') + file + "</tr></table>");
+        if (data.html !== undefined) {
+            $fileView.html(data.html);
+        } else {
+            $fileView.text(data.raw);
+        }
+
+        return $table;
     }
 
     $.fn.reviewify = function(fileurl) {
