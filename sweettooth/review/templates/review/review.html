@@ -70,7 +70,7 @@
     <abbr class="timestamp" title="{{ review.date|date:"c" }}">{{ review.date|date:"F j, Y" }}</abbr>
     <blockquote>{{ review.comments }}</blockquote>
     {% empty %}
-    <p>{{ empty|default:"No reviews." }}</p>
+    <p>No reviews.</p>
   </div>
   {% endfor %}
 </div>
