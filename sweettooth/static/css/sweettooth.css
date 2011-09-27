@@ -489,3 +489,9 @@ input[type=submit], button {
 .reivew blockquote.empty {
     color: #888;
 }
+
+.alpha-disclaimer {
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
+}
