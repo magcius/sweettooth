@@ -44,12 +44,15 @@ define(['jquery'], function($) {
             $.each(data, function() {
                 var data = this;
                 var $selector = $('<a>', {'class': 'fileselector'}).text(data.filename);
+                var $file = null;
 
                 $selector.click(function() {
                     if ($selector.hasClass('selected'))
                         return;
 
-                    var $file = createFileView(data).hide().appendTo($fileDisplay);
+                    if ($file === null)
+                        $file = createFileView(data).hide().appendTo($fileDisplay);
+
                     $fileList.find('li a.fileselector').removeClass('selected');
                     $selector.addClass('selected');
 
