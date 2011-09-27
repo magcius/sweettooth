@@ -236,7 +236,11 @@ def upload_file(request, pk):
                 uuid = metadata['uuid']
             except (models.InvalidExtensionData, KeyError), e:
                 messages.error(request, "Invalid extension data.")
-                return redirect('extensions-upload-file', pk=pk)
+
+                if pk is not None:
+                    return redirect('extensions-upload-file', pk=pk)
+                else:
+                    return redirect('extensions-upload-file')
 
             existing = models.Extension.objects.filter(uuid=uuid)
             if pk is None and existing.exists():
