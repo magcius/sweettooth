@@ -321,7 +321,7 @@ a:visited {
 #footer .links {
     overflow: hidden;
 }
-#footer .links > ul > li {
+#footer .links > div > ul > li {
     float: left;
     margin: 0 40px 10px 0;
 }
@@ -344,7 +344,7 @@ a:visited {
     margin: 0;
     padding: 0;
 }
-#footer .links > ul > li > a {
+#footer .links > div > ul > li > a {
     font-weight: bold;
 }
 #footer .links a {
