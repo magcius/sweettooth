@@ -4,15 +4,20 @@
   <input type="hidden" name="next" value="{{ next }}">
   {% csrf_token %}
 
-  {{ form.errors }}
-
   <ol>
     <li>
+      {% for error in form.username.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
       {{ form.username.label_tag }}
       {{ form.username }}
     </li>
 
     <li>
+      {% for error in form.password.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+      {{ form.password.errors }}
       {{ form.password.label_tag }}
       {{ form.password }}
     </li>
