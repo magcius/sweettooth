@@ -4,7 +4,6 @@ import os.path
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.views import static
 admin.autodiscover()
@@ -40,5 +39,3 @@ if settings.DEBUG:
 
     urlpatterns.append(url(r'^%s(?P<path>.*)' % (admin_media_prefix,),
                            static.serve, dict(document_root=admin_media_dir)))
-
-urlpatterns += staticfiles_urlpatterns()
