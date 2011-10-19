@@ -3,12 +3,14 @@ from django.contrib.auth import models
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login, logout
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect
 
 from auth import forms
 
 from review.models import CodeReview
 from extensions.models import Extension
+
+from utils import render
 
 def profile(request, user):
     userobj = get_object_or_404(models.User, username=user)

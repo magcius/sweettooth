@@ -1,21 +1,15 @@
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseForbidden, Http404
-from django.shortcuts import get_object_or_404, render, redirect
-from django.utils.safestring import mark_for_escaping
-from django.views.generic import DetailView, View
-from django.views.generic.detail import SingleObjectMixin
+from django.http import HttpResponseForbidden, Http404
+from django.shortcuts import get_object_or_404, redirect
 
 from extensions import models
 from extensions.forms import UploadForm
+
+from decorators import ajax_view, model_view, post_only_view
+from utils import render
 
 def download(request, uuid):
     pk = request.GET['version_tag']
@@ -26,196 +20,147 @@ def download(request, uuid):
 
     return redirect(version.source.url)
 
-class ExtensionLatestVersionView(DetailView):
-    model = models.Extension
-    context_object_name = "version"
+# Even though this is showing a version, the PK matches an extension
+@model_view(models.Extension)
+def extension_latest_version_view(request, obj, **kwargs):
+    extension, version = obj, obj.latest_version
 
-    @property
-    def template_name(self):
-        # If the user can edit the model, let him do so.
-        if self.object.extension.user_has_access(self.request.user):
-            return "extensions/detail_edit.html"
-        return "extensions/detail.html"
+    if version is None:
+        raise Http404()
 
-    def get(self, request, **kwargs):
-        # Redirect if we don't match the slug.
-        slug = self.kwargs.get('slug')
-        self.object = self.get_object()
-        if self.object is None:
-            raise Http404()
+    # Redirect if we don't match the slug.
+    slug = kwargs.get('slug')
 
-        if slug == self.object.extension.slug:
-            context = self.get_context_data(object=self.object)
-            status = self.object.status
-            context['is_editable'] = status in models.EDITABLE_STATUSES
-            context['is_visible'] = status in models.VISIBLE_STATUSES
-            context['status'] = status
-            return self.render_to_response(context)
-
-        kwargs = dict(self.kwargs)
-        kwargs.update(dict(slug=self.object.extension.slug))
+    if slug != extension.slug:
+        kwargs = dict(kwargs)
+        kwargs.update(dict(slug=extension.slug))
         return redirect('extensions-detail', **kwargs)
 
-    def get_object(self):
-        extension = super(ExtensionLatestVersionView, self).get_object()
-        return extension.latest_version
+    # If the user can edit the model, let him do so.
+    if extension.user_has_access(request.user):
+        template_name = "extensions/detail_edit.html"
+    else:
+        template_name = "extensions/detail.html"
 
-class ExtensionVersionView(DetailView):
-    model = models.ExtensionVersion
-    context_object_name = "version"
+    status = version.status
+    context = dict(version = version,
+                   extension = extension,
+                   is_editable = status in models.EDITABLE_STATUSES,
+                   is_visible = status in models.VISIBLE_STATUSES,
+                   status = status)
+    return render(request, template_name, context)
 
-    @property
-    def template_name(self):
-        # If the user can edit the model, let him do so.
-        if self.object.extension.user_has_access(self.request.user):
-            return "extensions/detail_edit.html"
-        return "extensions/detail.html"
+@model_view(models.ExtensionVersion)
+def extension_version_view(request, obj, **kwargs):
+    extension, version = obj.extension, obj
 
-    def get(self, request, **kwargs):
-        self.object = self.get_object()
+    is_preview = False
 
-        if self.object is None:
+    status = version.status
+    if status == models.STATUS_NEW:
+        # If it's unreviewed and unlocked, this is a preview
+        # for pre-lock.
+        is_preview = True
+
+        # Don't allow anybody (even moderators) to peek pre-lock.
+        if extension.creator != request.user:
             raise Http404()
 
-        is_preview = False
-        status = self.object.status
-        if status == models.STATUS_NEW:
-            # If it's unreviewed and unlocked, this is a preview
-            # for pre-lock.
-            is_preview = True
+    # Redirect if we don't match the slug or extension PK.
+    slug = kwargs.get('slug')
+    extpk = kwargs.get('ext_pk')
+    try:
+        extpk = int(extpk)
+    except ValueError:
+        extpk = None
 
-            # Don't allow anybody (even moderators) to peek pre-lock.
-            if self.object.extension.creator != request.user:
-                raise Http404()
-
-        # Redirect if we don't match the slug or extension PK.
-        slug = self.kwargs.get('slug')
-        extpk = self.kwargs.get('ext_pk')
-        try:
-            extpk = int(extpk)
-        except ValueError:
-            extpk = None
-
-        if slug == self.object.extension.slug and extpk == self.object.extension.pk:
-            context = self.get_context_data(object=self.object)
-            context['is_preview'] = is_preview
-            context['is_editable'] = status in models.EDITABLE_STATUSES
-            context['is_visible'] = status in models.VISIBLE_STATUSES
-            context['is_rejected'] = status in models.REJECTED_STATUSES
-
-            if not is_preview:
-                context['old_version'] = self.object != self.object.extension.latest_version
-            context['status'] = status
-            return self.render_to_response(context)
-
-        kwargs = dict(self.kwargs)
-        kwargs.update(dict(slug=self.object.extension.slug,
-                           ext_pk=self.object.extension.pk))
+    if slug != extension.slug or extpk != extension.pk:
+        kwargs.update(dict(slug=extension.slug,
+                           ext_pk=extension.pk))
         return redirect('extensions-version-detail', **kwargs)
 
-class AjaxSubmitAndLockView(SingleObjectMixin, View):
-    model = models.ExtensionVersion
+    # If the user can edit the model, let him do so.
+    if extension.user_has_access(request.user):
+        template_name = "extensions/detail_edit.html"
+    else:
+        template_name = "extensions/detail.html"
 
-    def get(self, request, *args, **kwargs):
+    context = dict(version = version,
+                   extension = extension,
+                   is_preview = is_preview,
+                   is_editable = status in models.EDITABLE_STATUSES,
+                   is_visible = status in models.VISIBLE_STATUSES,
+                   is_rejected = status in models.REJECTED_STATUSES,
+                   status = status)
+
+    if not is_preview:
+        context['old_version'] = version != extension.latest_version
+    return render(request, template_name, context)
+
+@ajax_view
+@post_only_view
+@model_view(models.ExtensionVersion)
+def ajax_submit_and_lock_view(request, obj):
+    if not obj.extension.user_has_access(request.user):
         return HttpResponseForbidden()
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        if not self.object.extension.user_has_access(request.user):
-            return HttpResponseForbidden()
-
-        if self.object.status != models.STATUS_NEW:
-            return HttpResponseForbidden()
-
-        self.object.status = models.STATUS_LOCKED
-        self.object.save()
-
-        models.submitted_for_review.send(sender=self, version=self.object)
-
-        return HttpResponse()
-
-class AjaxInlineEditView(SingleObjectMixin, View):
-    model = models.Extension
-
-    def get(self, request, *args, **kwargs):
+    if obj.status != models.STATUS_NEW:
         return HttpResponseForbidden()
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    obj.status = models.STATUS_LOCKED
+    obj.save()
 
-        if not self.object.user_has_access(request.user):
-            return HttpResponseForbidden()
+    models.submitted_for_review.send(sender=request, version=obj)
 
-        key = self.request.POST['id']
-        value = self.request.POST['value']
-        if key.startswith('extension_'):
-            key = key[len('extension_'):]
-
-        whitelist = 'name', 'description', 'url'
-        if key not in whitelist:
-            return HttpResponseForbidden()
-
-        setattr(self.object, key, value)
-        self.object.save()
-
-        return HttpResponse(mark_for_escaping(value))
-
-class AjaxImageUploadView(SingleObjectMixin, View):
-    model = models.Extension
-    field = None
-
-    def get(self, request, *args, **kwargs):
+@ajax_view
+@post_only_view
+@model_view(models.Extension)
+def ajax_inline_edit_view(request, obj):
+    if not obj.user_has_access(request.user):
         return HttpResponseForbidden()
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    key = request.POST['id']
+    value = request.POST['value']
+    if key.startswith('extension_'):
+        key = key[len('extension_'):]
 
-        if not self.object.user_has_access(request.user):
-            return HttpResponseForbidden()
+    whitelist = 'name', 'description', 'url'
+    if key not in whitelist:
+        return HttpResponseForbidden()
 
-        setattr(self.object, self.field, request.FILES['file'])
-        self.object.save()
+    setattr(object, key, value)
+    obj.save()
 
-        return HttpResponse()
+    return value
 
-class AjaxDetailsView(SingleObjectMixin, View):
-    model = models.Extension
+def ajax_image_upload_view(field):
+    @ajax_view
+    @post_only_view
+    @model_view(models.Extension)
+    def inner(request, obj):
+        setattr(obj, field, request.FILES['file'])
+        obj.save()
+    return field
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object is None:
-            raise Http404()
+@ajax_view
+def ajax_details_view(request):
+    uuid = request.GET.get('uuid', None)
 
-        data = {
-            'pk': self.object.pk,
-            'uuid': self.object.uuid,
-            'name': self.object.name,
-            'creator': self.object.creator.username,
-            'link': reverse('extensions-detail', kwargs=dict(pk=self.object.pk)),
-        }
+    if uuid is None:
+        raise Http404()
 
-        if self.object.icon:
-            data['icon'] = self.object.icon.url
+    extension = get_object_or_404(models.Extension, uuid=uuid)
 
-        return HttpResponse(json.dumps(data))
+    data = dict(pk = extension.pk,
+                uuid = extension.uuid,
+                name = extension.name,
+                creator = extension.creator.username,
+                link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)))
 
-    def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-        uuid = self.request.GET.get('uuid', None)
+    if extension.icon:
+        data['icon'] = extension.icon.url
 
-        if uuid is None:
-            return None
-
-        queryset = queryset.filter(uuid=uuid)
-
-        try:
-            return queryset.get()
-        except ObjectDoesNotExist:
-            pass
-
-        return None
+    return data
 
 @login_required
 def upload_file(request, pk):

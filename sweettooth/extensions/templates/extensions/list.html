@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
   <ul class="extensions">
-  {% for extension in extensions %}
+  {% for extension in extension_list %}
   {% with version=extension.latest_version %}
     <li class="extension">
       {% if extension.icon %}

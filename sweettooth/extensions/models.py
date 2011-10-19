@@ -152,6 +152,13 @@ def parse_zipfile_metadata(uploaded_file):
 # uuid max length + suffix max length
 filename_max_length = Extension._meta.get_field('uuid').max_length + len(".v000.shell-version.zip")
 
+class ExtensionVersionManager(models.Manager):
+    def locked(self):
+        return self.filter(status=STATUS_LOCKED)
+
+    def visible(self):
+        return self.filter(status__in=VISIBLE_STATUSES)
+
 class ExtensionVersion(models.Model):
     extension = models.ForeignKey(Extension, related_name="versions")
     version = models.IntegerField(default=0)
@@ -170,6 +177,8 @@ class ExtensionVersion(models.Model):
 
     source = models.FileField(upload_to=make_filename,
                               max_length=filename_max_length)
+
+    objects = ExtensionVersionManager()
 
     @property
     def shell_versions_json(self):
