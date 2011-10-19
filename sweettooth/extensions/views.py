@@ -93,8 +93,8 @@ def extension_version_view(request, obj, **kwargs):
                    is_rejected = status in models.REJECTED_STATUSES,
                    status = status)
 
-    if not is_preview:
-        context['old_version'] = version != extension.latest_version
+    if extension.latest_version is not None:
+        context['old_version'] = version.version < extension.latest_version.version
     return render(request, template_name, context)
 
 @ajax_view
