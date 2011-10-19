@@ -175,7 +175,6 @@ Review the extension at %(url)s
 This email was sent automatically by GNOME Shell Extensions. Do not reply.
 """.strip()
 
-@receiver(models.submitted_for_review)
 def send_email_on_submitted(sender, version, **kwargs):
     extension = version.extension
 
@@ -191,6 +190,8 @@ def send_email_on_submitted(sender, version, **kwargs):
               from_email=settings.EMAIL_SENDER,
               recipient_list=reviewers)
 
+models.submitted_for_review.connect(send_email_on_submitted)
+
 on_reviewed_subject = u"""
 GNOME Shell Extensions \N{EM DASH} Your extension, "%(name)s", v%(ver)d has been reviewed.
 """.strip()
@@ -203,7 +204,6 @@ Your extension, "%(name)s", version %(ver)d has been reviewed. You can see the r
 Please use the review page to follow up with any comments or concerns.
 """.strip()
 
-@receiver(models.reviewed)
 def send_email_on_reviewed(sender, version, review, **kwargs):
     if review.reviewer == version.creator:
         # Don't spam the creator with his own review
@@ -220,3 +220,5 @@ def send_email_on_reviewed(sender, version, review, **kwargs):
               message=on_reviewed_template % data,
               from_email=settings.EMAIL_SENDER,
               recipient_list=[extension.creator.email])
+
+models.reviewed.connect(send_email_on_reviewed)
