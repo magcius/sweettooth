@@ -5,8 +5,8 @@
 {% block body %}
 <h2> Unreviewed Extensions </h2>
 <ul class="extensions">
-{% for version in versions %}
-{% with extension=version.extension %}
+{% for version in version_list %}
+{% with version.extension as extension %}
 <li class="extension">
   <div class="switch insensitive"></div>
 

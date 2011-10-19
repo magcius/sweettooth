@@ -22,7 +22,6 @@
 {% block extra-body-header %}
 {% endblock %}
 
-{% with extension=version.extension %}
     <div class="extension"
          data-uuid="{{ extension.uuid }}"
          data-sv="{{ version.shell_versions_json }}"
@@ -72,7 +71,6 @@
       {% block extra %}
       {% endblock %}
 </div>
-{% endwith %}
 {% endblock %}
 {% block document-ready %}{{ block.super }}
     require(['jquery.rating', 'extensions'], function() {

@@ -4,7 +4,6 @@
 {% block title %}Review "{{ version.extension.name }}" - {{ block.super }}{% endblock %}
 
 {% block body %}
-{% with extension=version.extension %}
 <h2 class="expanded"> Details Page Preview </h2>
 <div id="preview">
   <div class="extension">
@@ -79,7 +78,6 @@
 {% block extra %}
 {% endblock %}
 
-{% endwith %}
 {% endblock %}
 
 {% block document-ready %}

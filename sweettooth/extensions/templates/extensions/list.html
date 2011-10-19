@@ -2,7 +2,7 @@
 {% block body %}
   <ul class="extensions">
   {% for extension in extension_list %}
-  {% with version=extension.latest_version %}
+  {% with extension.latest_version as version %}
     <li class="extension">
       {% if extension.icon %}
       <img src="{{ extension.icon.url }}" class="icon">
