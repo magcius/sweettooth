@@ -32,8 +32,8 @@ def extension_latest_version_view(request, obj, **kwargs):
     slug = kwargs.get('slug')
 
     if slug != extension.slug:
-        kwargs = dict(kwargs)
-        kwargs.update(dict(slug=extension.slug))
+        kwargs.update(dict(slug=extension.slug,
+                           pk=extension.pk))
         return redirect('extensions-detail', **kwargs)
 
     # If the user can edit the model, let him do so.
