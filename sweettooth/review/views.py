@@ -44,6 +44,9 @@ def can_review_extension(user, extension):
     return False
 
 def can_approve_extension(user, extension):
+    if user.is_superuser:
+        return True
+
     if user.has_perm("review.can-review-extensions"):
         return user != extension.creator
 
