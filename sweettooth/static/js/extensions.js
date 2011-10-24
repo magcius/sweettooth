@@ -139,67 +139,71 @@ function($, messages, dbusProxy) {
     $.fn.addLocalExtensions = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
-            $.each(extensions, function(uuid, extension) {
-                function reinstall() {
-                    dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
+            if (extensions && extensions.length) {
+                $.each(extensions, function(uuid, extension) {
+                    function reinstall() {
+                        dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
 
-                    // If the user clicks "Install" we need to show that we
-                    // installed it by reattaching the element, but we can't do
-                    // that here -- the user might click "Cancel".
-                    $elem.data('uninstalled', true);
+                        // If the user clicks "Install" we need to show that we
+                        // installed it by reattaching the element, but we can't do
+                        // that here -- the user might click "Cancel".
+                        $elem.data('uninstalled', true);
 
-                    message.slideUp();
-                }
+                        message.slideUp();
+                    }
 
-                function uninstall() {
-                    dbusProxy.UninstallExtension(uuid).done(function(result) {
-                        if (result) {
-                            $elem.fadeOut({ queue: false }).slideUp({ queue: false });
+                    function uninstall() {
+                        dbusProxy.UninstallExtension(uuid).done(function(result) {
+                            if (result) {
+                                $elem.fadeOut({ queue: false }).slideUp({ queue: false });
 
-                            // Construct a dummy <p> node as we need something
-                            // to stuff everything else in...
-                            var messageHTML = $("<p>You uninstalled </p>").
-                                append($('<b>').text(extension.name)).
-                                append(". ").
-                                append($('<a>', {'href': '#'}).text("Undo?")).html();
+                                // Construct a dummy <p> node as we need something
+                                // to stuff everything else in...
+                                var messageHTML = $("<p>You uninstalled </p>").
+                                    append($('<b>').text(extension.name)).
+                                    append(". ").
+                                    append($('<a>', {'href': '#'}).text("Undo?")).html();
 
-                            var message = messages.addInfo(messageHTML);
-                            message.find('a').click(reinstall);
-                            $elem.data('undo-uninstall-message', message);
-                        }
+                                var message = messages.addInfo(messageHTML);
+                                message.find('a').click(reinstall);
+                                $elem.data('undo-uninstall-message', message);
+                            }
+                        });
+                    }
+
+                    var $elem = $('<div>', {'class': 'extension'}).
+                        append($('<div>', {'class': 'switch'})).
+                        append($('<img>', {'class': 'icon'})).
+                        append($('<h3>', {'class': 'extension-name'}).text(extension.name)).
+                        append($('<span>', {'class': 'author'})).
+                        append($('<p>', {'class': 'description'}).text(extension.description));
+
+                    $.ajax({
+                        url: "/ajax/detail/",
+                        dataType: "json",
+                        data: { uuid: uuid },
+                        type: "GET",
+                    }).done(function(result) {
+                        $elem.
+                            find('span.author').html(" by <a href=\"/accounts/profile/"+result.creator+"\">"+result.creator+"</a>").end().
+                            find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
+                            find('img.icon').attr('src', result.icon).end().
+                            append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
+                            data('pk', result.pk);
                     });
-                }
 
-                var $elem = $('<div>', {'class': 'extension'}).
-                    append($('<div>', {'class': 'switch'})).
-                    append($('<img>', {'class': 'icon'})).
-                    append($('<h3>', {'class': 'extension-name'}).text(extension.name)).
-                    append($('<span>', {'class': 'author'})).
-                    append($('<p>', {'class': 'description'}).text(extension.description));
+                    // The DOM element's CSS styles won't be fully
+                    // computed, so the switch will be incorrectly
+                    // positioned -- wait a bit before adding them.
+                    setTimeout(function() {
+                        addExtensionSwitch(uuid, extension, $elem);
+                    }, 0);
 
-                $.ajax({
-                    url: "/ajax/detail/",
-                    dataType: "json",
-                    data: { uuid: uuid },
-                    type: "GET",
-                }).done(function(result) {
-                    $elem.
-                        find('span.author').html(" by <a href=\"/accounts/profile/"+result.creator+"\">"+result.creator+"</a>").end().
-                        find('h3').html($('<a>', {'href': result.link}).text(extension.name)).end().
-                        find('img.icon').attr('src', result.icon).end().
-                        append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
-                        data('pk', result.pk);
+                    $container.append($elem);
                 });
-
-                // The DOM element's CSS styles won't be fully
-                // computed, so the switch will be incorrectly
-                // positioned -- wait a bit before adding them.
-                setTimeout(function() {
-                    addExtensionSwitch(uuid, extension, $elem);
-                }, 0);
-
-                $container.append($elem);
-            });
+            } else {
+                $container.append("You don't have any extensions installed.");
+            }
         });
     };
 
