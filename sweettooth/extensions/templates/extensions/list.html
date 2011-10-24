@@ -17,6 +17,11 @@
   {% endwith %}
   {% endfor %}
   </ul>
+
+  {% load paginator %}
+  <div id="paginator">
+    {% paginator page_obj %}
+  </div>
 {% endblock %}
 
 {% block navclass %}main{% endblock %}

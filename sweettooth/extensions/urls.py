@@ -27,6 +27,7 @@ shell_patterns = patterns('',
 
 urlpatterns = patterns('',
     url(r'^$', object_list, dict(queryset=models.Extension.objects.visible(),
+                                 paginate_by=10,
                                  template_object_name='extension',
                                  template_name='extensions/list.html'),
         name='extensions-index'),
