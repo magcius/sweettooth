@@ -57,7 +57,12 @@ function($, messages, dbusProxy) {
         };
 
         $.fn.fillInErrors = function() {
-            $(this).append("GNOME Shell Extensions cannot automatically detect any errors.");
+            var $form = $(this);
+            var $textarea = $form.find('textarea[name=error]');
+            var $hidden = $form.find('input:hidden[name=has_errors]');
+            $textarea.text("GNOME Shell Extensions cannot automatically detect any errors.").
+                addClass('no-errors').attr('disabled', 'disabled');
+            $hidden.val('');
         };
 
         return;
