@@ -44,8 +44,7 @@ function($, messages, dbusProxy) {
         dbusProxy.ShellVersion === undefined) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
-        messages.addError("You do not appear to have an up " +
-                          "to date version of GNOME3");
+        messages.addError("You do not appear to have an up to date version of GNOME3. Some parts of the website may be disabled.");
 
         $.fn.addExtensionsSwitches = function() {
             // Don't show our switches -- CSS styles define a clickable
@@ -54,9 +53,11 @@ function($, messages, dbusProxy) {
         };
 
         $.fn.addLocalExtensions = function() {
+            $(this).append("GNOME Shell Extensions cannot list your installed extensions.");
         };
 
         $.fn.fillInErrors = function() {
+            $(this).append("GNOME Shell Extensions cannot automatically detect any errors.");
         };
 
         return;
