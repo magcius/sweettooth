@@ -178,13 +178,16 @@ Review the extension at %(url)s
 This email was sent automatically by GNOME Shell Extensions. Do not reply.
 """.strip()
 
-def send_email_on_submitted(sender, version, **kwargs):
+def send_email_on_submitted(request, version, **kwargs):
     extension = version.extension
+
+    url = request.build_absolute_uri(reverse('review-version',
+                                             kwargs=dict(pk=version.pk)))
 
     data = dict(ver=version.version,
                 name=extension.name,
                 creator=extension.creator,
-                url=reverse('review-version', kwargs=dict(pk=version.pk)))
+                url=url)
 
     reviewers = get_all_reviewers().values_list('email', flat=True)
 
@@ -207,17 +210,20 @@ Your extension, "%(name)s", version %(ver)d has been reviewed. You can see the r
 Please use the review page to follow up with any comments or concerns.
 """.strip()
 
-def send_email_on_reviewed(sender, version, review, **kwargs):
+def send_email_on_reviewed(request, version, review, **kwargs):
     extension = version.extension
 
     if review.reviewer == extension.creator:
         # Don't spam the creator with his own review
         return
 
+    url = request.build_absolute_uri(reverse('review-version',
+                                             kwargs=dict(pk=version.pk)))
+
     data = dict(ver=version.version,
                 name=extension.name,
                 creator=extension.creator,
-                url=reverse('review-version', kwargs=dict(pk=version.pk)))
+                url=url)
 
     send_mail(subject=on_reviewed_subject % data,
               message=on_reviewed_template % data,
