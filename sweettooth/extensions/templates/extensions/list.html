@@ -25,9 +25,11 @@
   </ul>
 
   {% load paginator %}
+  {% if page_obj.has_other_pages %}
   <div id="paginator">
     {% paginator page_obj %}
   </div>
+  {% endif %}
 {% endblock %}
 
 {% block navclass %}main{% endblock %}
