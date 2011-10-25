@@ -66,14 +66,7 @@
 
 {% block icon %}
 <div class="icon upload">
-  <img src="{{ extension.icon.url }}" />
-  <input type="file" accept="image/*">
-</div>
-{% endblock %}
-
-{% block no-icon %}
-<div class="icon upload placeholder">
-  <div class="dummy"></div>
+  <img src="{{ extension.icon.url }}">
   <input type="file" accept="image/*">
 </div>
 {% endblock %}

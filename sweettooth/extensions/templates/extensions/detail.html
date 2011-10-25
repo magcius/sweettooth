@@ -28,15 +28,9 @@
          data-pk="{{ version.pk }}">
       <div class="switch"></div>
 
-      {% if extension.icon %}
       {% block icon %}
       <img src="{{ extension.icon.url }}" class="icon">
       {% endblock icon %}
-      {% else %}
-      {% block no-icon %}
-      <div class="no-icon"></div>
-      {% endblock %}
-      {% endif %}
 
       {% if extension.screenshot %}
       {% thumbnail extension.screenshot "300x200" as th %}

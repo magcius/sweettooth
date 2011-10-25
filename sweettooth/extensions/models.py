@@ -58,7 +58,7 @@ class Extension(models.Model):
     def make_icon_filename(self, filename):
         return os.path.join(self.uuid, "icons/", filename)
 
-    icon = models.ImageField(upload_to=make_icon_filename, blank=True, default="")
+    icon = models.ImageField(upload_to=make_icon_filename, blank=True, default="/static/images/plugin.png")
 
     objects = ExtensionManager()
 
