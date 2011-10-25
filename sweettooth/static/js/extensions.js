@@ -144,7 +144,7 @@ function($, messages, dbusProxy) {
     $.fn.addLocalExtensions = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
-            if (extensions && extensions.length) {
+            if (extensions && Object.keys(extensions).length) {
                 $.each(extensions, function(uuid, extension) {
                     function reinstall() {
                         dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
