@@ -14,9 +14,7 @@
     <li class="extension profile">
       <div class="switch insensitive"></div>
 
-      {% if extension.icon %}
       <img src="{{ extension.icon.url }}" class="icon">
-      {% endif %}
 
       {% if extension.screenshot %}
       {% thumbnail extension.screenshot "300x200" as th %}

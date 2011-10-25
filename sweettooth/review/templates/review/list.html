@@ -10,9 +10,7 @@
 <li class="extension">
   <div class="switch insensitive"></div>
 
-  {% if extension.icon %}
   <img src="{{ extension.icon.url }}" class="icon">
-  {% endif %}
 
   <h3 class="extension-name"><a href="{% url review-version pk=version.pk %}">{{ extension.name }}</a></h3>
   <span class="author">by {{ extension.creator }}</span>
