@@ -145,7 +145,18 @@ function($, messages, dbusProxy) {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
             if (extensions && Object.keys(extensions).length) {
-                $.each(extensions, function(uuid, extension) {
+                var extensionValues = [];
+                for (var uuid in extensions) {
+                    extensionValues.push(extensions[uuid]);
+                }
+
+                extensionValues.sort(function(a, b) {
+                    return a.name.localeCompare(b.name);
+                });
+
+                extensionValues.forEach(function(extension) {
+                    var uuid = extension.uuid;
+
                     function reinstall() {
                         dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
 
