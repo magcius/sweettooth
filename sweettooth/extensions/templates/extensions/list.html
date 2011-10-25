@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
   <ul class="extensions">
+  {% if extension_list %}
   {% for extension in extension_list %}
   {% with extension.latest_version as version %}
     <li class="extension">
@@ -16,6 +17,11 @@
     </li>
   {% endwith %}
   {% endfor %}
+  {% else %}
+    <div class="empty">
+      There are no extensions.
+    </div>
+  {% endif %}
   </ul>
 
   {% load paginator %}
