@@ -140,7 +140,7 @@ def ajax_image_upload_view(field):
     def inner(request, obj):
         setattr(obj, field, request.FILES['file'])
         obj.save()
-    return field
+    return inner 
 
 @ajax_view
 def ajax_details_view(request):
