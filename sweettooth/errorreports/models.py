@@ -6,7 +6,6 @@ from extensions.models import ExtensionVersion
 
 class ErrorReport(models.Model):
     comment = models.TextField(blank=True)
-    errors = models.TextField(blank=True)
 
     # In the case that a user isn't logged in, they can supply an optional
     # email address for the extension author to reply to.

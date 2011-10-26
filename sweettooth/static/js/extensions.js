@@ -225,18 +225,21 @@ function($, messages, dbusProxy) {
 
     $.fn.fillInErrors = function (uuid) {
         var $form = $(this);
-        var $textarea = $form.find('textarea[name=error]');
-        var $hidden = $form.find('input:hidden[name=has_errors]');
+        var $textarea = $form.find('textarea');
         dbusProxy.GetErrors(uuid).done(function(errors) {
+            var errorString;
+
             if (errors && errors.length) {
-                $textarea.text(errors.join('\n\n')).
-                    removeClass('no-errors').removeAttr('disabled');
-                $hidden.val('true');
+                errorString = errors.join('\n\n================\n\n');
             } else {
-                $textarea.text("Could not detect any errors").
-                    addClass('no-errors').attr('disabled', 'disabled');
-                $hidden.val('');
+                errorString = "GNOME Shell Extensions did not detect any errors with this extension.";
             }
+
+            var template = ("What's wrong?\n\n\n" +
+                            "What have I tried?\n\n\n" +
+                            "Automatically detected errors:\n\n" + errorString);
+
+            $textarea.text(template);
         });
     };
 

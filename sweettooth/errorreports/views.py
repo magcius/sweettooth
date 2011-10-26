@@ -13,11 +13,6 @@ def report_error_view(request, obj):
     extension, version = obj.extension, obj
 
     if request.method == 'POST':
-        if request.POST['has_errors']:
-            errors = request.POST['error']
-        else:
-            errors = ""
-
         comment = request.POST['comment']
 
         if request.user.is_authenticated():
@@ -27,7 +22,6 @@ def report_error_view(request, obj):
 
         report = ErrorReport(version=version,
                              comment=comment,
-                             errors=errors,
                              user=user,
                              email=email)
         report.save()

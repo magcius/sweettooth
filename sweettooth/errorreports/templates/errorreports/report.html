@@ -7,11 +7,8 @@
   any private information.</p>
 <form action="" method="POST" id="error_report">
   {% csrf_token %}
-  <h3> Detected errors with this extension </h3>
-  <input type="hidden" name="has_errors" value="">
-  <textarea name="error" id="error_log"></textarea>
 
-  <h3> Additional comments for the author </h3>
+  <h3> Comments for the author </h3>
   <textarea name="comment" id="comment"></textarea>
 
   {% if not request.user.is_authenticated %}
