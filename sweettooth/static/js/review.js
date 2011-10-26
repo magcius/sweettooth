@@ -8,15 +8,8 @@ define(['jquery'], function($) {
         $tr = $('<tr>');
         $table = $('<table>').append($tr);
 
-        if (data.show_linenum) {
-            var rawLines = data.raw.split("\n");
-            var count = rawLines.length;
-
-            if (rawLines[count-1] == "")
-                count --;
-            if (rawLines[0] == "")
-                count --;
-
+        if (data.num_lines) {
+            var count = data.num_lines;
             var lines = [];
             lines.push("<td class=\"linenumbers\"><pre>");
             for (var i = 1; i < (count + 1); i ++) {

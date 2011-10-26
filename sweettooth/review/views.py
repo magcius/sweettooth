@@ -62,8 +62,6 @@ def ajax_get_files_view(request, obj):
 
     zipfile = obj.get_zipfile('r')
 
-    show_linenum = False
-
     # filename => { raw, html, filename }
     files = []
     for filename in zipfile.namelist():
@@ -71,11 +69,14 @@ def ajax_get_files_view(request, obj):
 
         base, extension = os.path.splitext(filename)
 
+        file_ = dict(filename=filename)
+
         if extension in IMAGE_TYPES:
             mime = IMAGE_TYPES[extension]
             raw_base64 = base64.standard_b64encode(raw)
 
-            html = '<img src="data:%s;base64,%s">' % (mime, raw_base64,)
+            file_.update(html='<img src="data:%s;base64,%s">' % (mime, raw_base64,),
+                         num_lines=0)
 
         else:
             try:
@@ -88,13 +89,10 @@ def ajax_get_files_view(request, obj):
                 else:
                     lexer = pygments.lexers.get_lexer_by_name('text')
 
-            html = pygments.highlight(raw, lexer, formatter)
-            show_linenum = True
+            file_.update(html=pygments.highlight(raw, lexer, formatter),
+                         num_lines=len(raw.strip().splitlines()))
 
-        files.append(dict(filename=filename,
-                          raw=raw,
-                          html=html,
-                          show_linenum=show_linenum))
+        files.append(file_)
 
     return files
 
