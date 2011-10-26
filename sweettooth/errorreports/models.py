@@ -1,6 +1,5 @@
 
 from django.contrib import auth
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import Signal
 from extensions.models import ExtensionVersion
