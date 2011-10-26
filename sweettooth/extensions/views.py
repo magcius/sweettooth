@@ -150,6 +150,14 @@ def ajax_image_upload_view(field):
         obj.save()
     return inner 
 
+def ajax_details(extension):
+    return dict(pk = extension.pk,
+                uuid = extension.uuid,
+                name = extension.name,
+                creator = extension.creator.username,
+                link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
+                icon = extension.icon.url)
+
 @ajax_view
 def ajax_details_view(request):
     uuid = request.GET.get('uuid', None)
@@ -158,17 +166,24 @@ def ajax_details_view(request):
         raise Http404()
 
     extension = get_object_or_404(models.Extension, uuid=uuid)
+    return ajax_details(extension)
 
-    data = dict(pk = extension.pk,
-                uuid = extension.uuid,
-                name = extension.name,
-                creator = extension.creator.username,
-                link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)))
+@ajax_view
+def ajax_query_view(request):
+    query_params = {}
 
-    if extension.icon:
-        data['icon'] = extension.icon.url
+    versions = request.GET.getlist('shell_version')
+    if versions:
+        versions = [models.ShellVersion.lookup_for_version_string(v) for v in versions]
+        versions = [v for v in versions if v is not None]
+        query_params['versions__shell_versions__in'] = versions
 
-    return data
+    uuids = request.GET.getlist('uuid')
+    if uuids:
+        query_params['uuid__in'] = uuids
+
+    extensions = models.Extension.filter(**query_params)
+    return [ajax_details(e) for e in extensions]
 
 @login_required
 def upload_file(request, pk):

@@ -87,7 +87,7 @@ class InvalidShellVersion(Exception):
     pass
 
 class ShellVersionManager(models.Manager):
-    def get_for_version_string(self, version_string):
+    def parse_version_string(self, version_string):
         version = version_string.split('.', 2)
         major, minor = version[:2]
         major, minor = int(major), int(minor)
@@ -102,6 +102,17 @@ class ShellVersionManager(models.Manager):
             # Two-digit odd versions are illegal: 3.1, 3.3
             raise InvalidShellVersion()
 
+        return major, minor, point
+
+    def lookup_for_version_string(self, version_string):
+        major, minor, point = self.parse_version_string(version_string)
+        try:
+            return self.get(major=major, minor=minor, point=point)
+        except self.model.DoesNotExist:
+            return None
+
+    def get_for_version_string(self, version_string):
+        major, minor, point = self.parse_version_string(version_string)
         obj, created = self.get_or_create(major=major, minor=minor, point=point)
         return obj
 

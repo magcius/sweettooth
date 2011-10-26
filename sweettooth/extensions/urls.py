@@ -19,6 +19,8 @@ ajax_patterns = patterns('',
 )
 
 shell_patterns = patterns('',
+    url(r'^extension-query/', views.ajax_query_view),
+
     url(r'^extension-info/', views.ajax_details_view),
 
     url(r'^download-extension/(?P<uuid>.+)\.shell-extension\.zip$',
