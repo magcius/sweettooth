@@ -13,6 +13,7 @@ from django.db import models
 from django.dispatch import Signal
 
 import autoslug
+import re
 from sorl import thumbnail
 
 (STATUS_NEW, STATUS_LOCKED,
@@ -30,6 +31,15 @@ STATUSES = {
 VISIBLE_STATUSES = (STATUS_ACTIVE,)
 REJECTED_STATUSES = (STATUS_REJECTED,)
 REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
+
+def validate_uuid(uuid):
+    if re.match('[-a-zA-Z0-9@.]+$', uuid) is None:
+        return False
+
+    if uuid.endswith('.gnome.org'):
+        return False
+
+    return True
 
 class ExtensionManager(models.Manager):
     def visible(self):
@@ -81,6 +91,12 @@ class Extension(models.Model):
         if user.has_perm('extensions.can-modify-data'):
             return True
         return False
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if not validate_uuid(self.uuid):
+            raise ValidationError("Invalid UUID")
 
 class InvalidShellVersion(Exception):
     pass
