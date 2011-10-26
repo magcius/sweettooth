@@ -36,7 +36,7 @@ window._SW = function() {
         <div class="user_settings">
           <ul>
             <li><a href="{% url auth-profile user=request.user.username %}">Your profile</a></li>
-            <!-- <li><a href="#">Settings</a></li> -->
+            <li><a href="{% url auth-settings user=request.user.username %}">Settings</a></li>
             <li><a href="{% url auth-logout %}">Log out</a></li>
           </ul>
         </div>
