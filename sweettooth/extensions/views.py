@@ -53,7 +53,6 @@ def extension_latest_version_view(request, obj, **kwargs):
     status = version.status
     context = dict(version = version,
                    extension = extension,
-                   is_editable = status in models.EDITABLE_STATUSES,
                    is_visible = status in models.VISIBLE_STATUSES,
                    status = status)
     return render(request, template_name, context)
@@ -96,7 +95,6 @@ def extension_version_view(request, obj, **kwargs):
     context = dict(version = version,
                    extension = extension,
                    is_preview = is_preview,
-                   is_editable = status in models.EDITABLE_STATUSES,
                    is_visible = status in models.VISIBLE_STATUSES,
                    is_rejected = status in models.REJECTED_STATUSES,
                    status = status)
