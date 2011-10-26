@@ -13,10 +13,15 @@ from utils import render
 
 def download(request, uuid):
     pk = request.GET['version_tag']
-    version = get_object_or_404(models.ExtensionVersion, pk=pk)
+    if pk == 'latest':
+        extension = get_object_or_404(models.Extension, uuid=uuid)
+        version = extension.latest_version
 
-    if version.extension.uuid != uuid:
-        raise Http404()
+    else:
+        version = get_object_or_404(models.ExtensionVersion, pk=pk)
+
+        if version.extension.uuid != uuid:
+            raise Http404()
 
     if version.status != models.STATUS_ACTIVE:
         return HttpResponseForbidden()
