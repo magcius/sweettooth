@@ -148,6 +148,13 @@ def parse_zipfile_metadata(uploaded_file):
     except BadZipfile:
         raise InvalidExtensionData("Invalid zip file")
 
+    if zipfile.testzip() is not None:
+        raise InvalidExtensionData("Invalid zip file")
+
+    total_uncompressed = sum(i.file_size for i in zipfile.infolist())
+    if total_uncompressed > 5*1024**3: # 5 MB
+        raise InvalidExtensionData("Zip file is too large")
+
     try:
         metadata = json.load(zipfile.open('metadata.json', 'r'))
     except KeyError:
