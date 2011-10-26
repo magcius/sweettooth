@@ -86,6 +86,7 @@ Requirements
   * Pygments_
   * sorl-thumbnail_
   * south_
+  * django-registration_
 
 I develop with PostgreSQL_ at home, but Django should be able to use SQLite_,
 MySQL_, and others. South_ is used for migrations.
@@ -98,3 +99,4 @@ MySQL_, and others. South_ is used for migrations.
 .. _SQLite: http://www.sqlite.org/
 .. _MySQL: http://www.mysql.com/
 .. _south: http://south.aeracode.org/
+.. _django-registration: http://pypi.python.org/pypi/django-registration

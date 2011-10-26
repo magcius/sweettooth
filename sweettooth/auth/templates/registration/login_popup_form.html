@@ -2,5 +2,5 @@
   {% csrf_token %}
   {{ login_popup_form.as_plain }}
   <input type="submit" value="Login">
-  <a href="{% url auth-register %}">Register</a>
+  <a href="{% url registration_register %}">Register</a>
 </form>

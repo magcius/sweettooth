@@ -1,5 +1,8 @@
 
-from django.contrib.auth import forms, models
+from django.db.models import forms
+from django.contrib.auth import forms as auth_forms
+from django.utils.translation import ugettext_lazy as _
+from registration.forms import RegistrationForm
 
 class PlainOutputForm(object):
     def as_plain(self):
@@ -22,16 +25,23 @@ class InlineForm(object):
             field.widget.attrs['placeholder'] = field.label
 
 class InlineAuthenticationForm(PlainOutputForm, AutoFocusForm,
-                               InlineForm, forms.AuthenticationForm):
+                               InlineForm, auth_forms.AuthenticationForm):
     pass
 
-class AuthenticationForm(AutoFocusForm, forms.AuthenticationForm):
+class AuthenticationForm(AutoFocusForm, auth_forms.AuthenticationForm):
     pass
 
-class UserCreationEmailForm(forms.UserCreationForm):
-    class Meta:
-        model = models.User
-        fields = 'username', 'email'
+class RegistrationForm(RegistrationForm):
+    # Copies the standard setting from the django.contrib.auth.forms
+    username = forms.RegexField(label=_("Username"), max_length=30, regex=r'^[\w.@+-]+$',
+        help_text = _("Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."),
+        error_messages = {'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
+    email = forms.EmailField(widget=forms.TextInput(attrs=dict(maxlength=75)),
+                             label=_(u'Email'))
+    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput,
+        help_text = _("Enter the same password as above, for verification."))
 
-class UserCreationForm(AutoFocusForm, UserCreationEmailForm):
+
+class AutoFocusRegistrationForm(AutoFocusForm, RegistrationForm):
     pass

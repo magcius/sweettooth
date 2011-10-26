@@ -109,10 +109,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sweettooth.auth.context_processors.login_form",
 )
 
+ACCOUNT_ACTIVATION_DAYS = 5
+
 LOGIN_URL = '/accounts/login/'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
+
+    'registration',
 
     # 'ratings' goes before django's comments
     # app so it will find our templates
