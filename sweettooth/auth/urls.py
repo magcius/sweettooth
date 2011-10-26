@@ -1,15 +1,16 @@
 
 from django.views.generic.simple import direct_to_template
 from django.conf.urls.defaults import patterns, url, include
+from django.contrib.auth.views import login, logout
 from auth import views, forms
 from registration.views import register
 
 urlpatterns = patterns('',
-    url(r'^login/', views.login,
+    url(r'^login/', login,
         dict(template_name='registration/login.html',
              authentication_form=forms.AuthenticationForm), name='auth-login'),
 
-    url(r'^logout/', views.logout,
+    url(r'^logout/', logout,
         dict(next_page='/'), name='auth-logout'),
 
     url(r'^register/$', register,
