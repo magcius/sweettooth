@@ -15,6 +15,9 @@ def download(request, uuid):
     pk = request.GET['version_tag']
     version = get_object_or_404(models.ExtensionVersion, pk=pk)
 
+    if version.extension.uuid != uuid:
+        raise Http404()
+
     if version.status != models.STATUS_ACTIVE:
         return HttpResponseForbidden()
 
