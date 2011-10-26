@@ -3,6 +3,10 @@
 // We need to abuse the plugin system so that we can defer the
 // load completion until our dynamically built requirement is
 // loaded.
+
+// Thanks to James Burke for helping me with this.
+// http://groups.google.com/group/requirejs/msg/cc6016210c53a51d
+
 define({
     load: function(name, req, onLoad, config) {
         req(['jquery'], function ($) {
@@ -20,7 +24,7 @@ define({
 
                     // TODO: this may not work if the DOM is not ready
                     // when this call is made. Depending on browsers
-                    // you want to support, wither listen to
+                    // you want to support, either listen to
                     // DOMContentLoaded, event, or use $(function(){}), but in
                     // those cases, the full body of this load action should
                     // be in that call.
