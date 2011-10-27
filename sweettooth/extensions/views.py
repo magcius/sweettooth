@@ -172,7 +172,7 @@ def ajax_query_view(request):
 
     versions = request.GET.getlist('shell_version')
     if versions:
-        versions = [models.ShellVersion.lookup_for_version_string(v) for v in versions]
+        versions = [models.ShellVersion.objects.lookup_for_version_string(v) for v in versions]
         versions = [v for v in versions if v is not None]
         query_params['versions__shell_versions__in'] = versions
 
@@ -180,7 +180,7 @@ def ajax_query_view(request):
     if uuids:
         query_params['uuid__in'] = uuids
 
-    extensions = models.Extension.filter(**query_params)
+    extensions = models.Extension.objects.filter(**query_params)
     return [ajax_details(e) for e in extensions]
 
 @login_required
