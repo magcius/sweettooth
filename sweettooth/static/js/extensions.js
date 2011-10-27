@@ -15,6 +15,7 @@ function($, messages, dbusProxy) {
         ERROR: 3,
         OUT_OF_DATE: 4,
         DOWNLOADING: 5,
+        INITIALIZED: 6,
 
         // Not a real state, used when there's no extension
         // with the associated UUID in the extension map.
@@ -103,7 +104,8 @@ function($, messages, dbusProxy) {
                     // If the extension is uninstalled and we
                     // flick the switch on, install.
                     dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
-                } else if (oldState == ExtensionState.DISABLED) {
+                } else if (oldState == ExtensionState.DISABLED ||
+                           oldState == ExtensionState.INITIALIZED) {
                     dbusProxy.EnableExtension(uuid);
                 }
             } else {
@@ -117,6 +119,7 @@ function($, messages, dbusProxy) {
             $switch.switchify('insensitive', false);
             $switch.tipsy({ gravity: 'e', fade: true });
             if (newState == ExtensionState.DISABLED ||
+                newState == ExtensionState.INITIALIZED ||
                 newState == ExtensionState.UNINSTALLED) {
                 $switch.switchify('activate', false);
             } else if (newState == ExtensionState.ENABLED) {
