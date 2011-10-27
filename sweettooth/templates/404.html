@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Uh oh... - {{ block.super }}{% endblock %}
+{% block body %}
+<h3>404 - Page not Found</h3>
+<p>We couldn't find the page you were looking for, <code>{{ request_path }}</code></p>
+{% endblock %}
