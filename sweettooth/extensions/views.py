@@ -180,6 +180,9 @@ def ajax_query_view(request):
     if uuids:
         query_params['uuid__in'] = uuids
 
+    if not query_params:
+        raise Http404()
+
     extensions = models.Extension.objects.filter(**query_params)
     return [ajax_details(e) for e in extensions]
 
