@@ -98,28 +98,6 @@ def ajax_get_files_view(request, obj):
 
 @post_only_view
 @model_view(models.ExtensionVersion)
-def change_status_view(request, obj):
-    if not can_approve_extension(request.user, obj.extension):
-        return HttpResponseForbidden()
-
-    newstatus_string = request.POST.get('newstatus')
-    newstatus = dict(Approve=models.STATUS_ACTIVE,
-                     Reject=models.STATUS_REJECTED)[newstatus_string]
-
-    log = ChangeStatusLog(user=request.user,
-                          version=obj,
-                          newstatus=newstatus)
-    log.save()
-
-    obj.status = newstatus
-    obj.save()
-
-    models.status_changed.send(sender=request, version=obj, log=log)
-
-    return redirect('review-list')
-
-@post_only_view
-@model_view(models.ExtensionVersion)
 def submit_review_view(request, obj):
     extension, version = obj.extension, obj
 
@@ -132,6 +110,22 @@ def submit_review_view(request, obj):
     review.save()
 
     messages.info(request, "Thank you for reviewing %s" % (extension.name,))
+
+    if can_approve_extension(request.user, obj.extension):
+        status_string = request.POST.get('status')
+        newstatus = dict(approve=models.STATUS_ACTIVE,
+                         reject=models.STATUS_REJECTED).get(status_string, None)
+
+        if newstatus is not None:
+            log = ChangeStatusLog(user=request.user,
+                                  version=obj,
+                                  newstatus=newstatus)
+            log.save()
+
+            obj.status = newstatus
+            obj.save()
+
+            models.status_changed.send(sender=request, version=obj, log=log)
 
     models.reviewed.send(sender=request, version=version, review=review)
 
