@@ -257,7 +257,7 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
         version.parse_metadata_json(metadata)
 
         version.save()
-        shell_versions = sorted([sv.version_string for sv in version.shell_versions.all()])
+        shell_versions = sorted(sv.version_string for sv in version.shell_versions.all())
         self.assertEquals(shell_versions, ["3.0.0", "3.0.1", "3.0.2"])
 
     def test_shell_versions_stable(self):
@@ -275,7 +275,7 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
         version.parse_metadata_json(metadata)
 
         version.save()
-        shell_versions = sorted([sv.version_string for sv in version.shell_versions.all()])
+        shell_versions = sorted(sv.version_string for sv in version.shell_versions.all())
         self.assertEquals(shell_versions, ["3.0", "3.2"])
 
 class ShellVersionTest(TestCase):
