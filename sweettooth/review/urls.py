@@ -12,7 +12,6 @@ urlpatterns = patterns('',
         name='review-list'),
     url(r'^ajax/get-files/(?P<pk>\d+)', views.ajax_get_files_view, name='review-ajax-files'),
     url(r'^submit/(?P<pk>\d+)', views.submit_review_view, name='review-submit'),
-    url(r'^approve/(?P<pk>\d+)', views.change_status_view, name='review-approve'),
 
     url(r'^(?P<pk>\d+)', views.review_version_view, name='review-version'),
 
