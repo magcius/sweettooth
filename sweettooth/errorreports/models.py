@@ -28,9 +28,4 @@ class ErrorReport(models.Model):
             return self.user.username
         else:
             return self.email
-
-    @property
-    def no_errors(self):
-        return self.errors == ""
-
 error_reported = Signal(providing_args=["version", "report"])
