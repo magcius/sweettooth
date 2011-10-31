@@ -30,6 +30,8 @@ class BasicUserTestCase(object):
         self.password = 'a random password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
 
+        self.client.login(username=self.username, password=self.password)
+
 class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
         metadata = {"name": "Test Metadata",
@@ -109,12 +111,9 @@ class ReplaceMetadataTest(BasicUserTestCase, TestCase):
 
 class UploadTest(BasicUserTestCase, TestCase):
     def test_upload_parsing(self):
-        client = Client()
-        client.login(username=self.username, password=self.password)
-
         with get_test_zipfile('SimpleExtension') as f:
-            response = client.post(reverse('extensions-upload-file'),
-                                   dict(source=f), follow=True)
+            response = self.client.post(reverse('extensions-upload-file'),
+                                        dict(source=f), follow=True)
 
         extension = models.Extension.objects.get(uuid="test-extension@gnome.org")
         version1 = extension.versions.order_by("-version")[0]
@@ -135,8 +134,8 @@ class UploadTest(BasicUserTestCase, TestCase):
 
         # Try again, hoping to get a new version
         with get_test_zipfile('SimpleExtension') as f:
-            response = client.post(reverse('extensions-upload-file'),
-                                   dict(source=f), follow=True)
+            response = self.client.post(reverse('extensions-upload-file'),
+                                        dict(source=f), follow=True)
 
         version2 = extension.versions.order_by("-version")[0]
         self.assertNotEquals(version1, version2)
@@ -146,12 +145,9 @@ class UploadTest(BasicUserTestCase, TestCase):
 
 
     def test_upload_large_uuid(self):
-        client = Client()
-        client.login(username=self.username, password=self.password)
-
         with get_test_zipfile('LargeUUID') as f:
-            response = client.post(reverse('extensions-upload-file'),
-                                   dict(source=f), follow=True)
+            response = self.client.post(reverse('extensions-upload-file'),
+                                        dict(source=f), follow=True)
 
         large_uuid = '1234567890'*9 + '@gnome.org'
         extension = models.Extension.objects.get(uuid=large_uuid)
