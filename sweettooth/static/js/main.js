@@ -7,20 +7,25 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable', 'jquery.time
     $.ajaxSettings.headers['X-CSRFToken'] = $.cookie('csrftoken');
 
     $.fn.csrfEditable = function(url) {
-        var self = this;
+        return this.each(function() {
+            var elem = $(this);
 
-        function error(xhr, status, error) {
-            if (status == 403) {
-                self.css("background-color", "#fcc");
+            function error(xhr, status, error) {
+                if (status == 403) {
+                    elem.css("background-color", "#fcc");
+                }
             }
-        }
 
-        self.editable(url, { select: true,
-                             ajaxoptions: { error: error },
-                             data: function(string, settings) {
-                                 return $.trim(string, settings);
-                             }});
-        self.addClass("editable");
+            elem.editable(url, { select: true,
+                                 ajaxoptions: { error: error, dataType: 'json' },
+                                 callback: function(result, settings) {
+                                     elem.text(result);
+                                 },
+                                 data: function(string, settings) {
+                                     return $.trim(string);
+                                 }});
+            elem.addClass("editable");
+        });
     };
 
     $(document).ready(function() {
