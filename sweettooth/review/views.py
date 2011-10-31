@@ -1,9 +1,4 @@
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
 import base64
 import os.path
 
