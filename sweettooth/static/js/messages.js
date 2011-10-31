@@ -7,7 +7,6 @@ define(['jquery'], function($) {
 
     function grabMessageSort($message) {
         var classList = $message.attr('class').split(' ');
-        console.log(classList);
 
         for (var i = 0; i < classList.length; i ++) {
             var order = SORT_ORDER.indexOf(classList[i]);
