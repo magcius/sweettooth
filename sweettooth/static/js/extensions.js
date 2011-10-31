@@ -184,7 +184,7 @@ function($, messages, dbusProxy) {
                                     append($('<a>', {'href': '#'}).text("Undo?")).html();
 
                                 var $message = messages.addInfo(messageHTML);
-                                $message.find('a').click(reinstall);
+                                $message.delegate('a', 'click', reinstall);
                                 $elem.data('undo-uninstall-message', $message);
                             }
                         });
