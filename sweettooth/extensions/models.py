@@ -59,13 +59,13 @@ class Extension(models.Model):
             ("can-modify-data", "Can modify extension data"),
         )
 
-    def make_screenshot_filename(self, filename):
-        return os.path.join(self.uuid, filename)
+    def make_screenshot_filename(self, filename=None):
+        return "screenshots/screenshot_%d.png" % (self.pk,)
 
     screenshot = thumbnail.ImageField(upload_to=make_screenshot_filename, blank=True)
 
-    def make_icon_filename(self, filename):
-        return os.path.join(self.uuid, "icons/", filename)
+    def make_icon_filename(self, filename=None):
+        return "icons/icon_%d.png" % (self.pk,)
 
     icon = models.ImageField(upload_to=make_icon_filename, blank=True, default="/static/images/plugin.png")
 
