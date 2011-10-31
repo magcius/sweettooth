@@ -6,9 +6,8 @@ from extensions.models import ExtensionVersion
 
 class ErrorReport(models.Model):
     comment = models.TextField(blank=True)
-
     user = models.ForeignKey(auth.models.User, related_name="+")
-
     version = models.ForeignKey(ExtensionVersion)
+    can_contact = models.BooleanField()
 
 error_reported = Signal(providing_args=["version", "report"])

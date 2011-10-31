@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 
 from errorreports.models import ErrorReport, error_reported
+from errorreports.forms import ErrorReportForm
 from extensions.models import ExtensionVersion
 
 from decorators import post_only_view, model_view
@@ -18,29 +19,29 @@ def report_error_view(request, obj):
     extension, version = obj.extension, obj
 
     if request.method == 'POST':
-        comment = request.POST['comment']
+        form = ErrorReportForm(data=request.POST)
 
         if not request.user.is_authenticated():
             return HttpResponseForbidden()
 
-        report = ErrorReport(version=version,
-                             comment=comment,
-                             user=request.user)
-        report.save()
+        if form.is_valid():
+            report = form.save(request=request, version=version)
+            error_reported.send(sender=request, version=version, report=report)
 
-        error_reported.send(sender=request, version=version, report=report)
+            messages.info(request, "Thank you for your error report!")
 
-        messages.info(request, "Thank you for your error report!")
-
-        return redirect('extensions-version-detail',
-                        pk=version.pk,
-                        ext_pk=extension.pk,
-                        slug=extension.slug)
+            return redirect('extensions-version-detail',
+                            pk=version.pk,
+                            ext_pk=extension.pk,
+                            slug=extension.slug)
 
     else:
-        context = dict(version=version,
-                       extension=extension)
-        return render(request, 'errorreports/report.html', context)
+        form = ErrorReportForm()
+
+    context = dict(version=version,
+                   extension=extension,
+                   form=form)
+    return render(request, 'errorreports/report.html', context)
 
 @model_view(ErrorReport)
 def view_error_report_view(request, obj):

@@ -355,8 +355,13 @@ li.extension:last-child {
     padding-left: 16px;
 }
 
-#error_report input {
-    float: right;
+#error_report input[name=can_contact] {
+    margin-left: 1em;
+}
+
+#error_report input[type=submit] {
+    display: block;
+    margin: 1em;
 }
 
 #error_report textarea,
@@ -379,14 +384,14 @@ li.extension:last-child {
     white-space: pre;
 }
 
-#error_report .no-errors {
-    color: #888;
-    font: inherit;
-    text-align: center;
-    height: 1.6em;
-    min-height: 1.6em;
-    line-height: 1.6em;
-    resize: none;
+#error_report .email {
+    display: block;
+    margin: .2em auto;
+
+    background-color: white;
+    color: #333;
+    font-family: monospace;
+    font-size: 1.2em;
 }
 
 /* Comments */
