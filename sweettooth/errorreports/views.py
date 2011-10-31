@@ -1,5 +1,6 @@
 
 from django.contrib import messages
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 
 from errorreports.models import ErrorReport, error_reported
@@ -15,15 +16,12 @@ def report_error_view(request, obj):
     if request.method == 'POST':
         comment = request.POST['comment']
 
-        if request.user.is_authenticated():
-            user, email = request.user, ""
-        else:
-            user, email = None, request.POST['email']
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
 
         report = ErrorReport(version=version,
                              comment=comment,
-                             user=user,
-                             email=email)
+                             user=request.user)
         report.save()
 
         error_reported.send(sender=request, version=version, report=report)

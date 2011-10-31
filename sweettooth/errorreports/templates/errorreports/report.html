@@ -11,15 +11,6 @@
   <h3> Comments for the author </h3>
   <textarea name="comment" id="comment"></textarea>
 
-  {% if not request.user.is_authenticated %}
-  <h3> Email address </h3>
-  <p>You're not <a href="{% url auth-login %}">logged in</a>.
-    In order for the extension author to contact you, you need to provide an email address.
-  </p>
-
-  <input type="email" name="email" value="">
-  {% endif %}
-
   <input type="submit" value="Report Errors">
 </form>
 {% endblock %}
