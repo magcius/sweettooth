@@ -204,7 +204,7 @@ function($, messages, dbusProxy) {
                         type: "GET",
                     }).done(function(result) {
                         $elem.
-                            find('span.author').text(" by ").append($('<a>', {'href': "/accounts/profile/" + result.creator})).end().
+                            find('span.author').text(" by ").append($('<a>', {'href': "/accounts/profile/" + result.creator}).text(result.creator)).end().
                             find('img.icon').detach().end().
                             find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end().
                             append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
