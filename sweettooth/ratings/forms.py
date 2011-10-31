@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 
 from ratings.models import RatingComment
 
-CHOICES = zip(range(5), (str(r) for r in range(1, 6)))
+CHOICES = [(i, str(i+1)) for i in range(5)]
 
 class NoLabelRadioInput(widgets.RadioInput):
     """
@@ -57,8 +57,6 @@ class RatingCommentForm(CommentForm):
         return dict(
             content_type = ContentType.objects.get_for_model(self.target_object),
             object_pk    = force_unicode(self.target_object._get_pk_val()),
-            user_name    = self.cleaned_data["name"],
-            user_email   = self.cleaned_data["email"],
             comment      = self.cleaned_data["comment"],
             rating       = self.cleaned_data["rating"],
             submit_date  = datetime.datetime.now(),
@@ -67,5 +65,7 @@ class RatingCommentForm(CommentForm):
             is_removed   = False,
         )
 
-# Remove the URL field, we don't want it.
+# Remove the URL, name and email fields. We don't want them.
 RatingCommentForm.base_fields.pop('url')
+RatingCommentForm.base_fields.pop('name')
+RatingCommentForm.base_fields.pop('email')

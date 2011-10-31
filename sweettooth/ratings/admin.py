@@ -11,7 +11,7 @@ class RatingCommentsAdmin(CommentsAdmin):
            {'fields': ('content_type', 'object_pk', 'site')}
         ),
         (_('Content'),
-           {'fields': ('user', 'user_name', 'user_email', 'rating', 'comment')}
+           {'fields': ('user', 'rating', 'comment')}
         ),
         (_('Metadata'),
            {'fields': ('submit_date', 'ip_address', 'is_public', 'is_removed')}

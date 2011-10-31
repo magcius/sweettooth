@@ -337,7 +337,7 @@ li.extension:last-child {
     line-height: 1.7em;
 }
 
-.extension .report.error {
+.extension .report.error, .extension .unauthenticated {
     background: #EEEEEC;
     border: 1px solid #BABDB6;
     border-radius: 8px;

@@ -24,6 +24,7 @@
 <div id="new-comment-form">
   <div>
     <h4>Your opinion</h4>
+    {% if request.user.is_authenticated %}
     <div class="report rating">
       <span class="txt">It worked, and...</span>
       {% render_comment_form for extension %}
@@ -36,5 +37,10 @@
         helps extension authors be known about bugs in their extension!
       </p>
     </div>
+    {% else %}
+    <p class="unauthenticated">
+      Unfortunately, to help prevent spam, we require that you <a href="{% url auth-login %}">log in to GNOME Shell Extensions</a> in order to post a comment or report an error. You understand, right?
+    </p>
+    {% endif %}
   </div>
 </div>
