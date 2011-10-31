@@ -18,6 +18,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
@@ -156,51 +157,30 @@ def review_version_view(request, obj):
 
     return render(request, template_name, context)
 
-on_submitted_subject = u"""
-GNOME Shell Extensions \N{EM DASH} New review request: "%(name)s", v%(ver)d
-""".strip()
-
-on_submitted_template = u"""
-A new extension version, "%(name)s", version %(ver)d has been submitted for review by %(creator)s.
-
-Review the extension at %(url)s
-
-\N{EM DASH}
-
-This email was sent automatically by GNOME Shell Extensions. Do not reply.
-""".strip()
-
 def send_email_on_submitted(request, version, **kwargs):
     extension = version.extension
 
     url = request.build_absolute_uri(reverse('review-version',
                                              kwargs=dict(pk=version.pk)))
 
-    data = dict(ver=version.version,
-                name=extension.name,
-                creator=extension.creator,
+    data = dict(version=version,
+                extension=extension,
                 url=url)
 
     reviewers = get_all_reviewers().values_list('email', flat=True)
 
-    send_mail(subject=on_submitted_subject % data,
-              message=on_submitted_template % data,
+    subject = render_to_string('review/submitted_mail_subject.txt', data).strip()
+    subject = subject.replace('\n', '')
+    subject = subject.replace('\r', '')
+
+    message = render_to_string('review/submitted_mail.txt', data).strip()
+
+    send_mail(subject=subject,
+              message=message,
               from_email=settings.EMAIL_SENDER,
               recipient_list=reviewers)
 
 models.submitted_for_review.connect(send_email_on_submitted)
-
-on_reviewed_subject = u"""
-GNOME Shell Extensions \N{EM DASH} Your extension, "%(name)s", v%(ver)d has been reviewed.
-""".strip()
-
-on_reviewed_template = u"""
-Your extension, "%(name)s", version %(ver)d has been reviewed. You can see the review here:
-
-%(url)s
-
-Please use the review page to follow up with any comments or concerns.
-""".strip()
 
 def send_email_on_reviewed(request, version, review, **kwargs):
     extension = version.extension
@@ -212,13 +192,18 @@ def send_email_on_reviewed(request, version, review, **kwargs):
     url = request.build_absolute_uri(reverse('review-version',
                                              kwargs=dict(pk=version.pk)))
 
-    data = dict(ver=version.version,
-                name=extension.name,
-                creator=extension.creator,
+    data = dict(version=version,
+                extension=extension,
                 url=url)
 
-    send_mail(subject=on_reviewed_subject % data,
-              message=on_reviewed_template % data,
+    subject = render_to_string('review/reviewed_mail_subject.txt', data).strip()
+    subject = subject.replace('\n', '')
+    subject = subject.replace('\r', '')
+
+    message = render_to_string('review/reviewed_mail.txt', data).strip()
+
+    send_mail(subject=subject,
+              message=message,
               from_email=settings.EMAIL_SENDER,
               recipient_list=[extension.creator.email])
 

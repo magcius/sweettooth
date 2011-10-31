@@ -1,0 +1,9 @@
+Your extension, "{{ extension.name }}", version {{ version.version }} has been reviewed. You can see the review here:
+
+{{ url }}
+
+Please use the review page to follow up with any comments or concerns.
+
+—
+
+This email was sent automatically by GNOME Shell Extensions. Do not reply.
