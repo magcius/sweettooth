@@ -134,7 +134,7 @@ def ajax_inline_edit_view(request, obj):
     if key not in whitelist:
         return HttpResponseForbidden()
 
-    setattr(object, key, value)
+    setattr(obj, key, value)
     obj.save()
 
     return value
