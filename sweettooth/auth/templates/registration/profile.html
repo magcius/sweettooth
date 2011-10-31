@@ -14,12 +14,6 @@
     <li class="extension profile">
       <div class="switch insensitive"></div>
 
-      {% if extension.screenshot %}
-      {% thumbnail extension.screenshot "300x200" as th %}
-      <img src="{{ th.url }}" />
-      {% endthumbnail %}
-      {% endif %}
-
       <h4 class="extension-name"><a href="{% url extensions-detail pk=extension.pk %}">      <img src="{{ extension.icon.url }}" class="icon">{{ extension.name }}</a></h4>
       <p class="description">
         {{ extension.description }}
