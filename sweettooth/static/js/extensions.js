@@ -90,7 +90,8 @@ function($, messages, dbusProxy) {
 
         $elem.data({'elem': $elem,
                     'state': _state,
-                    'uninstalled': false});
+                    'uninstalled': false,
+                    'undo-uninstall-message': null});
 
         $switch.data('elem', $elem);
         $switch.switchify();
@@ -137,6 +138,7 @@ function($, messages, dbusProxy) {
                                               newState == ExtensionState.OUT_OF_DATE)) {
                 $elem.fadeIn({ queue: false }).slideDown();
                 $elem.data('uninstalled', false);
+                $elem.data('undo-uninstall-message').slideUp();
             }
 
         });
@@ -167,8 +169,6 @@ function($, messages, dbusProxy) {
                         // installed it by reattaching the element, but we can't do
                         // that here -- the user might click "Cancel".
                         $elem.data('uninstalled', true);
-
-                        message.slideUp();
                     }
 
                     function uninstall() {
@@ -183,9 +183,9 @@ function($, messages, dbusProxy) {
                                     append(". ").
                                     append($('<a>', {'href': '#'}).text("Undo?")).html();
 
-                                var message = messages.addInfo(messageHTML);
-                                message.find('a').click(reinstall);
-                                $elem.data('undo-uninstall-message', message);
+                                var $message = messages.addInfo(messageHTML);
+                                $message.find('a').click(reinstall);
+                                $elem.data('undo-uninstall-message', $message);
                             }
                         });
                     }
