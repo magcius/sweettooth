@@ -22,13 +22,15 @@ def get_test_zipfile(testname):
 
     return new_temp
 
-class ParseZipfileTest(TestCase):
+class BasicUserTestCase(object):
     def setUp(self):
+        super(BasicUserTestCase, self).setUp()
         self.username = 'TestUser1'
         self.email = 'non-existant@non-existant.tld'
         self.password = 'a random password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
 
+class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
         metadata = {"name": "Test Metadata",
                     "description": "Simple test metadata",
@@ -72,13 +74,7 @@ class ParseZipfileTest(TestCase):
         self.assertTrue("description" not in extra)
         self.assertTrue("url" not in extra)
 
-class ReplaceMetadataTest(TestCase):
-    def setUp(self):
-        self.username = 'TestUser1'
-        self.email = 'non-existant@non-existant.tld'
-        self.password = 'a random password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
+class ReplaceMetadataTest(BasicUserTestCase, TestCase):
     def test_replace_metadata(self):
         extension = models.Extension(creator=self.user)
         version = models.ExtensionVersion()
@@ -111,13 +107,7 @@ class ReplaceMetadataTest(TestCase):
         old_zip.close()
         new_zip.close()
 
-class UploadTest(TestCase):
-    def setUp(self):
-        self.username = 'TestUser1'
-        self.email = 'non-existant@non-existant.tld'
-        self.password = 'a random password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
+class UploadTest(BasicUserTestCase, TestCase):
     def test_upload_parsing(self):
         client = Client()
         client.login(username=self.username, password=self.password)
@@ -174,13 +164,7 @@ class UploadTest(TestCase):
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
 
-class ExtensionVersionTest(TestCase):
-    def setUp(self):
-        self.username = 'TestUser1'
-        self.email = 'non-existant@non-existant.tld'
-        self.password = 'a random password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
+class ExtensionVersionTest(BasicUserTestCase, TestCase):
     def test_single_version(self):
         metadata = {"name": "Test Metadata",
                     "uuid": "test-1@gnome.org",
