@@ -131,11 +131,15 @@ def ajax_inline_edit_view(request, obj):
     if key.startswith('extension_'):
         key = key[len('extension_'):]
 
-    whitelist = 'name', 'description', 'url'
-    if key not in whitelist:
+    if key == 'name':
+        obj.name = value
+    elif key == 'description':
+        obj.description = value
+    elif key == 'url':
+        obj.url = value
+    else:
         return HttpResponseForbidden()
 
-    setattr(obj, key, value)
     obj.save()
 
     return value
