@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, redirect
+from sorl.thumbnail.shortcuts import get_thumbnail
 
 from extensions import models
 from extensions.forms import UploadForm
@@ -139,14 +140,21 @@ def ajax_inline_edit_view(request, obj):
 
     return value
 
-def ajax_image_upload_view(field):
-    @ajax_view
-    @post_only_view
-    @model_view(models.Extension)
-    def inner(request, obj):
-        setattr(obj, field, request.FILES['file'])
-        obj.save()
-    return inner 
+@ajax_view
+@post_only_view
+@model_view(models.Extension)
+def ajax_upload_screenshot_view(request, obj):
+    obj.screenshot = request.FILES['file']
+    obj.save()
+    return get_thumbnail(obj.screenshot, request.GET['geometry']).url
+
+@ajax_view
+@post_only_view
+@model_view(models.Extension)
+def ajax_upload_icon_view(request, obj):
+    obj.icon = request.FILES['file']
+    obj.save()
+    return obj.icon.url
 
 def ajax_details(extension):
     return dict(pk = extension.pk,

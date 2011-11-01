@@ -19,46 +19,12 @@ define(['jquery'], function($) {
         }
 
         function upload(e) {
-            function replaceImage($img) {
+            function uploadComplete(result) {
                 var $old = $elem.children().first();
-                if ($elem.width() < $elem.height())
-                    $img.width($elem.width());
-                else
-                    $img.height($elem.height());
+                var $img = $('<img>', { 'src': result });
                 $img.replaceAll($old);
                 $elem.removeClass('placeholder');
             }
-
-            function uploadCompleteObjectURL() {
-                var $img = $("<img>", { src: window.URL.createObjectURL(file) });
-                $img.bind('load', function() {
-                    window.URL.revokeObjectURL(this.src);
-                    replaceImage($img);
-                });
-            }
-
-            function uploadCompleteFileReader(url) {
-                function _img(url) {
-                    var $img = $("<img>", { src: url });
-                    $img.bind('load', function() {
-                        replaceImage($img);
-                    });
-                }
-
-                if (url) {
-                    _img(url);
-                } else {
-                    var filereader = new FileReader();
-                    filereader.onload = function(e) {
-                        var url = e.target.result;
-                        _img(url);
-                    };
-                }
-            }
-
-            var uploadComplete = ((window.URL.createObjectURL !== undefined) ? 
-                                  uploadCompleteObjectURL :
-                                  uploadCompleteFileReader);
 
             var dt, file;
             if (e.originalEvent.dataTransfer)
@@ -82,9 +48,7 @@ define(['jquery'], function($) {
                                        contentType: false,
                                        processData: false,
                                        data: fd });
-                df.done(function() {
-                    uploadComplete();
-                });
+                df.done(uploadComplete);
             } else {
                 var filereader = new FileReader();
                 filereader.onload = function(e) {
@@ -92,9 +56,7 @@ define(['jquery'], function($) {
                     var df = $.ajax(url, { type: 'POST',
                                            contentType: 'multipart/form-data; boundary="' + BOUNDARY + '"',
                                            data: buildMultipart(url) });
-                    df.done(function() {
-                        uploadComplete(url);
-                    });
+                    df.done(uploadComplete);
                 };
                 filereader.readAsBinaryString(file);
             }

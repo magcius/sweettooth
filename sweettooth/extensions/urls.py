@@ -13,8 +13,8 @@ upload_patterns = patterns('',
 ajax_patterns = patterns('',
     url(r'^edit/(?P<pk>\d+)', views.ajax_inline_edit_view, name='extensions-ajax-inline'),
     url(r'^submit/(?P<pk>\d+)', views.ajax_submit_and_lock_view, name='extensions-ajax-submit'),
-    url(r'^upload/screenshot/(?P<pk>\d+)', views.ajax_image_upload_view(field='screenshot'), name='extensions-ajax-screenshot'),
-    url(r'^upload/icon/(?P<pk>\d+)', views.ajax_image_upload_view(field='icon'), name='extensions-ajax-icon'),
+    url(r'^upload/screenshot/(?P<pk>\d+)', views.ajax_upload_screenshot_view, name='extensions-ajax-screenshot'),
+    url(r'^upload/icon/(?P<pk>\d+)', views.ajax_upload_icon_view, name='extensions-ajax-icon'),
     url(r'^detail/', views.ajax_details_view, name='extensions-ajax-details'),
 )
 
