@@ -10,4 +10,4 @@ class ErrorReport(models.Model):
     version = models.ForeignKey(ExtensionVersion)
     can_contact = models.BooleanField()
 
-error_reported = Signal(providing_args=["version", "report"])
+error_reported = Signal(providing_args=["request", "version", "report"])

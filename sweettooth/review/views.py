@@ -123,7 +123,8 @@ def submit_review_view(request, obj):
 
             models.status_changed.send(sender=request, version=obj, log=log)
 
-    models.reviewed.send(sender=request, version=version, review=review)
+    models.reviewed.send(sender=request, request=request,
+                         version=version, review=review)
 
     return redirect('review-list')
 
@@ -152,7 +153,7 @@ def review_version_view(request, obj):
 
     return render(request, template_name, context)
 
-def send_email_on_submitted(request, version, **kwargs):
+def send_email_on_submitted(sender, request, version, **kwargs):
     extension = version.extension
 
     url = request.build_absolute_uri(reverse('review-version',
@@ -177,7 +178,7 @@ def send_email_on_submitted(request, version, **kwargs):
 
 models.submitted_for_review.connect(send_email_on_submitted)
 
-def send_email_on_reviewed(request, version, review, **kwargs):
+def send_email_on_reviewed(sender, request, version, review, **kwargs):
     extension = version.extension
 
     if review.reviewer == extension.creator:

@@ -26,7 +26,8 @@ def report_error_view(request, obj):
 
         if form.is_valid():
             report = form.save(request=request, version=version)
-            error_reported.send(sender=request, version=version, report=report)
+            error_reported.send(sender=request, request=request,
+                                version=version, report=report)
 
             messages.info(request, "Thank you for your error report!")
 
@@ -48,7 +49,7 @@ def view_error_report_view(request, obj):
     return render(request, 'errorreports/view.html', dict(report=obj))
 
 
-def send_email_on_error_reported(request, version, report, **kwargs):
+def send_email_on_error_reported(sender, request, version, report, **kwargs):
     extension = version.extension
 
     url = request.build_absolute_uri(reverse('errorreports-view',

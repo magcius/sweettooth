@@ -116,7 +116,7 @@ def ajax_submit_and_lock_view(request, obj):
     obj.status = models.STATUS_LOCKED
     obj.save()
 
-    models.submitted_for_review.send(sender=request, version=obj)
+    models.submitted_for_review.send(sender=request, request=request, version=obj)
 
 @ajax_view
 @post_only_view
@@ -209,7 +209,7 @@ def upload_file(request, pk):
                 if pk is not None:
                     return redirect('extensions-upload-file', pk=pk)
                 else:
-                    return redirect('extensions-upload-file')
+                   return redirect('extensions-upload-file')
 
             existing = models.Extension.objects.filter(uuid=uuid)
             if pk is None and existing.exists():
