@@ -85,7 +85,7 @@ class Extension(models.Model):
             return qs[0]
         return None
 
-    def user_has_access(self, user):
+    def user_can_edit(self, user):
         if user == self.creator:
             return True
         if user.has_perm('extensions.can-modify-data'):

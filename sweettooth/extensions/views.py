@@ -46,7 +46,7 @@ def extension_latest_version_view(request, obj, **kwargs):
         return redirect('extensions-detail', **kwargs)
 
     # If the user can edit the model, let him do so.
-    if extension.user_has_access(request.user):
+    if extension.user_can_edit(request.user):
         template_name = "extensions/detail_edit.html"
     else:
         template_name = "extensions/detail.html"
@@ -88,7 +88,7 @@ def extension_version_view(request, obj, **kwargs):
         return redirect('extensions-version-detail', **kwargs)
 
     # If the user can edit the model, let him do so.
-    if extension.user_has_access(request.user):
+    if extension.user_can_edit(request.user):
         template_name = "extensions/detail_edit.html"
     else:
         template_name = "extensions/detail.html"
@@ -108,7 +108,7 @@ def extension_version_view(request, obj, **kwargs):
 @post_only_view
 @model_view(models.ExtensionVersion)
 def ajax_submit_and_lock_view(request, obj):
-    if not obj.extension.user_has_access(request.user):
+    if not obj.extension.user_can_edit(request.user):
         return HttpResponseForbidden()
 
     if obj.status != models.STATUS_NEW:
@@ -123,7 +123,7 @@ def ajax_submit_and_lock_view(request, obj):
 @post_only_view
 @model_view(models.Extension)
 def ajax_inline_edit_view(request, obj):
-    if not obj.user_has_access(request.user):
+    if not obj.user_can_edit(request.user):
         return HttpResponseForbidden()
 
     key = request.POST['id']
