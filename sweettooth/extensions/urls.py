@@ -28,7 +28,7 @@ shell_patterns = patterns('',
 )
 
 urlpatterns = patterns('',
-    url(r'^$', object_list, dict(queryset=models.Extension.objects.visible(),
+    url(r'^$', object_list, dict(queryset=models.Extension.objects.visible().order_by('name'),
                                  paginate_by=10,
                                  template_object_name='extension',
                                  template_name='extensions/list.html'),
