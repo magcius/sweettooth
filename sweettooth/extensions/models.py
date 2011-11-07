@@ -1,5 +1,4 @@
 
-import os
 try:
     import json
 except ImportError:
