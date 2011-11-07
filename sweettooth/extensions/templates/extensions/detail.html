@@ -68,7 +68,7 @@
 {% endblock %}
 {% block document-ready %}{{ block.super }}
     require(['jquery.rating', 'extensions'], function() {
-        {% if is_review or is_rejected %}
+        {% if is_rejected %}
         $(".extension .switch").addClass("insensitive");
         {% endif %}
         $(".extension").addExtensionsSwitches();
