@@ -130,7 +130,7 @@ function($, messages, dbusProxy) {
                 $switch.attr('title', "This extension had an error.");
             } else if (newState == ExtensionState.OUT_OF_DATE) {
                 $switch.switchify('insensitive', true);
-                messages.addError("This extension is not compatible with your version of GNOME.");
+                $elem.trigger('out-of-date');
             }
 
             if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||
@@ -249,6 +249,10 @@ function($, messages, dbusProxy) {
     $.fn.addExtensionsSwitch = function () {
         var $extension = $(this);
         var uuid = $extension.data('uuid');
+
+        $extension.bind('out-of-date', function() {
+            messages.addError("This extension is incompatible with your version of GNOME.");
+        });
 
         dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
             addExtensionSwitch(uuid, meta, $(this));
