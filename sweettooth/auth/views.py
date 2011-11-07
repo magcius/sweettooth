@@ -12,7 +12,7 @@ def profile(request, user):
     userobj = get_object_or_404(models.User, username=user)
 
     template = 'registration/profile.html'
-    if request.user == user:
+    if request.user == userobj:
         template = 'registration/profile_edit.html'
 
     display_name = userobj.get_full_name() or userobj.username
