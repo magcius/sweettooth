@@ -246,13 +246,12 @@ function($, messages, dbusProxy) {
         });
     };
 
-    $.fn.addExtensionsSwitches = function () {
-        var $container = $(this);
-        dbusProxy.ListExtensions().done(function(extensions) {
-            $container.each(function () {
-                var uuid = $(this).data('uuid');
-                addExtensionSwitch(uuid, extensions[uuid], $(this));
-            });
+    $.fn.addExtensionsSwitch = function () {
+        var $extension = $(this);
+        var uuid = $extension.data('uuid');
+
+        dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
+            addExtensionSwitch(uuid, meta, $(this));
         });
     };
 
