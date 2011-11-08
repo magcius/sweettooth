@@ -97,6 +97,12 @@ class Extension(models.Model):
         if not validate_uuid(self.uuid):
             raise ValidationError("Invalid UUID")
 
+    def save(self, *args, **kwargs):
+        super(Extension, self).save(*args, **kwargs)
+        for version in self.versions.all():
+            if version.source:
+                version.replace_metadata_json()
+
 class InvalidShellVersion(Exception):
     pass
 
