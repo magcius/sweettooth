@@ -98,6 +98,7 @@ def extension_version_view(request, obj, **kwargs):
                    is_preview = is_preview,
                    is_visible = status in models.VISIBLE_STATUSES,
                    is_rejected = status in models.REJECTED_STATUSES,
+                   is_new_extension = (extension.versions.count() == 1),
                    status = status)
 
     if extension.latest_version is not None:
