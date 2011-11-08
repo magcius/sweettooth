@@ -35,8 +35,8 @@ class ExtensionVersionInline(admin.TabularInline):
     extra = 0
 
 class ExtensionAdmin(admin.ModelAdmin):
-    list_display = 'name', 'num_versions', 'creator',
-    list_display_links = 'name',
+    list_display = 'name', 'uuid', 'num_versions', 'creator',
+    list_display_links = 'name', 'uuid',
 
     def num_versions(self, ext):
         return ext.versions.count()
