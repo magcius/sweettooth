@@ -246,7 +246,7 @@ function($, messages, dbusProxy) {
         });
     };
 
-    $.fn.addExtensionsSwitch = function () {
+    $.fn.addExtensionSwitch = function () {
         var $extension = $(this);
         var uuid = $extension.data('uuid');
 
