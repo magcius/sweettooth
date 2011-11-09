@@ -149,7 +149,7 @@ function($, messages, dbusProxy) {
     $.fn.addLocalExtensions = function () {
         var $container = $(this);
         dbusProxy.ListExtensions().done(function(extensions) {
-            if (extensions && Object.keys(extensions).length) {
+            if (extensions && !$.isEmptyObject(extensions)) {
                 var extensionValues = [];
                 for (var uuid in extensions) {
                     extensionValues.push(extensions[uuid]);
