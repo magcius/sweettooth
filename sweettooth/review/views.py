@@ -173,7 +173,7 @@ def send_email_on_submitted(sender, request, version, **kwargs):
 
     send_mail(subject=subject,
               message=message,
-              from_email=settings.EMAIL_SENDER,
+              from_email=settings.DEFAULT_FROM_EMAIL,
               recipient_list=reviewers)
 
 models.submitted_for_review.connect(send_email_on_submitted)
@@ -200,7 +200,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
 
     send_mail(subject=subject,
               message=message,
-              from_email=settings.EMAIL_SENDER,
+              from_email=settings.DEFAULT_FROM_EMAIL,
               recipient_list=[extension.creator.email])
 
 models.reviewed.connect(send_email_on_reviewed)

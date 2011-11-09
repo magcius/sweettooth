@@ -68,7 +68,7 @@ def send_email_on_error_reported(sender, request, version, report, **kwargs):
 
     send_mail(subject=subject,
               message=message,
-              from_email=settings.EMAIL_SENDER,
+              from_email=settings.DEFAULT_FROM_EMAIL,
               recipient_list=[extension.creator.email])
 
 error_reported.connect(send_email_on_error_reported)

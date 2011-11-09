@@ -168,7 +168,7 @@ LOGGING = {
     }
 }
 
-EMAIL_SENDER = "noreply@extensions.gnome.org"
+DEFAULT_FROM_EMAIL = "noreply@extensions.gnome.org"
 
 try:
     from local_settings import *
