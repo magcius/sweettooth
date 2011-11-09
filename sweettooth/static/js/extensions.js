@@ -84,7 +84,7 @@ function($, messages, dbusProxy) {
 
         if (shellVersions && !versionCheck(shellVersions, dbusProxy.ShellVersion)) {
             _state = ExtensionState.OUT_OF_DATE;
-        } else if (extension) {
+        } else if (extension && !$.isEmptyObject(extension)) {
             _state = extension.state;
         }
 
