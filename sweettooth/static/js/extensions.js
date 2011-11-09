@@ -255,7 +255,7 @@ function($, messages, dbusProxy) {
         });
 
         dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
-            addExtensionSwitch(uuid, meta, $(this));
+            addExtensionSwitch(uuid, meta, $extension);
         });
     };
 
