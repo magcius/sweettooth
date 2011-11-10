@@ -18,7 +18,7 @@
     {% endif %}
 
     <h3 class="extension-name">{{ extension.name }}</h3>
-    <span class="author">by {{ extension.creator }}</span>
+    <span class="author">by <a href="{% url auth-profile user=extension.creator %}">{{ extension.creator }}</a></span>
     <p class="description">
       {{ extension.description }}
     </p>
