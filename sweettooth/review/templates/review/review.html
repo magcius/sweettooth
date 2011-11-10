@@ -44,7 +44,7 @@
     <tbody>
       {% for version in previous_versions %}
       <tr>
-        <td><a href="{% url extensions-version-detail ext_pt=version.extension.pk slug=version.extension.slug pk=version.pk %}">{{ version.version }}</a></td>
+        <td><a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=version.pk %}">{{ version.version }}</a></td>
         <td>
           <span class="{{ version.get_status_class }}">{{ version.get_status_display }}</span>
         </td>
