@@ -228,6 +228,12 @@ li.extension:last-child {
     margin-top: 8px;
 }
 
+@media screen and (max-width: 1165px) {
+    .maxwidth {
+        margin-left: 105px;
+    }
+}
+
 .extension .description {
     font-size: 14pt;
 }
