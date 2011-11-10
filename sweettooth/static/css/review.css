@@ -129,6 +129,10 @@ h2.expanded:before {
     width: 100%;
 }
 
+#previous_versions td {
+    text-align: center;
+}
+
 #previous_versions p span {
     font-weight: bold;
 }
