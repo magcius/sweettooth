@@ -133,7 +133,7 @@ def review_version_view(request, obj):
     extension, version = obj.extension, obj
 
     # Reviews on previous versions of the same extension.
-    previous_versions = CodeReview.objects.filter(version__extension=extension)
+    previous_versions = extension.versions.order_by('-version')
 
     # Other reviews on the same version
     previous_reviews = version.reviews.all()
