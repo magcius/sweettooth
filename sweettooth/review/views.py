@@ -135,6 +135,10 @@ def review_version_view(request, obj):
     # Reviews on previous versions of the same extension.
     previous_versions = extension.versions.order_by('-version')
 
+    # Exclude this version...
+    previous_versions = previous_versions.exclude(version=version.version)
+
+
     # Other reviews on the same version
     previous_reviews = version.reviews.all()
 
