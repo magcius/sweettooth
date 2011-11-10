@@ -32,7 +32,7 @@ REJECTED_STATUSES = (STATUS_REJECTED,)
 REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
 
 def validate_uuid(uuid):
-    if re.match('[-a-zA-Z0-9@.]+$', uuid) is None:
+    if re.match('[-a-zA-Z0-9@._]+$', uuid) is None:
         return False
 
     if uuid.endswith('.gnome.org'):
