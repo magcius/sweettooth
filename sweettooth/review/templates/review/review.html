@@ -66,9 +66,9 @@
     reviewed
     <abbr class="timestamp" title="{{ review.date|date:"c" }}">{{ review.date|date:"F j, Y" }}</abbr>
     <blockquote>{{ review.comments }}</blockquote>
-    {% empty %}
-    <p>No reviews.</p>
   </div>
+  {% empty %}
+  <p>No reviews.</p>
   {% endfor %}
 </div>
 {% endif %}
