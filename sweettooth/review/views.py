@@ -103,7 +103,6 @@ def submit_review_view(request, obj):
     review = CodeReview(version=version,
                         reviewer=request.user,
                         comments=request.POST.get('comments'))
-    review.save()
 
     messages.info(request, "Thank you for reviewing %s" % (extension.name,))
 
@@ -121,7 +120,11 @@ def submit_review_view(request, obj):
             obj.status = newstatus
             obj.save()
 
+            review.changelog = log
+
             models.status_changed.send(sender=request, version=obj, log=log)
+
+    review.save()
 
     models.reviewed.send(sender=request, request=request,
                          version=version, review=review)
