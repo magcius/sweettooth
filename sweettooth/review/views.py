@@ -199,7 +199,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
     message = render_to_string('review/reviewed_mail.txt', data).strip()
 
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
-    recipient_list.append(extension.creator)
+    recipient_list.append(extension.creator.email)
 
     if review.reviewer.email in recipient_list:
         # Don't spam the reviewer with his own review.
