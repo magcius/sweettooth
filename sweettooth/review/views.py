@@ -185,10 +185,6 @@ models.submitted_for_review.connect(send_email_on_submitted)
 def send_email_on_reviewed(sender, request, version, review, **kwargs):
     extension = version.extension
 
-    if review.reviewer == extension.creator:
-        # Don't spam the creator with his own review
-        return
-
     url = request.build_absolute_uri(reverse('review-version',
                                              kwargs=dict(pk=version.pk)))
 
@@ -202,9 +198,16 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
 
     message = render_to_string('review/reviewed_mail.txt', data).strip()
 
+    recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
+    recipient_list.append(extension.creator)
+
+    if review.reviewer.email in recipient_list:
+        # Don't spam the reviewer with his own review.
+        recipient_list.remove(review.reviewer.email)
+
     send_mail(subject=subject,
               message=message,
               from_email=settings.DEFAULT_FROM_EMAIL,
-              recipient_list=[extension.creator.email])
+              recipient_list=recipient_list)
 
 models.reviewed.connect(send_email_on_reviewed)
