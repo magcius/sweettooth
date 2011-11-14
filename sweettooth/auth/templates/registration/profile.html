@@ -5,7 +5,13 @@
 {% load thumbnail %}
 {% load gravatar %}
 <div class="profile">
-  <h2 id="new_display_name">{{ display_name }}</h2>
+  {% if is_editable %}
+  <h2 class="editable"
+      id="new_display_name"
+      editurl="{% url auth-ajax-edit-display-name %}">{{ display_name }}</h2>
+  {% else %}
+  <h2>{{ display_name }}</h2>
+  {% endif %}
   <img class="gravatar" src="{% gravatar_url user.email 128 %}">
 
   <h3> {{ display_name }} has authored </h3>

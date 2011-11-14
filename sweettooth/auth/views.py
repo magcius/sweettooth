@@ -13,18 +13,19 @@ from utils import render
 def profile(request, user):
     userobj = get_object_or_404(models.User, username=user)
 
-    template = 'registration/profile.html'
-    if request.user == userobj:
-        template = 'registration/profile_edit.html'
+    is_editable = request.user == userobj
 
     display_name = userobj.get_full_name() or userobj.username
     extensions = Extension.objects.filter(creator=userobj)
     reviews = CodeReview.objects.filter(reviewer=userobj)
 
-    return render(request, template, dict(user=userobj,
-                                          display_name=display_name,
-                                          extensions=extensions,
-                                          reviews=reviews,))
+    return render(request,
+                  'registration/profile.html',
+                  dict(user=userobj,
+                       display_name=display_name,
+                       extensions=extensions,
+                       reviews=reviews,
+                       is_editable=is_editable))
 
 @ajax_view
 @post_only_view

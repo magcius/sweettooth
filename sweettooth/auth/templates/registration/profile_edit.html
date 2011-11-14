@@ -1,5 +1,0 @@
-{% extends "registration/profile.html" %}
-
-{% block document-ready %}{{ block.super }}
-    $("#new_display_name").csrfEditable("{% url auth-ajax-edit-display-name %}");
-{% endblock %}
