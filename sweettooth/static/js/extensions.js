@@ -47,7 +47,7 @@ function($, messages, dbusProxy) {
         // version of GNOME3 or the Shell.
         messages.addError("You do not appear to have an up to date version of GNOME3. Some parts of the website may be disabled.");
 
-        $.fn.addExtensionsSwitches = function() {
+        $.fn.addExtensionSwitch = function() {
             // Don't show our switches -- CSS styles define a clickable
             // area even with no content.
             $(this).find('.switch').hide();
