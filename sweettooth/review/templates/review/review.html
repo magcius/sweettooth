@@ -7,8 +7,6 @@
 <h2 class="expanded"> Details Page Preview </h2>
 <div id="preview">
   <div class="extension">
-    <div class="switch insensitive"></div>
-
     <img src="{{ extension.icon.url }}" class="icon">
 
     {% if extension.screenshot %}
@@ -84,7 +82,6 @@
 
 {% block document-ready %}
   require(['review', 'switch'], function() {
-    $(".extension .switch").switchify();
     $("#files").reviewify("{% url review-ajax-files pk=version.pk %}");
   });
   $("h2").click(function() {
