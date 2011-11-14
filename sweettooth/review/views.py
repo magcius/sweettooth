@@ -30,6 +30,8 @@ IMAGE_TYPES = {
     '.svg':  'image/svg+xml',
 }
 
+FORMATTER = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
+
 def can_review_extension(user, extension):
     if user == extension.creator:
         return True
@@ -51,8 +53,6 @@ def can_approve_extension(user, extension):
 @ajax_view
 @model_view(models.ExtensionVersion)
 def ajax_get_files_view(request, obj):
-    formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
-
     if not can_review_extension(request.user, obj.extension):
         return HttpResponseForbidden()
 
@@ -85,7 +85,7 @@ def ajax_get_files_view(request, obj):
                 else:
                     lexer = pygments.lexers.get_lexer_by_name('text')
 
-            file_.update(html=pygments.highlight(raw, lexer, formatter),
+            file_.update(html=pygments.highlight(raw, lexer, FORMATTER),
                          num_lines=len(raw.strip().splitlines()))
 
         files.append(file_)
