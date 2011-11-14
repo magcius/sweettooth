@@ -4,7 +4,7 @@
 <h2><em>{{ version.extension.name }}</em> is malfunctioning?</h2>
 
 <p>Please look through the information below and edit out any unwanted information.</p>
-<form action="" method="POST" id="error_report">
+<form action="" method="POST" id="error_report" data-uuid="{{ version.extension.uuid }}">
   {% csrf_token %}
 
   <h3> Comments for the author </h3>
@@ -17,12 +17,6 @@
   <input type="submit" value="Report Errors">
 </form>
 
-{% endblock %}
-
-{% block document-ready %}
-require(['jquery', 'extensions'], function($) {
-    $("#error_report").fillInErrors("{{ version.extension.uuid }}");
-});
 {% endblock %}
 
 {% block navclass %}main{% endblock %}

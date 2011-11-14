@@ -226,10 +226,10 @@ function($, messages, dbusProxy) {
         });
     };
 
-    $.fn.fillInErrors = function (uuid) {
+    $.fn.fillInErrors = function () {
         var $form = $(this);
         var $textarea = $form.find('textarea');
-        dbusProxy.GetErrors(uuid).done(function(errors) {
+        dbusProxy.GetErrors($form.data('uuid')).done(function(errors) {
             var errorString;
 
             if (errors && errors.length) {

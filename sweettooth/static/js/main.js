@@ -90,6 +90,7 @@ require(['jquery', 'messages',
         });
 
         $('#local_extensions').addLocalExtensions();
+        $('#error_report').fillInErrors();
 
         if (window._SW)
             try {
