@@ -81,6 +81,30 @@ def html_for_file(filename, raw):
 
 @ajax_view
 @model_view(models.ExtensionVersion)
+def ajax_get_file_list_view(request, obj):
+    version, extension = obj, obj.extension
+
+    if not can_review_extension(request.user, extension):
+        return HttpResponseForbidden()
+
+    version, extension = obj, obj.extension
+
+    new_zipfile = version.get_zipfile('r')
+    old_zipfile = extension.latest_version.get_zipfile('r')
+
+    new_filelist = set(new_zipfile.namelist())
+    old_filelist = set(old_zipfile.namelist())
+
+    both    = new_filelist & old_filelist
+    added   = new_filelist - old_filelist
+    deleted = old_filelist - new_filelist
+
+    return dict(both=sorted(both),
+                added=sorted(added),
+                deleted=sorted(deleted))
+
+@ajax_view
+@model_view(models.ExtensionVersion)
 def ajax_get_files_view(request, obj):
     if not can_review_extension(request.user, obj.extension):
         return HttpResponseForbidden()
