@@ -147,115 +147,121 @@ function($, messages, dbusProxy) {
     }
 
     $.fn.addLocalExtensions = function () {
-        var $container = $(this);
-        dbusProxy.ListExtensions().done(function(extensions) {
-            if (extensions && !$.isEmptyObject(extensions)) {
-                var extensionValues = [];
-                for (var uuid in extensions) {
-                    extensionValues.push(extensions[uuid]);
-                }
-
-                extensionValues.sort(function(a, b) {
-                    return a.name.localeCompare(b.name);
-                });
-
-                extensionValues.forEach(function(extension) {
-                    var uuid = extension.uuid;
-
-                    function reinstall() {
-                        dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
-
-                        // If the user clicks "Install" we need to show that we
-                        // installed it by reattaching the element, but we can't do
-                        // that here -- the user might click "Cancel".
-                        $elem.data('uninstalled', true);
+        return this.each(function() {
+            var $container = $(this);
+            dbusProxy.ListExtensions().done(function(extensions) {
+                if (extensions && !$.isEmptyObject(extensions)) {
+                    var extensionValues = [];
+                    for (var uuid in extensions) {
+                        extensionValues.push(extensions[uuid]);
                     }
 
-                    function uninstall() {
-                        dbusProxy.UninstallExtension(uuid).done(function(result) {
-                            if (result) {
-                                $elem.fadeOut({ queue: false }).slideUp({ queue: false });
-
-                                // Construct a dummy <p> node as we need something
-                                // to stuff everything else in...
-                                var messageHTML = $("<p>You uninstalled </p>").
-                                    append($('<b>').text(extension.name)).
-                                    append(". ").
-                                    append($('<a>', {'href': '#'}).text("Undo?")).html();
-
-                                var $message = messages.addInfo(messageHTML);
-                                $message.delegate('a', 'click', reinstall);
-                                $elem.data('undo-uninstall-message', $message);
-                            }
-                        });
-                    }
-
-                    var $elem = $('<div>', {'class': 'extension'}).
-                        append($('<div>', {'class': 'switch'})).
-                        append($('<img>', {'class': 'icon'})).
-                        append($('<h3>', {'class': 'extension-name'}).text(extension.name)).
-                        append($('<span>', {'class': 'author'})).
-                        append($('<p>', {'class': 'description'}).text(extension.description));
-
-                    $.ajax({
-                        url: "/ajax/detail/",
-                        dataType: "json",
-                        data: { uuid: uuid },
-                        type: "GET",
-                    }).done(function(result) {
-                        $elem.
-                            find('span.author').text(" by ").append($('<a>', {'href': "/accounts/profile/" + result.creator}).text(result.creator)).end().
-                            find('img.icon').detach().end().
-                            find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end().
-                            append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
-                            data('pk', result.pk);
+                    extensionValues.sort(function(a, b) {
+                        return a.name.localeCompare(b.name);
                     });
 
-                    // The DOM element's CSS styles won't be fully
-                    // computed, so the switch will be incorrectly
-                    // positioned -- wait a bit before adding them.
-                    setTimeout(function() {
-                        addExtensionSwitch(uuid, extension, $elem);
-                    }, 0);
+                    extensionValues.forEach(function(extension) {
+                        var uuid = extension.uuid;
 
-                    $container.append($elem);
-                });
-            } else {
-                $container.append("You don't have any extensions installed.");
-            }
+                        function reinstall() {
+                            dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
+
+                            // If the user clicks "Install" we need to show that we
+                            // installed it by reattaching the element, but we can't do
+                            // that here -- the user might click "Cancel".
+                            $elem.data('uninstalled', true);
+                        }
+
+                        function uninstall() {
+                            dbusProxy.UninstallExtension(uuid).done(function(result) {
+                                if (result) {
+                                    $elem.fadeOut({ queue: false }).slideUp({ queue: false });
+
+                                    // Construct a dummy <p> node as we need something
+                                    // to stuff everything else in...
+                                    var messageHTML = $("<p>You uninstalled </p>").
+                                        append($('<b>').text(extension.name)).
+                                        append(". ").
+                                        append($('<a>', {'href': '#'}).text("Undo?")).html();
+
+                                    var $message = messages.addInfo(messageHTML);
+                                    $message.delegate('a', 'click', reinstall);
+                                    $elem.data('undo-uninstall-message', $message);
+                                }
+                            });
+                        }
+
+                        var $elem = $('<div>', {'class': 'extension'}).
+                            append($('<div>', {'class': 'switch'})).
+                            append($('<img>', {'class': 'icon'})).
+                            append($('<h3>', {'class': 'extension-name'}).text(extension.name)).
+                            append($('<span>', {'class': 'author'})).
+                            append($('<p>', {'class': 'description'}).text(extension.description));
+
+                        $.ajax({
+                            url: "/ajax/detail/",
+                            dataType: "json",
+                            data: { uuid: uuid },
+                            type: "GET",
+                        }).done(function(result) {
+                            $elem.
+                                find('span.author').text(" by ").append($('<a>', {'href': "/accounts/profile/" + result.creator}).text(result.creator)).end().
+                                find('img.icon').detach().end().
+                                find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end().
+                                append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
+                                data('pk', result.pk);
+                        });
+
+                        // The DOM element's CSS styles won't be fully
+                        // computed, so the switch will be incorrectly
+                        // positioned -- wait a bit before adding them.
+                        setTimeout(function() {
+                            addExtensionSwitch(uuid, extension, $elem);
+                        }, 0);
+
+                        $container.append($elem);
+                    });
+                } else {
+                    $container.append("You don't have any extensions installed.");
+                }
+            })
         });
     };
 
     $.fn.fillInErrors = function () {
-        var $form = $(this);
-        var $textarea = $form.find('textarea');
-        dbusProxy.GetErrors($form.data('uuid')).done(function(errors) {
-            var errorString;
+        return this.each(function() {
+            var $form = $(this);
+            var $textarea = $form.find('textarea');
+            dbusProxy.GetErrors($form.data('uuid')).done(function(errors) {
+                var errorString;
 
-            if (errors && errors.length) {
-                errorString = errors.join('\n\n================\n\n');
-            } else {
-                errorString = "GNOME Shell Extensions did not detect any errors with this extension.";
-            }
+                if (errors && errors.length) {
+                    errorString = errors.join('\n\n================\n\n');
+                } else {
+                    errorString = "GNOME Shell Extensions did not detect any errors with this extension.";
+                }
 
-            var template = ("What's wrong?\n\n\n" +
-                            "What have I tried?\n\n\n" +
-                            "Automatically detected errors:\n\n" + errorString);
+                var template = ("What's wrong?\n\n\n" +
+                                "What have I tried?\n\n\n" +
+                                "Automatically detected errors:\n\n" + errorString);
 
-            $textarea.text(template);
+                $textarea.text(template);
+            });
         });
     };
 
     $.fn.addExtensionSwitch = function () {
-        var $extension = $(this);
-        var uuid = $extension.data('uuid');
+        return this.each(function() {
+            var $extension = $(this);
+            var uuid = $extension.data('uuid');
 
-        $extension.bind('out-of-date', function() {
-            messages.addError("This extension is incompatible with your version of GNOME.");
-        });
+            $extension.bind('out-of-date', function() {
+                messages.addError("This extension is incompatible with your version of GNOME.");
+            });
 
-        dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
-            addExtensionSwitch(uuid, meta, $extension);
+            dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
+                addExtensionSwitch(uuid, meta, $extension);
+            });
         });
     };
 
