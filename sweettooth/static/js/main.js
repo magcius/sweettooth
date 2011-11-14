@@ -1,8 +1,8 @@
 "use strict";
 
-require(['jquery', 'messages',
+require(['jquery', 'messages', 'extensions',
          'jquery.cookie', 'jquery.jeditable',
-         'jquery.timeago', 'extensions'], function($, messages) {
+         'jquery.timeago', 'jquery.rating'], function($, messages) {
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 
@@ -91,6 +91,11 @@ require(['jquery', 'messages',
 
         $('#local_extensions').addLocalExtensions();
         $('#error_report').fillInErrors();
+        $('.extension').addExtensionSwitch();
+        $('.comment .rating').each(function() {
+            $(this).find('input').rating();
+        });
+        $('form .rating').rating();
 
         if (window._SW)
             try {
