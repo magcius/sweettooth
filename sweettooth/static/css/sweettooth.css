@@ -265,7 +265,7 @@ li.extension:last-child {
     position: absolute;
     left: 0px;
     margin-top: 4px;
-    padding: 2px;
+    padding: 2px 16px 2px 2px;
 }
 
 .extension .upload {
