@@ -58,7 +58,7 @@ def ajax_get_files_view(request, obj):
 
     zipfile = obj.get_zipfile('r')
 
-    # filename => { raw, html, filename }
+    # filename => { html, filename }
     files = []
     for filename in sorted(zipfile.namelist()):
         raw = zipfile.open(filename, 'r').read()
