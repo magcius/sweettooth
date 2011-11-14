@@ -11,7 +11,7 @@
       <div class="rating">
         {% rating comment.rating 5 %}
       </div> by
-      <span class="comment-author">{{ comment.user_name }}</span>
+      <a class="comment-author" href="{% url auth-profile user=comment.user.username %}">{{ comment.user }}</span>
     </div>
     <p>{{ comment.comment }}</p>
     <abbr class="timestamp" title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</abbr>
