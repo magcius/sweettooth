@@ -32,9 +32,10 @@ define(['jquery'], function($) {
         return $table;
     }
 
-    $.fn.reviewify = function(fileurl) {
+    $.fn.reviewify = function() {
         var $elem = $(this);
         var $fileList = $('<ul>', {'class': 'filelist'}).appendTo($elem);
+        var fileurl = $elem.data('fileurl');
 
         // Hide the file list until we're done grabbing all the elements.
         $fileList.hide();

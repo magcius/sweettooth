@@ -12,7 +12,7 @@ window._SW = function() {
 };
     </script>
     <script src="/static/js/jquery.js"></script>
-    <script data-main="/static/js/main.js" src="/static/js/require.js"></script>
+    <script data-main="/static/js/{% block js-main %}main{% endblock %}.js" src="/static/js/require.js"></script>
   </head>
   <body>
     <div id="global_domain_bar">

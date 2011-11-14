@@ -28,7 +28,7 @@
 </div>
 
 <h2 class="expanded"> Files </h2>
-<div id="files">
+<div id="files" data-fileurl="{% url review-ajax-files pk=version.pk %}">
 </div>
 
 <h2 class="expanded"> Previous Versions </h2>
@@ -80,14 +80,7 @@
 
 {% endblock %}
 
-{% block document-ready %}
-  require(['review', 'switch'], function() {
-    $("#files").reviewify("{% url review-ajax-files pk=version.pk %}");
-  });
-  $("h2").click(function() {
-    $(this).toggleClass("expanded").next().slideToggle();
-  }).not(".expanded").next().hide();
-{% endblock %}
+{% block js-main %}review{% endblock %}
 
 {% block head %}
   {{ block.super }}
