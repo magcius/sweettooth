@@ -1,6 +1,8 @@
 "use strict";
 
-require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable', 'jquery.timeago'], function($, messages) {
+require(['jquery', 'messages',
+         'jquery.cookie', 'jquery.jeditable',
+         'jquery.timeago', 'extensions'], function($, messages) {
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 
@@ -86,6 +88,8 @@ require(['jquery', 'messages', 'jquery.cookie', 'jquery.jeditable', 'jquery.time
 
             return false;
         });
+
+        $('#local_extensions').addLocalExtensions();
 
         if (window._SW)
             try {

@@ -2,15 +2,8 @@
 {% block title %}Installed Extensions &mdash; {{ block.super }}{% endblock %}
 {% block body %}
 <h2> Installed Extensions </h2>
-<div id="extensions">
+<div id="local_extensions">
 </div>
-{% endblock %}
-
-
-{% block document-ready %}
-require(['jquery', 'extensions'], function($) {
-    $("#extensions").addLocalExtensions();
-});
 {% endblock %}
 
 {% block navclass %}local{% endblock %}
