@@ -50,6 +50,35 @@ def can_approve_extension(user, extension):
 
     return False
 
+def highlight_file(filename, raw):
+    try:
+        lexer = pygments.lexers.guess_lexer_for_filename(filename, raw)
+    except pygments.util.ClassNotFound:
+        # released pygments doesn't yet have .json
+        # so hack around it here.
+        if filename.endswith('.json'):
+            lexer = pygments.lexers.get_lexer_by_name('js')
+        else:
+            lexer = pygments.lexers.get_lexer_by_name('text')
+
+    return pygments.highlight(raw, lexer, FORMATTER)
+
+def html_for_file(filename, raw):
+    base, extension = os.path.splitext(filename)
+
+    file_ = dict(filename=filename)
+
+    if extension in IMAGE_TYPES:
+        mime = IMAGE_TYPES[extension]
+        raw_base64 = base64.standard_b64encode(raw)
+
+        return dict(html='<img src="data:%s;base64,%s">' % (mime, raw_base64,),
+                    num_lines=0)
+
+    else:
+        return dict(html=highlight_file(filename, raw),
+                    num_lines=len(raw.strip().splitlines()))
+
 @ajax_view
 @model_view(models.ExtensionVersion)
 def ajax_get_files_view(request, obj):
@@ -66,27 +95,7 @@ def ajax_get_files_view(request, obj):
         base, extension = os.path.splitext(filename)
 
         file_ = dict(filename=filename)
-
-        if extension in IMAGE_TYPES:
-            mime = IMAGE_TYPES[extension]
-            raw_base64 = base64.standard_b64encode(raw)
-
-            file_.update(html='<img src="data:%s;base64,%s">' % (mime, raw_base64,),
-                         num_lines=0)
-
-        else:
-            try:
-                lexer = pygments.lexers.guess_lexer_for_filename(filename, raw)
-            except pygments.util.ClassNotFound:
-                # released pygments doesn't yet have .json
-                # so hack around it here.
-                if filename.endswith('.json'):
-                    lexer = pygments.lexers.get_lexer_by_name('js')
-                else:
-                    lexer = pygments.lexers.get_lexer_by_name('text')
-
-            file_.update(html=pygments.highlight(raw, lexer, FORMATTER),
-                         num_lines=len(raw.strip().splitlines()))
+        file_.update(html_for_file(filename, raw))
 
         files.append(file_)
 
