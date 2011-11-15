@@ -23,11 +23,7 @@ define(['jquery'], function($) {
         $fileView = $('<div>', {'class': 'file'}).
             appendTo($('<td>', {'width': '100%'}).appendTo($tr));
 
-        if (data.html !== undefined) {
-            $fileView.html(data.html);
-        } else {
-            $fileView.text(data.raw);
-        }
+        $fileView.html(data.html);
 
         return $table;
     }
