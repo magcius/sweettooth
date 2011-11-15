@@ -165,25 +165,20 @@ def ajax_get_file_diff_view(request, obj):
 
 @ajax_view
 @model_view(models.ExtensionVersion)
-def ajax_get_files_view(request, obj):
+def ajax_get_file_view(request, obj):
     if not can_review_extension(request.user, obj.extension):
         return HttpResponseForbidden()
 
     zipfile = obj.get_zipfile('r')
+    filename = request.GET['filename']
 
-    # filename => { html, filename }
-    files = []
-    for filename in sorted(zipfile.namelist()):
-        raw = zipfile.open(filename, 'r').read()
+    try:
+        f = zipfile.open(filename, 'r')
+    except KeyError:
+        raise Http404()
 
-        base, extension = os.path.splitext(filename)
-
-        file_ = dict(filename=filename)
-        file_.update(html_for_file(filename, raw))
-
-        files.append(file_)
-
-    return files
+    raw = f.read()
+    return html_for_file(filename, raw)
 
 @post_only_view
 @model_view(models.ExtensionVersion)

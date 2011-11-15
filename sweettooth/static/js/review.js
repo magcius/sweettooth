@@ -2,83 +2,121 @@
 
 define(['jquery'], function($) {
 
-    function createFileView(data) {
-        var $fileView, $table, $tr;
+    var REVIEW_URL_BASE = '/review/ajax';
 
-        $tr = $('<tr>');
-        $table = $('<table>').append($tr);
+    function createFileView(filename, pk) {
+        var req = $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            data: { filename: filename },
+            url: REVIEW_URL_BASE + '/get-file/' + pk,
+        });
 
-        if (data.num_lines) {
-            var count = data.num_lines;
-            var lines = [];
-            lines.push("<td class=\"linenumbers\"><pre>");
-            for (var i = 1; i < (count + 1); i ++) {
-                lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
+        var deferred = new $.Deferred();
+
+        req.done(function(data) {
+            var $fileView, $table, $tr;
+
+            $tr = $('<tr>');
+            $table = $('<table>').append($tr);
+
+            if (data.num_lines) {
+                var count = data.num_lines;
+                var lines = [];
+                lines.push("<td class=\"linenumbers\"><pre>");
+                for (var i = 1; i < (count + 1); i ++) {
+                    lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
+                }
+                lines.push("</pre></td>");
+
+                $tr.append(lines.join(''));
             }
-            lines.push("</pre></td>");
 
-            $tr.append(lines.join(''));
-        }
+            $fileView = $('<div>', {'class': 'file'}).
+                appendTo($('<td>', {'width': '100%'}).appendTo($tr));
 
-        $fileView = $('<div>', {'class': 'file'}).
-            appendTo($('<td>', {'width': '100%'}).appendTo($tr));
+            $fileView.html(data.html);
 
-        $fileView.html(data.html);
+            deferred.resolve($table);
+        });
 
-        return $table;
+        return deferred;
     }
 
     $.fn.reviewify = function() {
         var $elem = $(this);
         var $fileList = $('<ul>', {'class': 'filelist'}).appendTo($elem);
-        var fileurl = $elem.data('fileurl');
+        var pk = $elem.data('pk');
 
         // Hide the file list until we're done grabbing all the elements.
         $fileList.hide();
 
         var $fileDisplay = $('<div>', {'class': 'filedisplay'}).appendTo($elem);
         $fileDisplay.css('position', 'relative');
-
+ 
+        var currentFilename;
         var $currentFile = null;
 
         var req = $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: fileurl
+            url: REVIEW_URL_BASE + '/get-file-list/' + pk,
         });
 
-        req.done(function(data) {
-            $.each(data, function() {
-                var data = this;
-                var $selector = $('<a>', {'class': 'fileselector'}).text(data.filename);
+        function showTable(filename, $file, $selector) {
+            $fileList.find('li a.fileselector').removeClass('selected');
+            $selector.addClass('selected');
+
+            $file.css('position', 'relative');
+
+            if ($currentFile != null) {
+                $currentFile.css({'position': 'absolute',
+                                  'top': '0'});
+                $currentFile.fadeOut();
+                $file.fadeIn();
+            } else {
+                $file.show();
+            }
+
+            currentFilename = filename;
+            $currentFile = $file;
+        }
+
+        req.done(function(files) {
+            function createFileSelector(tag, filename) {
+                var $selector = $('<a>').
+                    addClass(tag).
+                    addClass('fileselector').
+                    text(filename);
+
                 var $file = null;
 
                 $selector.click(function() {
                     if ($selector.hasClass('selected'))
                         return;
 
-                    if ($file === null)
-                        $file = createFileView(data).hide().appendTo($fileDisplay);
-
-                    $fileList.find('li a.fileselector').removeClass('selected');
-                    $selector.addClass('selected');
-
-                    $file.css('position', 'relative');
-
-                    if ($currentFile != null) {
-                        $currentFile.css({'position': 'absolute',
-                                          'top': '0'});
-                        $currentFile.fadeOut();
-                        $file.fadeIn();
+                    if ($file === null) {
+                        var d = createFileView(filename, pk);
+                        currentFilename = filename;
+                        d.done(function($table) {
+                            $file = $table;
+                            $file.hide().appendTo($fileDisplay);
+                            if (currentFilename === filename)
+                                showTable(filename, $file, $selector);
+                        });
                     } else {
-                        $file.show();
+                        showTable(filename, $file, $selector);
                     }
 
-                    $currentFile = $file;
                 });
 
                 $('<li>').append($selector).appendTo($fileList);
-            });
+            }
+
+
+            $.each(files.both, function() { createFileSelector('both', this); });
+            $.each(files.added, function() { createFileSelector('added', this); });
+            $.each(files.deleted, function() { createFileSelector('deleted', this); });
 
             $fileList.show();
 
