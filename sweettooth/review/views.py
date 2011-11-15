@@ -93,6 +93,10 @@ def get_zipfiles(version):
 def get_diff(old_zipfile, new_zipfile, filename, highlight):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
     oldcontent, newcontent = old.read(), new.read()
+
+    if oldcontent == newcontent:
+        return None
+
     old.close()
     new.close()
 
