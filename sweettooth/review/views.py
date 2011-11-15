@@ -11,10 +11,12 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.utils.html import escape
 
+from review.diffview import get_chunks_html, split_lines, NoWrapperHtmlFormatter
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
 
@@ -30,7 +32,8 @@ IMAGE_TYPES = {
     '.svg':  'image/svg+xml',
 }
 
-FORMATTER = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
+code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
+diff_formatter = NoWrapperHtmlFormatter(style="borland")
 
 def can_review_extension(user, extension):
     if user == extension.creator:
@@ -50,7 +53,7 @@ def can_approve_extension(user, extension):
 
     return False
 
-def highlight_file(filename, raw):
+def highlight_file(filename, raw, formatter):
     try:
         lexer = pygments.lexers.guess_lexer_for_filename(filename, raw)
     except pygments.util.ClassNotFound:
@@ -61,7 +64,7 @@ def highlight_file(filename, raw):
         else:
             lexer = pygments.lexers.get_lexer_by_name('text')
 
-    return pygments.highlight(raw, lexer, FORMATTER)
+    return pygments.highlight(raw, lexer, formatter)
 
 def html_for_file(filename, raw):
     base, extension = os.path.splitext(filename)
@@ -76,8 +79,35 @@ def html_for_file(filename, raw):
                     num_lines=0)
 
     else:
-        return dict(html=highlight_file(filename, raw),
+        return dict(html=highlight_file(filename, raw, code_formatter),
                     num_lines=len(raw.strip().splitlines()))
+
+def get_zipfiles(version):
+    extension = version.extension
+
+    new_zipfile = version.get_zipfile('r')
+    old_zipfile = extension.latest_version.get_zipfile('r')
+
+    return old_zipfile, new_zipfile
+
+def get_diff(old_zipfile, new_zipfile, filename, highlight):
+    old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
+    oldcontent, newcontent = old.read(), new.read()
+    old.close()
+    new.close()
+
+    if highlight:
+        oldmarkup = highlight_file(filename, oldcontent, diff_formatter)
+        newmarkup = highlight_file(filename, newcontent, diff_formatter)
+    else:
+        oldmarkup = escape(oldcontent)
+        newmarkup = escape(newcontent)
+
+    oldlines = split_lines(oldmarkup)
+    newlines = split_lines(newmarkup)
+
+    old_htmls, new_htmls = get_chunks_html(oldlines, newlines)
+    return '\n'.join(old_htmls), '\n'.join(new_htmls)
 
 @ajax_view
 @model_view(models.ExtensionVersion)
@@ -87,10 +117,7 @@ def ajax_get_file_list_view(request, obj):
     if not can_review_extension(request.user, extension):
         return HttpResponseForbidden()
 
-    version, extension = obj, obj.extension
-
-    new_zipfile = version.get_zipfile('r')
-    old_zipfile = extension.latest_version.get_zipfile('r')
+    old_zipfile, new_zipfile = get_zipfiles(version)
 
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())
@@ -102,6 +129,39 @@ def ajax_get_file_list_view(request, obj):
     return dict(both=sorted(both),
                 added=sorted(added),
                 deleted=sorted(deleted))
+
+@ajax_view
+@model_view(models.ExtensionVersion)
+def ajax_get_file_diff_view(request, obj):
+    version, extension = obj, obj.extension
+
+    if not can_review_extension(request.user, extension):
+        return HttpResponseForbidden()
+
+    old_zipfile, new_zipfile = get_zipfiles(version)
+
+    filename = request.GET['filename']
+    highlight = request.GET.get('highlight', True)
+
+    new_filelist = set(new_zipfile.namelist())
+    old_filelist = set(old_zipfile.namelist())
+
+    diff = None
+
+    if filename in old_filelist:
+        if filename in new_filelist:
+            operation = 'both'
+            diff = get_diff(old_zipfile, new_zipfile,
+                            filename, highlight)
+        else:
+            operation = 'deleted'
+    elif filename in new_namelist:
+        operation = 'added'
+    else:
+        raise Http404()
+
+    return dict(operation=operation,
+                diff=diff)
 
 @ajax_view
 @model_view(models.ExtensionVersion)
