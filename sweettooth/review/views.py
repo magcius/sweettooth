@@ -155,7 +155,7 @@ def ajax_get_file_diff_view(request, obj):
                             filename, highlight)
         else:
             operation = 'deleted'
-    elif filename in new_namelist:
+    elif filename in new_filelist:
         operation = 'added'
     else:
         raise Http404()
