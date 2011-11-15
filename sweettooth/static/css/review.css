@@ -62,21 +62,31 @@
 }
 
 .code {
-    white-space: pre;
     font-family: monospace;
-    padding-left: 1em;
     background-color: #fff;
-    line-height: 1.2;
     margin: 0;
-    padding: 0.5em;
 }
 
-td.code {
-    padding: 0;
+.file {
+    padding-left: 0.5em;
+}
+
+.code, .linenumbers pre {
+    line-height: 1.2;
 }
 
 p.nochanges {
     font-size: 1.4em;
+}
+
+span.line {
+    width: 100%;
+    display: block;
+    white-space: pre;
+
+    /* makes blank lines "expand",
+     * keep in sync with line-height */
+    height: 1.2em;
 }
 
 /* colors stolen from Splinter */
@@ -88,7 +98,7 @@ span.inserted {
     background-color: #bbffbb;
 }
 
-span.unchanged {
+span.replaced {
     background-color: #aaccff;
 }
 
