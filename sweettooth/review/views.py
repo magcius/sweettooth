@@ -32,6 +32,8 @@ IMAGE_TYPES = {
     '.svg':  'image/svg+xml',
 }
 
+BINARY_TYPES = set(['.mo'])
+
 code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
 diff_formatter = NoWrapperHtmlFormatter(style="borland")
 
@@ -136,10 +138,17 @@ def ajax_get_file_diff_view(request, obj):
     if not can_review_extension(request.user, extension):
         return HttpResponseForbidden()
 
-    old_zipfile, new_zipfile = get_zipfiles(version)
-
     filename = request.GET['filename']
     highlight = request.GET.get('highlight', True)
+
+    file_base, file_extension = os.path.splitext(filename)
+    if file_extension in IMAGE_TYPES:
+        return
+
+    if file_extension in BINARY_TYPES:
+        return
+
+    old_zipfile, new_zipfile = get_zipfiles(version)
 
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())
