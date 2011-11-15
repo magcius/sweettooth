@@ -4,46 +4,72 @@ define(['jquery'], function($) {
 
     var REVIEW_URL_BASE = '/review/ajax';
 
-    function createFileView(filename, pk) {
+    function addLineNumbers(data) {
+        var $fileView, $table, $tr;
+
+        $tr = $('<tr>');
+        $table = $('<table>', {'class': 'filetable'}).append($tr);
+
+        if (data.num_lines) {
+            var count = data.num_lines;
+            var lines = [];
+            lines.push("<td class=\"linenumbers\"><pre>");
+            for (var i = 1; i < (count + 1); i ++) {
+                lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
+            }
+            lines.push("</pre></td>");
+
+            $tr.append(lines.join(''));
+        }
+
+        $fileView = $('<div>', {'class': 'file'}).
+            appendTo($('<td>', {'width': '100%'}).appendTo($tr));
+
+        $fileView.html(data.html);
+
+        return $table;
+    }
+
+    function createFileView(filename, pk, diff) {
+        var frag = diff ? '/get-file-diff/' : '/get-file/';
+
         var req = $.ajax({
             type: 'GET',
             dataType: 'json',
             data: { filename: filename },
-            url: REVIEW_URL_BASE + '/get-file/' + pk,
+            url: REVIEW_URL_BASE + frag + pk
         });
 
         var deferred = new $.Deferred();
 
         req.done(function(data) {
-            var $fileView, $table, $tr;
+            var $html;
+            if (diff) {
+                if (data === null) {
+                    $html = $('<p>', {'class': 'nochanges'}).
+                        text("There have been no changes in this file.");
+                } else {
+                    var $old = addLineNumbers(data['old']);
+                    var $new = addLineNumbers(data['new']);
 
-            $tr = $('<tr>');
-            $table = $('<table>').append($tr);
+                    $html = $('<table>', {'class': 'diff'});
+                    var $tr = $('<tr>').appendTo($html);
 
-            if (data.num_lines) {
-                var count = data.num_lines;
-                var lines = [];
-                lines.push("<td class=\"linenumbers\"><pre>");
-                for (var i = 1; i < (count + 1); i ++) {
-                    lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
+                    $tr.append($('<td>', {'width': '50%',
+                                          'class': 'code'}).append($old));
+                    $tr.append($('<td>', {'width': '50%',
+                                          'class': 'code'}).append($new));
                 }
-                lines.push("</pre></td>");
-
-                $tr.append(lines.join(''));
+            } else {
+                $html = addLineNumbers(data);
             }
-
-            $fileView = $('<div>', {'class': 'file'}).
-                appendTo($('<td>', {'width': '100%'}).appendTo($tr));
-
-            $fileView.html(data.html);
-
-            deferred.resolve($table);
+            deferred.resolve($html);
         });
 
         return deferred;
     }
 
-    $.fn.reviewify = function() {
+    $.fn.reviewify = function(diff) {
         var $elem = $(this);
         var $fileList = $('<ul>', {'class': 'filelist'}).appendTo($elem);
         var pk = $elem.data('pk');
@@ -96,7 +122,7 @@ define(['jquery'], function($) {
                         return;
 
                     if ($file === null) {
-                        var d = createFileView(filename, pk);
+                        var d = createFileView(filename, pk, diff);
                         currentFilename = filename;
                         d.done(function($table) {
                             $file = $table;

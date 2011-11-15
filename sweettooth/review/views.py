@@ -111,7 +111,10 @@ def get_diff(old_zipfile, new_zipfile, filename, highlight):
     newlines = split_lines(newmarkup)
 
     old_htmls, new_htmls = get_chunks_html(oldlines, newlines)
-    return '\n'.join(old_htmls), '\n'.join(new_htmls)
+    return dict(old=dict(html='\n'.join(old_htmls),
+                         num_lines=len(oldlines)),
+                new=dict(html='\n'.join(new_htmls),
+                         num_lines=len(newlines)))
 
 @ajax_view
 @model_view(models.ExtensionVersion)
@@ -157,22 +160,11 @@ def ajax_get_file_diff_view(request, obj):
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())
 
-    diff = None
-
-    if filename in old_filelist:
-        if filename in new_filelist:
-            operation = 'both'
-            diff = get_diff(old_zipfile, new_zipfile,
-                            filename, highlight)
-        else:
-            operation = 'deleted'
-    elif filename in new_filelist:
-        operation = 'added'
+    if filename in old_filelist and filename in new_filelist:
+        return get_diff(old_zipfile, new_zipfile,
+                        filename, highlight)
     else:
-        raise Http404()
-
-    return dict(operation=operation,
-                diff=diff)
+        return None
 
 @ajax_view
 @model_view(models.ExtensionVersion)

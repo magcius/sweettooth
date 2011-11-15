@@ -7,24 +7,24 @@
     border-top: none;
 }
 
-#files .filelist, #files table {
+.filelist, .filedisplay > table {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     margin: 0;
 }
 
-#files .filelist {
+.filelist {
     list-style-type: none;
     overflow: hidden;
     border: 1px solid #aaa;
     background-color: #EAF0F7;
 }
 
-#files .filelist li {
+.filelist li {
     margin: 0;
     margin-left: 2em;
 }
 
-#files .filelist li a {
+.filelist li a {
     float: left;
     display: block;
     padding: 0 1em;
@@ -39,7 +39,7 @@
     transition: background-color 0.2s ease-in-out, border 0.2s ease-in-out;
 }
 
-#files .filelist li a.selected {
+.filelist li a.selected {
     cursor: auto;
     color: #2e3436;
     background-color: #C8D0D5;
@@ -48,21 +48,50 @@
     border-style: none solid;
 }
 
-#files pre {
+.file pre, .filedisplay .diff, .filedisplay .filetable {
+    margin: 0;
+}
+
+.code {
+    white-space: pre;
+    font-family: monospace;
+    padding-left: 1em;
+    background-color: #fff;
     line-height: 1.2;
     margin: 0;
     padding: 0.5em;
 }
 
-#files .code {
-    padding-left: 1em;
-    background-color: #fff;
+td.code {
+    padding: 0;
 }
 
-#files .linenumbers pre {
+p.nochanges {
+    font-size: 1.4em;
+}
+
+/* colors stolen from Splinter */
+span.deleted {
+    background-color: #ffccaa;
+}
+
+span.inserted {
+    background-color: #bbffbb;
+}
+
+span.unchanged {
+    background-color: #aaccff;
+}
+
+span.changed {
+    background-color: #cceeff;
+}
+
+.linenumbers pre {
     color: #aaa;
     text-align: right;
     background-color: #eee;
+    margin: 0;
     padding-right: 1em;
     border-right: 1px solid #ccc;
 }
