@@ -86,6 +86,10 @@ def get_zipfiles(version):
     extension = version.extension
 
     new_zipfile = version.get_zipfile('r')
+
+    if extension.latest_version is None:
+        return None, new_zipfile
+
     old_zipfile = extension.latest_version.get_zipfile('r')
 
     return old_zipfile, new_zipfile
@@ -124,6 +128,12 @@ def ajax_get_file_list_view(request, obj):
     old_zipfile, new_zipfile = get_zipfiles(version)
 
     new_filelist = set(new_zipfile.namelist())
+
+    if old_zipfile is None:
+        return dict(both=[],
+                    added=sorted(new_zipfile.namelist()),
+                    deleted=[])
+
     old_filelist = set(old_zipfile.namelist())
 
     both    = new_filelist & old_filelist
