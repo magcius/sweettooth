@@ -1,14 +1,13 @@
 
-import json
 import os.path
 import tempfile
 from zipfile import ZipFile
 
 from django.test import TestCase
-from django.test.client import Client
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.utils import simplejson as json
 from extensions import models
 
 testdata_dir = os.path.join(os.path.dirname(__file__), 'testdata')
