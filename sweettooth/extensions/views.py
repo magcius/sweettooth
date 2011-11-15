@@ -12,7 +12,7 @@ from extensions.forms import UploadForm
 from decorators import ajax_view, model_view, post_only_view
 from utils import render
 
-def download(request, uuid):
+def shell_download(request, uuid):
     pk = request.GET['version_tag']
     if pk == 'latest':
         extension = get_object_or_404(models.Extension, uuid=uuid)
