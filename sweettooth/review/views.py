@@ -69,8 +69,6 @@ def highlight_file(filename, raw, formatter):
 def html_for_file(filename, raw):
     base, extension = os.path.splitext(filename)
 
-    file_ = dict(filename=filename)
-
     if extension in IMAGE_TYPES:
         mime = IMAGE_TYPES[extension]
         raw_base64 = base64.standard_b64encode(raw)
