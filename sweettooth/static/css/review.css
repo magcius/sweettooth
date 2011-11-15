@@ -1,6 +1,11 @@
 
 @import url("pygments.css");
 
+.maxwidth {
+    width: auto !important;
+    margin: 0 1em;
+}
+
 #files table {
     width: 100%;
     border: 1px solid #aaa;
