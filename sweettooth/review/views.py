@@ -121,9 +121,6 @@ def get_diff(old_zipfile, new_zipfile, filename, highlight):
 def ajax_get_file_list_view(request, obj):
     version, extension = obj, obj.extension
 
-    if not can_review_extension(request.user, extension):
-        return HttpResponseForbidden()
-
     old_zipfile, new_zipfile = get_zipfiles(version)
 
     new_filelist = set(new_zipfile.namelist())
@@ -141,9 +138,6 @@ def ajax_get_file_list_view(request, obj):
 @model_view(models.ExtensionVersion)
 def ajax_get_file_diff_view(request, obj):
     version, extension = obj, obj.extension
-
-    if not can_review_extension(request.user, extension):
-        return HttpResponseForbidden()
 
     filename = request.GET['filename']
     highlight = request.GET.get('highlight', True)
@@ -169,9 +163,6 @@ def ajax_get_file_diff_view(request, obj):
 @ajax_view
 @model_view(models.ExtensionVersion)
 def ajax_get_file_view(request, obj):
-    if not can_review_extension(request.user, obj.extension):
-        return HttpResponseForbidden()
-
     zipfile = obj.get_zipfile('r')
     filename = request.GET['filename']
 
