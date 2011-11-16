@@ -25,6 +25,8 @@ shell_patterns = patterns('',
 
     url(r'^download-extension/(?P<uuid>.+)\.shell-extension\.zip$',
         views.shell_download),
+
+    url(r'^update-info/', views.shell_update, name='extensions-shell-update'),
 )
 
 urlpatterns = patterns('',

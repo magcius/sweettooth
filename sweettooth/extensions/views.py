@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import simplejson as json
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 from extensions import models
@@ -28,6 +29,47 @@ def shell_download(request, uuid):
         return HttpResponseForbidden()
 
     return redirect(version.source.url)
+
+@ajax_view
+@post_only_view
+def shell_update(request):
+    installed = json.loads(request.POST['installed'])
+    operations = {}
+
+    for uuid, meta in installed.iteritems():
+        try:
+            extension = models.Extension.objects.get(uuid=uuid)
+        except models.Extension.DoesNotExist:
+            continue
+
+        if 'version_tag' not in meta:
+            # Some extensions may be on the site, but if the user
+            # didn't download it from SweetTooth, there won't
+            # be a version_tag value in the metadata.
+            continue
+
+        version = meta['version_tag']
+
+        try:
+            version_obj = extension.versions.get(version=version)
+        except models.ExtensionVersion.DoesNotExist:
+            # The user may have a newer version than what's on the site.
+            continue
+
+        latest_version = extension.latest_version
+
+        if latest_version is None:
+            operations[uuid] = dict(operation="blacklist")
+
+        elif version < latest_version.version:
+            operations[uuid] = dict(operation="upgrade",
+                                    version_tag=extension.latest_version.pk)
+
+        elif version_obj.status in models.REJECTED_STATUSES:
+            operations[uuid] = dict(operation="downgrade",
+                                    version_tag=extension.latest_version.pk)
+
+    return operations
 
 # Even though this is showing a version, the PK matches an extension
 @model_view(models.Extension)
