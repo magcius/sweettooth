@@ -82,7 +82,7 @@ def highlight_file(filename, raw, formatter):
 
     return pygments.highlight(raw, lexer, formatter)
 
-def html_for_file(filename, raw):
+def html_for_file(filename, version, raw):
     base, extension = os.path.splitext(filename)
 
     if extension in IMAGE_TYPES:
@@ -92,6 +92,12 @@ def html_for_file(filename, raw):
         return dict(html='<img src="data:%s;base64,%s">' % (mime, raw_base64,),
                     num_lines=0)
 
+    elif extension in BINARY_TYPES:
+        download_url = reverse('review-download', kwargs=dict(pk=version.pk))
+        html = "<p>This file is binary. Please <a href=\"%s\">" \
+            "download the zipfile</a> to see it.</p>" % (download_url,)
+
+        return dict(html=html, num_lines=0)
     else:
         return dict(html=highlight_file(filename, raw, code_formatter),
                     num_lines=len(raw.strip().splitlines()))
@@ -198,7 +204,7 @@ def ajax_get_file_view(request, obj):
         raise Http404()
 
     raw = f.read()
-    return html_for_file(filename, raw)
+    return html_for_file(filename, obj, raw)
 
 def download_zipfile(request, uuid):
     pk = request.GET['pk']
