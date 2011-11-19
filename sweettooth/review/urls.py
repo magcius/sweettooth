@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^submit/(?P<pk>\d+)', views.submit_review_view, name='review-submit'),
 
     url(r'^download/(?P<uuid>.+)\.shell-extension\.zip$',
-        views.download_zipfile, name='review-zipfile'),
+        views.download_zipfile, name='review-download'),
 
     url(r'^(?P<pk>\d+)', views.review_version_view, name='review-version'),
 
