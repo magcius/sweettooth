@@ -1,1 +1,1 @@
-GNOME Shell Extensions — Your extension, "{{ extension.name }}", v{{ version.version }} has been reviewed.
+GNOME Shell Extensions — {{ extension.creator }}'s extension, "{{ extension.name }}", v{{ version.version }}, has a new review

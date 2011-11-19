@@ -1,8 +1,12 @@
-Your extension, "{{ extension.name }}", version {{ version.version }} has been reviewed. You can see the review here:
+{{ extension.creator }}'s extension, "{{ extension.name }}", version {{ version.version }} has a new review:
+
+{{ review.reviewer }} posted a review on {{ review.date|date:"F j, Y" }}:
+
+{{ review.comments }}
+
+Please use the review page to follow up:
 
 {{ url }}
-
-Please use the review page to follow up with any comments or concerns.
 
 —
 

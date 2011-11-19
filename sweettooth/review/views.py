@@ -298,6 +298,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
 
     data = dict(version=version,
                 extension=extension,
+                review=review,
                 url=url)
 
     subject = render_to_string('review/reviewed_mail_subject.txt', data).strip()
