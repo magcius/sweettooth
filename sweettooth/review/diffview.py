@@ -41,6 +41,9 @@ def get_line_region_markup(line, regions):
     return parts
 
 def get_equal_markup(chunk, old, new):
+    if chunk['collapsible']:
+        return '', ''
+
     lines = chunk['lines']
     start = lines[0]
     end = lines[-1]
