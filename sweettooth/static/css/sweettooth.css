@@ -554,10 +554,11 @@ input[type=submit], button {
 }
 
 .review blockquote {
-    line-height: 1.8em;
-    text-indent: 2em;
-    font-size: larger;
-    font-style: italic;
+    padding: .5em;
+    white-space: pre;
+    border: 1px solid #BABDB6;
+    border-left: 1em solid #A5A5AF;
+    border-radius: 2px 2px 2px 2px;
 }
 
 .review blockquote.empty {
