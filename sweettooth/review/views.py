@@ -129,9 +129,9 @@ def get_diff(old_zipfile, new_zipfile, filename, highlight):
 
     old_htmls, new_htmls = get_chunks_html(oldlines, newlines)
     return dict(old=dict(html='\n'.join(old_htmls),
-                         num_lines=len(split_lines(old_htmls))),
+                         num_lines=len(old_htmls)),
                 new=dict(html='\n'.join(new_htmls),
-                         num_lines=len(split_lines(new_htmls))))
+                         num_lines=len(new_htmls)))
 
 @ajax_view
 @model_view(models.ExtensionVersion)
