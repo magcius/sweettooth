@@ -37,16 +37,17 @@ BINARY_TYPES = set(['.mo'])
 code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
 diff_formatter = NoWrapperHtmlFormatter(style="borland")
 
-def get_filelist(zipfile):
+def get_filelist(zipfile, disallow_binary):
     for name in zipfile.namelist():
         if name.endswith('/'):
             # There's no directory flag in the info, so I'm
             # guessing this is the most reliable way to do it.
             continue
 
-        base, extension = os.path.splitext(name)
-        if extension in BINARY_TYPES:
-            continue
+        if disallow_binary:
+            base, extension = os.path.splitext(name)
+            if extension in BINARY_TYPES:
+                continue
 
         yield name
 
@@ -140,14 +141,16 @@ def ajax_get_file_list_view(request, obj):
 
     old_zipfile, new_zipfile = get_zipfiles(version)
 
-    new_filelist = set(get_filelist(new_zipfile))
+    disallow_binary = request.GET['disallow_binary']
+
+    new_filelist = set(get_filelist(new_zipfile, disallow_binary))
 
     if old_zipfile is None:
         return dict(both=[],
                     added=sorted(new_filelist),
                     deleted=[])
 
-    old_filelist = set(get_filelist(old_zipfile))
+    old_filelist = set(get_filelist(old_zipfile, disallow_binary))
 
     both    = new_filelist & old_filelist
     added   = new_filelist - old_filelist

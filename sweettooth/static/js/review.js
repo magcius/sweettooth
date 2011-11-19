@@ -86,6 +86,7 @@ define(['jquery'], function($) {
         var req = $.ajax({
             type: 'GET',
             dataType: 'json',
+            data: { disallow_binary: diff },
             url: REVIEW_URL_BASE + '/get-file-list/' + pk,
         });
 
