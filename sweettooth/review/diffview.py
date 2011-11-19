@@ -71,10 +71,18 @@ def get_replaced_markup(chunk, old, new):
         newcontent = new[line[2] - 1]
         oldregion = line[3]
         newregion = line[4]
-        oldlines.append(REPLACED_REGION % \
-                            (''.join(get_line_region_markup(oldcontent, oldregion)),))
-        newlines.append(REPLACED_REGION % \
-                            (''.join(get_line_region_markup(newcontent, newregion)),))
+
+        if oldregion is not None:
+            oldlines.append(REPLACED_REGION % \
+                                (''.join(get_line_region_markup(oldcontent, oldregion)),))
+        else:
+            oldlines.append(REPLACED_REGION % (oldcontent,))
+
+        if newregion is not None:
+            newlines.append(REPLACED_REGION % \
+                                (''.join(get_line_region_markup(newcontent, newregion)),))
+        else:
+            newlines.append(REPLACED_REGION % (newcontent,))
 
     return oldlines, newlines
 
