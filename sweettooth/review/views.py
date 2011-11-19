@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import redirect, get_object_or_404
+from django.template import Context
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils import simplejson as json
@@ -295,11 +296,12 @@ def send_email_on_submitted(sender, request, version, **kwargs):
 
     reviewers = get_all_reviewers().values_list('email', flat=True)
 
-    subject = render_to_string('review/submitted_mail_subject.txt', data).strip()
+    subject = render_to_string('review/submitted_mail_subject.txt', data, Context(autoescape=False))
+    subject = subject.strip()
     subject = subject.replace('\n', '')
     subject = subject.replace('\r', '')
 
-    message = render_to_string('review/submitted_mail.txt', data).strip()
+    message = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
 
     send_mail(subject=subject,
               message=message,
@@ -319,11 +321,12 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
                 review=review,
                 url=url)
 
-    subject = render_to_string('review/reviewed_mail_subject.txt', data).strip()
+    subject = render_to_string('review/reviewed_mail_subject.txt', data, Context(autoescape=False))
+    subject = subject.strip()
     subject = subject.replace('\n', '')
     subject = subject.replace('\r', '')
 
-    message = render_to_string('review/reviewed_mail.txt', data).strip()
+    message = render_to_string('review/reviewed_mail.txt', data, Context(autoescape=False)).strip()
 
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
     recipient_list.append(extension.creator.email)
