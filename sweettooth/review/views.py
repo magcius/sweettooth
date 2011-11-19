@@ -15,6 +15,7 @@ from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.html import escape
+from django.utils import simplejson as json
 
 from review.diffview import get_chunks_html, split_lines, NoWrapperHtmlFormatter
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
@@ -147,7 +148,7 @@ def ajax_get_file_list_view(request, obj):
 
     old_zipfile, new_zipfile = get_zipfiles(version)
 
-    disallow_binary = request.GET['disallow_binary']
+    disallow_binary = json.loads(request.GET['disallow_binary'])
 
     new_filelist = set(get_filelist(new_zipfile, disallow_binary))
 
