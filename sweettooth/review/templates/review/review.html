@@ -70,7 +70,7 @@
     {% if review.changelog %}
     <span class="{{ review.changelog.get_newstatus_class }}">{{ review.changelog.get_newstatus_display|lower }}</span>
     {% else %}
-    reviewed
+    posted a review
     {% endif %}
     <abbr class="timestamp" title="{{ review.date|date:"c" }}">{{ review.date|date:"F j, Y" }}</abbr>
     <blockquote>{{ review.comments }}</blockquote>
