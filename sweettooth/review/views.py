@@ -206,8 +206,7 @@ def ajax_get_file_view(request, obj):
     raw = f.read()
     return html_for_file(filename, obj, raw)
 
-def download_zipfile(request, uuid):
-    pk = request.GET['pk']
+def download_zipfile(request, pk):
     version = get_object_or_404(models.ExtensionVersion, pk=pk)
 
     if version.extension.uuid != uuid:
