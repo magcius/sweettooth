@@ -44,7 +44,8 @@ def get_filelist(zipfile):
             # guessing this is the most reliable way to do it.
             continue
 
-        if name in BINARY_TYPES:
+        base, extension = os.path.splitext(filename)
+        if extension in BINARY_TYPES:
             continue
 
         yield name
