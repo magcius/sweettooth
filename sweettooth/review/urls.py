@@ -15,6 +15,9 @@ urlpatterns = patterns('',
     url(r'^ajax/get-file-diff/(?P<pk>\d+)', views.ajax_get_file_diff_view, name='review-ajax-file-diff'),
     url(r'^submit/(?P<pk>\d+)', views.submit_review_view, name='review-submit'),
 
+    url(r'^download/(?P<uuid>.+)\.shell-extension\.zip$',
+        views.download_zipfile, name='review-zipfile'),
+
     url(r'^(?P<pk>\d+)', views.review_version_view, name='review-version'),
 
 )

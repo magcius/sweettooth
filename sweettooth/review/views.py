@@ -12,7 +12,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.html import escape
 
@@ -199,6 +199,18 @@ def ajax_get_file_view(request, obj):
 
     raw = f.read()
     return html_for_file(filename, raw)
+
+def download_zipfile(request, uuid):
+    pk = request.GET['pk']
+    version = get_object_or_404(models.ExtensionVersion, pk=pk)
+
+    if version.extension.uuid != uuid:
+        raise Http404()
+
+    if version.status == models.STATUS_NEW:
+        return HttpResponseForbidden()
+
+    return redirect(version.source.url)
 
 @post_only_view
 @model_view(models.ExtensionVersion)

@@ -28,7 +28,12 @@
 </div>
 
 <h2 class="expanded"> Files </h2>
-<div id="files" data-pk="{{ version.pk }}">
+<div>
+  <div id="files" data-pk="{{ version.pk }}">
+  </div>
+  <p>Note: Binary files aren't showed on the web site. To see all
+    files, please <a href="{% url review-download pk=version.pk %}">download
+      the extension zipfile</a>.</p>
 </div>
 
 {% if previous_versions %}
