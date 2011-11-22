@@ -1,6 +1,7 @@
 
 import pygments.formatters
 
+from django.utils.html import escape
 from review.diffutils import get_chunks, split_lines
 
 # Stolen from ReviewBoard
