@@ -108,11 +108,11 @@ def get_zipfiles(version):
     extension = version.extension
 
     new_zipfile = version.get_zipfile('r')
-
-    if extension.latest_version is None:
+    if version.version == 1:
         return None, new_zipfile
 
-    old_zipfile = extension.latest_version.get_zipfile('r')
+    old_version = extension.versions.get(version=version.version-1)
+    old_zipfile = old_version.get_zipfile('r')
 
     return old_zipfile, new_zipfile
 
