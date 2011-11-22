@@ -1,7 +1,6 @@
 
 import pygments.formatters
 
-from django.utils.html import escape
 from review.diffutils import get_chunks, split_lines
 
 # Stolen from ReviewBoard
@@ -29,7 +28,7 @@ REPLACED_REGION = REGION % (u'line replaced',)
 
 def get_line_region_markup(line, regions):
     if regions == []:
-        return [UNCHANGED_REGION % escape(line)]
+        return [UNCHANGED_REGION % line]
 
     parts = []
     last_end = 0
