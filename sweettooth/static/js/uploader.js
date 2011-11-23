@@ -39,7 +39,6 @@ define(['jquery'], function($) {
 
             if (window.FormData) {
                 var fd = new FormData();
-                var headers = {};
                 fd.append('file', file);
 
                 var df = $.ajax(url, { type: 'POST',
