@@ -617,3 +617,49 @@ input[type=submit], button {
     display: block;
     margin: 10px auto 0;
 }
+
+.expandy_header {
+    cursor: pointer;
+    background-color: #336C84;
+    color: white;
+    line-height: 1.5em;
+    padding-left: 0.5em;
+    margin-bottom: 0;
+    margin-top: 10px;
+    clear: both;
+}
+
+.expandy_header:hover {
+    background-color: #447D95;
+}
+
+.expandy_header:before {
+    content: "";
+    display: block;
+    float: left;
+    border-color: transparent;
+    border-left-color: white;
+    border-style: solid;
+    border-width: .4em;
+    margin-top: .4em;
+    width: 0;
+
+    -webkit-transition: -webkit-transform 0.4s ease-in-out;
+    -webkit-transform-origin: 25% 50%;
+
+    -moz-transition: -moz-transform 0.4s ease-in-out;
+    -moz-transform-origin: 25% 50%;
+
+    -o-transition: -o-transform 0.4s ease-in-out;
+    -o-transform-origin: 25% 50%;
+
+    transition: transform 0.4s ease-in-out;
+    transform-origin: 25% 50%;
+}
+
+.expandy_header.expanded:before {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}

@@ -97,6 +97,10 @@ require(['jquery', 'messages', 'extensions',
         });
         $('form .rating').rating();
 
+        $('.expandy_header').click(function() {
+            $(this).toggleClass('expanded').next().slideToggle();
+        }).not('.expanded').next().hide();
+
         if (window._SW)
             try {
                 window._SW();
