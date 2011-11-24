@@ -143,16 +143,16 @@ h2:before {
     margin-top: .4em;
     width: 0;
 
-    -webkit-transition: -moz-transform 0.4s ease-in-out;
+    -webkit-transition: -webkit-transform 0.4s ease-in-out;
     -webkit-transform-origin: 25% 50%;
 
     -moz-transition: -moz-transform 0.4s ease-in-out;
     -moz-transform-origin: 25% 50%;
 
-    -o-transition: -moz-transform 0.4s ease-in-out;
+    -o-transition: -o-transform 0.4s ease-in-out;
     -o-transform-origin: 25% 50%;
 
-    transition: -moz-transform 0.4s ease-in-out;
+    transition: transform 0.4s ease-in-out;
     transform-origin: 25% 50%;
 }
 
