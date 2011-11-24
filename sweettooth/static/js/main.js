@@ -101,6 +101,29 @@ require(['jquery', 'messages', 'extensions',
             $(this).toggleClass('expanded').next().slideToggle();
         }).not('.expanded').next().hide();
 
+        $('#extension_shell_versions_info').buildShellVersionsInfo();
+
+        $('.extension_status_toggle a').click(function() {
+            var href = $(this).attr('href');
+            var pk = $(this).parents('tr').data('pk');
+            var $ext = $(this).parents('.extension');
+
+            var req = $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                data: { pk: pk },
+                url: href
+            });
+
+            req.done(function(newShellVersionMap) {
+                $ext.data('svm', newShellVersionMap);
+                $('#extension_shell_versions_info').buildShellVersionsInfo();
+                $('.extension_status_toggle').toggleClass('visible');
+            });
+
+            return false;
+        });
+
         if (window._SW)
             try {
                 window._SW();

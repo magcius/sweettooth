@@ -16,6 +16,11 @@ ajax_patterns = patterns('',
     url(r'^upload/screenshot/(?P<pk>\d+)', views.ajax_upload_screenshot_view, name='extensions-ajax-screenshot'),
     url(r'^upload/icon/(?P<pk>\d+)', views.ajax_upload_icon_view, name='extensions-ajax-icon'),
     url(r'^detail/', views.ajax_details_view, name='extensions-ajax-details'),
+
+    url(r'^set-status/active/', views.ajax_set_status_view,
+        dict(newstatus=models.STATUS_ACTIVE), name='extensions-ajax-set-status-active'),
+    url(r'^set-status/inactive/', views.ajax_set_status_view,
+        dict(newstatus=models.STATUS_INACTIVE), name='extensions-ajax-set-status-inactive'),
 )
 
 shell_patterns = patterns('',
@@ -37,7 +42,7 @@ urlpatterns = patterns('',
         name='extensions-index'),
 
     # we ignore PK of extension, and get extension from version PK
-    url(r'^extension/(?P<ext_pk>\d+)/(?P<slug>.+)/version/(?P<pk>\d+)/$',
+    url(r'^extension/(?P<ext_pk>\d+)/(?P<slug>.+)/version/(?P<pk>.*)/$',
         views.extension_version_view, name='extensions-version-detail'),
 
     url(r'^extension/(?P<pk>\d+)/(?P<slug>.+)/$',

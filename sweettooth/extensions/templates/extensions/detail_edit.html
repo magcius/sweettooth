@@ -42,8 +42,52 @@
   </div>
   {% endif %}
 
-  {% if not is_preview %}
-    <a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a>
+  {% if not is_preview and is_multiversion %}
+    <h2 class="expandy_header expanded"> Admin </h2>
+    <ul>
+      <li>
+        <a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a>
+      </li>
+    </ul>
+
+    <h2 class="expandy_header expanded"> Versions </h2>
+    <table>
+      <thead> <tr>
+        <th> Version </th> <th> Status </th> <th> Shell Versions </th> <th> Actions </th>
+      </tr> </thead>
+      <tbody>
+      {% for version in all_versions %}
+      <tr data-pk="{{ version.pk }}">
+        <td> <a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=version.pk %}"> {{ version.version }} </a> </td>
+        <td>
+          <span class="{{ version.get_status_class }}">{{ version.get_status_display }}</span>
+        </td>
+        <td>
+          {% for shell_version in version.shell_versions.all %}
+          <code class="extension_shell_versions">{{ shell_version.version_string }}</code>
+          {% endfor %}
+        </td>
+        {% if version.is_live %}
+        <td class="extension_status_toggle{% if version.is_active %} visible{% endif %}">
+          <a href="{% url extensions-ajax-set-status-inactive %}">Inactivate</a>
+        </td>
+        <td class="extension_status_toggle{% if not version.is_active %} visible{% endif %}">
+          <a href="{% url extensions-ajax-set-status-active %}">Activate</a>
+        </td>
+        {% endif %}
+
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <h2 class="expandy_header expanded"> Shell Versions </h2>
+    <p> Shell versions mapped to their associated extension versions </p>
+    <table id="extension_shell_versions_info">
+      <thead> <th> Shell Version </th> <th> Extension Version </th> </thead>
+      <tbody>
+      </tbody>
+    </table>
   {% endif %}
 {% endblock %}
 

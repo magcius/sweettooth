@@ -113,7 +113,9 @@ def extension_view(request, obj, **kwargs):
 
     context = dict(shell_version_map = json.dumps(shell_version_map),
                    extension = extension,
-                   is_visible = True)
+                   all_versions = extension.versions.order_by('-version'),
+                   is_visible = True,
+                   is_multiversion = True)
     return render(request, template_name, context)
 
 @model_view(models.ExtensionVersion)
@@ -266,6 +268,21 @@ def ajax_query_view(request):
 
     extensions = models.Extension.objects.filter(**query_params)
     return [ajax_details(e) for e in extensions]
+
+@ajax_view
+def ajax_set_status_view(request, newstatus):
+    pk = request.GET['pk']
+
+    version = get_object_or_404(models.ExtensionVersion, pk=pk)
+    extension = version.extension
+
+    if not extension.user_can_edit(request.user):
+        return HttpResponseForbidden()
+
+    version.status = newstatus
+    version.save()
+
+    return build_shell_version_map(extension.visible_versions)
 
 @login_required
 def upload_file(request, pk):

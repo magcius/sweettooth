@@ -28,6 +28,7 @@ STATUSES = {
 }
 
 VISIBLE_STATUSES = (STATUS_ACTIVE,)
+LIVE_STATUSES = (STATUS_ACTIVE, STATUS_INACTIVE)
 REJECTED_STATUSES = (STATUS_REJECTED,)
 REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
 
@@ -321,6 +322,15 @@ class ExtensionVersion(models.Model):
 
     def get_status_class(self):
         return STATUSES[self.status].lower()
+
+    def is_live(self):
+        return self.status in LIVE_STATUSES
+
+    def is_active(self):
+        return self.status == STATUS_ACTIVE
+
+    def is_inactive(self):
+        return self.status == STATUS_INACTIVE
 
 submitted_for_review = Signal(providing_args=["request", "version"])
 reviewed = Signal(providing_args=["request", "version", "review"])

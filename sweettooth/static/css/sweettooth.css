@@ -361,6 +361,18 @@ li.extension:last-child {
     padding-left: 16px;
 }
 
+.extension table {
+    width: 100%;
+}
+
+.extension_status_toggle {
+    display: none;
+}
+
+.extension_status_toggle.visible {
+    display: table-cell;
+}
+
 #error_report input[name=can_contact] {
     margin-left: 1em;
 }

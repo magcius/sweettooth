@@ -6,6 +6,30 @@ function($, messages, dbusProxy, extensionUtils) {
 
     var ExtensionState = extensionUtils.ExtensionState;
 
+    $.fn.buildShellVersionsInfo = function () {
+        return this.each(function() {
+            var $table = $(this);
+            var $tbody = $table.find('tbody');
+            var $extension = $table.parents('.extension');
+            var urlBase = $extension.data('ver-url-base');
+
+            $tbody.children().remove();
+
+            var svm = $extension.data('svm');
+            for (var version in svm) {
+                if (!svm.hasOwnProperty(version))
+                    continue;
+
+                var vpk = extensionUtils.grabProperExtensionVersion(svm, version);
+
+                var $tr = $('<tr>').appendTo($tbody);
+
+                $('<td>').append($('<code>').text(version)).appendTo($tr);
+                $('<td>').append($('<a>', {'href': urlBase + vpk.pk}).text(vpk.version)).appendTo($tr);
+            }
+        });
+    };
+
     // While technically we shouldn't have mismatched API versions,
     // the plugin doesn't check whether the Shell matches, so if someone
     // is running with an old Shell version but a newer plugin, error out.
