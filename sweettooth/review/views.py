@@ -104,14 +104,17 @@ def html_for_file(filename, version, raw):
         return dict(html=highlight_file(filename, raw, code_formatter),
                     num_lines=len(raw.strip().splitlines()))
 
-def get_zipfiles(version):
+def get_zipfiles(version, old_version_number=None):
     extension = version.extension
 
     new_zipfile = version.get_zipfile('r')
     if version.version == 1:
         return None, new_zipfile
 
-    old_version = extension.versions.get(version=version.version-1)
+    if old_version_number is None:
+        old_version_number = version.version - 1
+
+    old_version = extension.versions.get(version=old_version_number)
     old_zipfile = old_version.get_zipfile('r')
 
     return old_zipfile, new_zipfile
@@ -147,7 +150,9 @@ def get_diff(old_zipfile, new_zipfile, filename, highlight):
 def ajax_get_file_list_view(request, obj):
     version, extension = obj, obj.extension
 
-    old_zipfile, new_zipfile = get_zipfiles(version)
+    old_version_number = request.GET.get('oldver', None)
+
+    old_zipfile, new_zipfile = get_zipfiles(version, old_version_number)
 
     disallow_binary = json.loads(request.GET['disallow_binary'])
 
@@ -175,6 +180,7 @@ def ajax_get_file_diff_view(request, obj):
 
     filename = request.GET['filename']
     highlight = request.GET.get('highlight', True)
+    old_version_number = request.GET.get('oldver', None)
 
     file_base, file_extension = os.path.splitext(filename)
     if file_extension in IMAGE_TYPES:
@@ -183,7 +189,7 @@ def ajax_get_file_diff_view(request, obj):
     if file_extension in BINARY_TYPES:
         return
 
-    old_zipfile, new_zipfile = get_zipfiles(version)
+    old_zipfile, new_zipfile = get_zipfiles(version, old_version_number)
 
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())
