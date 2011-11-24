@@ -38,6 +38,32 @@ define([], function() {
         return false;
     };
 
+    module.grabProperExtensionVersion = function(map, current) {
+        var versionA = map[current];
+
+        var parts = current.split('.');
+
+        // Unstable releases
+        if (parseInt(parts[1]) % 2 != 0) {
+            if (versionA !== undefined)
+                return versionA;
+            else
+                return null;
+        }
+
+        var versionB = map[(parts[0] + '.' + parts[1])];
+
+        if (versionA !== undefined && versionB !== undefined) {
+            return (versionA.version > versionB.version) ? versionA : versionB;
+        } else if (versionA !== undefined) {
+            return versionA;
+        } else if (versionB !== undefined) {
+            return versionB;
+        } else {
+            return null;
+        }
+    };
+
     return module;
 
 });

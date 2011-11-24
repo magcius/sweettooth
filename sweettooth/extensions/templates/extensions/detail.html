@@ -24,8 +24,7 @@
 
     <div class="extension"
          data-uuid="{{ extension.uuid }}"
-         data-sv="{{ version.shell_versions_json }}"
-         data-pk="{{ version.pk }}">
+         data-svm="{{ shell_version_map }}">
       <div class="switch{% if is_rejected %} insensitive{% endif %}"></div>
 
       {% block icon %}

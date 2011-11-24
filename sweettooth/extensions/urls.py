@@ -41,9 +41,9 @@ urlpatterns = patterns('',
         views.extension_version_view, name='extensions-version-detail'),
 
     url(r'^extension/(?P<pk>\d+)/(?P<slug>.+)/$',
-        views.extension_latest_version_view, name='extensions-detail'),
+        views.extension_view, name='extensions-detail'),
     url(r'^extension/(?P<pk>\d+)/$',
-        views.extension_latest_version_view, dict(slug=None), name='extensions-detail'),
+        views.extension_view, dict(slug=None), name='extensions-detail'),
 
     url(r'^local/', direct_to_template, dict(template='extensions/local.html'), name='extensions-local'),
 

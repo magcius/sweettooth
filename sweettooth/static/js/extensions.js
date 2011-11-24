@@ -45,18 +45,23 @@ function($, messages, dbusProxy, extensionUtils) {
     };
 
     function addExtensionSwitch(uuid, extension, $elem) {
-        var shellVersions = $elem.data('sv');
-
         var $switch = $elem.find('.switch');
         var _state = ExtensionState.UNINSTALLED;
+        var svm = $elem.data('svm');
 
-        if (shellVersions && !versionCheck(shellVersions, dbusProxy.ShellVersion)) {
+        if (!svm)
+            _state = ExtensionState.OUT_OF_DATE;
+
+        var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+
+        if (vpk === null) {
             _state = ExtensionState.OUT_OF_DATE;
         } else if (extension && !$.isEmptyObject(extension)) {
             _state = extension.state;
         }
 
         $elem.data({'elem': $elem,
+                    'pk': (vpk === null ? 0 : vpk.pk),
                     'state': _state,
                     'uninstalled': false,
                     'undo-uninstall-message': null});

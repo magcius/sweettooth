@@ -71,12 +71,28 @@ def shell_update(request):
 
     return operations
 
-# Even though this is showing a version, the PK matches an extension
-@model_view(models.Extension)
-def extension_latest_version_view(request, obj, **kwargs):
-    extension, version = obj, obj.latest_version
+def build_shell_version_map(versions):
+    shell_version_map = {}
+    for version in versions:
+        for shell_version in version.shell_versions.all():
+            key = shell_version.version_string
+            if key not in shell_version_map:
+                shell_version_map[key] = version
 
-    if version is None:
+            if version.version > shell_version_map[key].version:
+                shell_version_map[key] = version
+
+    for key, version in shell_version_map.iteritems():
+        shell_version_map[key] = dict(pk = version.pk,
+                                      version = version.version)
+
+    return shell_version_map
+
+@model_view(models.Extension)
+def extension_view(request, obj, **kwargs):
+    extension, versions = obj, obj.visible_versions
+
+    if versions.count() == 0 and not extension.user_can_edit(request.user):
         raise Http404()
 
     # Redirect if we don't match the slug.
@@ -93,11 +109,11 @@ def extension_latest_version_view(request, obj, **kwargs):
     else:
         template_name = "extensions/detail.html"
 
-    status = version.status
-    context = dict(version = version,
+    shell_version_map = build_shell_version_map(versions)
+
+    context = dict(shell_version_map = json.dumps(shell_version_map),
                    extension = extension,
-                   is_visible = status in models.VISIBLE_STATUSES,
-                   status = status)
+                   is_visible = True)
     return render(request, template_name, context)
 
 @model_view(models.ExtensionVersion)
@@ -135,8 +151,12 @@ def extension_version_view(request, obj, **kwargs):
     else:
         template_name = "extensions/detail.html"
 
+    version_obj = dict(pk = version.pk, version = version.version)
+    shell_version_map = dict((sv.version_string, version_obj) for sv in version.shell_versions.all())
+
     context = dict(version = version,
                    extension = extension,
+                   shell_version_map = json.dumps(shell_version_map),
                    is_preview = is_preview,
                    is_visible = status in models.VISIBLE_STATUSES,
                    is_rejected = status in models.REJECTED_STATUSES,
