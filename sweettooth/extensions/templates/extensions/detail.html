@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% load thumbnail %}
-{% block title %}{{ version.extension.name }} - {{ block.super }}{% endblock %}
+{% block title %}{{ extension.name }} - {{ block.super }}{% endblock %}
 
 {% block extra-messages %}
   {{ block.super }}
   {% if is_rejected %}
    {% spaceless %}
     <p class="message error">
-      This version of {{ version.extension.name }} was rejected.
-      <a href="{% url extensions-detail pk=version.extension.pk %}">View the latest accepted version.</a>
+      This version of {{ extension.name }} was rejected.
+      <a href="{% url extensions-detail pk=extension.pk %}">View the latest accepted version.</a>
     </p>
     {% endspaceless %}
   {% else %} {% if old_version %}
     <p class="message warning">
-      You are viewing an old version of <a href="{% url extensions-detail pk=version.extension.pk %}">{{ version.extension.name }}</a>
+      You are viewing an old version of <a href="{% url extensions-detail pk=extension.pk %}">{{ extension.name }}</a>
     </p>
   {% endif %} {% endif %}
 {% endblock %}

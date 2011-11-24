@@ -42,8 +42,8 @@
   </div>
   {% endif %}
 
-  {% if request.user == version.extension.creator and not is_preview %}
-    <a href="{% url extensions-upload-file pk=version.extension.pk %}">Upload a new version</a>
+  {% if request.user == extension.creator and not is_preview %}
+    <a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a>
   {% endif %}
 {% endblock %}
 
@@ -72,9 +72,9 @@
 {% endblock %}
 
 {% block document-ready %}{{ block.super }}
-    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=version.extension.pk %}");
+    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=extension.pk %}");
     require(['uploader'], function() {
-        $(".screenshot.upload").uploadify("{% url extensions-ajax-screenshot pk=version.extension.pk %}?geometry=300x200");
-        $(".icon.upload").uploadify("{% url extensions-ajax-icon pk=version.extension.pk %}");
+        $(".screenshot.upload").uploadify("{% url extensions-ajax-screenshot pk=extension.pk %}?geometry=300x200");
+        $(".icon.upload").uploadify("{% url extensions-ajax-icon pk=extension.pk %}");
     });
 {% endblock %}
