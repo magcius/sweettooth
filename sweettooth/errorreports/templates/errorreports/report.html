@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Report Error for "{{ version.extension.name }}" - {{ block.super }}{% endblock %}
+{% block title %}Report Error for "{{ extension.name }}" - {{ block.super }}{% endblock %}
 {% block body %}
-<h2><em>{{ version.extension.name }}</em> is malfunctioning?</h2>
+<h2><em>{{ extension.name }}</em> is malfunctioning?</h2>
 
 <p>Please look through the information below and edit out any unwanted information.</p>
-<form action="" method="POST" id="error_report" data-uuid="{{ version.extension.uuid }}">
+<form action="" method="POST" id="error_report" data-uuid="{{ extension.uuid }}">
   {% csrf_token %}
 
   <h3> Comments for the author </h3>

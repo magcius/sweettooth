@@ -9,15 +9,13 @@ from django.template.loader import render_to_string
 
 from errorreports.models import ErrorReport, error_reported
 from errorreports.forms import ErrorReportForm
-from extensions.models import ExtensionVersion
+from extensions.models import Extension
 
 from decorators import post_only_view, model_view
 from utils import render
 
-@model_view(ExtensionVersion.objects.visible())
-def report_error_view(request, obj):
-    extension, version = obj.extension, obj
-
+@model_view(Extension.objects.visible())
+def report_error_view(request, extension):
     if request.method == 'POST':
         form = ErrorReportForm(data=request.POST)
 
@@ -25,22 +23,20 @@ def report_error_view(request, obj):
             return HttpResponseForbidden()
 
         if form.is_valid():
-            report = form.save(request=request, version=version)
+            report = form.save(request=request, extension=extension)
             error_reported.send(sender=request, request=request,
-                                version=version, report=report)
+                                extension=extension, report=report)
 
             messages.info(request, "Thank you for your error report!")
 
-            return redirect('extensions-version-detail',
-                            pk=version.pk,
+            return redirect('extensions-detail',
                             ext_pk=extension.pk,
                             slug=extension.slug)
 
     else:
         form = ErrorReportForm()
 
-    context = dict(version=version,
-                   extension=extension,
+    context = dict(extension=extension,
                    form=form)
     return render(request, 'errorreports/report.html', context)
 
@@ -49,14 +45,12 @@ def view_error_report_view(request, obj):
     return render(request, 'errorreports/view.html', dict(report=obj))
 
 
-def send_email_on_error_reported(sender, request, version, report, **kwargs):
-    extension = version.extension
+def send_email_on_error_reported(sender, request, extension, report, **kwargs):
 
     url = request.build_absolute_uri(reverse('errorreports-view',
                                              kwargs=dict(pk=report.pk)))
 
-    data = dict(version=version,
-                extension=extension,
+    data = dict(extension=extension,
                 report=report,
                 url=url)
 

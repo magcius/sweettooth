@@ -1,4 +1,4 @@
-Your extension, "{{ extension.name }}", version {{ version.version }} has received an error report from {{ report.user }}:
+Your extension, "{{ extension.name }}" has received an error report from {{ report.user }}:
 
 {{ report.comments }}
 
