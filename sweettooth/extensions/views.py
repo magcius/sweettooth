@@ -204,8 +204,7 @@ def ajax_upload_icon_view(request, obj):
     return obj.icon.url
 
 def ajax_details(extension):
-    return dict(pk = extension.pk,
-                uuid = extension.uuid,
+    return dict(uuid = extension.uuid,
                 name = extension.name,
                 creator = extension.creator.username,
                 link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
@@ -214,12 +213,19 @@ def ajax_details(extension):
 @ajax_view
 def ajax_details_view(request):
     uuid = request.GET.get('uuid', None)
+    version_tag = request.GET.get('version_tag', None)
 
     if uuid is None:
         raise Http404()
 
     extension = get_object_or_404(models.Extension, uuid=uuid)
-    return ajax_details(extension)
+    details = ajax_details(extension)
+
+    if version_tag is not None:
+        version = extension.versions.get(version=version_tag)
+        details['pk'] = version.pk
+
+    return details
 
 @ajax_view
 def ajax_query_view(request):

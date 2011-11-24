@@ -201,7 +201,8 @@ function($, messages, dbusProxy) {
                         $.ajax({
                             url: "/ajax/detail/",
                             dataType: "json",
-                            data: { uuid: uuid },
+                            data: { uuid: extension.version,
+                                    version_tag: extension.version_tag },
                             type: "GET",
                         }).done(function(result) {
                             $elem.
