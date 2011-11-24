@@ -72,7 +72,7 @@
 {% endblock %}
 
 {% block document-ready %}{{ block.super }}
-    $("h3, p.description").csrfEditable("{% url extensions-ajax-inline pk=extension.pk %}");
+    $("#extension_name, #extension_description, #extension_url").csrfEditable("{% url extensions-ajax-inline pk=extension.pk %}");
     require(['uploader'], function() {
         $(".screenshot.upload").uploadify("{% url extensions-ajax-screenshot pk=extension.pk %}?geometry=300x200");
         $(".icon.upload").uploadify("{% url extensions-ajax-icon pk=extension.pk %}");
