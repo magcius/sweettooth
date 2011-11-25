@@ -1,42 +1,10 @@
 "use strict";
 
-define(['jquery', 'messages', 'dbus!_',
+define(['jquery', 'messages', 'dbus!_', 'extensionUtils',
         'switch', 'jquery.tipsy'],
-function($, messages, dbusProxy) {
+function($, messages, dbusProxy, extensionUtils) {
 
-    // ExtensionState and versionCheck are stolen and should
-    // be kept in sync those from the Shell.
-    // Licensed under GPL2+
-    // See: http://git.gnome.org/browse/gnome-shell/tree/js/ui/extensionSystem.js
-
-    var ExtensionState = {
-        ENABLED: 1,
-        DISABLED: 2,
-        ERROR: 3,
-        OUT_OF_DATE: 4,
-        DOWNLOADING: 5,
-        INITIALIZED: 6,
-
-        // Not a real state, used when there's no extension
-        // with the associated UUID in the extension map.
-        UNINSTALLED: 99
-    };
-
-    function versionCheck(required, current) {
-        var currentArray = current.split('.');
-        var major = currentArray[0];
-        var minor = currentArray[1];
-        var point = currentArray[2];
-        for (var i = 0; i < required.length; i++) {
-            var requiredArray = required[i].split('.');
-            if (requiredArray[0] == major &&
-                requiredArray[1] == minor &&
-                (requiredArray[2] == point ||
-                 (requiredArray[2] == undefined && parseInt(minor) % 2 == 0)))
-                return true;
-        }
-        return false;
-    }
+    var ExtensionState = extensionUtils.ExtensionState;
 
     // While technically we shouldn't have mismatched API versions,
     // the plugin doesn't check whether the Shell matches, so if someone
