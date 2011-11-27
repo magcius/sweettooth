@@ -233,7 +233,7 @@ class ExtensionVersion(models.Model):
             description = self.extension.description,
             url         = self.extension.url,
             uuid        = self.extension.uuid,
-            version_tag = self.version,
+            version     = self.version,
         )
 
         fields['shell-version'] = [sv.version_string for sv in self.shell_versions.all()]

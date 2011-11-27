@@ -303,15 +303,15 @@ class UpdateVersionTest(TestCase):
         downgrade_pk = models.Extension.objects.get(uuid=self.downgrade_uuid).latest_version.pk
 
         self.full_expected = { self.upgrade_uuid: dict(operation='upgrade',
-                                                       version_tag=upgrade_pk),
+                                                       version=upgrade_pk),
                                self.reject_uuid: dict(operation='blacklist'),
                                self.downgrade_uuid: dict(operation='downgrade',
-                                                         version_tag=downgrade_pk) }
+                                                         version=downgrade_pk) }
 
     def grab_response(self, uuids):
         installed = {}
-        for uuid, version_tag in uuids.iteritems():
-            installed[uuid] = dict(version_tag=version_tag)
+        for uuid, version in uuids.iteritems():
+            installed[uuid] = dict(version=version)
 
         post_data = dict(installed=json.dumps(installed))
 

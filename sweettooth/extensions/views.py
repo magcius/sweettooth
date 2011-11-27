@@ -42,13 +42,13 @@ def shell_update(request):
         except models.Extension.DoesNotExist:
             continue
 
-        if 'version_tag' not in meta:
+        if 'version' not in meta:
             # Some extensions may be on the site, but if the user
             # didn't download it from SweetTooth, there won't
-            # be a version_tag value in the metadata.
+            # be a version value in the metadata.
             continue
 
-        version = meta['version_tag']
+        version = meta['version']
 
         try:
             version_obj = extension.versions.get(version=version)
@@ -63,11 +63,11 @@ def shell_update(request):
 
         elif version < latest_version.version:
             operations[uuid] = dict(operation="upgrade",
-                                    version_tag=extension.latest_version.pk)
+                                    version=extension.latest_version.pk)
 
         elif version_obj.status in models.REJECTED_STATUSES:
             operations[uuid] = dict(operation="downgrade",
-                                    version_tag=extension.latest_version.pk)
+                                    version=extension.latest_version.pk)
 
     return operations
 
@@ -213,7 +213,7 @@ def ajax_details(extension):
 @ajax_view
 def ajax_details_view(request):
     uuid = request.GET.get('uuid', None)
-    version_tag = request.GET.get('version_tag', None)
+    version = request.GET.get('version', None)
 
     if uuid is None:
         raise Http404()
@@ -221,8 +221,8 @@ def ajax_details_view(request):
     extension = get_object_or_404(models.Extension, uuid=uuid)
     details = ajax_details(extension)
 
-    if version_tag is not None:
-        version = extension.versions.get(version=version_tag)
+    if version is not None:
+        version = extension.versions.get(version=version)
         details['pk'] = version.pk
 
     return details
