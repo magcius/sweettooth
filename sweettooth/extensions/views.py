@@ -230,7 +230,8 @@ def ajax_details(extension):
                 name = extension.name,
                 creator = extension.creator.username,
                 link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
-                icon = extension.icon.url)
+                icon = extension.icon.url,
+                shell_version_map = build_shell_version_map(extension.visible_versions))
 
 @ajax_view
 def ajax_details_view(request):
