@@ -365,6 +365,10 @@ li.extension:last-child {
     width: 100%;
 }
 
+.extension th {
+    text-align: left;
+}
+
 .extension_status_toggle {
     display: none;
 }
