@@ -377,12 +377,12 @@ li.extension:last-child {
     display: table-cell;
 }
 
-.rejected, .reject {
+span.rejected, span.reject {
     color: #c00 !important;
     font-weight: bold;
 }
 
-.active, .approve {
+span.active, span.approve {
     color: #0a0 !important;
     font-weight: bold;
 }
