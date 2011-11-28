@@ -37,7 +37,10 @@ function($, messages, dbusProxy, extensionUtils) {
         dbusProxy.ShellVersion === undefined) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
-        messages.addError("You do not appear to have an up to date version of GNOME3. Some parts of the website may be disabled.");
+        messages.addError("You do not appear to have an up to date version " +
+                          "of GNOME3. You won't be able to install extensions " +
+                          "from here. See the <a href=\"/about/#old-version\">about page</a> " +
+                          "for more information");
 
         $.fn.addExtensionSwitch = function() {
             // Don't show our switches -- CSS styles define a clickable

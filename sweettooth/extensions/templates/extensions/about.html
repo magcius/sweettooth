@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}What's this? - {{ block.super }}{% endblock %}
+{% block body %}
+<h2> What is GNOME Shell? </h2>
+<p>GNOME Shell is the biggest new feature of <a href="http://www.gnome3.org/">GNOME 3</a>. If you're using GNOME 3 right now, it's the big black bar at the top of your screen. It's also that "Activities" place you go to to switch tasks.</p>
+<h2> What are GNOME Shell Extensions? </h2>
+<p>GNOME Shell Extensions are things that you can add on to GNOME 3 and GNOME Shell, like Chrome Extensions or Firefox Addons.</p>
+<h2> What can GNOME Shell Extensions do? </h2>
+<p>When you install a GNOME Shell Extension, this adds new functionality to your OS. Extensions may make small changes, like moving your clock to the right-hand side of the screen, or make big changes, like laying out the windows in the "Activities" mode in a different way.</p>
+<h2> Are GNOME Shell Extensions safe? </h2>
+<p>Because of the wide variety of changes that we want GNOME Shell Extensions to make, it's pretty tricky to make sure they're secure. We don't want to negatively impact your system, but note that GNOME Shell Extensions may cause slowdown or make your system crash. If you've installed an extension like this, please report it to the extension author &mdash; chances are they want to fix these problems, too!</p>
+<p> As an additional security measure, every one of the extensions listed on this website has had its code personally reviewed by a GNOME Shell Developer to the best of their abilities to ensure that people can't steal system information or pop up ads.</p>
+<h2> I don't think I have GNOME Shell. What can I do to get it? </h2>
+<p> The easiest way to get GNOME Shell along with GNOME 3 is to install a Linux distribution with GNOME 3 and GNOME Shell installed. See the <a href="http://www.gnome.org/getting-gnome/">Getting GNOME</a> page on the main GNOME site to learn how to grab a Linux distribution with GNOME 3.</p>
+<h2 id="old-version"> I'm using GNOME 3 right now! Why doesn't your stupid site recognize it? </h2>
+<p> Make sure you're using GNOME 3.2 or later, not GNOME 3.0, and make sure you have the "GNOME Shell Extension Integration" browser plugin enabled. GNOME 3.2 added the browser plugin and necessary hooks in GNOME Shell to make this website possible, so this website does not support and will never support integration with GNOME 3.0.</p>
+
+</p>Note: there were some bugs in the browser plugin shipped in GNOME 3.2 that prevent it from working properly under WebKit-based browsers like Epiphany and Chromium. These bugs have been fixed and should be released when GNOME 3.4 ships at the beginning of March, next year. Use Firefox for now.</p>
+
+{% endblock %}
+
+{% block navclass %}about{% endblock %}
