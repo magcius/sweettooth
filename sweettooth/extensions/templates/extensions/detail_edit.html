@@ -45,9 +45,8 @@
   {% if not is_preview and is_multiversion %}
     <h2 class="expandy_header expanded"> Admin </h2>
     <ul>
-      <li>
-        <a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a>
-      </li>
+      <li><a href="{% url extensions-upload-file pk=extension.pk %}">Upload a new version</a></li>
+      <li><a href="{% url review-version pk=extension.pk %}">View review and source</a></li>
     </ul>
 
     <h2 class="expandy_header expanded"> Versions </h2>
