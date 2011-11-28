@@ -73,13 +73,15 @@ function($, messages, dbusProxy, extensionUtils) {
         var _state = ExtensionState.UNINSTALLED;
         var svm = $elem.data('svm');
 
-        if (!svm)
-            _state = ExtensionState.OUT_OF_DATE;
-
         var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
 
         if (vpk === null) {
-            _state = ExtensionState.OUT_OF_DATE;
+            if (svm) {
+                _state = ExtensionState.OUT_OF_DATE;
+            } else {
+                // Allow the local extensions code to work without an svm.
+                _state = extension.state;
+            }
         } else if (extension && !$.isEmptyObject(extension)) {
             _state = extension.state;
         }
@@ -198,7 +200,7 @@ function($, messages, dbusProxy, extensionUtils) {
                         $.ajax({
                             url: "/ajax/detail/",
                             dataType: "json",
-                            data: { uuid: extension.version,
+                            data: { uuid: extension.uuid,
                                     version: extension.version },
                             type: "GET",
                         }).done(function(result) {
@@ -207,15 +209,16 @@ function($, messages, dbusProxy, extensionUtils) {
                                 find('img.icon').detach().end().
                                 find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end().
                                 append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
-                                data('pk', result.pk);
-                        });
+                                data('pk', result.pk).
+                                data('svm', result.shell_version_map);
 
-                        // The DOM element's CSS styles won't be fully
-                        // computed, so the switch will be incorrectly
-                        // positioned -- wait a bit before adding them.
-                        setTimeout(function() {
                             addExtensionSwitch(uuid, extension, $elem);
-                        }, 0);
+                        }).fail(function(e) {
+                            // If the extension doesn't exist, add a switch anyway
+                            // so the user can toggle the enabled state.
+                            if (e.status == 404)
+                                addExtensionSwitch(uuid, extension, $elem);
+                        });
 
                         $container.append($elem);
                     });

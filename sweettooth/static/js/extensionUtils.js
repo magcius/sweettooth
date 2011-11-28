@@ -39,6 +39,9 @@ define([], function() {
     };
 
     module.grabProperExtensionVersion = function(map, current) {
+        if (!map || !map.hasOwnProperty(current))
+            return null;
+
         var versionA = map[current];
 
         var parts = current.split('.');
