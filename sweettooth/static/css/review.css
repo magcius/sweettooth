@@ -146,16 +146,6 @@ span.changed {
     font-size: larger;
 }
 
-.rejected, .reject {
-    color: #c00 !important;
-    font-weight: bold;
-}
-
-.active, .approve {
-    color: #0a0 !important;
-    font-weight: bold;
-}
-
 #approve {
     clear: right;
 }
