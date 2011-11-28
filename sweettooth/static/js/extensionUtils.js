@@ -39,7 +39,7 @@ define([], function() {
     };
 
     module.grabProperExtensionVersion = function(map, current) {
-        if (!map || !map.hasOwnProperty(current))
+        if (!map)
             return null;
 
         var versionA = map[current];
