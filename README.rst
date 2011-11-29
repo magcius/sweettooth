@@ -27,8 +27,7 @@ You can get started developing the website with::
   $ python sweettooth/manage.py `runserver_plus`_
 
 Create a superuser, and log in. You should be able to upload extensions and
-review extensions. There isn't a link to the code review UI, but it's hidden
-at /review/.
+review extensions.
 
 .. _runserver_plus: http://packages.python.org/django-extensions/
 .. _virtualenv: http://www.virtualenv.org/
