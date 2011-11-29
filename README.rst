@@ -5,13 +5,13 @@ SweetTooth-Web
 **SweetTooth-Web** is a Django-powered web application that, in co-operation
 with some co-horts in GNOME Shell and other places, allows users to install,
 upgrade and enable/disable their own Shell Extensions. All operations with
-the Shell are done through a special NPAPI plugin, sweettooth-plugin_, which
-proxies over to the Shell by DBus.
+the Shell are done through a special NPAPI plugin which proxies over to the
+Shell by DBus.
 
 Since extensions can be dangerous, all extensions uploaded to the repository
 must go through code review and testing.
 
-.. _sweettooth-plugin: https://github.com/magcius/sweettooth-plugin
+.. _sweettooth-plugin: http://git.gnome.org/browse/gnome-shell/tree/browser-plugin
 
 Getting Started
 ---------------
