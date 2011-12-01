@@ -91,7 +91,7 @@ require(['jquery', 'messages', 'extensions',
 
         $('#local_extensions').addLocalExtensions();
         $('#error_report').fillInErrors();
-        $('.extension').addExtensionSwitch();
+        $('.extension.single-page').addExtensionSwitch();
         $('.comment .rating').each(function() {
             $(this).find('input').rating();
         });
