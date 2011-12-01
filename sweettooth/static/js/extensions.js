@@ -210,10 +210,16 @@ function($, messages, dbusProxy, extensionUtils) {
                             $elem.
                                 find('span.author').text(" by ").append($('<a>', {'href': "/accounts/profile/" + result.creator}).text(result.creator)).end().
                                 find('img.icon').detach().end().
-                                find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end().
-                                append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
-                                data('pk', result.pk).
-                                data('svm', result.shell_version_map);
+                                find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end();
+
+                            // The PK might not exist if the extension wasn't
+                            // installed from GNOME Shell Extensions.
+                            if (result.pk !== undefined) {
+                                $elem.
+                                    data('pk', result.pk).
+                                    data('svm', result.shell_version_map).
+                                    append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall));
+                            }
 
                             addExtensionSwitch(uuid, extension, $elem);
                         }).fail(function(e) {
