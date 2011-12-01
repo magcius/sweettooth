@@ -235,21 +235,34 @@ function($, messages, dbusProxy, extensionUtils) {
     $.fn.fillInErrors = function () {
         return this.each(function() {
             var $form = $(this);
+            var uuid = $form.data('uuid');
             var $textarea = $form.find('textarea');
-            dbusProxy.GetErrors($form.data('uuid')).done(function(errors) {
-                var errorString;
+            dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
+                dbusProxy.GetErrors($form.data('uuid')).done(function(errors) {
+                    var errorString;
 
-                if (errors && errors.length) {
-                    errorString = errors.join('\n\n================\n\n');
-                } else {
-                    errorString = "GNOME Shell Extensions did not detect any errors with this extension.";
-                }
+                    var versionInformation = "";
+                    versionInformation += "    Shell version: " + dbusProxy.ShellVersion + "\n";
+                    versionInformation += "    Extension version: ";
+                    if (meta && meta.version) {
+                        versionInformation += meta.version;
+                    } else {
+                        versionInformation += "Not found";
+                    }
 
-                var template = ("What's wrong?\n\n\n" +
-                                "What have I tried?\n\n\n" +
-                                "Automatically detected errors:\n\n" + errorString);
+                    if (errors && errors.length) {
+                        errorString = errors.join('\n\n================\n\n');
+                    } else {
+                        errorString = "GNOME Shell Extensions did not detect any errors with this extension.";
+                    }
 
-                $textarea.text(template);
+                    var template = ("What's wrong?\n\n\n\n" +
+                                    "What have you tried?\n\n\n\n" +
+                                    "Automatically detected errors:\n\n" + errorString +
+                                    "\n\nVersion information:\n\n" + versionInformation);
+
+                    $textarea.text(template);
+                });
             });
         });
     };
