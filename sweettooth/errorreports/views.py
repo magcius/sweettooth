@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
+from django.template import Context
 from django.template.loader import render_to_string
 
 from errorreports.models import ErrorReport, error_reported
@@ -54,11 +55,13 @@ def send_email_on_error_reported(sender, request, extension, report, **kwargs):
                 report=report,
                 url=url)
 
-    subject = render_to_string('errorreports/report_mail_subject.txt', data).strip()
+    subject = render_to_string('errorreports/report_mail_subject.txt', data, Context(autoescape=False))
+    subject = subject.strip()
     subject = subject.replace('\n', '')
     subject = subject.replace('\r', '')
 
-    message = render_to_string('errorreports/report_mail.txt', data).strip()
+    message = render_to_string('errorreports/report_mail.txt', data, Context(autoescape=False))
+    message = message.strip()
 
     send_mail(subject=subject,
               message=message,
