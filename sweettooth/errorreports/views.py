@@ -30,7 +30,7 @@ def report_error_view(request, extension):
             messages.info(request, "Thank you for your error report!")
 
             return redirect('extensions-detail',
-                            ext_pk=extension.pk,
+                            pk=extension.pk,
                             slug=extension.slug)
 
     else:

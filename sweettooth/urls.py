@@ -1,7 +1,7 @@
 
 import os.path
 
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, include, url, handler404, handler500
 from django.conf import settings
 
 from django.contrib import admin
