@@ -104,9 +104,11 @@ require(['jquery', 'messages', 'extensions',
         $('#extension_shell_versions_info').buildShellVersionsInfo();
 
         $('.extension_status_toggle a').click(function() {
-            var href = $(this).attr('href');
-            var pk = $(this).parents('tr').data('pk');
-            var $ext = $(this).parents('.extension');
+            var $link = $(this);
+            var %tr = $link.parents('tr');
+            var href = $link.attr('href');
+            var pk = $tr.data('pk');
+            var $ext = $link.parents('.extension');
 
             var req = $.ajax({
                 type: 'GET',
@@ -118,7 +120,7 @@ require(['jquery', 'messages', 'extensions',
             req.done(function(newShellVersionMap) {
                 $ext.data('svm', newShellVersionMap);
                 $('#extension_shell_versions_info').buildShellVersionsInfo();
-                $('.extension_status_toggle').toggleClass('visible');
+                $tr.find('.extension_status_toggle').toggleClass('visible');
             });
 
             return false;
