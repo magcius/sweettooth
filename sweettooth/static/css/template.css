@@ -261,6 +261,7 @@ a:visited {
 #globalnav.main li.main a:after,
 #globalnav.upload li.upload a:after,
 #globalnav.local li.local a:after,
+#globalnav.about li.about a:after,
 #globalnav li.active a:after {
     content: url(../images/globalnav-arrow.png);
     position: absolute;
