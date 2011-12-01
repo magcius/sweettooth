@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.utils import simplejson as json
 from sorl.thumbnail.shortcuts import get_thumbnail
 
@@ -283,7 +284,11 @@ def ajax_set_status_view(request, newstatus):
     version.status = newstatus
     version.save()
 
-    return build_shell_version_map(extension.visible_versions)
+    context = dict(version=version,
+                   extension=extension)
+
+    return dict(svm=build_shell_version_map(extension.visible_versions),
+                mvs=render_to_string('extensions/multiversion_status.html', context))
 
 @login_required
 def upload_file(request, pk):

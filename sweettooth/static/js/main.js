@@ -105,7 +105,7 @@ require(['jquery', 'messages', 'extensions',
 
         $('.extension_status_toggle a').click(function() {
             var $link = $(this);
-            var %tr = $link.parents('tr');
+            var $tr = $link.parents('tr');
             var href = $link.attr('href');
             var pk = $tr.data('pk');
             var $ext = $link.parents('.extension');
@@ -117,9 +117,10 @@ require(['jquery', 'messages', 'extensions',
                 url: href
             });
 
-            req.done(function(newShellVersionMap) {
-                $ext.data('svm', newShellVersionMap);
+            req.done(function(data) {
+                $ext.data('svm', data.svm);
                 $('#extension_shell_versions_info').buildShellVersionsInfo();
+                $tr.find('.mvs').html(data.mvs);
                 $tr.find('.extension_status_toggle').toggleClass('visible');
             });
 
