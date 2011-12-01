@@ -120,7 +120,7 @@ function($, messages, dbusProxy, extensionUtils) {
         $elem.bind('state-changed', function(e, newState) {
             $elem.data('state', newState);
             $switch.switchify('insensitive', false);
-            $switch.tipsy({ gravity: 'e', fade: true });
+            $switch.tipsy({ gravity: 'w', fade: true });
             if (newState == ExtensionState.DISABLED ||
                 newState == ExtensionState.INITIALIZED ||
                 newState == ExtensionState.UNINSTALLED) {
