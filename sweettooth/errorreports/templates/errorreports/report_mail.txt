@@ -1,6 +1,6 @@
 Your extension, "{{ extension.name }}" has received an error report from {{ report.user }}:
 
-{{ report.comments }}
+{{ report.comment }}
 
 You can see the full report at:
 

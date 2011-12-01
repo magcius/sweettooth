@@ -31,11 +31,12 @@ class SubmitErrorReportTestCase(TestCase):
     def test_no_contact_information(self):
         comment = "No contact information"
 
-        response = self.client.post(reverse('errorreports-report', kwargs=dict(pk=self.extension.pk)),
-                                    dict(can_contact=False,
-                                         comment=comment), follow=True)
+        self.client.post(reverse('errorreports-report', kwargs=dict(pk=self.extension.pk)),
+                         dict(can_contact=False,
+                              comment=comment), follow=True)
 
         self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(comment, mail.outbox[0].body)
         error_report = models.ErrorReport.objects.get(comment=comment)
         self.assertEqual(error_report.can_contact, False)
 
@@ -47,5 +48,6 @@ class SubmitErrorReportTestCase(TestCase):
                               comment=comment), follow=True)
 
         self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(comment, mail.outbox[0].body)
         error_report = models.ErrorReport.objects.get(comment=comment)
         self.assertEqual(error_report.can_contact, True)
