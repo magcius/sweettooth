@@ -401,10 +401,13 @@ span.active, span.approve {
     display: block;
     width: 97%;
     resize: vertical;
-    height: 300px;
     min-height: 80px;
     padding: 0.5em;
     margin: 1em;
+}
+
+#error_report textarea {
+    height: 300px;
 }
 
 #error_report div {
