@@ -146,29 +146,29 @@ hr.bottom_shadow {
     transform: rotate(180deg);
 }
 
-#paginator {
+.paginator {
     display: block;
     background-color: #ddd;
     border-radius: 8px;
     padding: 2px;
 }
 
-#paginator .number {
+.paginator .number {
     display: inline-block;
     width: 1.5em;
     text-align: center;
     margin: 0 4px;
 }
 
-#paginator .number:first-child {
+.paginator .number:first-child {
     margin-left: 0;
 }
 
-#paginator .number:last-child {
+.paginator .number:last-child {
     margin-right: 0;
 }
 
-#paginator .number.current {
+.paginator .number.current {
     background-color: white;
     border-radius: 6px;
 }

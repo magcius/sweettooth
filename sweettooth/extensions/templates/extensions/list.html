@@ -2,6 +2,13 @@
 {% block body %}
   <ul class="extensions">
   {% if extension_list %}
+  {% load paginator %}
+  {% if page_obj.has_other_pages %}
+  <div class="paginator">
+    {% paginator page_obj %}
+  </div>
+  {% endif %}
+
   {% for extension in extension_list %}
   {% with extension.latest_version as version %}
     <li class="extension">
@@ -20,9 +27,8 @@
   {% endif %}
   </ul>
 
-  {% load paginator %}
   {% if page_obj.has_other_pages %}
-  <div id="paginator">
+  <div class="paginator">
     {% paginator page_obj %}
   </div>
   {% endif %}
