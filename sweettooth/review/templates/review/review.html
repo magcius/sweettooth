@@ -11,7 +11,7 @@
 
     {% if extension.screenshot %}
     {% thumbnail extension.screenshot "300x200" as th %}
-    <a href="{{ extension.screenshot.image.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
+    <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
     {% endthumbnail %}
     {% endif %}
 
