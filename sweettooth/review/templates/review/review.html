@@ -20,6 +20,14 @@
     <p class="description">
       {{ extension.description }}
     </p>
+
+    <dl>
+      {% if extension.url %}
+      <dt>Extension Homepage</dt>
+      <dd><a href="{{ extension.url }}" id="extension_url">{{ extension.url }}</a></dd>
+      {% endif %}
+    </dl>
+
     <hr>
 
     No comments.
