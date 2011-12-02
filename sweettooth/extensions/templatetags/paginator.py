@@ -13,6 +13,7 @@ def paginator(page_obj, context=3):
     lines = []
 
     if page_obj.has_previous():
+        lines.append(u'<a class="number prev" href="?page=%d">Previous</a>' % (number-1,))
         lines.append(u'<a class="number first" href="?page=1">1</a>')
         if number-context > 2:
             lines.append(u'<span class="ellipses">...</span>')
@@ -25,5 +26,6 @@ def paginator(page_obj, context=3):
     if page_obj.has_next():
         for i in context_right:
             lines.append(u'<a class="next number" href="?page=%d">%d</a>' % (i, i))
+        lines.append(u'<a class="number prev" href="?page=%d">Next</a>' % (number+1,))
 
     return mark_safe(u'\n'.join(lines))
