@@ -6,7 +6,7 @@
   {% get_comment_list for extension as comments %}
   {% for comment in comments %}
   <div class="comment">
-    <img src="{% gravatar_url comment.user_email %}" class="gravatar">
+    <img src="{% gravatar_url comment.email %}" class="gravatar">
     <div class="rating-author">
       <div class="rating">
         {% rating comment.rating 5 %}
