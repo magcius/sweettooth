@@ -238,6 +238,11 @@ li.extension:last-child {
     font-size: 14pt;
 }
 
+.extension .description,
+.extension dl {
+    margin-left: 48px;
+}
+
 .extension .screenshot {
     float: right;
     display: block;
@@ -315,7 +320,7 @@ li.extension:last-child {
 .extension dt, .extension dd {
     font-size: 1em;
     display: inline-block;
-    padding: 0 1em;
+    padding: 0 1em 0 0;
 }
 
 .extension .report {
