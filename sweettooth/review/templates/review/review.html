@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load thumbnail %}
 
-{% block title %}Review "{{ version.extension.name }}" - {{ block.super }}{% endblock %}
+{% block title %}Review "{{ extension.name }}" - {{ block.super }}{% endblock %}
 
 {% block body %}
 <h2 class="expandy_header expanded"> Details Page Preview </h2>
@@ -62,7 +62,7 @@
     </tbody>
   </table>
   {% else %}
-  <p>There are no previous versions of <span>{{ version.extension.name }}</span></p>
+  <p>There are no previous versions of <span>{{ extension.name }}</span></p>
   {% endif %}
 </div>
 
