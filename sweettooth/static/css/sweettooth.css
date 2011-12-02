@@ -155,7 +155,7 @@ hr.bottom_shadow {
 
 .paginator .number {
     display: inline-block;
-    width: 1.5em;
+    min-width: 1.5em;
     text-align: center;
     margin: 0 4px;
 }
