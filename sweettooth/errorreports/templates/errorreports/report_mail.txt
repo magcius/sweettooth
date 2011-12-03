@@ -2,7 +2,7 @@ Your extension, "{{ extension.name }}" has received an error report from {{ repo
 
 {{ report.comment }}
 
-{% if report.can_cantact %}
+{% if report.can_contact %}
 Please email the reporter back to respond. The user's address is:
 
 {{ report.user.email }}
