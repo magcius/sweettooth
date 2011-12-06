@@ -279,7 +279,9 @@ function($, messages, dbusProxy, extensionUtils) {
             var uuid = $extension.data('uuid');
 
             $extension.bind('out-of-date', function() {
-                messages.addError("This extension is incompatible with your version of GNOME.");
+                var svm = $extension.data('svm');
+                var nextHighestVersion = extensionUtils.findNextHighestVersion(svm, dbusProxy.ShellVersion);
+                messages.addError("This extension is incompatible with your version of GNOME. Please upgrade to GNOME " + nextHighestVersion);
             });
 
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {

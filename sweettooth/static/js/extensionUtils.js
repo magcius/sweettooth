@@ -67,6 +67,30 @@ define([], function() {
         }
     };
 
+    module.findNextHighestVersion = function(map, current) {
+        function saneParseInt(p) {
+            return parseInt(p, 10);
+        }
+
+        var currentParts = current.split('.').map(saneParseInt);
+        var nextHighestParts = [Infinity, Infinity, Infinity];
+
+        $.each(map, function(key) {
+            var parts = key.split('.').map(saneParseInt);
+
+            if (parts[0] >= currentParts[0] &&
+                parts[1] >= currentParts[1] &&
+                ((parts[2] !== undefined && currentParts[2] !== undefined && parts[2] >= currentParts[2])
+                 || parts[2] === undefined || currentParts[2] === undefined) &&
+                parts[0] < nextHighestParts[0] &&
+                parts[1] < nextHighestParts[1] &&
+                ((parts[2] !== undefined && parts[2] < nextHighestParts[2]) || parts[2] === undefined))
+                nextHighestParts = parts;
+        });
+
+        return nextHighestParts.join('.');
+    };
+
     return module;
 
 });
