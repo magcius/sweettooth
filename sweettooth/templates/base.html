@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/static/css/sweettooth.css" />
     <link rel="shortcut icon" href="/static/images/favicon.png" />
+    <link rel="alternate" type="application/rss+xml"
+          href="{% url extensions-rss-feed %}" title="Latest extensions in GNOME Shell Extensions" />
     {% block head %} {% endblock %}
     <title>{% block title %}GNOME Shell Extensions{% endblock %}</title>
     <script>

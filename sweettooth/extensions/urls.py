@@ -3,7 +3,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.views.generic.simple import direct_to_template
 from django.views.generic.list_detail import object_list
 
-from extensions import views, models
+from extensions import views, models, feeds
 
 upload_patterns = patterns('',
     url(r'^$', views.upload_file, dict(pk=None), name='extensions-upload-file'),
@@ -53,6 +53,8 @@ urlpatterns = patterns('',
         views.extension_view, dict(slug=None), name='extensions-detail'),
 
     url(r'^local/', direct_to_template, dict(template='extensions/local.html'), name='extensions-local'),
+
+    url(r'^rss/', LatestExtensionsFeed(), name='extensions-rss-feed'),
 
     url(r'^upload/', include(upload_patterns)),
     url(r'^ajax/', include(ajax_patterns)),
