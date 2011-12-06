@@ -9,7 +9,7 @@ class LatestExtensionsFeed(Feed):
     description = "The latest extensions in GNOME Shell Extensions"
 
     def items(self):
-        return Extension.objects.visible().order_by('pk')[-10:]
+        return Extension.objects.visible().order_by('-pk')[:10]
 
     def item_title(self, item):
         return item.name
