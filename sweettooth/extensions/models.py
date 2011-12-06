@@ -92,6 +92,11 @@ class Extension(models.Model):
             return True
         return False
 
+    def first_line_of_description(self):
+        if not self.description:
+            return ""
+        return self.description.splitlines()[0]
+
     def clean(self):
         from django.core.exceptions import ValidationError
 

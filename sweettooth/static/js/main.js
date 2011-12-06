@@ -8,7 +8,7 @@ require(['jquery', 'messages', 'extensions',
 
     $.ajaxSettings.headers['X-CSRFToken'] = $.cookie('csrftoken');
 
-    $.fn.csrfEditable = function(url) {
+    $.fn.csrfEditable = function(url, options) {
         return $(this).each(function() {
             var $elem = $(this);
 
@@ -18,14 +18,15 @@ require(['jquery', 'messages', 'extensions',
                 }
             }
 
-            $elem.editable(url, { select: true,
+            $elem.editable(url, $.merge(options,
+                                { select: true,
                                   ajaxoptions: { error: error, dataType: 'json' },
                                   callback: function(result, settings) {
                                       elem.text(result);
                                   },
                                   data: function(string, settings) {
                                       return $.trim(string);
-                                  }});
+                                  }}));
             $elem.addClass("editable");
         });
     };

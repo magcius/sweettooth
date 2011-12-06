@@ -121,7 +121,8 @@
 {% endblock %}
 
 {% block document-ready %}{{ block.super }}
-    $("#extension_name, #extension_description, #extension_url").csrfEditable("{% url extensions-ajax-inline pk=extension.pk %}");
+    $("#extension_name, #extension_url").csrfEditable("{% url extensions-ajax-inline pk=extension.pk %}");
+    $("#extension_description").csrfEditable("{% url extensions-ajax-inline pk=extension.pk %}", {"type": "textarea"});
     require(['uploader'], function() {
         $(".screenshot.upload").uploadify("{% url extensions-ajax-screenshot pk=extension.pk %}?geometry=300x200");
         $(".icon.upload").uploadify("{% url extensions-ajax-icon pk=extension.pk %}");
