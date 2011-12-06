@@ -18,7 +18,7 @@ require(['jquery', 'messages', 'extensions',
                 }
             }
 
-            $elem.editable(url, $.merge(options,
+            $elem.editable(url, $.merge(options || {},
                                 { select: true,
                                   ajaxoptions: { error: error, dataType: 'json' },
                                   callback: function(result, settings) {
