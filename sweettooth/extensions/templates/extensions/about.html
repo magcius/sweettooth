@@ -81,6 +81,39 @@ you will need to apply to get WebKit support working include:
 <li><a href="http://git.gnome.org/browse/gnome-shell/commit/?id=9bc1a68fe48a0b1e8f377597387baea7a90a3a5b">browser-plugin: Use g_strndup to get a string property</a></li>
 <li><a href="http://git.gnome.org/browse/gnome-shell/commit/?id=ab6a7773ce0bf0b6614fe81acc26521739723853">browser-plugin: Make sure to use the UTF8Length parameter</a></li>
 </ul>
+<h2 id="uninstall"> How do I uninstall my extensions? </h2>
+<p>
+Unfortunately, there are some bugs in GNOME 3.2 that prevented uninstallation
+from working properly for some extensions. Some distributions have already
+included patches to ensure that extensions can be properly installed by GNOME
+Shell Extensions. To uninstall an extension manually, remove the extension's
+directory, and then restart the Shell. The extension is stored
+in <code>~/.local/share/gnome-shell/extensions</code>. To restart the Shell,
+open the run dialog with <kbd>Alt+F2</kbd>, and enter <code>restart</code>.
+</p>
+<p>
+Distributions that we know of that include such patches to GNOME Shell to
+provide a better uninstallation experience include:
+</p>
+<ul>
+<li><a href="http://www.mageia.org/">Maegia</a></li>
+</ul>
+<p>
+If you maintain your distribution's packages for GNOME 3.2, the current set of
+patches that you need to make extension uninstallation work correctly include:
+</p>
+<ul>
+<li><a href="http://git.gnome.org/browse/gnome-shell/commit/?id=ef49670ae491993cbfcfe666d389485c3a7c8adb">fileUtils: Fix recursively delete dir</a></li>
+<li><a href="http://git.gnome.org/browse/gnome-shell/commit/?id=bbb83656bf83c9740fe68db7e35e05ea4f129b01">extensionSystem: Set the proper 'enable' and 'type' parameters.</a></li>
+</ul>
+<h2> How do I update my extensions? </h2>
+<p>
+To update your extension to the latest version, unfortunately you have to
+uninstall and reinstall the extension. Due to bugs in GNOME 3.2, you may need
+to uninstall extensions manually. See <a href="#uninstall">How do I uninstall
+extensions?</a> for more information. GNOME 3.4 will include features that will
+make sure your extensions can be updated automatically for you.
+</p>
 
 {% endblock %}
 
