@@ -82,8 +82,6 @@ require(['jquery', 'messages', 'extensions',
                               type: 'POST' });
             df.done(function() {
                 messages.addInfo("Your extension has been submitted.").hide().slideDown();
-                $elem.attr('disabled', true);
-                $('h3, p.description').csrfEditable('disable').removeClass('editable');
             });
 
             return false;
