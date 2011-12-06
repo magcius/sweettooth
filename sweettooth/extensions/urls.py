@@ -54,7 +54,7 @@ urlpatterns = patterns('',
 
     url(r'^local/', direct_to_template, dict(template='extensions/local.html'), name='extensions-local'),
 
-    url(r'^rss/', LatestExtensionsFeed(), name='extensions-rss-feed'),
+    url(r'^rss/', feeds.LatestExtensionsFeed(), name='extensions-rss-feed'),
 
     url(r'^upload/', include(upload_patterns)),
     url(r'^ajax/', include(ajax_patterns)),
