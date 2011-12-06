@@ -1,4 +1,5 @@
 
+from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -88,6 +89,36 @@ def build_shell_version_map(versions):
                                       version = version.version)
 
     return shell_version_map
+
+def extensions_list(request):
+    queryset = models.Extension.objects.visible()
+    if request.GET.get('sort', '') == 'recent':
+        queryset = queryset.order_by('-pk')
+    else:
+        queryset = queryset.order_by('name')
+
+    paginator = Paginator(queryset, 10)
+    if not page:
+        page = request.GET.get('page', 1)
+    try:
+        page_number = int(page)
+    except ValueError:
+        if page == 'last':
+            page_number = paginator.num_pages
+        else:
+            # Page is not 'last', nor can it be converted to an int.
+            raise Http404()
+    try:
+        page_obj = paginator.page(page_number)
+    except InvalidPage:
+        raise Http404()
+
+    context = dict(paginator=paginator,
+                   page_obj=page_obj,
+                   is_paginated=page_obj.has_other_pages(),
+                   extension_list=page_obj.object_list)
+
+    return render(request, 'extensions/list.html', context)
 
 @model_view(models.Extension)
 def extension_view(request, obj, **kwargs):
