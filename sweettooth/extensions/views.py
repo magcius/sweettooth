@@ -98,8 +98,7 @@ def extensions_list(request):
         queryset = queryset.order_by('name')
 
     paginator = Paginator(queryset, 10)
-    if not page:
-        page = request.GET.get('page', 1)
+    page = request.GET.get('page', 1)
     try:
         page_number = int(page)
     except ValueError:
