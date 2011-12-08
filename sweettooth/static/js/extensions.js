@@ -283,10 +283,10 @@ function($, messages, dbusProxy, extensionUtils) {
                 var nhvOperation = extensionUtils.findNextHighestVersion(svm, dbusProxy.ShellVersion);
                 if (nhvOperation.operation === 'upgrade' &&
                     nhvOperation.stability === 'stable') {
-                    messages.addError("This extension is incompatible with your version of GNOME. Please upgrade to GNOME " + nextHighestVersion);
+                    messages.addError("This extension is incompatible with your version of GNOME. Please upgrade to GNOME " + nhvOperation.version);
                 } else if (nhvOperation.operation === 'upgrade' &&
                            nhvOperation.stability === 'unstable') {
-                    messages.addError("This extension is incompatible with your version of GNOME. This extension supports the GNOME unstable release, " + nextHighestVersion);
+                    messages.addError("This extension is incompatible with your version of GNOME. This extension supports the GNOME unstable release, " + nhvOperation.version);
                 } else if (nhvOperation.operation === 'downgrade') {
                     messages.addError("This extension is incompatible with your version of GNOME.");
                 }
