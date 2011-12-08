@@ -22,7 +22,7 @@ require(['jquery', 'messages', 'extensions',
                                 { select: true,
                                   ajaxoptions: { error: error, dataType: 'json' },
                                   callback: function(result, settings) {
-                                      elem.text(result);
+                                      $elem.text(result);
                                   },
                                   data: function(string, settings) {
                                       return $.trim(string);
