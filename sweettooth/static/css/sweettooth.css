@@ -200,7 +200,7 @@ li.extension:last-child {
 }
 
 .extension.out-of-date {
-    opacity: 0.8;
+    opacity: 0.5;
 }
 
 .extension .extension-name {
