@@ -80,8 +80,8 @@ define([], function() {
 
             if (parts[0] >= currentParts[0] &&
                 parts[1] >= currentParts[1] &&
-                ((parts[2] !== undefined && currentParts[2] !== undefined && parts[2] >= currentParts[2])
-                 || parts[2] === undefined || currentParts[2] === undefined) &&
+                ((parts[2] !== undefined && parts[2] >= currentParts[2])
+                 || parts[2] === undefined) &&
                 parts[0] < nextHighestParts[0] &&
                 parts[1] < nextHighestParts[1] &&
                 ((parts[2] !== undefined && parts[2] < nextHighestParts[2]) || parts[2] === undefined))

@@ -32,10 +32,10 @@ require(['extensionUtils', 'jquery', 'test/qunit'], function(extensionUtils) {
 
     var findNextHighestVersion = extensionUtils.findNextHighestVersion;
     test("findNextHighestVersion", function() {
-        equal(findNextHighestVersion({ "3.2": true }, "3.0"), "3.2");
+        equal(findNextHighestVersion({ "3.2": true }, "3.0"), "3.2.0");
         equal(findNextHighestVersion({ "3.2.1": true }, "3.0"), "3.2.1");
         equal(findNextHighestVersion({ "3.2.1": true, "3.0": true }, "3.2"), "3.2.1");
-        equal(findNextHighestVersion({ "3.3": true, "3.0": true }, "3.2"), "3.3");
+        equal(findNextHighestVersion({ "3.3": true, "3.0": true }, "3.2"), "3.3.0");
         equal(findNextHighestVersion({ "3.2.1": true, "3.0": true, "3.3.1": true }, "3.2"), "3.2.1");
     });
 });
