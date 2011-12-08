@@ -20,6 +20,7 @@ require(['jquery', 'messages', 'extensions',
 
             $elem.editable(url, $.extend(options || {},
                                 { select: true,
+                                  onblur: 'submit',
                                   ajaxoptions: { error: error, dataType: 'json' },
                                   callback: function(result, settings) {
                                       $elem.text(result);
