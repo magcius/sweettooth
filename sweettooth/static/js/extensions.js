@@ -280,8 +280,16 @@ function($, messages, dbusProxy, extensionUtils) {
 
             $extension.bind('out-of-date', function() {
                 var svm = $extension.data('svm');
-                var nextHighestVersion = extensionUtils.findNextHighestVersion(svm, dbusProxy.ShellVersion);
-                messages.addError("This extension is incompatible with your version of GNOME. Please upgrade to GNOME " + nextHighestVersion);
+                var nhvOperation = extensionUtils.findNextHighestVersion(svm, dbusProxy.ShellVersion);
+                if (nhvOperation.operation === 'upgrade' &&
+                    nhvOperation.stability === 'stable') {
+                    messages.addError("This extension is incompatible with your version of GNOME. Please upgrade to GNOME " + nextHighestVersion);
+                } else if (nhvOperation.operation === 'upgrade' &&
+                           nhvOperation.stability === 'unstable') {
+                    messages.addError("This extension is incompatible with your version of GNOME. This extension supports the GNOME unstable release, " + nextHighestVersion);
+                } else if (nhvOperation.operation === 'downgrade') {
+                    messages.addError("This extension is incompatible with your version of GNOME.");
+                }
             });
 
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {

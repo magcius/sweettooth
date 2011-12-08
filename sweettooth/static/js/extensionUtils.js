@@ -88,7 +88,16 @@ define([], function() {
                 nextHighestParts = parts;
         });
 
-        return nextHighestParts.join('.');
+        // In this case, it's a downgrade.
+        if (nextHighestParts[0] === Infinity ||
+            nextHighestParts[1] === Infinity ||
+            nextHighestParts[2] === Infinity) {
+            return {'operation': 'downgrade'};
+        }
+
+        return {'operation': 'upgrade',
+                'stability': (nextHighestParts[1] % 2 === 0) ? 'stable' : 'unstable',
+                'version': nextHighestParts.join('.')};
     };
 
     return module;
