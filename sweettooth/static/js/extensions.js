@@ -302,7 +302,7 @@ function($, messages, dbusProxy, extensionUtils) {
         var svm = $(this).data('svm');
         var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
         if (vpk === null) {
-            $(this).addClass('out-of-date').attr('title', "This extension is out of date").tipsy({ gravity: 's', fade: true });
+            $(this).addClass('out-of-date').attr('title', "This extension is incompatible with your version of GNOME").tipsy({ gravity: 's', fade: true });
         }
     });
 
