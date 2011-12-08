@@ -301,8 +301,9 @@ function($, messages, dbusProxy, extensionUtils) {
     $('li.extension').each(function() {
         var svm = $(this).data('svm');
         var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-        if (vpk === null)
-            $(this).addClass('out-of-date');
+        if (vpk === null) {
+            $(this).addClass('out-of-date').attr('title', "This extension is out of date").tipsy({ gravity: 's', fade: true });
+        }
     });
 
 });
