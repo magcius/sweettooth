@@ -298,4 +298,11 @@ function($, messages, dbusProxy, extensionUtils) {
         });
     };
 
+    $('li.extension').each(function() {
+        var svm = $(this).data('svm');
+        var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+        if (vpk === null)
+            $(this).addClass('out-of-date');
+    });
+
 });

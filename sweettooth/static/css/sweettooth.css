@@ -199,6 +199,10 @@ li.extension:last-child {
     position: relative;
 }
 
+.extension.out-of-date {
+    opacity: 0.8;
+}
+
 .extension .extension-name {
     margin-left: 48px;
     font-size: 2em;
