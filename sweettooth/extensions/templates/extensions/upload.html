@@ -1,4 +1,14 @@
 {% extends "base.html" %}
+
+{% block extra-messages %}
+  {{ block.super }}
+  {% for error in errors %}
+  <p class="message error">
+    {{ error }}
+  </p>
+  {% endfor %}
+{% endblock %}
+
 {% block body %}
 <div class="step upload">
   <h2 class="steptitle">Step <span>1</span></h2>

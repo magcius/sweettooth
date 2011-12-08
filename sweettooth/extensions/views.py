@@ -1,4 +1,5 @@
 
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -329,6 +330,8 @@ def upload_file(request, pk):
         if extension.creator != request.user:
             return HttpResponseForbidden()
 
+    errors = []
+
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -361,20 +364,30 @@ def upload_file(request, pk):
             version.parse_metadata_json(metadata)
 
             extension.creator = request.user
-            extension.save()
 
-            version.extension = extension
-            version.source = file_source
-            version.status = models.STATUS_NEW
-            version.save()
+            try:
+                extension.full_clean()
+            except ValidationError, e:
+                is_valid = False
+                errors = e.messages
+            else:
+                is_valid = True
 
-            version.replace_metadata_json()
+            if is_valid:
+                extension.save()
 
-            return redirect('extensions-version-detail',
-                            pk=version.pk,
-                            ext_pk=extension.pk,
-                            slug=extension.slug)
-    else:
-        form = UploadForm()
+                version.extension = extension
+                version.source = file_source
+                version.status = models.STATUS_NEW
+                version.save()
 
-    return render(request, 'extensions/upload.html', dict(form=form))
+                version.replace_metadata_json()
+
+                return redirect('extensions-version-detail',
+                                pk=version.pk,
+                                ext_pk=extension.pk,
+                                slug=extension.slug)
+
+    form = UploadForm()
+    return render(request, 'extensions/upload.html', dict(form=form,
+                                                          errors=errors))
