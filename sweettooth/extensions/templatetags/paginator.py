@@ -29,7 +29,7 @@ def paginator(page_obj, context=3):
             lines.append(u'<a class="next number" href="?page=%d">%d</a>' % (i, i))
 
         if num_pages - (number+context) > 1:
-            lines.append(u'<span class="ellipses">...</span>"')
+            lines.append(u'<span class="ellipses">...</span>')
 
         lines.append(u'<a class="number first" href="?page=%d">%d</a>' % (num_pages, num_pages))
         lines.append(u'<a class="number prev" href="?page=%d">Next</a>' % (number+1,))
