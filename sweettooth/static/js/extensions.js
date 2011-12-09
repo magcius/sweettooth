@@ -300,6 +300,9 @@ function($, messages, dbusProxy, extensionUtils) {
 
     $('li.extension').each(function() {
         var svm = $(this).data('svm');
+        if (svm === null)
+            return;
+
         var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
         if (vpk === null) {
             $(this).addClass('out-of-date').attr('title', "This extension is incompatible with your version of GNOME").tipsy({ gravity: 's', fade: true });
