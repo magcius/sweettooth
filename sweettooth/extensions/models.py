@@ -51,7 +51,7 @@ class Extension(models.Model):
     slug = autoslug.AutoSlugField(populate_from="name")
     creator = models.ForeignKey(User, db_index=True)
     description = models.TextField()
-    url = models.URLField(verify_exists=False)
+    url = models.URLField(verify_exists=False, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
