@@ -74,23 +74,6 @@ def shell_update(request):
 
     return operations
 
-def build_shell_version_map(versions):
-    shell_version_map = {}
-    for version in versions:
-        for shell_version in version.shell_versions.all():
-            key = shell_version.version_string
-            if key not in shell_version_map:
-                shell_version_map[key] = version
-
-            if version.version > shell_version_map[key].version:
-                shell_version_map[key] = version
-
-    for key, version in shell_version_map.iteritems():
-        shell_version_map[key] = dict(pk = version.pk,
-                                      version = version.version)
-
-    return shell_version_map
-
 def extensions_list(request):
     queryset = models.Extension.objects.visible()
     if request.GET.get('sort', '') == 'recent':
@@ -141,9 +124,7 @@ def extension_view(request, obj, **kwargs):
     else:
         template_name = "extensions/detail.html"
 
-    shell_version_map = build_shell_version_map(versions)
-
-    context = dict(shell_version_map = json.dumps(shell_version_map),
+    context = dict(shell_version_map = obj.visible_shell_version_map_json,
                    extension = extension,
                    all_versions = extension.versions.order_by('-version'),
                    is_visible = True,
@@ -263,7 +244,7 @@ def ajax_details(extension):
                 creator = extension.creator.username,
                 link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
                 icon = extension.icon.url,
-                shell_version_map = build_shell_version_map(extension.visible_versions))
+                shell_version_map = extension.visible_shell_version_map_json)
 
 @ajax_view
 def ajax_details_view(request):
@@ -318,7 +299,7 @@ def ajax_set_status_view(request, newstatus):
     context = dict(version=version,
                    extension=extension)
 
-    return dict(svm=build_shell_version_map(extension.visible_versions),
+    return dict(svm=extension.visible_shell_version_map_json,
                 mvs=render_to_string('extensions/multiversion_status.html', context))
 
 @login_required

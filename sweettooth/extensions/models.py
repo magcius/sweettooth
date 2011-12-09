@@ -45,6 +45,23 @@ class ExtensionManager(models.Manager):
     def visible(self):
         return self.filter(versions__status__in=VISIBLE_STATUSES).distinct()
 
+def build_shell_version_map(versions):
+    shell_version_map = {}
+    for version in versions:
+        for shell_version in version.shell_versions.all():
+            key = shell_version.version_string
+            if key not in shell_version_map:
+                shell_version_map[key] = version
+
+            if version.version > shell_version_map[key].version:
+                shell_version_map[key] = version
+
+    for key, version in shell_version_map.iteritems():
+        shell_version_map[key] = dict(pk = version.pk,
+                                      version = version.version)
+
+    return shell_version_map
+
 class Extension(models.Model):
     name = models.CharField(max_length=200)
     uuid = models.CharField(max_length=200, unique=True, db_index=True)
@@ -108,6 +125,14 @@ class Extension(models.Model):
         for version in self.versions.all():
             if version.source:
                 version.replace_metadata_json()
+
+    @property
+    def visible_shell_version_map(self):
+        return build_shell_version_map(self.visible_versions)
+
+    @property
+    def visible_shell_version_map_json(self):
+        return json.dumps(self.visible_shell_version_map)
 
 class InvalidShellVersion(Exception):
     pass
