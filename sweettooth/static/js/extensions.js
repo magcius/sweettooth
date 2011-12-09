@@ -300,7 +300,7 @@ function($, messages, dbusProxy, extensionUtils) {
 
     $('li.extension').each(function() {
         var svm = $(this).data('svm');
-        if (svm === null)
+        if (!svm)
             return;
 
         var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
