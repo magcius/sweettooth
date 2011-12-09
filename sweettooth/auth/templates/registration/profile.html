@@ -18,7 +18,9 @@
   <ul>
     {% for extension in extensions %}
     <li class="extension profile">
-      <h4 class="extension-name"><a href="{% url extensions-detail pk=extension.pk %}">      <img src="{{ extension.icon.url }}" class="icon">{{ extension.name }}</a></h4>
+      <h4 class="extension-name"><a href="{% url extensions-detail pk=extension.pk %}">
+          <img src="{{ extension.icon.url }}" class="icon">{{ extension.name }}
+      </a></h4>
       <p class="description">
         {{ extension.description }}
       </p>
