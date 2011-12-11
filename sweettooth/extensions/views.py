@@ -312,6 +312,7 @@ def upload_file(request, pk):
             return HttpResponseForbidden()
 
     errors = []
+    extra_debug = None
 
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
@@ -351,6 +352,7 @@ def upload_file(request, pk):
             except ValidationError, e:
                 is_valid = False
                 errors = e.messages
+                extra_debug = repr(e)
             else:
                 is_valid = True
 
@@ -371,4 +373,5 @@ def upload_file(request, pk):
 
     form = UploadForm()
     return render(request, 'extensions/upload.html', dict(form=form,
-                                                          errors=errors))
+                                                          errors=errors,
+                                                          extra_debug=extra_debug))
