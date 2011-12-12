@@ -307,8 +307,10 @@ def ajax_set_status_view(request, newstatus):
 def upload_file(request, pk):
     if pk is None:
         extension = models.Extension(creator=request.user)
+        extension_is_new = True
     else:
         extension = models.Extension.objects.get(pk=pk)
+        extension_is_new = False
         if extension.creator != request.user:
             return HttpResponseForbidden()
 
@@ -359,6 +361,10 @@ def upload_file(request, pk):
                                         "starts with <pre>http://</pre>")]
                 else:
                     errors = e.messages
+
+                version.delete()
+                if extension_is_new:
+                    extension.delete()
 
                 extra_debug = repr(e)
             else:
