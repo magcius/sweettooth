@@ -357,8 +357,9 @@ def upload_file(request, pk):
                 if getattr(e, 'message_dict', None) and 'url' in e.message_dict:
                     errors = [mark_safe("You have an invalid URL. Make sure your URL "
                                         "starts with <pre>http://</pre>")]
+                else:
+                    errors = e.messages
 
-                errors = e.messages
                 extra_debug = repr(e)
             else:
                 is_valid = True
