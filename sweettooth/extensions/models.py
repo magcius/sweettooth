@@ -67,7 +67,7 @@ class Extension(models.Model):
     uuid = models.CharField(max_length=200, unique=True, db_index=True)
     slug = autoslug.AutoSlugField(populate_from="name")
     creator = models.ForeignKey(User, db_index=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     url = models.URLField(verify_exists=False, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -125,7 +125,7 @@ class Extension(models.Model):
         for version in self.versions.all():
             if version.source:
                 version.replace_metadata_json()
-
+ 
     @property
     def visible_shell_version_map(self):
         return build_shell_version_map(self.visible_versions)
