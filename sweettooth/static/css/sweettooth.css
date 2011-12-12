@@ -148,9 +148,10 @@ hr.bottom_shadow {
 
 .paginator {
     display: block;
-    background-color: #ddd;
-    border-radius: 8px;
-    padding: 2px;
+    background-color: #EEEEEC;
+    border-radius: 3px;
+    border: 1px solid #BABDB6;
+    padding: 3px;
 }
 
 .paginator .number {
@@ -170,7 +171,8 @@ hr.bottom_shadow {
 
 .paginator .number.current {
     background-color: white;
-    border-radius: 6px;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 3px;
 }
 
 /* Extension view */
