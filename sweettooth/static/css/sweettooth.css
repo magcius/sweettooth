@@ -477,31 +477,40 @@ span.active, span.approve {
 /* ==================================================================== */
 
 p.message {
+    min-height: 42px;
     display: block;
     padding: .5em;
     margin: 0 auto;
     padding-left: 72px;
     background-repeat: no-repeat;
     background-position: 16px center;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(33, 33, 33, 0.3);
+    border-top: 0;
+}
+
+p.message:first-child {
+    border-radius: 6px 6px 0 0;
+    border-top: 1px solid rgba(33, 33, 33, 0.3);
+}
+
+p.message:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 p.message.error {
     background-color: #fcc;
     background-image: url(../images/error.png);
-    border-bottom: 1px solid #b44;
 }
 
 p.message.info {
     background-color: #ccf;
     background-image: url(../images/info.png);
-    border-bottom: 1px solid #aad;
 }
 
 p.message.warning {
     background-color: #EBDE71;
     background-image: url(../images/warning.png);
-    border-bottom: 1px solid #D1C466;
 }
 
 #message_container {
