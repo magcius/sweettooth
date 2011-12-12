@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.utils.safestring import mark_safe
 from django.utils import simplejson as json
 from sorl.thumbnail.shortcuts import get_thumbnail
 
@@ -351,6 +352,12 @@ def upload_file(request, pk):
                 extension.full_clean()
             except ValidationError, e:
                 is_valid = False
+
+                # Output a specialized error message for a common mistake:
+                if getattr(e, 'message_dict', None) and 'url' in e.message_dict:
+                    errors = [mark_safe("You have an invalid URL. Make sure your URL "
+                                        "starts with <pre>http://</pre>")]
+
                 errors = e.messages
                 extra_debug = repr(e)
             else:
