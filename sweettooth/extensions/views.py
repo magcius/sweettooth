@@ -323,7 +323,7 @@ def upload_file(request, pk):
                 metadata = models.parse_zipfile_metadata(file_source)
                 uuid = metadata['uuid']
             except (models.InvalidExtensionData, KeyError), e:
-                messages.error(request, "Invalid extension data.")
+                messages.error(request, "Invalid extension data: %s" % (e.message,))
 
                 if pk is not None:
                     return redirect('extensions-upload-file', pk=pk)
