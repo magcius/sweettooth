@@ -205,7 +205,7 @@ li.extension:last-child {
 
 .extension .extension-name {
     margin-left: 48px;
-    font-size: 2em;
+    font-size: 1.3em;
 }
 
 .extension .extension-name, .extension .extension-name a {
@@ -239,7 +239,7 @@ li.extension:last-child {
 }
 
 .extension .description {
-    font-size: 14pt;
+    font-size: 1.2em;
 }
 
 .extension .description,
