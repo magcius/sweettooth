@@ -57,7 +57,9 @@ define(['jquery', 'jquery.hashchange'], function($) {
                 if ($beforePaginator)
                     $beforePaginator.detach();
                 if ($afterPaginator)
-                $afterPaginator.detach();
+                    $afterPaginator.detach();
+
+                $loadingPageContent.detach();
 
                 numPages = result.numpages;
 
