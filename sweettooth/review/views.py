@@ -17,12 +17,13 @@ from django.template import Context
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.utils import simplejson as json
+from django.views.decorators.http import require_POST
 
 from review.diffview import get_chunks_html, split_lines, NoWrapperHtmlFormatter
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
 
-from decorators import ajax_view, model_view, post_only_view
+from decorators import ajax_view, model_view
 from utils import render
 
 IMAGE_TYPES = {
@@ -222,7 +223,7 @@ def download_zipfile(request, pk):
 
     return redirect(version.source.url)
 
-@post_only_view
+@require_POST
 @model_view(models.ExtensionVersion)
 def submit_review_view(request, obj):
     extension, version = obj.extension, obj

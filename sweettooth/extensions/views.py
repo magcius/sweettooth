@@ -9,12 +9,13 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils import simplejson as json
+from django.views.decorators.http import require_POST
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 from extensions import models
 from extensions.forms import UploadForm
 
-from decorators import ajax_view, model_view, post_only_view
+from decorators import ajax_view, model_view
 from utils import render
 
 def shell_download(request, uuid):
@@ -35,7 +36,7 @@ def shell_download(request, uuid):
     return redirect(version.source.url)
 
 @ajax_view
-@post_only_view
+@require_POST
 def shell_update(request):
     installed = json.loads(request.POST['installed'])
     operations = {}
@@ -185,7 +186,7 @@ def extension_version_view(request, obj, **kwargs):
     return render(request, template_name, context)
 
 @ajax_view
-@post_only_view
+@require_POST
 @model_view(models.ExtensionVersion)
 def ajax_submit_and_lock_view(request, obj):
     if not obj.extension.user_can_edit(request.user):
@@ -200,7 +201,7 @@ def ajax_submit_and_lock_view(request, obj):
     models.submitted_for_review.send(sender=request, request=request, version=obj)
 
 @ajax_view
-@post_only_view
+@require_POST
 @model_view(models.Extension)
 def ajax_inline_edit_view(request, obj):
     if not obj.user_can_edit(request.user):
@@ -225,7 +226,7 @@ def ajax_inline_edit_view(request, obj):
     return value
 
 @ajax_view
-@post_only_view
+@require_POST
 @model_view(models.Extension)
 def ajax_upload_screenshot_view(request, obj):
     obj.screenshot = request.FILES['file']
@@ -233,7 +234,7 @@ def ajax_upload_screenshot_view(request, obj):
     return get_thumbnail(obj.screenshot, request.GET['geometry']).url
 
 @ajax_view
-@post_only_view
+@require_POST
 @model_view(models.Extension)
 def ajax_upload_icon_view(request, obj):
     obj.icon = request.FILES['file']

@@ -12,7 +12,7 @@ from errorreports.models import ErrorReport, error_reported
 from errorreports.forms import ErrorReportForm
 from extensions.models import Extension
 
-from decorators import post_only_view, model_view
+from decorators import model_view
 from utils import render
 
 @model_view(Extension.objects.visible())

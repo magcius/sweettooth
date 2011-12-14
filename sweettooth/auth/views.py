@@ -3,11 +3,12 @@ from django.contrib.auth import models
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
 from review.models import CodeReview
 from extensions.models import Extension
 
-from decorators import ajax_view, post_only_view
+from decorators import ajax_view
 from utils import render
 
 def profile(request, user):
@@ -28,7 +29,7 @@ def profile(request, user):
                        is_editable=is_editable))
 
 @ajax_view
-@post_only_view
+@require_POST
 @login_required
 def ajax_change_display_name(request):
     if request.POST['id'] != 'new_display_name':

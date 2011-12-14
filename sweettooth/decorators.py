@@ -15,14 +15,6 @@ def model_view(model):
         return new_view
     return inner
 
-def post_only_view(view):
-    @functools.wraps(view)
-    def new_view(request, **kw):
-        if request.method != 'POST':
-            return HttpResponseForbidden()
-        return view(request, **kw)
-    return new_view
-
 def ajax_view(view):
     @functools.wraps(view)
     def new_view(request, **kw):
