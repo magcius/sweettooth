@@ -40,6 +40,9 @@ define(['jquery', 'jquery.hashchange'], function($) {
         if (context === undefined)
             context = 3;
 
+        var $loadingPageContent = $('<div>', {'class': 'loading-page'}).
+            text("Loading page... please wait");
+
         var $elem = $(this);
         var numPages = 0;
         var $beforePaginator = null;
@@ -47,6 +50,7 @@ define(['jquery', 'jquery.hashchange'], function($) {
 
         function loadPage() {
             $elem.addClass('loading');
+            $loadingPageContent.prependTo($elem);
 
             $.ajax({
                 url: url,

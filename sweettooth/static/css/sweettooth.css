@@ -178,6 +178,28 @@ hr.bottom_shadow {
 /* Extension view */
 /* ==================================================================== */
 
+#extensions-list {
+    position: relative;
+}
+
+#extensions-list.loading {
+    opacity: 0.5;
+}
+
+#extensions-list .loading-page {
+    background: #EEEEEC;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    padding: .5em;
+    text-align: center;
+
+    position: absolute;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+}
+
 ul.extensions {
     margin-top: 0;
 }
