@@ -7,6 +7,7 @@ except ImportError:
 import uuid
 from zipfile import ZipFile, BadZipfile
 
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch import Signal
@@ -133,6 +134,10 @@ class Extension(models.Model):
     @property
     def visible_shell_version_map_json(self):
         return json.dumps(self.visible_shell_version_map)
+
+    def get_absolute_url(self):
+        return reverse('extensions-detail', kwargs=dict(pk=self.pk,
+                                                        slug=self.slug))
 
 class InvalidShellVersion(Exception):
     pass
