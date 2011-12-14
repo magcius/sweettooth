@@ -1,35 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-  {% load paginator %}
-  {% if page_obj.has_other_pages %}
-  <div class="paginator">
-    {% paginator page_obj %}
+  <div id="extensions-list">
   </div>
-  {% endif %}
-
-  {% if extension_list %}
-  <ul class="extensions">
-  {% for extension in extension_list %}
-    <li class="extension" data-svm="{{ extension.visible_shell_version_map_json }}">
-      <h3 class="extension-name"><a href="{% url extensions-detail pk=extension.pk %}" class="title-link"><img src="{{ extension.icon.url }}" class="icon">{{ extension.name }}</a></h3>
-      <span class="author">by <a href="{% url auth-profile user=extension.creator.username %}">{{ extension.creator }}</a></span>
-      <p class="description">
-        {{ extension.first_line_of_description }}
-      </p>
-    </li>
-  {% endfor %}
-  </ul>
-  {% else %}
-    <div class="empty">
-      There are no extensions.
-    </div>
-  {% endif %}
-
-  {% if page_obj.has_other_pages %}
-  <div class="paginator">
-    {% paginator page_obj %}
-  </div>
-  {% endif %}
 {% endblock %}
 
 {% block navclass %}main{% endblock %}

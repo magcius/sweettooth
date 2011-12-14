@@ -75,7 +75,8 @@ def shell_update(request):
 
     return operations
 
-def extensions_list(request):
+@ajax_view
+def ajax_extensions_list(request):
     queryset = models.Extension.objects.visible()
     if request.GET.get('sort', '') == 'recent':
         queryset = queryset.order_by('-pk')
@@ -99,10 +100,10 @@ def extensions_list(request):
 
     context = dict(paginator=paginator,
                    page_obj=page_obj,
-                   is_paginated=page_obj.has_other_pages(),
                    extension_list=page_obj.object_list)
 
-    return render(request, 'extensions/list.html', context)
+    return dict(html=render_to_string('extensions/list_bare.html', context),
+                numpages = paginator.num_pages)
 
 @model_view(models.Extension)
 def extension_view(request, obj, **kwargs):

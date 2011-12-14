@@ -21,6 +21,7 @@ ajax_patterns = patterns('',
         dict(newstatus=models.STATUS_ACTIVE), name='extensions-ajax-set-status-active'),
     url(r'^set-status/inactive/', views.ajax_set_status_view,
         dict(newstatus=models.STATUS_INACTIVE), name='extensions-ajax-set-status-inactive'),
+    url(r'^extensions-list/', views.ajax_extensions_list),
 )
 
 shell_patterns = patterns('',
@@ -35,7 +36,7 @@ shell_patterns = patterns('',
 )
 
 urlpatterns = patterns('',
-    url(r'^$', views.extensions_list, name='extensions-index'),
+    url(r'^$', direct_to_template, dict(template='extensions/list.html'), name='extensions-index'),
 
     url(r'^about/$', direct_to_template, dict(template='extensions/about.html'), name='extensions-about'),
 

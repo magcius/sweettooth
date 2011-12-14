@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'messages', 'extensions',
+require(['jquery', 'messages', 'extensions', 'paginator',
          'jquery.cookie', 'jquery.jeditable',
          'jquery.timeago', 'jquery.rating'], function($, messages) {
     if (!$.ajaxSettings.headers)
@@ -102,6 +102,9 @@ require(['jquery', 'messages', 'extensions',
         }).not('.expanded').next().hide();
 
         $('#extension_shell_versions_info').buildShellVersionsInfo();
+
+        var $extList = $('#extensions-list');
+        $extList.paginatorify('/ajax/extensions-list/');
 
         $('.extension_status_toggle a').click(function() {
             var $link = $(this);
