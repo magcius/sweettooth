@@ -83,8 +83,12 @@ def shell_update(request):
 @ajax_view
 def ajax_extensions_list(request):
     queryset = models.Extension.objects.visible()
-    if request.GET.get('sort', '') == 'recent':
+    sort = request.GET.get('sort', '')
+
+    if sort == 'recent':
         queryset = queryset.order_by('-pk')
+    elif sort == 'popularity':
+        queryset = queryset.order_by('-downloads')
     else:
         queryset = queryset.order_by('name')
 
