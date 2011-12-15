@@ -71,6 +71,7 @@ class Extension(models.Model):
     description = models.TextField(blank=True)
     url = models.URLField(verify_exists=False, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    downloads = models.PositiveIntegerField(default=0)
 
     class Meta:
         permissions = (

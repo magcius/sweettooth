@@ -26,12 +26,16 @@ def shell_download(request, uuid):
 
     else:
         version = get_object_or_404(models.ExtensionVersion, pk=pk)
+        extension = version.extension
 
         if version.extension.uuid != uuid:
             raise Http404()
 
     if version.status != models.STATUS_ACTIVE:
         return HttpResponseForbidden()
+
+    extension.downloads += 1
+    extension.save()
 
     return redirect(version.source.url)
 
