@@ -39,6 +39,32 @@ def shell_download(request, uuid):
 
     return redirect(version.source.url)
 
+def ajax_query_params_query(request):
+    query_params = {}
+
+    versions = request.GET.getlist('shell_version')
+    if versions:
+        versions = [models.ShellVersion.objects.lookup_for_version_string(v) for v in versions]
+        versions = [v for v in versions if v is not None]
+        query_params['versions__shell_versions__in'] = versions
+
+    uuids = request.GET.getlist('uuid')
+    if uuids:
+        query_params['uuid__in'] = uuids
+
+    queryset = models.Extension.objects.filter(**query_params)
+
+    sort = request.GET.get('sort', '')
+
+    if sort == 'recent':
+        queryset = queryset.order_by('-pk')
+    elif sort == 'popularity':
+        queryset = queryset.order_by('-downloads')
+    else:
+        queryset = queryset.order_by('name')
+
+    return queryset
+
 @ajax_view
 @require_POST
 def shell_update(request):
@@ -82,15 +108,7 @@ def shell_update(request):
 
 @ajax_view
 def ajax_extensions_list(request):
-    queryset = models.Extension.objects.visible()
-    sort = request.GET.get('sort', '')
-
-    if sort == 'recent':
-        queryset = queryset.order_by('-pk')
-    elif sort == 'popularity':
-        queryset = queryset.order_by('-downloads')
-    else:
-        queryset = queryset.order_by('name')
+    queryset = ajax_query_params_query(request)
 
     paginator = Paginator(queryset, 10)
     page = request.GET.get('page', 1)
@@ -276,23 +294,7 @@ def ajax_details_view(request):
 
 @ajax_view
 def ajax_query_view(request):
-    query_params = {}
-
-    versions = request.GET.getlist('shell_version')
-    if versions:
-        versions = [models.ShellVersion.objects.lookup_for_version_string(v) for v in versions]
-        versions = [v for v in versions if v is not None]
-        query_params['versions__shell_versions__in'] = versions
-
-    uuids = request.GET.getlist('uuid')
-    if uuids:
-        query_params['uuid__in'] = uuids
-
-    if not query_params:
-        raise Http404()
-
-    extensions = models.Extension.objects.filter(**query_params)
-    return [ajax_details(e) for e in extensions]
+    return [ajax_details(e) for e in ajax_query_params_query(request)]
 
 @ajax_view
 def ajax_set_status_view(request, newstatus):
