@@ -58,7 +58,7 @@ def ajax_query_params_query(request):
 
     if sort == 'recent':
         queryset = queryset.order_by('-pk')
-    elif sort == 'popularity':
+    elif sort == 'downloads':
         queryset = queryset.order_by('-downloads')
     else:
         queryset = queryset.order_by('name')
