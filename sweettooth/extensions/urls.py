@@ -21,6 +21,7 @@ ajax_patterns = patterns('',
     url(r'^set-status/inactive/', views.ajax_set_status_view,
         dict(newstatus=models.STATUS_INACTIVE), name='extensions-ajax-set-status-inactive'),
     url(r'^extensions-list/', views.ajax_extensions_list),
+    url(r'^adjust-popularity/', views.ajax_adjust_popularity_view),
 )
 
 shell_patterns = patterns('',

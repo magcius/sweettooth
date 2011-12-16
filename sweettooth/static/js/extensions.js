@@ -100,6 +100,12 @@ function($, messages, dbusProxy, extensionUtils) {
         if ($switch.hasClass('insensitive'))
             return;
 
+        function sendPopularity(action) {
+            $.ajax({ url: '/ajax/adjust-popularity/',
+                     data: { uuid: uuid,
+                             action: action } });
+        }
+
         $switch.bind('changed', function(e, newValue) {
             var oldState = $elem.data('state');
             if (newValue) {
@@ -110,10 +116,13 @@ function($, messages, dbusProxy, extensionUtils) {
                 } else if (oldState == ExtensionState.DISABLED ||
                            oldState == ExtensionState.INITIALIZED) {
                     dbusProxy.EnableExtension(uuid);
+                    sendPopularity('enable');
                 }
             } else {
-                if (oldState == ExtensionState.ENABLED)
+                if (oldState == ExtensionState.ENABLED) {
                     dbusProxy.DisableExtension(uuid);
+                    sendPopularity('disable');
+                }
             }
         });
 

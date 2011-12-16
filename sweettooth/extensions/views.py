@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponseForbidden, Http404
+from django.http import HttpResponseForbidden, HttpResponseServerError, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -60,6 +60,8 @@ def ajax_query_params_query(request):
         queryset = queryset.order_by('-pk')
     elif sort == 'downloads':
         queryset = queryset.order_by('-downloads')
+    elif sort == 'popularity':
+        queryset = queryset.order_by('-popularity')
     else:
         queryset = queryset.order_by('name')
 
@@ -210,6 +212,24 @@ def extension_version_view(request, obj, **kwargs):
     if extension.latest_version is not None:
         context['old_version'] = version.version < extension.latest_version.version
     return render(request, template_name, context)
+
+@ajax_view
+def ajax_adjust_popularity_view(request):
+    uuid = request.GET['uuid']
+    action = request.GET['action']
+
+    extension = models.Extension.objects.get(uuid=uuid)
+
+    if action == 'enable':
+        extension.enables += 1
+        extension.popularity += 1
+    elif action == 'disable':
+        extension.disables += 1
+        extension.popularity -= 1
+    else:
+        return HttpResponseServerError()
+
+    extension.save()
 
 @ajax_view
 @require_POST
