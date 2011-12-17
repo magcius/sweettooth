@@ -54,17 +54,15 @@ def ajax_query_params_query(request):
 
     queryset = models.Extension.objects.filter(**query_params)
 
-    sort = request.GET.get('sort', '')
+    sort = request.GET.get('sort', 'name')
+    sort = dict(recent='created').get(sort, sort)
+    if sort not in ('created', 'downloads', 'popularity', 'name'):
+        raise Http404()
 
-    if sort == 'recent':
-        queryset = queryset.order_by('-pk')
-    elif sort == 'downloads':
-        queryset = queryset.order_by('-downloads')
-    elif sort == 'popularity':
-        queryset = queryset.order_by('-popularity')
-    else:
-        queryset = queryset.order_by('name')
+    order = request.GET.get('order')
+    order = dict(desc='-', asc='').get(order, '-')
 
+    queryset = queryset.order_by('%s%s' % (order, sort))
     return queryset
 
 @ajax_view
