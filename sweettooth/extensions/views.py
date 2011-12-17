@@ -100,8 +100,12 @@ def ajax_query_params_query(request):
     if sort not in ('created', 'downloads', 'popularity', 'name'):
         raise Http404()
 
-    order = request.GET.get('order')
-    order = dict(desc='-', asc='').get(order, '-')
+    if 'order' in request.GET:
+        order = request.GET['order']
+        order = dict(desc='-', asc='').get(order, '-')
+    else:
+        # order by ASC for 'name', DESC for everything else
+        order = dict(name='').get(sort, '-')
 
     queryset = queryset.order_by('%s%s' % (order, sort))
     return queryset
