@@ -77,7 +77,8 @@ define(['jquery', 'jquery.hashchange'], function($) {
                     empty().
                     append($beforePaginator).
                     append($newContent).
-                    append($afterPaginator);
+                    append($afterPaginator).
+                    trigger('page-loaded');
             });
         }
 
@@ -150,6 +151,8 @@ define(['jquery', 'jquery.hashchange'], function($) {
         });
 
         $(window).hashchange();
+
+        return this;
     };
 
 });

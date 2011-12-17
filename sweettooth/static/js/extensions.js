@@ -30,6 +30,9 @@ function($, messages, dbusProxy, extensionUtils) {
         });
     };
 
+    var $extList = $('#extensions-list');
+    $extList.paginatorify('/ajax/extensions-list/');
+
     // While technically we shouldn't have mismatched API versions,
     // the plugin doesn't check whether the Shell matches, so if someone
     // is running with an old Shell version but a newer plugin, error out.
@@ -307,15 +310,22 @@ function($, messages, dbusProxy, extensionUtils) {
         });
     };
 
-    $('li.extension').each(function() {
-        var svm = $(this).data('svm');
-        if (!svm)
-            return;
+    function addOutOfDateIndicator() {
+        $('li.extension').each(function() {
+            var svm = $(this).data('svm');
+            if (!svm)
+                return;
 
-        var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-        if (vpk === null) {
-            $(this).addClass('out-of-date').attr('title', "This extension is incompatible with your version of GNOME").tipsy({ gravity: 'c', fade: true });
-        }
-    });
+            var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+            if (vpk === null) {
+                $(this).
+                    addClass('out-of-date').
+                    attr('title', "This extension is incompatible with your version of GNOME").
+                    tipsy({ gravity: 'c', fade: true });
+            }
+        });
+    }
+
+    $extList.bind('page-loaded', addOutOfDateIndicator);
 
 });

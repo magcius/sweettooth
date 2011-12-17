@@ -103,9 +103,6 @@ require(['jquery', 'messages', 'extensions', 'paginator',
 
         $('#extension_shell_versions_info').buildShellVersionsInfo();
 
-        var $extList = $('#extensions-list');
-        $extList.paginatorify('/ajax/extensions-list/');
-
         $('.extension_status_toggle a').click(function() {
             var $link = $(this);
             var $tr = $link.parents('tr');
