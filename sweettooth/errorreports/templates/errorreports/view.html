@@ -9,12 +9,8 @@
 </div>
 
 <h3> Contact information </h3>
-{% if report.can_contact %}
 <p>Please email the reporter back to respond. The user's address is:</p>
 <a class="email" href="mailto:{{ report.user.email }}">{{ report.user.email }}</a>
-{% else %}
-<p>The reporter did not provide you with his contact information.</p>
-{% endif %}
 {% endblock %}
 
 {% block navclass %}main{% endblock %}

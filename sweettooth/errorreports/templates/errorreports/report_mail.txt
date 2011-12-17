@@ -2,13 +2,9 @@ Your extension, "{{ extension.name }}" has received an error report from {{ repo
 
 {{ report.comment }}
 
-{% if report.can_contact %}
 Please email the reporter back to respond. The user's address is:
 
 {{ report.user.email }}
-{% else %}
-The reporter did not wish to provide you with his contact information.
-{% endif %}
 
 You can see the full report at:
 

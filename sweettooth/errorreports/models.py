@@ -8,6 +8,5 @@ class ErrorReport(models.Model):
     comment = models.TextField(blank=True)
     user = models.ForeignKey(auth.models.User, related_name="+")
     extension = models.ForeignKey(Extension, null=True)
-    can_contact = models.BooleanField()
 
 error_reported = Signal(providing_args=["request", "version", "report"])

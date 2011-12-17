@@ -28,26 +28,11 @@ class SubmitErrorReportTestCase(TestCase):
         self.extension.save()
         self.version.save()
 
-    def test_no_contact_information(self):
-        comment = "No contact information"
+    def test_email_sent(self):
+        comment = "YOUR EXTENSION SUCKS IT BROKE"
 
         self.client.post(reverse('errorreports-report', kwargs=dict(pk=self.extension.pk)),
-                         dict(can_contact=False,
-                              comment=comment), follow=True)
+                         dict(comment=comment), follow=True)
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn(comment, mail.outbox[0].body)
-        error_report = models.ErrorReport.objects.get(comment=comment)
-        self.assertEqual(error_report.can_contact, False)
-
-    def test_with_contact_information(self):
-        comment = "With contact information"
-
-        self.client.post(reverse('errorreports-report', kwargs=dict(pk=self.extension.pk)),
-                         dict(can_contact=True,
-                              comment=comment), follow=True)
-
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(comment, mail.outbox[0].body)
-        error_report = models.ErrorReport.objects.get(comment=comment)
-        self.assertEqual(error_report.can_contact, True)
