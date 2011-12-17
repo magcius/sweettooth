@@ -39,32 +39,6 @@ def shell_download(request, uuid):
 
     return redirect(version.source.url)
 
-def ajax_query_params_query(request):
-    query_params = {}
-
-    versions = request.GET.getlist('shell_version')
-    if versions:
-        versions = [models.ShellVersion.objects.lookup_for_version_string(v) for v in versions]
-        versions = [v for v in versions if v is not None]
-        query_params['versions__shell_versions__in'] = versions
-
-    uuids = request.GET.getlist('uuid')
-    if uuids:
-        query_params['uuid__in'] = uuids
-
-    queryset = models.Extension.objects.filter(**query_params)
-
-    sort = request.GET.get('sort', 'name')
-    sort = dict(recent='created').get(sort, sort)
-    if sort not in ('created', 'downloads', 'popularity', 'name'):
-        raise Http404()
-
-    order = request.GET.get('order')
-    order = dict(desc='-', asc='').get(order, '-')
-
-    queryset = queryset.order_by('%s%s' % (order, sort))
-    return queryset
-
 @ajax_view
 @require_POST
 def shell_update(request):
@@ -105,6 +79,32 @@ def shell_update(request):
                                     version=extension.latest_version.pk)
 
     return operations
+
+def ajax_query_params_query(request):
+    query_params = {}
+
+    versions = request.GET.getlist('shell_version')
+    if versions:
+        versions = [models.ShellVersion.objects.lookup_for_version_string(v) for v in versions]
+        versions = [v for v in versions if v is not None]
+        query_params['versions__shell_versions__in'] = versions
+
+    uuids = request.GET.getlist('uuid')
+    if uuids:
+        query_params['uuid__in'] = uuids
+
+    queryset = models.Extension.objects.filter(**query_params)
+
+    sort = request.GET.get('sort', 'name')
+    sort = dict(recent='created').get(sort, sort)
+    if sort not in ('created', 'downloads', 'popularity', 'name'):
+        raise Http404()
+
+    order = request.GET.get('order')
+    order = dict(desc='-', asc='').get(order, '-')
+
+    queryset = queryset.order_by('%s%s' % (order, sort))
+    return queryset
 
 @ajax_view
 def ajax_extensions_list(request):
