@@ -93,7 +93,7 @@ def ajax_query_params_query(request):
     if uuids:
         query_params['uuid__in'] = uuids
 
-    queryset = models.Extension.objects.filter(**query_params)
+    queryset = models.Extension.objects.visible().filter(**query_params)
 
     sort = request.GET.get('sort', 'name')
     sort = dict(recent='created').get(sort, sort)
