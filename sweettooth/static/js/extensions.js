@@ -30,8 +30,21 @@ function($, messages, dbusProxy, extensionUtils) {
         });
     };
 
-    var $extList = $('#extensions-list');
-    $extList.paginatorify('/ajax/extensions-list/');
+    $.fn.addOutOfDateIndicator = function() {
+        return this.each(function() {
+            var svm = $(this).data('svm');
+            if (!svm)
+                return;
+
+            var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+            if (vpk === null) {
+                $(this).
+                    addClass('out-of-date').
+                    attr('title', "This extension is incompatible with your version of GNOME").
+                    tipsy({ gravity: 'c', fade: true });
+            }
+        });
+    };
 
     // While technically we shouldn't have mismatched API versions,
     // the plugin doesn't check whether the Shell matches, so if someone
@@ -230,7 +243,8 @@ function($, messages, dbusProxy, extensionUtils) {
                                 $elem.
                                     data('pk', result.pk).
                                     data('svm', $.parseJSON(result.shell_version_map)).
-                                    append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall));
+                                    append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall)).
+                                    addOutOfDateIndicator();
                             }
 
                             addExtensionSwitch(uuid, extension, $elem);
@@ -309,23 +323,5 @@ function($, messages, dbusProxy, extensionUtils) {
             });
         });
     };
-
-    function addOutOfDateIndicator() {
-        $('li.extension').each(function() {
-            var svm = $(this).data('svm');
-            if (!svm)
-                return;
-
-            var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-            if (vpk === null) {
-                $(this).
-                    addClass('out-of-date').
-                    attr('title', "This extension is incompatible with your version of GNOME").
-                    tipsy({ gravity: 'c', fade: true });
-            }
-        });
-    }
-
-    $extList.bind('page-loaded', addOutOfDateIndicator);
 
 });

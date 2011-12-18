@@ -102,6 +102,12 @@ require(['jquery', 'messages', 'extensions', 'uploader',
 
         $('#extension_shell_versions_info').buildShellVersionsInfo();
 
+        $('#extensions-list').
+            paginatorify('/ajax/extensions-list/').
+            bind('page-loaded', function() {
+                $('li.extension').addOutOfDateIndicator();
+            });
+
         $('.extension_status_toggle a').click(function() {
             var $link = $(this);
             var $tr = $link.parents('tr');
