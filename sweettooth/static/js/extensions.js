@@ -180,6 +180,7 @@ function($, messages, dbusProxy, extensionUtils) {
                     // If the extension is uninstalled and we
                     // flick the switch on, install.
                     dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
+                    sendPopularity('enable');
                 } else if (oldState == ExtensionState.DISABLED ||
                            oldState == ExtensionState.INITIALIZED) {
                     dbusProxy.EnableExtension(uuid);
