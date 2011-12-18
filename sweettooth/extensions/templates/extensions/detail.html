@@ -22,7 +22,7 @@
 {% block extra-body-header %}
 {% endblock %}
 
-    <div class="extension single-page"
+    <div class="extension single-page {% block extra-ext-class %}{% endblock %}"
          data-epk="{{ extension.pk }}"
          data-uuid="{{ extension.uuid }}"
          data-ver-url-base="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk='' %}"
