@@ -84,7 +84,8 @@ function($, messages, dbusProxy, extensionUtils) {
     var elems = {};
 
     dbusProxy.extensionStateChangedHandler = function(uuid, newState, _) {
-        elems[uuid].trigger('state-changed', newState);
+        if (elems[uuid] !== undefined)
+            elems[uuid].trigger('state-changed', newState);
     };
 
     function addExtensionSwitch(uuid, extension, $elem) {
