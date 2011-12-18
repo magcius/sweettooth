@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'messages', 'extensions',
+require(['jquery', 'messages', 'extensions', 'uploader',
          'jquery.cookie', 'jquery.jeditable',
          'jquery.timeago', 'jquery.rating'], function($, messages) {
     if (!$.ajaxSettings.headers)
@@ -90,7 +90,6 @@ require(['jquery', 'messages', 'extensions',
         });
 
         $('#local_extensions').addLocalExtensions();
-        $('#error_report').fillInErrors();
         $('.extension.single-page').addExtensionSwitch();
         $('.comment .rating').each(function() {
             $(this).find('input').rating();
@@ -127,12 +126,14 @@ require(['jquery', 'messages', 'extensions',
             return false;
         });
 
-        if (window._SW)
-            try {
-                window._SW();
-            } catch(e) {
-                if (console && console.error)
-                    console.error(e);
-            }
+        var pk = $('.extension.single-page').data('epk');
+        if (pk) {
+            var inlineEditURL = '/ajax/edit/' + pk;
+            $('#extension_name, #extension_url').csrfEditable(inlineEditURL);
+            $('#extension_description').csrfEditable(inlineEditURL, {type: 'textarea'});
+
+            $('.screenshot.upload').uploadify('/upload/screenshot/'+pk+'?geometry=300x200');
+            $('.icon.upload').uploadify('/upload/icon/'+pk);
+        }
     });
 });

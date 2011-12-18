@@ -8,11 +8,6 @@
           href="{% url extensions-rss-feed %}" title="Latest extensions in GNOME Shell Extensions" />
     {% block head %} {% endblock %}
     <title>{% block title %}GNOME Shell Extensions{% endblock %}</title>
-    <script>
-window._SW = function() {
-{% block document-ready %}{% endblock %}
-};
-    </script>
     <script src="/static/js/jquery.js"></script>
     <script data-main="/static/js/{% block js-main %}main{% endblock %}.js" src="/static/js/require.js"></script>
   </head>
