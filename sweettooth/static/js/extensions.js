@@ -1,6 +1,6 @@
 "use strict";
 
-define(['jquery', 'messages', 'dbus!_', 'extensionUtils',
+define(['jquery', 'messages', 'dbus!_', 'extensionUtils', 'paginator',
         'switch', 'jquery.tipsy'],
 function($, messages, dbusProxy, extensionUtils) {
 

@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'messages', 'extensions', 'paginator',
+require(['jquery', 'messages', 'extensions',
          'jquery.cookie', 'jquery.jeditable',
          'jquery.timeago', 'jquery.rating'], function($, messages) {
     if (!$.ajaxSettings.headers)
