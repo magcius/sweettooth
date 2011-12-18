@@ -40,23 +40,15 @@ define(['jquery', 'dbus!API'], function($, API) {
 
         API_onchange: function(proxy) {
             return function(uuid, newState, error) {
-                try {
+                if (proxy.extensionStateChangedHandler !== null)
                     proxy.extensionStateChangedHandler(uuid, newState, error);
-                } catch(e) {
-                    // There's no way to tell if a property is callable, so
-                    // just catch the error.
-                }
             };
         },
 
         API_onshellrestart: function(proxy) {
             return function() {
-                try {
+                if (proxy.shellRestartHandler !== null)
                     proxy.shellRestartHandler();
-                } catch(e) {
-                    // There's no way to tell if a property is callable, so
-                    // just catch the error.
-                }
             };
         }
     };
