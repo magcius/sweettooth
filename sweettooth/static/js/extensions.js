@@ -217,7 +217,7 @@ function($, messages, dbusProxy, extensionUtils) {
                             if (result.pk !== undefined) {
                                 $elem.
                                     data('pk', result.pk).
-                                    data('svm', result.shell_version_map).
+                                    data('svm', $.parseJSON(result.shell_version_map)).
                                     append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall));
                             }
 
