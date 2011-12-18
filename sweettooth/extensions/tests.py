@@ -308,11 +308,7 @@ class UpdateVersionTest(TestCase):
                                self.downgrade_uuid: dict(operation='downgrade',
                                                          version=downgrade_pk) }
 
-    def grab_response(self, uuids):
-        installed = {}
-        for uuid, version in uuids.iteritems():
-            installed[uuid] = dict(version=version)
-
+    def grab_response(self, installed):
         post_data = dict(installed=json.dumps(installed))
 
         response = self.client.post(reverse('extensions-shell-update'),

@@ -45,19 +45,11 @@ def shell_update(request):
     installed = json.loads(request.POST['installed'])
     operations = {}
 
-    for uuid, meta in installed.iteritems():
+    for uuid, version in installed.iteritems():
         try:
             extension = models.Extension.objects.get(uuid=uuid)
         except models.Extension.DoesNotExist:
             continue
-
-        if 'version' not in meta:
-            # Some extensions may be on the site, but if the user
-            # didn't download it from SweetTooth, there won't
-            # be a version value in the metadata.
-            continue
-
-        version = meta['version']
 
         try:
             version_obj = extension.versions.get(version=version)
