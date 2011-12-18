@@ -9,7 +9,7 @@ class ErrorReportForm(forms.ModelForm):
 
     class Meta:
         model = ErrorReport
-        fields = ('comment', 'can_contact')
+        fields = ('comment',)
 
     def clean_comment(self):
         return self.cleaned_data['comment'].strip()
