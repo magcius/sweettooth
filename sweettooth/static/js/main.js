@@ -132,6 +132,8 @@ require(['jquery', 'messages', 'extensions', 'uploader',
             return false;
         });
 
+        $('div.extension').checkForUpdates();
+
         var pk = $('.extension.single-page').data('epk');
         if (pk) {
             var inlineEditURL = '/ajax/edit/' + pk;

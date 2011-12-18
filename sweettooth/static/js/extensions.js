@@ -46,6 +46,47 @@ function($, messages, dbusProxy, extensionUtils) {
         });
     };
 
+    $.fn.checkForUpdates = function() {
+        return this.each(function() {
+            var $elem = $(this);
+            var svm = $elem.data('svm');
+            var uuid = $elem.data('uuid');
+            if (!svm)
+                return;
+
+            var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+
+            if (vpk === null)
+                return;
+
+            function upgrade() {
+                dbusProxy.UninstallExtension(uuid).done(function() {
+                    dbusProxy.InstallExtension(uuid, vpk.version.toString());
+                });
+            }
+
+            dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
+                var extensionName = $elem.find('.extension-name').text();
+                var $upgradeMe = $elem.find('.upgrade-me');
+                if (!meta)
+                    return;
+
+                if (vpk.version > meta.version) {
+                    var msg = "You have version " + meta.version + " of";
+                    msg += "\"" + extensionName + "\"";
+                    msg += ". The latest version is version " + vpk.version;
+                    msg += ". Click here to upgrade.";
+
+                    $upgradeMe.append($('<a>', { href: '#' }).txt(msg).click(upgrade));
+                } else if (vpk.version == meta.version) {
+                    var msg = "You have the latest version of ";
+                    msg += "\"" + extensionName + "\"";
+                    $upgradeMe.text(msg);
+                }
+            });
+        });
+    };
+
     // While technically we shouldn't have mismatched API versions,
     // the plugin doesn't check whether the Shell matches, so if someone
     // is running with an old Shell version but a newer plugin, error out.
