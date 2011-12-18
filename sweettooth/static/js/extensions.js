@@ -88,6 +88,15 @@ function($, messages, dbusProxy, extensionUtils) {
             elems[uuid].trigger('state-changed', newState);
     };
 
+    dbusProxy.shellRestartHandler = function() {
+        dbusProxy.ListExtensions().done(function(extensions) {
+            $.each(extensions, function(meta) {
+                if (elems[uuid] !== undefined)
+                    elems[uuid].trigger('state-changed', meta.state);
+            });
+        });
+    };
+
     function addExtensionSwitch(uuid, extension, $elem) {
         var $switch = $elem.find('.switch');
         var _state = ExtensionState.UNINSTALLED;
