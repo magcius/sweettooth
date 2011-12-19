@@ -35,6 +35,9 @@ define(['jquery', 'jquery.hashchange'], function($) {
     }
 
     $.fn.paginatorify = function(url, context) {
+        if (!this.length)
+            return this;
+
         var hashParams = {};
 
         if (context === undefined)
