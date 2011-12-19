@@ -108,6 +108,8 @@ require(['jquery', 'messages', 'extensions', 'uploader',
                 $('li.extension').addOutOfDateIndicator();
             });
 
+        $('#error_report').fillInErrors();
+
         $('.extension_status_toggle a').click(function() {
             var $link = $(this);
             var $tr = $link.parents('tr');
