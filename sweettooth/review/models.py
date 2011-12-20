@@ -16,7 +16,7 @@ def get_all_reviewers():
 class CodeReview(models.Model):
     reviewer = models.ForeignKey(User)
     date = models.DateTimeField(auto_now_add=True)
-    comments = models.TextField()
+    comments = models.TextField(blank=True)
     version = models.ForeignKey(ExtensionVersion, related_name="reviews")
     changelog = models.OneToOneField('ChangeStatusLog', null=True)
 
