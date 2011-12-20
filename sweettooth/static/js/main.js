@@ -136,7 +136,7 @@ require(['jquery', 'messages', 'extensions', 'uploader',
 
         $('div.extension').checkForUpdates();
 
-        var pk = $('.extension.single-page.editable').data('epk');
+        var pk = $('.extension.single-page.can-edit').data('epk');
         if (pk) {
             var inlineEditURL = '/ajax/edit/' + pk;
             $('#extension_name, #extension_url').csrfEditable(inlineEditURL);
