@@ -142,8 +142,8 @@ require(['jquery', 'messages', 'extensions', 'uploader',
             $('#extension_name, #extension_url').csrfEditable(inlineEditURL);
             $('#extension_description').csrfEditable(inlineEditURL, {type: 'textarea'});
 
-            $('.screenshot.upload').uploadify('/upload/screenshot/'+pk+'?geometry=300x200');
-            $('.icon.upload').uploadify('/upload/icon/'+pk);
+            $('.screenshot.upload').uploadify('/ajax/upload/screenshot/'+pk+'?geometry=300x200');
+            $('.icon.upload').uploadify('/ajax/upload/icon/'+pk);
         }
     });
 });
