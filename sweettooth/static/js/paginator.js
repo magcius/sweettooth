@@ -101,7 +101,7 @@ define(['jquery', 'jquery.hashchange'], function($) {
             var contextLeft = Math.max(number-context, 2);
             var contextRight = Math.min(number+context+2, numPages);
 
-            var $elem = $('<div>', {'class': 'paginator'});
+            var $elem = $('<div>', {'class': 'paginator-content'});
 
             if (number > 1) {
                 makeLink(number-1, 'prev', "Previous").appendTo($elem);
@@ -126,7 +126,7 @@ define(['jquery', 'jquery.hashchange'], function($) {
                 makeLink(number+1, 'prev', "Next").appendTo($elem);
             }
 
-            return $elem;
+            return $('<div>', {'class': 'paginator'}).append($elem);
         }
 
         function hashChanged(hp) {

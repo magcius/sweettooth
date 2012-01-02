@@ -175,6 +175,10 @@ hr.bottom_shadow {
     border-radius: 3px;
 }
 
+.paginator-content {
+    text-align: center;
+}
+
 /* Extension view */
 /* ==================================================================== */
 
