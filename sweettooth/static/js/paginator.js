@@ -119,7 +119,7 @@ define(['jquery', 'jquery.hashchange'], function($) {
                 for (var i = number+1; i < contextRight; i++)
                     makeLink(i).appendTo($elem);
 
-                if (numPages - (number+context) > 1)
+                if (numPages - (number+context) > 2)
                     $elem.append($('<span>', {'class': 'ellipses'}).text("..."));
 
                 makeLink(numPages, 'last').appendTo($elem);
