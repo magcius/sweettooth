@@ -104,7 +104,7 @@ define(['jquery', 'jquery.hashchange'], function($) {
             var $elem = $('<div>', {'class': 'paginator-content'});
 
             if (number > 1) {
-                makeLink(number-1, 'prev', "Previous").appendTo($elem);
+                makeLink(number-1, 'prev', '\u00ab').appendTo($elem);
                 makeLink(1, 'first').appendTo($elem);
                 if (number-context > 2)
                     $elem.append($('<span>', {'class': 'ellipses'}).text("..."));
@@ -123,7 +123,7 @@ define(['jquery', 'jquery.hashchange'], function($) {
                     $elem.append($('<span>', {'class': 'ellipses'}).text("..."));
 
                 makeLink(numPages, 'last').appendTo($elem);
-                makeLink(number+1, 'prev', "Next").appendTo($elem);
+                makeLink(number+1, 'prev', '\u00bb').appendTo($elem);
             }
 
             return $('<div>', {'class': 'paginator'}).append($elem);
