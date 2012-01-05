@@ -35,6 +35,9 @@
     {% csrf_token %}
 
     {{ form.source }}
+    {{ form.source.errors }}
+
+    <br>
     <input type="submit" value="Upload extension">
   </form>
 
