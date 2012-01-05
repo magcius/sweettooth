@@ -411,7 +411,9 @@ def upload_file(request, pk):
                                 ext_pk=extension.pk,
                                 slug=extension.slug)
 
-    form = UploadForm()
+    else:
+        form = UploadForm()
+
     return render(request, 'extensions/upload.html', dict(form=form,
                                                           errors=errors,
                                                           extra_debug=extra_debug))
