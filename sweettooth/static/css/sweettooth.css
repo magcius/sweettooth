@@ -157,7 +157,7 @@ hr.bottom_shadow {
 /* Filtering and Sorting UI */
 /* ==================================================================== */
 
-a.filter-ui-link {
+a.fsui-link {
     float: right;
     border-radius: 4px;
     font-size: 0.8em;
@@ -176,13 +176,13 @@ a.filter-ui-link {
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.filter-ui-link.selected {
+.fsui-link.selected {
     background-color: #fff;
     text-decoration: none;
     color: #222;
 }
 
-.filter-ui {
+.fsui {
     background-color: #fff;
     position: absolute;
 
@@ -198,11 +198,11 @@ a.filter-ui-link {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-.filter-ui h4 {
+.fsui h4 {
     margin: 0;
 }
 
-.filter-sort-ui-sort-link {
+.fsui-selection-link {
     text-decoration: none;
     color: #444;
     list-style-position: inside;
@@ -213,12 +213,12 @@ a.filter-ui-link {
     padding-left: 2em;
 }
 
-.filter-sort-ui-sort-link.selected {
+.fsui-selection-link.selected {
     list-style-type: disc;
     padding-left: 1em;
 }
 
-.filter-sort-ui-sort-link:hover {
+.fsui-selection-link:hover {
     background-color: #e5e5e0;
 }
 
@@ -245,6 +245,8 @@ a.filter-ui-link {
     left: 50%;
     width: 300px;
     margin-left: -150px;
+
+    z-index: 999;
 }
 
 ul.extensions {
