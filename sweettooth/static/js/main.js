@@ -1,8 +1,9 @@
 "use strict";
 
-require(['jquery', 'messages', 'extensions', 'uploader', 'filter',
+require(['jquery', 'messages', 'modal',
+         'extensions', 'uploader', 'filter',
          'jquery.cookie', 'jquery.jeditable',
-         'jquery.timeago', 'jquery.rating'], function($, messages) {
+         'jquery.timeago', 'jquery.rating'], function($, messages, modal) {
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 
@@ -42,38 +43,25 @@ require(['jquery', 'messages', 'extensions', 'uploader', 'filter',
 
         $("abbr.timestamp").timeago();
 
+        var $userPopupLink = $('#global_domain_bar .user');
+        var $userPopup = $('#global_domain_bar .user_popup');
         function closeUserSettings() {
-            var needsClose = $('#global_domain_bar .user').hasClass('active');
-            if (!needsClose)
-                return false;
-
-            $('#global_domain_bar .user').removeClass('active');
-            $('#global_domain_bar .user_settings, #global_domain_bar .login_popup_form').animate({ top: '10px', opacity: 0 }, 200, function() {
-                $(this).hide();
-            });
-            return true;
-        }
-
-        function openUserSettings() {
-            $('#global_domain_bar .user').addClass('active');
-            $('#global_domain_bar .user_settings, #global_domain_bar .login_popup_form').show().css({ top: '-10px', opacity: 0 }).animate({ top: '0', opacity: 1 }, 200);
-        }
-
-        $(document.body).click(function() {
-            if (closeUserSettings())
-                return false;
-        });
-
-        $('#global_domain_bar .user_settings, #global_domain_bar .login_popup_form').click(function(e) {
-            e.stopPropagation();
-        });
-
-        $('#global_domain_bar .user').click(function() {
-            if ($(this).hasClass('active')) {
-                closeUserSettings();
-            } else {
-                openUserSettings();
+            if ($userPopupLink.hasClass('active')) {
+                $userPopupLink.removeClass('active');
+                $userPopup.animate({ top: '10px', opacity: 0 }, 200, function() {
+                    $(this).hide();
+                });
+                return true;
             }
+        }
+
+        $userPopupLink.click(function() {
+            $userPopupLink.addClass('active');
+            $userPopup.
+                show().
+                css({ top: '-10px', opacity: 0 }).
+                animate({ top: '0', opacity: 1 }, 200);
+            modal.activateModal($userPopup, closeUserSettings);
             return false;
         });
 

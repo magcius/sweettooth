@@ -30,7 +30,7 @@
           {% endspaceless %}
         </div>
         {% if request.user.is_authenticated %}
-        <div class="user_settings">
+        <div class="user_settings user_popup">
           <ul>
             <li><a href="{% url auth-profile user=request.user.username %}">Your profile</a></li>
             <li><a href="{% url auth-settings user=request.user.username %}">Settings</a></li>
