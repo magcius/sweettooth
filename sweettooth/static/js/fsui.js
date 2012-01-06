@@ -1,9 +1,12 @@
 "use strict";
 
+// FSUI is short for "Filtering and Sorting UI", which contains
+// controls for filtering and sorting the extensions list
+
 require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal) {
 
     function makeLink(name, value, text) {
-        return $('<li>', {'class': 'filter-sort-ui-sort-link'}).
+        return $('<li>', {'class': 'fsui-selection-link'}).
             text(text).
             click(function() {
                 var hp = hashparamutils.getHashParams();
@@ -19,14 +22,14 @@ require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal
         'popularity': "Popularity"
     };
 
-    $.fn.filterUIify = function() {
+    $.fn.fsUIify = function() {
 
         return this.each(function() {
             var $elem = $(this);
 
             function closeUI() {
                 if ($link.hasClass('selected')) {
-                    $('.filter-ui').slideUp('fast', function() {
+                    $('.fsui').slideUp('fast', function() {
                         $(this).detach();
                     });
                     $link.removeClass('selected');
@@ -35,22 +38,22 @@ require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal
                 return false;
             }
 
-            var $link = $('<a>', {'class': 'filter-ui-link'}).
+            var $link = $('<a>', {'class': 'fsui-link'}).
                 text("Filtering and Sorting").
                 click(function() {
                     $(this).addClass('selected');
                     var pos = $elem.offset();
-                    var $filterUI = $('<div>', {'class': 'filter-ui'}).
+                    var $fsui = $('<div>', {'class': 'fsui'}).
                         css({'top': pos.top + $elem.outerHeight(),
                              'left': pos.left,
                              'width': $elem.outerWidth()}).
                         appendTo(document.body).
                         hide().
                         slideDown('fast');
-                    modal.activateModal($filterUI, closeUI);
+                    modal.activateModal($fsui, closeUI);
 
-                    var $sortUI = $('<div>', {'class': 'filter-sort-ui'}).
-                        appendTo($filterUI).
+                    var $sortUI = $('<div>', {'class': 'fsui-sort-ui'}).
+                        appendTo($fsui).
                         append('<h4>Sort by</h4>');
 
                     var $sortUL = $('<ul>').appendTo($sortUI);

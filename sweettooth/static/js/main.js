@@ -1,7 +1,7 @@
 "use strict";
 
 require(['jquery', 'messages', 'modal',
-         'extensions', 'uploader', 'filter',
+         'extensions', 'uploader', 'fsui',
          'jquery.cookie', 'jquery.jeditable',
          'jquery.timeago', 'jquery.rating'], function($, messages, modal) {
     if (!$.ajaxSettings.headers)
@@ -94,7 +94,7 @@ require(['jquery', 'messages', 'modal',
             paginatorify('/ajax/extensions-list/').
             bind('page-loaded', function() {
                 $('li.extension').addOutOfDateIndicator();
-                $('#extensions-list .before-paginator').filterUIify();
+                $('#extensions-list .before-paginator').fsUIify();
             });
 
         $('#error_report').fillInErrors();
