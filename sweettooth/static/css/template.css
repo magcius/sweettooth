@@ -115,7 +115,7 @@ a:visited {
 
 /* User settings */
 
-#global_domain_bar .user_settings:before {
+#global_domain_bar .user_popup:before {
     width: 20px;
     height: 10px;
     margin-top: -25px;
@@ -123,7 +123,7 @@ a:visited {
     position: absolute;
     content: url(../images/globaldomain-popup-arrow.png);
 }
-#global_domain_bar .user_settings {
+#global_domain_bar .user_popup {
     display: none;
     z-index: 10;
     position: absolute;
@@ -139,7 +139,7 @@ a:visited {
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
-#global_domain_bar .user_settings a {
+#global_domain_bar .user_popup a {
     color: #fff;
     text-decoration: none;
     display: block;

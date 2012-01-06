@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'hashparamutils'], function($, hashparamutils) {
+require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal) {
 
     function makeLink(name, value, text) {
         return $('<li>', {'class': 'filter-sort-ui-sort-link'}).
@@ -38,49 +38,40 @@ require(['jquery', 'hashparamutils'], function($, hashparamutils) {
             var $link = $('<a>', {'class': 'filter-ui-link'}).
                 text("Filtering and Sorting").
                 click(function() {
-                    if (closeUI()) {
-                        return false;
-                    } else {
-                        $(this).addClass('selected');
-                        var pos = $elem.offset();
-                        var $filterUI = $('<div>', {'class': 'filter-ui'}).
-                            css({'top': pos.top + $elem.outerHeight(),
-                                 'left': pos.left,
-                                 'width': $elem.outerWidth()}).
-                            appendTo(document.body).
-                            hide().
-                            slideDown('fast');
+                    $(this).addClass('selected');
+                    var pos = $elem.offset();
+                    var $filterUI = $('<div>', {'class': 'filter-ui'}).
+                        css({'top': pos.top + $elem.outerHeight(),
+                             'left': pos.left,
+                             'width': $elem.outerWidth()}).
+                        appendTo(document.body).
+                        hide().
+                        slideDown('fast');
+                    modal.activateModal($filterUI, closeUI);
 
-                        var $sortUI = $('<div>', {'class': 'filter-sort-ui'}).
-                            appendTo($filterUI).
-                            append('<h4>Sort by</h4>');
+                    var $sortUI = $('<div>', {'class': 'filter-sort-ui'}).
+                        appendTo($filterUI).
+                        append('<h4>Sort by</h4>');
 
-                        var $sortUL = $('<ul>').appendTo($sortUI);
+                    var $sortUL = $('<ul>').appendTo($sortUI);
+                    var sortLinks = {};
+                    $.each(sortCriteria, function(key) {
+                        sortLinks[key] = makeLink('sort', key, this).
+                            appendTo($sortUL).
+                            click(function() {
+                                closeUI();
+                            });
+                    });
 
-                        var sortLinks = {};
-                        $.each(sortCriteria, function(key) {
-                            sortLinks[key] = makeLink('sort', key, this).
-                                appendTo($sortUL).
-                                click(function() {
-                                    closeUI();
-                                });
-                        });
+                    var hp = hashparamutils.getHashParams();
+                    if (hp.sort === undefined)
+                        hp.sort = 'name';
 
-                        var hp = hashparamutils.getHashParams();
-                        if (hp.sort === undefined)
-                            hp.sort = 'name';
+                    if (sortLinks.hasOwnProperty(hp.sort))
+                        sortLinks[hp.sort].addClass('selected');
 
-                        if (sortLinks.hasOwnProperty(hp.sort))
-                            sortLinks[hp.sort].addClass('selected');
-
-                        return false;
-                    }
-                }).appendTo($elem);
-
-            $(document.body).click(function() {
-                if (closeUI())
                     return false;
-            });
+                }).appendTo($elem);
         });
     };
 });
