@@ -9,9 +9,7 @@ require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal
         return $('<li>', {'class': 'fsui-selection-link'}).
             text(text).
             click(function() {
-                var hp = hashparamutils.getHashParams();
-                hp[name] = value;
-                hashparamutils.setHashParams(hp);
+                hashparamutils.setHashParam(name, value);
             });
     }
 

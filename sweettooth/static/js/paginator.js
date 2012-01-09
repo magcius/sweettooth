@@ -61,7 +61,7 @@ define(['jquery', 'hashparamutils', 'jquery.hashchange'], function($, hashparamu
             hp.page = pageNumber;
 
             return $('<a>', {'class': 'number ' + styleClass,
-                             'href': '#' + hashparamutils.makeHashParams(hp)}).text(text);
+                             'href': '#' + $.param(hp)}).text(text);
         }
 
         function buildPaginator() {
