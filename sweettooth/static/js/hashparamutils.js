@@ -1,6 +1,6 @@
 "use strict";
 
-define([], function() {
+define(["jquery"], function($) {
 
     function getHashParams() {
         var hash = window.location.hash;
@@ -14,28 +14,30 @@ define([], function() {
                 continue;
 
             var kv = values[i].split('=');
-            obj[kv[0]] = kv[1];
+            var key = kv[0], value = kv[1];
+            if (key in obj && $.isArray(obj[key]))
+                obj[key].push(value);
+            else if (key in obj)
+                obj[key] = [obj[key], value];
+            else
+                obj[key] = value;
         }
 
         return obj;
     }
 
-    function makeHashParams(obj) {
-        var hash = '';
-        for (var key in obj) {
-            hash += key + '=' + obj[key] + '&';
-        }
-
-        // Remove last '&'
-        return hash.slice(0, -1);
+    function setHashParam(name, value) {
+        var hp = getHashParams();
+        hp[name] = value;
+        setHashParams(hp);
     }
 
     function setHashParams(obj) {
-        window.location.hash = makeHashParams(obj);
+        window.location.hash = $.param(obj);
     }
 
     return { getHashParams: getHashParams,
-             makeHashParams: makeHashParams,
+             setHashParam:  setHashParam,
              setHashParams: setHashParams };
 
 });
