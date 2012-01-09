@@ -372,7 +372,7 @@ function($, messages, dbusProxy, extensionUtils) {
                     msg += ". The latest version is version " + vpk.version;
                     msg += ". Click here to upgrade.";
 
-                    $upgradeMe.append($('<a>', { href: '#' }).txt(msg).click(upgrade));
+                    $upgradeMe.append($('<a>', { href: '#' }).text(msg).click(upgrade));
                 } else if (vpk.version == meta.version) {
                     var msg = "You have the latest version of ";
                     msg += "\"" + extensionName + "\"";
