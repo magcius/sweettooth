@@ -29,7 +29,7 @@ require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal
 
             function closeUI() {
                 if ($link.hasClass('selected')) {
-                    $('.fsui').slideUp('fast', function() {
+                    $('.fsui').fadeOut('fast', function() {
                         $(this).detach();
                     });
                     $link.removeClass('selected');
@@ -44,12 +44,9 @@ require(['jquery', 'hashparamutils', 'modal'], function($, hashparamutils, modal
                     $(this).addClass('selected');
                     var pos = $elem.offset();
                     var $fsui = $('<div>', {'class': 'fsui'}).
-                        css({'top': pos.top + $elem.outerHeight(),
-                             'left': pos.left,
-                             'width': $elem.outerWidth()}).
-                        appendTo(document.body).
+                        appendTo($elem).
                         hide().
-                        slideDown('fast');
+                        fadeIn('fast');
                     modal.activateModal($fsui, closeUI);
 
                     var $sortUI = $('<div>', {'class': 'fsui-sort-ui'}).
