@@ -185,21 +185,20 @@ a.fsui-link {
 .fsui {
     background-color: #fff;
     position: absolute;
+    right: 4px;
 
-    -webkit-transition: visiblity 0.2s ease-in-out;
+    margin-top: -4px;
+
     border-radius: 0 0 4px 4px;
-    border: 1px solid #BABDB6;
-    border-top: none;
-    padding: 1em;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
 
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+    z-index: 999;
 }
 
 .fsui h4 {
     margin: 0;
+    margin-top: 1em;
+    text-align: center;
 }
 
 .fsui-selection-link {
@@ -207,7 +206,7 @@ a.fsui-link {
     color: #444;
     list-style-position: inside;
     list-style-type: none;
-    padding: .5em 0 .5em 1em;
+    padding: .5em 1em;
     cursor: pointer;
     margin-left: 0;
     padding-left: 2em;
