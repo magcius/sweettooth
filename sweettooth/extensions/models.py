@@ -201,6 +201,31 @@ class ShellVersion(models.Model):
 
         return "%d.%d.%d" % (self.major, self.minor, self.point)
 
+    @property
+    def is_unstable(self):
+        return self.minor % 2 != 0
+
+    @property
+    def is_stable(self):
+        return self.minor % 2 == 0
+
+    @property
+    def base_version(self):
+        if self.point == -1:
+            return None
+
+        if self.is_unstable:
+            return None
+
+        try:
+            # This is intended to be use to easily query for all extensions
+            # that are compatible with a specific shell version. As such,
+            # this doesn't use get_or_create -- no sense creating a shell
+            # version that no extensions are going to match.
+            return self._default_manager.get(major=self.major, minor=self.minor, point=-1)
+        except self.DoesNotExist:
+            return None
+
 class InvalidExtensionData(Exception):
     pass
 
