@@ -97,27 +97,14 @@ define(['jquery', 'hashparamutils', 'jquery.hashchange'], function($, hashparamu
             return $('<div>', {'class': 'paginator'}).append($elem);
         }
 
-        function hashChanged(hp) {
-            if (hashParams.sort !== hp.sort)
-                return true;
-
-            if (hashParams.page !== hp.page)
-                return true;
-
-            return false;
-        }
-
         $(window).hashchange(function() {
-            var hp = hashparamutils.getHashParams();
-            if (hp.page === undefined)
-                hp.page = 1;
+            hashParams = hashparamutils.getHashParams();
+            if (hashParams.page === undefined)
+                hashParams.page = 1;
             else
-                hp.page = parseInt(hp.page);
+                hashParams.page = parseInt(hashParams.page);
 
-            if (hashChanged(hp)) {
-                hashParams = hp;
-                loadPage();
-            }
+            loadPage();
         });
 
         $(window).hashchange();
