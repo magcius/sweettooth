@@ -75,14 +75,24 @@ def shell_update(request):
 
     return operations
 
+def get_versions_for_version_strings(version_strings):
+    for version_string in version_strings:
+        version = models.ShellVersion.objects.lookup_for_version_string(version_string)
+        if version is None:
+            continue
+        yield version
+
+        base_version = version.base_version
+        if base_version is None:
+            continue
+        yield base_version
+
 def ajax_query_params_query(request):
     query_params = {}
 
-    versions = request.GET.getlist('shell_version')
-    if versions:
-        versions = [models.ShellVersion.objects.lookup_for_version_string(v) for v in versions]
-        versions = [v for v in versions if v is not None]
-        query_params['versions__shell_versions__in'] = versions
+    version_strings = request.GET.getlist('shell_version')
+    if version_strings:
+        query_params['versions__shell_versions__in'] = get_versions_for_version_strings(version_strings)
 
     uuids = request.GET.getlist('uuid')
     if uuids:

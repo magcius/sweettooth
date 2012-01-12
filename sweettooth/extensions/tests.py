@@ -275,20 +275,38 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
 
 class ShellVersionTest(TestCase):
     def test_shell_version_parsing_basic(self):
+        lookup_version = models.ShellVersion.objects.lookup_for_version_string
         get_version = models.ShellVersion.objects.get_for_version_string
 
         version = get_version("3.0.0")
         self.assertEquals(version.major, 3)
         self.assertEquals(version.minor, 0)
         self.assertEquals(version.point, 0)
+        self.assertTrue(version.is_stable)
 
         version = get_version("3.2")
         self.assertEquals(version.major, 3)
         self.assertEquals(version.minor, 2)
         self.assertEquals(version.point, -1)
+        self.assertTrue(version.is_stable)
 
         with self.assertRaises(models.InvalidShellVersion):
             version = get_version("3.1")
+
+        # Test that we don't track shell versions for unstable extensions
+        # (it doesn't really matter because we can't really create a base
+        # shell version for unstable extensions *anyway*, but oh well)
+        version = get_version("3.1.4")
+        self.assertEquals(version.base_version, None)
+
+        # Test that we don't create shell versions
+        version = get_version("3.4.1")
+        self.assertEquals(lookup_version("3.4"), None)
+        self.assertEquals(version.base_version, None)
+
+        # OK, go and create the base version and make sure we track it
+        base_version = get_version("3.4")
+        self.assertEquals(version.base_version, base_version)
 
 class UpdateVersionTest(TestCase):
     fixtures = [os.path.join(testdata_dir, 'test_upgrade_data.json')]
