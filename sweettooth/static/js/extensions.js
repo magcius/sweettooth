@@ -356,7 +356,7 @@ function($, messages, dbusProxy, extensionUtils) {
 
             function upgrade() {
                 dbusProxy.UninstallExtension(uuid).done(function() {
-                    dbusProxy.InstallExtension(uuid, vpk.version.toString());
+                    dbusProxy.InstallExtension(uuid, vpk.pk.toString());
                 });
             }
 
