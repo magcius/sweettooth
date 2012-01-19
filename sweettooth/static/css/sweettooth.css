@@ -868,3 +868,17 @@ input[type=submit], button {
     -o-transform: rotate(90deg);
     transform: rotate(90deg);
 }
+
+.launch-prefs-button {
+    background-color: #4D90FE;
+    border: 1px solid #3079ED;
+    border-radius: 2px;
+    color: white;
+    margin-left: 25px;
+    padding: 2px 10px;
+    cursor: pointer;
+}
+
+.launch-prefs-button:hover {
+    background-color: #5EA1FF;
+}

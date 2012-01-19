@@ -22,6 +22,10 @@ define(['jquery', 'dbus!API'], function($, API) {
             return _makePromise(API.getExtensionErrors(uuid));
         },
 
+        LaunchExtensionPrefs: function(uuid) {
+            return _makePromise(API.launchExtensionPrefs(uuid));
+        },
+
         EnableExtension: function(uuid) {
             API.setExtensionEnabled(uuid, true);
         },
