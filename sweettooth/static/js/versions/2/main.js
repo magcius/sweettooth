@@ -9,6 +9,7 @@ define(['jquery', 'dbus!API', 'versions/common/common'], function($, API, common
         DisableExtension: common.DisableExtension,
         InstallExtension: common.InstallExtension,
         UninstallExtension: common.UninstallExtension,
+        LaunchExtensionPrefs: common.LaunchExtensionPrefsDummy,
 
         ShellVersion: API.shellVersion,
 

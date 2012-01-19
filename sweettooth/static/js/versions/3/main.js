@@ -9,14 +9,16 @@ define(['jquery', 'dbus!API', 'versions/common/common'], function($, API, common
         DisableExtension: common.DisableExtension,
         InstallExtension: common.InstallExtension,
         UninstallExtension: common.UninstallExtension,
-        LaunchExtensionPrefs: common.LaunchExtensionPrefsDummy,
+        LaunchExtensionPrefs: common.LaunchExtensionPrefs,
 
         ShellVersion: API.shellVersion,
 
-        extensionStateChangedHandler: null
+        extensionStateChangedHandler: null,
+        shellRestartHandler: null
     };
 
     API.onchange = common.API_onchange(proxy);
+    API.onshellrestart = common.API_onshellrestart(proxy);
 
     return proxy;
 });

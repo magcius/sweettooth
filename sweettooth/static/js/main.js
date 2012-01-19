@@ -78,7 +78,7 @@ require(['jquery', 'messages', 'modal',
         });
 
         $('#local_extensions').addLocalExtensions();
-        $('.extension.single-page').addExtensionSwitch();
+        $('.extension.single-page').addExtensionSwitch().addLaunchExtensionPrefsButton();
 
         $.extend($.fn.raty.defaults, {
             path: '/static/images/',

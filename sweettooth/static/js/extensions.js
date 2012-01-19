@@ -64,6 +64,9 @@ function($, messages, dbusProxy, extensionUtils) {
         $.fn.addOutOfDateIndicator = function() {
         };
 
+        $.fn.addLaunchExtensionPrefsButton = function() {
+        };
+
         $.fn.checkForUpdates = function() {
         };
 
@@ -233,6 +236,11 @@ function($, messages, dbusProxy, extensionUtils) {
                             append($('<span>', {'class': 'author'})).
                             append($('<p>', {'class': 'description'}).text(extension.description));
 
+                        $elem.data('uuid', extension.uuid);
+
+                        if (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE)
+                            $elem.addLaunchExtensionPrefsButton(true);
+
                         $.ajax({
                             url: "/ajax/detail/",
                             dataType: "json",
@@ -344,6 +352,32 @@ function($, messages, dbusProxy, extensionUtils) {
                     addClass('out-of-date').
                     attr('title', "This extension is incompatible with your version of GNOME").
                     tipsy({ gravity: 'c', fade: true });
+            }
+        });
+    };
+
+    $.fn.addLaunchExtensionPrefsButton = function(force) {
+        function launchExtensionPrefsButton($elem, uuid) {
+            $elem.
+                find('.description').
+                before($('<span>', {'class': 'launch-prefs-button'}).
+                       text("Configure").
+                       click(function() {
+                           dbusProxy.LaunchExtensionPrefs(uuid);
+                       }));
+        }
+
+        return this.each(function() {
+            var $elem = $(this);
+            var uuid = $elem.data('uuid');
+
+            if (force) {
+                launchExtensionPrefsButton($elem, uuid);
+            } else {
+                dbusProxy.GetExtensionInfo(uuid).done(function(data) {
+                    if (data.hasPrefs && data.state !== ExtensionState.OUT_OF_DATE)
+                        launchExtensionPrefsButton($elem, uuid);
+                });
             }
         });
     };
