@@ -42,9 +42,12 @@ define([], function() {
         if (!map)
             return null;
 
-        var versionA = map[current];
+        // Only care about the first three parts -- look up
+        // "3.2.2" when given "3.2.2.1"
 
         var parts = current.split('.');
+
+        var versionA = map[(parts[0] + '.' + parts[1] + '.' + parts[2])];
 
         // Unstable releases
         if (parseInt(parts[1]) % 2 != 0) {

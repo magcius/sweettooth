@@ -10,6 +10,8 @@ require(['extensionUtils', 'jquery', 'test/qunit'], function(extensionUtils) {
 
         equal(versionCheck(["3.2"], "3.2.1"), true, "stable release checking");
         equal(versionCheck(["3.3"], "3.3.1"), false);
+
+        equal(versionCheck(["3.2.2"], "3.2.2.1"), true, "ignoring the fourth field");
     });
 
     var grabProperExtensionVersion = extensionUtils.grabProperExtensionVersion;
@@ -19,7 +21,8 @@ require(['extensionUtils', 'jquery', 'test/qunit'], function(extensionUtils) {
                     "3.2.1": { version: 3, pk: 3 },
                     "3.2": { version: 4, pk: 4 },
                     "3.3": { version: 5, pk: 5 },
-                    "3.3.1": { version: 6, pk: 6 } };
+                    "3.3.1": { version: 6, pk: 6 },
+                    "3.4.1": { version: 7, pk: 7 } };
 
         equal(grabProperExtensionVersion(map, "3.4.0"), null);
         equal(grabProperExtensionVersion(map, "3.0.0").version, 1);
@@ -28,6 +31,7 @@ require(['extensionUtils', 'jquery', 'test/qunit'], function(extensionUtils) {
         equal(grabProperExtensionVersion(map, "3.2.1").version, 4);
         equal(grabProperExtensionVersion(map, "3.3.0"), null, "stable release checking");
         equal(grabProperExtensionVersion(map, "3.3.1").version, 6);
+        equal(grabProperExtensionVersion(map, "3.4.1.1").version, 7);
     });
 
     function nhvEqual(versions, current, operation, stability, version) {
