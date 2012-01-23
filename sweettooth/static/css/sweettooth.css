@@ -157,13 +157,17 @@ hr.bottom_shadow {
 /* Filtering and Sorting UI */
 /* ==================================================================== */
 
-a.fsui-link {
+div.fsui {
     float: right;
-    border-radius: 4px;
     font-size: 0.8em;
     line-height: 2.2em;
-    margin-top: -2.2em;
-    padding: 0 1em;
+    position: relative;
+    top: -2.2em;
+}
+
+.fsui-dropdown-link {
+    border-radius: 4px;
+    padding: 0.2em 1em;
     cursor: pointer;
 
     text-decoration: none;
@@ -176,13 +180,23 @@ a.fsui-link {
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.fsui-link.selected {
+.fsui-dropdown-link-arrow {
+    position: relative;
+    margin-left: .25em;
+    top: -.25em;
+}
+
+.fsui-dropdown-link:hover {
+    background-color: #f4f4f4;
+}
+
+.fsui-dropdown-link.selected {
     background-color: #fff;
     text-decoration: none;
     color: #222;
 }
 
-.fsui {
+.fsui-dropdown {
     background-color: #fff;
     position: absolute;
     right: 4px;
@@ -195,13 +209,7 @@ a.fsui-link {
     z-index: 999;
 }
 
-.fsui h4 {
-    margin: 0;
-    margin-top: 1em;
-    text-align: center;
-}
-
-.fsui-selection-link {
+.fsui-dropdown-item {
     text-decoration: none;
     color: #444;
     list-style-position: inside;
@@ -212,12 +220,12 @@ a.fsui-link {
     padding-left: 2em;
 }
 
-.fsui-selection-link.selected {
+.fsui-dropdown-item.selected {
     list-style-type: disc;
     padding-left: 1em;
 }
 
-.fsui-selection-link:hover {
+.fsui-dropdown-item:hover {
     background-color: #e5e5e0;
 }
 
