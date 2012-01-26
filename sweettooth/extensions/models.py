@@ -72,6 +72,7 @@ class Extension(models.Model):
     url = models.URLField(verify_exists=False, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     downloads = models.PositiveIntegerField(default=0)
+    popularity = models.IntegerField(default=0)
 
     class Meta:
         permissions = (

@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import datetime
+
+import os
+import sys
+
+_path = os.path.dirname(__file__)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'sweettooth.settings'
+sys.path.extend([os.path.join(_path, '..'),
+                 os.path.join(_path, '..', 'sweettooth')])
+
+from django.db.models import Sum
+from extensions.models import Extension
+
+for ext in Extension.objects.all():
+    data = (ext.popularity_items
+            .filter(date__gt=(datetime.datetime.now()-datetime.timedelta(days=7)))
+            .annotate(popularity=Sum('offset')))
+    if 'popularity' in data:
+        ext.popularity = qs['popularity']
+        ext.save()

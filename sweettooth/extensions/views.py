@@ -1,10 +1,7 @@
 
-import datetime
-
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
-from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, HttpResponseServerError, Http404
@@ -104,14 +101,6 @@ def ajax_query_params_query(request):
     sort = dict(recent='created').get(sort, sort)
     if sort not in ('created', 'downloads', 'popularity', 'name'):
         raise Http404()
-
-    if sort == 'popularity':
-        # XXX - This filters out extensions which don't
-        # have any popularity items in the past week. Hopefully
-        # this will never happen in a real-world scenario
-        queryset = (queryset
-                    .filter(popularity_items__date__gt=(datetime.datetime.now()-datetime.timedelta(days=7)))
-                    .annotate(popularity=Sum('popularity_items__offset')))
 
     queryset = queryset.order_by(sort)
 
