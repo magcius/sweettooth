@@ -157,7 +157,7 @@ hr.bottom_shadow {
 /* Filtering and Sorting UI */
 /* ==================================================================== */
 
-div.fsui {
+.fsui {
     float: right;
     font-size: 0.8em;
     line-height: 2.2em;
@@ -167,7 +167,8 @@ div.fsui {
 
 .fsui-dropdown-link {
     border-radius: 4px;
-    padding: 0.2em 1em;
+    padding: 0.2em 0.4em;
+    margin: 0 0.6em;
     cursor: pointer;
 
     text-decoration: none;
@@ -199,14 +200,14 @@ div.fsui {
 .fsui-dropdown {
     background-color: #fff;
     position: absolute;
-    right: 4px;
-
     margin-top: -4px;
-
     border-radius: 0 0 4px 4px;
-
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
     z-index: 999;
+}
+
+.fsui-dropdown ul {
+    margin: 0;
 }
 
 .fsui-dropdown-item {
@@ -214,9 +215,9 @@ div.fsui {
     color: #444;
     list-style-position: inside;
     list-style-type: none;
-    padding: .5em 1em;
     cursor: pointer;
     margin-left: 0;
+    padding: .2em;
     padding-left: 2em;
 }
 

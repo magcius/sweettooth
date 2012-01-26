@@ -28,7 +28,10 @@ define(["jquery"], function($) {
 
     function setHashParam(name, value) {
         var hp = getHashParams();
-        hp[name] = value;
+        if (value === undefined)
+            delete hp[name];
+        else
+            hp[name] = value;
         setHashParams(hp);
     }
 
