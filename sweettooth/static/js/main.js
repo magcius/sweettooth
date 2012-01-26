@@ -95,6 +95,9 @@ require(['jquery', 'messages', 'modal',
             bind('page-loaded', function() {
                 $('li.extension').addOutOfDateIndicator();
                 $('#extensions-list .before-paginator').fsUIify();
+
+                // Scroll the page back up to the top.
+                document.documentElement.scrollTop = 0;
             });
 
         $('#error_report').fillInErrors();
