@@ -186,6 +186,12 @@ function($, messages, dbusProxy, extensionUtils) {
                     }
 
                     extensionValues.sort(function(a, b) {
+                        if (a.name === undefined)
+                            return 0;
+
+                        if (b.name === undefined)
+                            return 0;
+
                         return a.name.localeCompare(b.name);
                     });
 
