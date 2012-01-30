@@ -72,7 +72,7 @@
           {% endif %}
         </td>
         <td>
-          <span class="{{ ver.get_status_class }}">{{ ver.get_status_display }}</span>
+          <a class="{{ ver.get_status_class }}" href="{% url review-version pk=ver.pk %}">{{ ver.get_status_display }}</a>
         </td>
       </tr>
       {% endfor %}

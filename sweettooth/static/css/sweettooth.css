@@ -471,12 +471,12 @@ li.extension:last-child {
     display: table-cell;
 }
 
-span.rejected, span.reject {
+.rejected, .reject {
     color: #c00 !important;
     font-weight: bold;
 }
 
-span.active, span.approve {
+.active, .approve {
     color: #0a0 !important;
     font-weight: bold;
 }
