@@ -128,7 +128,11 @@ class Extension(models.Model):
         if replace_metadata_json:
             for version in self.versions.all():
                 if version.source:
-                    version.replace_metadata_json()
+                    try:
+                        version.replace_metadata_json()
+                    except BadZipfile, e:
+                        # Ignore bad zipfiles, we don't care
+                        pass
  
     @property
     def visible_shell_version_map(self):
