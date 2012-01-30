@@ -35,7 +35,7 @@ def shell_download(request, uuid):
         return HttpResponseForbidden()
 
     extension.downloads += 1
-    extension.save()
+    extension.save(replace_metadata_json=False)
 
     return redirect(version.source.url)
 
@@ -280,7 +280,7 @@ def ajax_inline_edit_view(request, obj):
 @model_view(models.Extension)
 def ajax_upload_screenshot_view(request, obj):
     obj.screenshot = request.FILES['file']
-    obj.save()
+    obj.save(replace_metadata_json=False)
     return get_thumbnail(obj.screenshot, request.GET['geometry']).url
 
 @ajax_view
@@ -288,7 +288,7 @@ def ajax_upload_screenshot_view(request, obj):
 @model_view(models.Extension)
 def ajax_upload_icon_view(request, obj):
     obj.icon = request.FILES['file']
-    obj.save()
+    obj.save(replace_metadata_json=False)
     return obj.icon.url
 
 def ajax_details(extension):
