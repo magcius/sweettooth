@@ -19,4 +19,4 @@ for ext in Extension.objects.all():
             .filter(date__gt=(datetime.datetime.now()-datetime.timedelta(days=7)))
             .aggregate(popularity=Sum('offset')))
     ext.popularity = data['popularity']
-    ext.save()
+    ext.save(replace_metadata_json=False)
