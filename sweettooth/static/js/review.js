@@ -1,6 +1,6 @@
 "use strict";
 
-define(['jquery'], function($) {
+define(['jquery', 'diff'], function($, diff) {
 
     var REVIEW_URL_BASE = '/review/ajax';
 
@@ -30,8 +30,8 @@ define(['jquery'], function($) {
         return $table;
     }
 
-    function createFileView(filename, pk, diff) {
-        var frag = diff ? '/get-file-diff/' : '/get-file/';
+    function createFileView(filename, pk, isDiff) {
+        var frag = isDiff ? '/get-file-diff/' : '/get-file/';
 
         var req = $.ajax({
             type: 'GET',
@@ -44,21 +44,12 @@ define(['jquery'], function($) {
 
         req.done(function(data) {
             var $html;
-            if (diff) {
+            if (isDiff) {
                 if (data === null) {
                     $html = $('<p>', {'class': 'nochanges'}).
                         text("There have been no changes in this file.");
                 } else {
-                    var $old = addLineNumbers(data['old']);
-                    var $new = addLineNumbers(data['new']);
-
-                    $html = $('<table>', {'class': 'diff'});
-                    var $tr = $('<tr>').appendTo($html);
-
-                    $tr.append($('<td>', {'width': '50%',
-                                          'class': 'code'}).append($old));
-                    $tr.append($('<td>', {'width': '50%',
-                                          'class': 'code'}).append($new));
+                    $html = diff.buildDiffTable(data.chunks, data.oldlines, data.newlines);
                 }
             } else {
                 $html = addLineNumbers(data);

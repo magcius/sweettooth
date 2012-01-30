@@ -65,6 +65,7 @@
     font-family: monospace;
     background-color: #fff;
     margin: 0;
+    width: 100%;
 }
 
 .file {
@@ -81,9 +82,7 @@ p.nochanges {
     color: #aaa;
 }
 
-span.line {
-    width: 100%;
-    display: block;
+.line {
     white-space: pre;
 
     /* makes blank lines "expand",
@@ -92,23 +91,23 @@ span.line {
 }
 
 /* colors stolen from Splinter */
-span.deleted {
+.deleted {
     background-color: #ffccaa;
 }
 
-span.inserted {
+.inserted {
     background-color: #bbffbb;
 }
 
-span.replaced {
+.replaced {
     background-color: #aaccff;
 }
 
-span.changed {
+.changed {
     background-color: #cceeff;
 }
 
-.linenumbers pre {
+.linenumbers pre, .linum {
     color: #aaa;
     text-align: right;
     background-color: #eee;

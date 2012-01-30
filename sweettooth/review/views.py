@@ -19,7 +19,7 @@ from django.utils.html import escape
 from django.utils import simplejson as json
 from django.views.decorators.http import require_POST
 
-from review.diffview import get_chunks_html, split_lines, NoWrapperHtmlFormatter
+from review.diffutils import get_chunks, split_lines
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
 
@@ -38,7 +38,6 @@ IMAGE_TYPES = {
 BINARY_TYPES = set(['.mo', '.png', ',jpg', '.jpeg', '.gif', '.bmp'])
 
 code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
-diff_formatter = NoWrapperHtmlFormatter(style="borland")
 
 def get_filelist(zipfile, disallow_binary):
     for name in zipfile.namelist():
@@ -120,7 +119,7 @@ def get_zipfiles(version, old_version_number=None):
 
     return old_zipfile, new_zipfile
 
-def get_diff(old_zipfile, new_zipfile, filename, highlight):
+def get_diff(old_zipfile, new_zipfile, filename):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
     oldcontent, newcontent = old.read(), new.read()
 
@@ -130,21 +129,16 @@ def get_diff(old_zipfile, new_zipfile, filename, highlight):
     old.close()
     new.close()
 
-    if highlight:
-        oldmarkup = highlight_file(filename, oldcontent, diff_formatter)
-        newmarkup = highlight_file(filename, newcontent, diff_formatter)
-    else:
-        oldmarkup = escape(oldcontent)
-        newmarkup = escape(newcontent)
+    oldmarkup = escape(oldcontent)
+    newmarkup = escape(newcontent)
 
     oldlines = split_lines(oldmarkup)
     newlines = split_lines(newmarkup)
 
-    old_htmls, new_htmls = get_chunks_html(oldlines, newlines)
-    return dict(old=dict(html='\n'.join(old_htmls),
-                         num_lines=len(old_htmls)),
-                new=dict(html='\n'.join(new_htmls),
-                         num_lines=len(new_htmls)))
+    chunks = list(get_chunks(oldlines, newlines))
+    return dict(chunks=chunks,
+                oldlines=oldlines,
+                newlines=newlines)
 
 @ajax_view
 @model_view(models.ExtensionVersion)
@@ -180,15 +174,14 @@ def ajax_get_file_diff_view(request, obj):
     version, extension = obj, obj.extension
 
     filename = request.GET['filename']
-    highlight = request.GET.get('highlight', True)
     old_version_number = request.GET.get('oldver', None)
 
     file_base, file_extension = os.path.splitext(filename)
     if file_extension in IMAGE_TYPES:
-        return
+        return None
 
     if file_extension in BINARY_TYPES:
-        return
+        return None
 
     old_zipfile, new_zipfile = get_zipfiles(version, old_version_number)
 
@@ -196,8 +189,7 @@ def ajax_get_file_diff_view(request, obj):
     old_filelist = set(old_zipfile.namelist())
 
     if filename in old_filelist and filename in new_filelist:
-        return get_diff(old_zipfile, new_zipfile,
-                        filename, highlight)
+        return get_diff(old_zipfile, new_zipfile, filename)
     else:
         return None
 
