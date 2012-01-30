@@ -35,7 +35,7 @@ IMAGE_TYPES = {
     '.svg':  'image/svg+xml',
 }
 
-BINARY_TYPES = set(['.mo'])
+BINARY_TYPES = set(['.mo', '.png', ',jpg', '.jpeg', '.gif', '.bmp'])
 
 code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
 diff_formatter = NoWrapperHtmlFormatter(style="borland")
