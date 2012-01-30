@@ -129,21 +129,16 @@ span.changed {
     margin-bottom: 20px;
 }
 
-#previous_versions table {
+#all_versions table {
     width: 100%;
 }
 
-#previous_versions td {
+#all_versions td {
     text-align: center;
 }
 
-#previous_versions p span {
+#all_versions .current_version {
     font-weight: bold;
-}
-
-#previous_versions p {
-    text-align: center;
-    font-size: larger;
 }
 
 #approve {

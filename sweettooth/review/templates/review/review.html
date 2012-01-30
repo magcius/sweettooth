@@ -44,34 +44,40 @@
       the extension zipfile</a>.</p>
 </div>
 
-{% if previous_versions %}
+{% if version.version > 1 %}
 <h2 class="expandy_header expanded"> Diff Against Previous Version </h2>
 <div id="diff" data-pk="{{ version.pk }}">
 </div>
 {% endif %}
 
-<h2 class="expandy_header expanded"> Previous Versions </h2>
-<div id="previous_versions">
-  {% if previous_versions %}
+<h2 class="expandy_header expanded"> All Versions </h2>
+<div id="all_versions">
   <table>
     <thead>
       <th>Version</th>
       <th>Status</th>
     </thead>
     <tbody>
-      {% for version in previous_versions %}
+      {% comment %}
+      This is somewhat confusing. 'ver' is the loop variable across
+      all extension versions. 'version' is the current version.
+      {% endcomment %}
+      {% for ver in all_versions %}
       <tr>
-        <td><a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=version.pk %}">{{ version.version }}</a></td>
         <td>
-          <span class="{{ version.get_status_class }}">{{ version.get_status_display }}</span>
+          {% if ver.version == version.version %}
+          <span class="current_version">{{ ver.version }}</span>
+          {% else %}
+          <a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=ver.pk %}">{{ ver.version }}</a>
+          {% endif %}
+        </td>
+        <td>
+          <span class="{{ ver.get_status_class }}">{{ ver.get_status_display }}</span>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p>There are no previous versions of <span>{{ extension.name }}</span></p>
-  {% endif %}
 </div>
 
 {% if previous_reviews %}

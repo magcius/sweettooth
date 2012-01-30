@@ -266,21 +266,17 @@ def submit_review_view(request, obj):
 def review_version_view(request, obj):
     extension, version = obj.extension, obj
 
-    # Reviews on previous versions of the same extension.
-    previous_versions = extension.versions.order_by('-version')
+    # Reviews on all versions of the same extension.
+    all_versions = extension.versions.order_by('-version')
 
-    # Exclude this version...
-    previous_versions = previous_versions.exclude(version=version.version)
-
-
-    # Other reviews on the same version
+    # Other reviews on the same version.
     previous_reviews = version.reviews.all()
 
     can_approve = can_approve_extension(request.user, extension)
 
     context = dict(extension=extension,
                    version=version,
-                   previous_versions=previous_versions,
+                   all_versions=all_versions,
                    previous_reviews=previous_reviews,
                    can_approve=can_approve)
 
