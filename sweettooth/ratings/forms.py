@@ -10,45 +10,21 @@ from django.utils.safestring import mark_safe
 
 from ratings.models import RatingComment
 
-CHOICES = [(i, str(i+1)) for i in range(5)]
-
-class NoLabelRadioInput(widgets.RadioInput):
-    """
-    Like RadioInput, but with no label.
-    """
-
-    def __unicode__(self):
-        return self.tag()
-
-class NoSoapRadio(StrAndUnicode):
-    """
-    Like RadioSelectRenderer, but without lists.
-    """
-
-    def __init__(self, name, value, attrs, choices):
-        self.name, self.value, self.attrs = name, value, attrs
-        self.choices = choices
-
-    def __iter__(self):
-        for i, choice in enumerate(self.choices):
-            yield NoLabelRadioInput(self.name, self.value, self.attrs.copy(), choice, i)
-
-    def __getitem__(self, idx):
-        choice = self.choices[idx] # Let the IndexError propogate
-        return NoLabelRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
-
-    def __unicode__(self):
-        return self.render()
-
-    def render(self):
-        """Outputs a <ul> for this set of radio fields."""
-        return mark_safe(u'\n'.join(force_unicode(w) for w in self))
+# Raty inserts its own <input> element, so we don't want to provide
+# a widget here. We'll insert a <div> for raty to fill in the template.
+class NoOpWidget(widgets.Widget):
+    def render(self, *a, **kw):
+        return u''
 
 class RatingCommentForm(CommentForm):
-    rating = fields.IntegerField(min_value=0, max_value=4,
-                                 widget=widgets.RadioSelect(choices=CHOICES,
-                                                            renderer=NoSoapRadio,
-                                                            attrs={"class": "rating"}))
+    rating = fields.IntegerField(min_value=-1, max_value=4,
+                                 required=False, widget=NoOpWidget())
+
+    def clean_rating(self):
+        rating = self.cleaned_data["rating"]
+        if rating is None:
+            rating = -1
+        return rating
 
     def get_comment_model(self):
         return RatingComment

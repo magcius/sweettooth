@@ -3,7 +3,7 @@
 require(['jquery', 'messages', 'modal',
          'extensions', 'uploader', 'fsui',
          'jquery.cookie', 'jquery.jeditable',
-         'jquery.timeago', 'jquery.rating'], function($, messages, modal) {
+         'jquery.timeago', 'jquery.raty'], function($, messages, modal) {
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 
@@ -79,10 +79,37 @@ require(['jquery', 'messages', 'modal',
 
         $('#local_extensions').addLocalExtensions();
         $('.extension.single-page').addExtensionSwitch();
-        $('.comment .rating').each(function() {
-            $(this).find('input').rating();
+
+        $.extend($.fn.raty.defaults, {
+            path: '/static/images/',
+            starOff: 'star-empty.png',
+            starOn: 'star-full.png',
+            size: 25
         });
-        $('form .rating').rating();
+
+        $('.comment .rating').each(function() {
+            $(this).raty({
+                start: $(this).data('rating-value'),
+                readOnly: true
+            });
+        });
+        $('#rating_form').hide();
+        $('#rating_form .rating').raty({ scoreName: 'rating' });
+
+        function makeShowForm(isRating) {
+            return function() {
+                $('#leave_comment, #leave_rating').removeClass('selected');
+                $(this).addClass('selected');
+                var $rating = $('#rating_form').slideDown().find('.rating');
+                if (isRating)
+                    $rating.show();
+                else
+                    $rating.hide();
+            };
+        }
+
+        $('#leave_comment').click(makeShowForm(false));
+        $('#leave_rating').click(makeShowForm(true));
 
         $('.expandy_header').click(function() {
             $(this).toggleClass('expanded').next().slideToggle();

@@ -412,49 +412,6 @@ li.extension:last-child {
     padding: 0 1em 0 0;
 }
 
-.extension .report {
-    overflow: auto;
-}
-
-.extension .report .txt {
-    display: block;
-    height: 32px;
-    padding-left: 36px;
-    font-size: 16pt;
-    background-repeat: no-repeat;
-}
-
-.extension .report.error .txt {
-    background-image: url(../images/face-angry.png);
-}
-
-.extension .report.rating .txt {
-    background-image: url(../images/face-smile.png);
-    margin-bottom: 10px;
-}
-
-.extension .report p {
-    line-height: 1.7em;
-}
-
-.extension .report.error, .extension .unauthenticated {
-    background: #EEEEEC;
-    border: 1px solid #BABDB6;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    clear: both;
-    padding: 20px;
-
-    /* Extra margin on the bottom, left and right is for
-     * the shadow -- we use overflow: hidden on the parent
-     * to establish a BFC, so it will clip the shadow. */
-    margin: 20px 4px 4px 4px;
-}
-
-.extension .report.error p {
-    padding-left: 16px;
-}
-
 .extension table {
     width: 100%;
 }
@@ -632,19 +589,23 @@ input[type=submit], button {
 }
 
 
-/* New comment form */
+/* Opinion form */
 /* ==================================================================== */
 
-#new-comment-form {
+#opinion_form {
     overflow: hidden;
 }
 
-#new-comment-form label {
+#opinion_form label {
     display: block;
 }
 
-#new-comment-form p input,
-#new-comment-form p textarea {
+#opinion_form .rating {
+    float: left;
+}
+
+#opinion_form p input,
+#opinion_form p textarea {
     width: 100%;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -652,13 +613,39 @@ input[type=submit], button {
     padding: 3px;
 }
 
-#new-comment-form p textarea {
+#opinion_form p textarea {
     resize: vertical;
     min-height: 150px;
 }
 
-#new-comment-form .submit-post {
+#opinion_form input[type=submit] {
+    height: 32px;
     float: right;
+}
+
+#opinion_form .comment_choice {
+    display: block;
+    height: 32px;
+    font-size: 16pt;
+    background-repeat: no-repeat;
+}
+
+#opinion_form .comment_choice a.selected {
+    font-weight: bold;
+}
+
+#opinion_form .unauthenticated {
+    background: #EEEEEC;
+    border: 1px solid #BABDB6;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    clear: both;
+    padding: 20px;
+
+    /* Extra margin on the bottom, left and right is for
+     * the shadow -- we use overflow: hidden on the parent
+     * to establish a BFC, so it will clip the shadow. */
+    margin: 20px 4px 4px 4px;
 }
 
 /* Review List */

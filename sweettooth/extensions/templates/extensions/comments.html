@@ -13,9 +13,9 @@
   {% endif %}
     <img src="{% gravatar_url comment.email %}" class="gravatar">
     <div class="rating-author">
-      <div class="rating">
-        {% rating comment.rating 5 %}
-      </div> by
+      {% if comment.rating != -1 %}
+      <div class="rating" data-rating-value="{{ comment.rating }}"></div> by
+      {% endif %}
       <a class="comment-author" href="{% url auth-profile user=comment.user.username %}">{{ comment.user }}</a>
     </div>
     <p>{{ comment.comment }}</p>
@@ -26,26 +26,21 @@
   There are no comments.
   {% endfor %}
 </div>
-<div id="new-comment-form">
-  <div>
-    <h4>Your opinion</h4>
-    {% if request.user.is_authenticated %}
-    <div class="report rating">
-      <span class="txt">It worked, and...</span>
-      {% render_comment_form for extension %}
-    </div>
-
-    <div class="report error">
-      <a class="txt" href="{% url errorreports-report pk=extension.pk %}" class="report error">Help! It didn't work!</a>
-      <p>
-        Errors should be reported through the error reporting tool &mdash; it
-        helps extension authors be known about bugs in their extension!
-      </p>
-    </div>
-    {% else %}
-    <p class="unauthenticated">
-      Unfortunately, to help prevent spam, we require that you <a href="{% url auth-login %}">log in to GNOME Shell Extensions</a> in order to post a comment or report an error. You understand, right?
-    </p>
-    {% endif %}
+<div id="opinion_form">
+  <h4>Your opinion</h4>
+  {% if request.user.is_authenticated %}
+  <div class="comment_choice">
+    Leave a...
+    <a href="javascript:void 0" id="leave_comment">Comment</a>
+    <a href="javascript:void 0" id="leave_rating">Rating</a>
+    <a href="{% url errorreports-report pk=extension.pk %}">Bug report</a>
   </div>
+  <div id="rating_form">
+    {% render_comment_form for extension %}
+  </div>
+  {% else %}
+  <p class="unauthenticated">
+    Unfortunately, to help prevent spam, we require that you <a href="{% url auth-login %}">log in to GNOME Shell Extensions</a> in order to post a comment or report an error. You understand, right?
+  </p>
+  {% endif %}
 </div>
