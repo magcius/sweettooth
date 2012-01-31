@@ -398,7 +398,13 @@ class ExtensionVersion(models.Model):
         self.save()
 
         for sv_string in metadata.pop('shell-version', []):
-            sv = ShellVersion.objects.get_for_version_string(sv_string)
+            try:
+                sv = ShellVersion.objects.get_for_version_string(sv_string)
+            except InvalidShellVersion:
+                # For now, ignore invalid shell versions, rather than
+                # causing a fit.
+                pass
+
             self.shell_versions.add(sv)
 
         self.save()
