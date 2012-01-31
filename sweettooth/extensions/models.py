@@ -159,7 +159,7 @@ class InvalidShellVersion(Exception):
 
 class ShellVersionManager(models.Manager):
     def parse_version_string(self, version_string):
-        version = version_string.split('.', 2)
+        version = version_string.split('.')
         major, minor = version[:2]
 
         try:
@@ -167,7 +167,7 @@ class ShellVersionManager(models.Manager):
         except ValueError, e:
             raise InvalidShellVersion()
 
-        if len(version) >= 3:
+        if len(version) == 3:
             # 3.0.1, 3.1.4
             try:
                 point = int(version[2])
