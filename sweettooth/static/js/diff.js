@@ -58,7 +58,7 @@ define(['jquery'], function($) {
     function buildDeleteChunk(chunk, oldContents, newContents) {
         return $.map(chunk.lines, function(line) {
             var linum = line[1];
-            var contents = newContents[linum - 1];
+            var contents = oldContents[linum - 1];
 
             return $('<tr>', {'class': 'line deleted'}).
                 append($('<td>', {'class': 'old linum'}).text(linum)).
