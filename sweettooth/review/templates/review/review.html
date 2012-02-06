@@ -35,7 +35,13 @@
   </div>
 </div>
 
-<h2 class="expandy_header expanded"> Files </h2>
+{% if version.version > 1 %}
+<h2 class="expandy_header expanded"> Diff Against Previous Version </h2>
+<div id="diff" data-pk="{{ version.pk }}">
+</div>
+{% endif %}
+
+<h2 class="expandy_header"> Files </h2>
 <div>
   <div id="files" data-pk="{{ version.pk }}">
   </div>
@@ -43,12 +49,6 @@
     files, please <a href="{% url review-download pk=version.pk %}">download
       the extension zipfile</a>.</p>
 </div>
-
-{% if version.version > 1 %}
-<h2 class="expandy_header expanded"> Diff Against Previous Version </h2>
-<div id="diff" data-pk="{{ version.pk }}">
-</div>
-{% endif %}
 
 <h2 class="expandy_header expanded"> All Versions </h2>
 <div id="all_versions">
