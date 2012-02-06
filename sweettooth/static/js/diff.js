@@ -19,7 +19,29 @@ define(['jquery'], function($) {
     }
 
     function buildEqualChunk(chunk, oldContents, newContents) {
-        return $.map(chunk.lines, function(line, i) {
+        function triggerCollapse() {
+            // show() and hide() don't work on table-rows - jQuery
+            // will set the row back to 'display: block'. Unsure if it's
+            // a jQuery or browser bug.
+            if (collapsed) {
+                $triggerRow.removeClass('collapsed');
+                $collapsable.css('display', 'table-row');
+                $triggers.text('-');
+            } else {
+                $triggerRow.addClass('collapsed');
+                $collapsable.css('display', 'none');
+                $triggers.text('+');
+            }
+
+            collapsed = !collapsed;
+        }
+
+        var $triggerRow;
+        var $triggers = $();
+        var $collapsable = $();
+        var collapsed = false;
+
+        var $elems = $.map(chunk.lines, function(line, i) {
             var oldLinum = line[1];
             var newLinum = line[2];
 
@@ -32,14 +54,26 @@ define(['jquery'], function($) {
                 append($('<td>', {'class': 'new contents'}).html(contents));
 
             if (chunk.collapsable) {
-                if (i == 0)
-                    $row.addClass('collapsable-first');
-                else
-                    $row.addClass('collapsable-rest');
+                if (i == 0) {
+                    $triggerRow = $row;
+                    $row.addClass('collapsable-trigger-row').find('.contents').each(function() {
+                        var $trigger = $('<a>', {'class': 'collapsable-trigger'}).click(triggerCollapse);
+                        $triggers = $triggers.add($trigger);
+                        $(this).append($trigger);
+                    });
+                } else {
+                    $row.addClass('collapsable-collapsed-row');
+                    $collapsable = $collapsable.add($row);
+                }
             }
 
             return $row;
         });
+
+        if (chunk.collapsable)
+            triggerCollapse($collapsable);
+
+        return $elems;
     }
 
     function buildInsertChunk(chunk, oldContents, newContents) {

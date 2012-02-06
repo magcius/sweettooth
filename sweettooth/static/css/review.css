@@ -115,6 +115,24 @@ p.nochanges {
     color: #747474;
 }
 
+.collapsable-trigger-row.collapsed {
+    height: 2.6em;
+}
+
+.collapsable-collapsed-row {
+    background-color: #f4f4f4;
+}
+
+.collapsable-trigger {
+    margin-left: 1.2em;
+    padding: 0 0.3em;
+    background-color: #aaccff;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+}
+
 .linenumbers pre, .linum {
     color: #aaa;
     text-align: right;
