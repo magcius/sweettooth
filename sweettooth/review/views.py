@@ -39,20 +39,6 @@ BINARY_TYPES = set(['.mo', '.png', ',jpg', '.jpeg', '.gif', '.bmp'])
 
 code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
 
-def get_filelist(zipfile, disallow_binary):
-    for name in zipfile.namelist():
-        if name.endswith('/'):
-            # There's no directory flag in the info, so I'm
-            # guessing this is the most reliable way to do it.
-            continue
-
-        if disallow_binary:
-            base, extension = os.path.splitext(name)
-            if extension in BINARY_TYPES:
-                continue
-
-        yield name
-
 def can_review_extension(user, extension):
     if user == extension.creator:
         return True
@@ -118,6 +104,20 @@ def get_zipfiles(version, old_version_number=None):
     old_zipfile = old_version.get_zipfile('r')
 
     return old_zipfile, new_zipfile
+
+def get_filelist(zipfile, disallow_binary):
+    for name in zipfile.namelist():
+        if name.endswith('/'):
+            # There's no directory flag in the info, so I'm
+            # guessing this is the most reliable way to do it.
+            continue
+
+        if disallow_binary:
+            base, extension = os.path.splitext(name)
+            if extension in BINARY_TYPES:
+                continue
+
+        yield name
 
 def get_diff(old_zipfile, new_zipfile, filename):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
