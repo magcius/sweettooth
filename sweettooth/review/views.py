@@ -164,7 +164,20 @@ def ajax_get_file_list_view(request, obj):
     added   = new_filelist - old_filelist
     deleted = old_filelist - new_filelist
 
-    return dict(both=sorted(both),
+    unchanged, changed = set([]), set([])
+
+    for filename in both:
+        old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
+        oldcontent, newcontent = old.read(), new.read()
+
+        # Unchanged, remove
+        if oldcontent == newcontent:
+            unchanged.add(filename)
+        else:
+            changed.add(filename)
+
+    return dict(unchanged=sorted(unchanged),
+                changed=sorted(changed),
                 added=sorted(added),
                 deleted=sorted(deleted))
 

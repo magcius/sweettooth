@@ -29,7 +29,7 @@
     margin-left: 2em;
 }
 
-.filelist li a {
+.fileselector {
     float: left;
     display: block;
     padding: 0 1em;
@@ -44,7 +44,7 @@
     transition: background-color 0.2s ease-in-out, border 0.2s ease-in-out;
 }
 
-.filelist li a.selected {
+.fileselector.selected {
     cursor: auto;
     color: #2e3436;
     background-color: #C8D0D5;
@@ -95,7 +95,7 @@ p.nochanges {
     background-color: #ffccaa;
 }
 
-.inserted {
+.inserted, .added {
     background-color: #bbffbb;
 }
 
@@ -105,6 +105,14 @@ p.nochanges {
 
 .changed {
     background-color: #cceeff;
+}
+
+.fileselector.changed {
+    background-color: transparent;
+}
+
+.unchanged {
+    color: #747474;
 }
 
 .linenumbers pre, .linum {

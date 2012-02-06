@@ -45,12 +45,7 @@ define(['jquery', 'diff'], function($, diff) {
         req.done(function(data) {
             var $html;
             if (isDiff) {
-                if (data === null) {
-                    $html = $('<p>', {'class': 'nochanges'}).
-                        text("There have been no changes in this file.");
-                } else {
-                    $html = diff.buildDiffTable(data.chunks, data.oldlines, data.newlines);
-                }
+                $html = diff.buildDiffTable(data.chunks, data.oldlines, data.newlines);
             } else {
                 $html = addLineNumbers(data);
             }
@@ -131,10 +126,13 @@ define(['jquery', 'diff'], function($, diff) {
                 $('<li>').append($selector).appendTo($fileList);
             }
 
-
-            $.each(files.both, function() { createFileSelector('both', this); });
+            $.each(files.changed, function() { createFileSelector('changed', this); });
             $.each(files.added, function() { createFileSelector('added', this); });
             $.each(files.deleted, function() { createFileSelector('deleted', this); });
+
+            // Don't show the 'unchanged' section in a diff view.
+            if (!diff)
+                $.each(files.unchanged, function() { createFileSelector('unchanged', this); });
 
             $fileList.show();
 
