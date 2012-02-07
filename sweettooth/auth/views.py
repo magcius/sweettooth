@@ -17,7 +17,7 @@ def profile(request, user):
     is_editable = request.user == userobj
 
     display_name = userobj.get_full_name() or userobj.username
-    extensions = Extension.objects.filter(creator=userobj)
+    extensions = Extension.objects.visible().filter(creator=userobj)
     reviews = CodeReview.objects.filter(reviewer=userobj)
 
     return render(request,
