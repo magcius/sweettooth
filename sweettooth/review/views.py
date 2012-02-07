@@ -36,7 +36,7 @@ IMAGE_TYPES = {
 }
 
 # Keep this in sync with the BINARY_TYPES list at the top of review.js
-BINARY_TYPES = set(['.mo', '.png', ',jpg', '.jpeg', '.gif', '.bmp'])
+BINARY_TYPES = set(['.mo', '.compiled'])
 
 # Stolen from ReviewBoard
 # See the top of diffutils.py for details

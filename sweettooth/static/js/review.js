@@ -5,7 +5,7 @@ define(['jquery', 'diff'], function($, diff) {
     var REVIEW_URL_BASE = '/review/ajax';
 
     var BINARY_TYPES = {};
-    $.each(['mo', 'png', 'jpg', 'jpeg', 'gif', 'bmp'], function() {
+    $.each(['mo', 'compiled'], function() {
         BINARY_TYPES[this] = true;
     });
 
