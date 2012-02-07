@@ -41,7 +41,11 @@
 </div>
 {% endif %}
 
+{% if version.version > 1 %}
 <h2 class="expandy_header"> Files </h2>
+{% else %}
+<h2 class="expandy_header expanded"> Files </h2>
+{% endif %}
 <div>
   <div id="files" data-pk="{{ version.pk }}">
   </div>
