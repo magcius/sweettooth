@@ -163,7 +163,8 @@ def ajax_get_file_list_view(request, obj):
     new_filelist = set(get_filelist(new_zipfile, disallow_binary))
 
     if old_zipfile is None:
-        return dict(both=[],
+        return dict(unchanged=[],
+                    changed=[],
                     added=sorted(new_filelist),
                     deleted=[])
 
