@@ -57,9 +57,6 @@ define(['jquery', 'diff'], function($, diff) {
         var $fileList = $('<ul>', {'class': 'filelist'}).appendTo($elem);
         var pk = $elem.data('pk');
 
-        // Hide the file list until we're done grabbing all the elements.
-        $fileList.hide();
-
         var $fileDisplay = $('<div>', {'class': 'filedisplay'}).appendTo($elem);
         $fileDisplay.css('position', 'relative');
  
@@ -139,8 +136,6 @@ define(['jquery', 'diff'], function($, diff) {
             // Don't show the 'unchanged' section in a diff view.
             if (!diff)
                 $.each(files.unchanged, function() { createFileSelector('unchanged', this); });
-
-            $fileList.show();
 
             // Select the first item.
             $fileList.find('li a.fileselector').first().click();
