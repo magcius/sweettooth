@@ -1,1 +1,1 @@
-<span class="{{ version.get_status_class }}">{{ version.get_status_display }}</span>
+<a class="{{ version.get_status_class }}" href="{% url review-version pk=version.pk %}">{{ version.get_status_display }}</a>
