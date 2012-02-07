@@ -31,33 +31,25 @@ define(['jquery', 'diff'], function($, diff) {
     }
 
     function createDiffView(filename, pk) {
-        var req = $.ajax({
+        return $.ajax({
             type: 'GET',
             dataType: 'json',
             data: { filename: filename },
             url: REVIEW_URL_BASE + '/get-file-diff/' + pk
+        }).pipe(function(data) {
+            return diff.buildDiffTable(data.chunks, data.oldlines, data.newlines);
         });
-
-        var deferred = new $.Deferred();
-        req.done(function(data) {
-            deferred.resolve(diff.buildDiffTable(data.chunks, data.oldlines, data.newlines));
-        });
-        return deferred;
     }
 
     function createFileView(filename, pk) {
-        var req = $.ajax({
+        return $.ajax({
             type: 'GET',
             dataType: 'json',
             data: { filename: filename },
             url: REVIEW_URL_BASE + '/get-file/' + pk
+        }).pipe(function(data) {
+            return buildFileView(data);
         });
-
-        var deferred = new $.Deferred();
-        req.done(function(data) {
-            deferred.resolve(buildFileView(data));
-        });
-        return deferred;
     }
 
     $.fn.reviewify = function(diff) {
