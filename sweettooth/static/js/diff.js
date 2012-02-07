@@ -47,7 +47,7 @@ define(['jquery'], function($) {
 
             var contents = oldContents[oldLinum - 1];
 
-            var $row = $('<tr>', {'class': 'line equal'}).
+            var $row = $('<tr>', {'class': 'diff-line equal'}).
                 append($('<td>', {'class': 'old linum'}).text(oldLinum)).
                 append($('<td>', {'class': 'old contents'}).html(contents)).
                 append($('<td>', {'class': 'new linum'}).text(newLinum)).
@@ -81,7 +81,7 @@ define(['jquery'], function($) {
             var linum = line[2];
             var contents = newContents[linum - 1];
 
-            return $('<tr>', {'class': 'line inserted'}).
+            return $('<tr>', {'class': 'diff-line inserted'}).
                 append($('<td>', {'class': 'linum'})).
                 append($('<td>')).
                 append($('<td>', {'class': 'new linum'}).text(linum)).
@@ -94,7 +94,7 @@ define(['jquery'], function($) {
             var linum = line[1];
             var contents = oldContents[linum - 1];
 
-            return $('<tr>', {'class': 'line deleted'}).
+            return $('<tr>', {'class': 'diff-line deleted'}).
                 append($('<td>', {'class': 'old linum'}).text(linum)).
                 append($('<td>', {'class': 'old contents'}).html(contents)).
                 append($('<td>', {'class': 'linum'})).
@@ -117,7 +117,7 @@ define(['jquery'], function($) {
     // half-row.
     function buildReplaceRegions(regions, contents) {
         function span(tag, text) {
-            return $('<span>', {'class': 'inline'}).addClass(tag).html(text);
+            return $('<span>', {'class': 'diff-inline'}).addClass(tag).html(text);
         }
 
         function unchanged(text) { return span('unchanged', text); }
@@ -160,7 +160,7 @@ define(['jquery'], function($) {
             var oldContent = oldContents[oldLinum - 1];
             var newContent = newContents[newLinum - 1];
 
-            return $('<tr>', {'class': 'line replaced'}).
+            return $('<tr>', {'class': 'diff-line replaced'}).
                 append($('<td>', {'class': 'old linum'}).text(oldLinum)).
                 append($('<td>', {'class': 'old contents'})
                        .append(flatten(buildReplaceRegions(oldRegion, oldContent)))).

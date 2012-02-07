@@ -84,7 +84,7 @@ p.nochanges {
     border-right: 1px solid #ccc;
 }
 
-.line {
+.diff-line {
     white-space: pre;
 
     /* makes blank lines "expand",
@@ -93,27 +93,23 @@ p.nochanges {
 }
 
 /* colors stolen from Splinter */
-.deleted {
+.diff-line.deleted, .fileselector.deleted {
     background-color: #ffccaa;
 }
 
-.inserted, .added {
+.diff-line.inserted, .fileselector.added {
     background-color: #bbffbb;
 }
 
-.replaced {
+.diff-line.replaced {
     background-color: #aaccff;
 }
 
-.changed {
+.diff-inline.changed {
     background-color: #cceeff;
 }
 
-.fileselector.changed {
-    background-color: transparent;
-}
-
-.unchanged {
+.fileselector.unchanged {
     color: #747474;
 }
 
