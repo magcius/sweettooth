@@ -52,12 +52,6 @@
     padding-left: 0.5em;
 }
 
-p.nochanges {
-    font-size: 1.4em;
-    text-align: center;
-    color: #aaa;
-}
-
 .code {
     font-family: monospace;
     background-color: #fff;
