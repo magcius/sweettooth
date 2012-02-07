@@ -30,28 +30,33 @@ define(['jquery', 'diff'], function($, diff) {
         return $table;
     }
 
-    function createFileView(filename, pk, isDiff) {
-        var frag = isDiff ? '/get-file-diff/' : '/get-file/';
-
+    function createDiffView(filename, pk) {
         var req = $.ajax({
             type: 'GET',
             dataType: 'json',
             data: { filename: filename },
-            url: REVIEW_URL_BASE + frag + pk
+            url: REVIEW_URL_BASE + '/get-file-diff/' + pk
         });
 
         var deferred = new $.Deferred();
-
         req.done(function(data) {
-            var $html;
-            if (isDiff) {
-                $html = diff.buildDiffTable(data.chunks, data.oldlines, data.newlines);
-            } else {
-                $html = buildFileView(data);
-            }
-            deferred.resolve($html);
+            deferred.resolve(diff.buildDiffTable(data.chunks, data.oldlines, data.newlines));
+        });
+        return deferred;
+    }
+
+    function createFileView(filename, pk) {
+        var req = $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            data: { filename: filename },
+            url: REVIEW_URL_BASE + '/get-file/' + pk
         });
 
+        var deferred = new $.Deferred();
+        req.done(function(data) {
+            deferred.resolve(buildFileView(data));
+        });
         return deferred;
     }
 
@@ -120,7 +125,7 @@ define(['jquery', 'diff'], function($, diff) {
                         return;
 
                     if ($file === null) {
-                        var d = createFileView(filename, pk, diff);
+                        var d = (diff ? createDiffView : createFileView)(filename, pk, diff);
                         currentFilename = filename;
                         d.done(function($table) {
                             $file = $table;
