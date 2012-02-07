@@ -132,6 +132,17 @@ def get_diff(old_zipfile, new_zipfile, filename):
                 oldlines=oldlines,
                 newlines=newlines)
 
+def get_fake_chunks(numlines, tag):
+    # When a file is added/deleted, we want to show a view where
+    # we have nothing in one pane, and a bunch of inserted/delted
+    # lines in the other.
+    lines = [[n, n, n, [], [], False] for n in range(1, numlines + 1)]
+    return [{ 'lines': lines,
+              'numlines': numlines,
+              'change': tag,
+              'collapsable': False,
+              'meta': None }]
+
 def get_filelist(zipfile):
     return set(n for n in zipfile.namelist() if not n.endswith('/'))
 
@@ -197,6 +208,18 @@ def ajax_get_file_diff_view(request, obj):
 
     if filename in old_filelist and filename in new_filelist:
         return get_diff(old_zipfile, new_zipfile, filename)
+    elif filename in old_filelist:
+        # File was deleted.
+        f = old_zipfile.open(filename, 'r')
+        lines = split_lines(escape(f.read()))
+        f.close()
+        return dict(chunks=get_fake_chunks(len(lines), 'delete'), oldlines=lines, newlines=[])
+    elif filename in new_filelist:
+        # File was added.
+        f = new_zipfile.open(filename, 'r')
+        lines = split_lines(escape(f.read()))
+        f.close()
+        return dict(chunks=get_fake_chunks(len(lines), 'insert'), oldlines=[], newlines=lines)
     else:
         return None
 
