@@ -37,7 +37,20 @@ IMAGE_TYPES = {
 
 BINARY_TYPES = set(['.mo', '.png', ',jpg', '.jpeg', '.gif', '.bmp'])
 
-code_formatter = pygments.formatters.HtmlFormatter(style="borland", cssclass="code")
+# Stolen from ReviewBoard
+# See the top of diffutils.py for details
+class NoWrapperHtmlFormatter(pygments.formatters.HtmlFormatter):
+    """An HTML Formatter for Pygments that don't wrap items in a div."""
+
+    def _wrap_div(self, inner):
+        # Method called by the formatter to wrap the contents of inner.
+        # Inner is a list of tuples containing formatted code. If the first item
+        # in the tuple is zero, then it's a wrapper, so we should ignore it.
+        for tup in inner:
+            if tup[0]:
+                yield tup
+
+code_formatter = NoWrapperHtmlFormatter(style="borland", cssclass="code")
 
 def can_review_extension(user, extension):
     if user == extension.creator:
@@ -82,13 +95,9 @@ def html_for_file(filename, version, raw):
 
     elif extension in BINARY_TYPES:
         download_url = reverse('review-download', kwargs=dict(pk=version.pk))
-        html = "<p>This file is binary. Please <a href=\"%s\">" \
-            "download the zipfile</a> to see it.</p>" % (download_url,)
-
-        return dict(html=html, num_lines=0)
+        return dict(binary=True, url=download_url)
     else:
-        return dict(html=highlight_file(filename, raw, code_formatter),
-                    num_lines=len(raw.strip().splitlines()))
+        return dict(binary=False, lines=split_lines(highlight_file(filename, raw, code_formatter)))
 
 def get_zipfiles(version, old_version_number=None):
     extension = version.extension

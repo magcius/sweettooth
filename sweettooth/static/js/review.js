@@ -4,28 +4,23 @@ define(['jquery', 'diff'], function($, diff) {
 
     var REVIEW_URL_BASE = '/review/ajax';
 
-    function addLineNumbers(data) {
+    function buildFileView(data) {
         var $fileView, $table, $tr;
 
-        $tr = $('<tr>');
-        $table = $('<table>', {'class': 'filetable'}).append($tr);
-
-        if (data.num_lines) {
-            var count = data.num_lines;
-            var lines = [];
-            lines.push("<td class=\"linenumbers\"><pre>");
-            for (var i = 1; i < (count + 1); i ++) {
-                lines.push("<span rel=\"L" + i + "\">" + i + "</span>\n");
-            }
-            lines.push("</pre></td>");
-
-            $tr.append(lines.join(''));
+        if (data.binary) {
+            return $("<p>").
+                append("This file is binary. Please ").
+                append($("<a>", {'href': data.url}).text("download the zipfile")).
+                append("to see it.");
         }
 
-        $fileView = $('<div>', {'class': 'file'}).
-            appendTo($('<td>', {'width': '100%'}).appendTo($tr));
+        var $table = $('<table>', {'class': 'code'});
 
-        $fileView.html(data.html);
+        $.each(data.lines, function(i) {
+            $table.append($('<tr>', {'class': 'line'}).
+                          append($('<td>', {'class': 'linum'}).text(i + 1)).
+                          append($('<td>', {'class': 'contents'}).html(this)));
+        });
 
         return $table;
     }
@@ -47,7 +42,7 @@ define(['jquery', 'diff'], function($, diff) {
             if (isDiff) {
                 $html = diff.buildDiffTable(data.chunks, data.oldlines, data.newlines);
             } else {
-                $html = addLineNumbers(data);
+                $html = buildFileView(data);
             }
             deferred.resolve($html);
         });

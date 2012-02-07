@@ -53,27 +53,12 @@
     border-style: none solid;
 }
 
-.file pre, .filedisplay .diff, .filedisplay .filetable {
-    margin: 0;
-}
-
 #diff, #files {
     overflow-x: auto;
 }
 
-.code {
-    font-family: monospace;
-    background-color: #fff;
-    margin: 0;
-    width: 100%;
-}
-
 .file {
     padding-left: 0.5em;
-}
-
-.code, .linenumbers pre {
-    line-height: 1.2;
 }
 
 p.nochanges {
@@ -82,11 +67,28 @@ p.nochanges {
     color: #aaa;
 }
 
+.code {
+    font-family: monospace;
+    background-color: #fff;
+    margin: 0;
+    width: 100%;
+    line-height: 1.2;
+}
+
+.linum {
+    color: #aaa;
+    text-align: right;
+    background-color: #eee;
+    margin: 0;
+    padding-right: 1em;
+    border-right: 1px solid #ccc;
+}
+
 .line {
     white-space: pre;
 
     /* makes blank lines "expand",
-     * keep in sync with line-height */
+     * keep in sync with line-height in .code */
     height: 1.2em;
 }
 
@@ -131,15 +133,6 @@ p.nochanges {
     cursor: pointer;
     color: #000;
     font-weight: bold;
-}
-
-.linenumbers pre, .linum {
-    color: #aaa;
-    text-align: right;
-    background-color: #eee;
-    margin: 0;
-    padding-right: 1em;
-    border-right: 1px solid #ccc;
 }
 
 #comments {
