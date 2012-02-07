@@ -89,15 +89,14 @@ def html_for_file(filename, version, raw):
     if extension in IMAGE_TYPES:
         mime = IMAGE_TYPES[extension]
         raw_base64 = base64.standard_b64encode(raw)
-
-        return dict(html='<img src="data:%s;base64,%s">' % (mime, raw_base64,),
-                    num_lines=0)
-
+        return dict(raw=True, binary=False,
+                    html='<img src="data:%s;base64,%s">' % (mime, raw_base64,))
     elif extension in BINARY_TYPES:
         download_url = reverse('review-download', kwargs=dict(pk=version.pk))
-        return dict(binary=True, url=download_url)
+        return dict(raw=False, binary=True, url=download_url)
     else:
-        return dict(binary=False, lines=split_lines(highlight_file(filename, raw, code_formatter)))
+        return dict(raw=False, binary=False,
+                    lines=split_lines(highlight_file(filename, raw, code_formatter)))
 
 def get_zipfiles(version, old_version_number=None):
     extension = version.extension

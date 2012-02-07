@@ -5,14 +5,14 @@ define(['jquery', 'diff'], function($, diff) {
     var REVIEW_URL_BASE = '/review/ajax';
 
     function buildFileView(data) {
-        var $fileView, $table, $tr;
+        if (data.raw)
+            return $(data.html);
 
-        if (data.binary) {
+        if (data.binary)
             return $("<p>").
                 append("This file is binary. Please ").
                 append($("<a>", {'href': data.url}).text("download the zipfile")).
                 append("to see it.");
-        }
 
         var $table = $('<table>', {'class': 'code'});
 
