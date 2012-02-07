@@ -4,15 +4,20 @@ define(['jquery', 'diff'], function($, diff) {
 
     var REVIEW_URL_BASE = '/review/ajax';
 
+    var BINARY_TYPES = {};
+    $.each(['mo', 'png', 'jpg', 'jpeg', 'gif', 'bmp'], function() {
+        BINARY_TYPES[this] = true;
+    });
+
+    function isBinary(filename) {
+        var parts = filename.split('.');
+        var ext = parts[parts.length - 1];
+        return BINARY_TYPES.hasOwnProperty(ext);
+    }
+
     function buildFileView(data) {
         if (data.raw)
             return $(data.html);
-
-        if (data.binary)
-            return $("<p>").
-                append("This file is binary. Please ").
-                append($("<a>", {'href': data.url}).text("download the zipfile")).
-                append("to see it.");
 
         var $table = $('<table>', {'class': 'code'});
 
@@ -67,7 +72,6 @@ define(['jquery', 'diff'], function($, diff) {
         var req = $.ajax({
             type: 'GET',
             dataType: 'json',
-            data: { disallow_binary: diff },
             url: REVIEW_URL_BASE + '/get-file-list/' + pk,
         });
 
@@ -99,6 +103,18 @@ define(['jquery', 'diff'], function($, diff) {
 
                 var $file = null;
 
+                if (diff && isBinary(filename)) {
+                    // We don't show binary files in the diff view.
+                    return;
+                }
+
+                $('<li>').append($selector).appendTo($fileList);
+
+                if (isBinary(filename)) {
+                    $selector.addClass('binary');
+                    return;
+                }
+
                 $selector.click(function() {
                     if ($selector.hasClass('selected'))
                         return;
@@ -117,8 +133,6 @@ define(['jquery', 'diff'], function($, diff) {
                     }
 
                 });
-
-                $('<li>').append($selector).appendTo($fileList);
             }
 
             $.each(files.changed, function() { createFileSelector('changed', this); });

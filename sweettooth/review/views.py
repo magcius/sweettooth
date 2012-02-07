@@ -35,6 +35,7 @@ IMAGE_TYPES = {
     '.svg':  'image/svg+xml',
 }
 
+# Keep this in sync with the BINARY_TYPES list at the top of review.js
 BINARY_TYPES = set(['.mo', '.png', ',jpg', '.jpeg', '.gif', '.bmp'])
 
 # Stolen from ReviewBoard
@@ -83,20 +84,17 @@ def highlight_file(filename, raw, formatter):
 
     return pygments.highlight(raw, lexer, formatter)
 
-def html_for_file(filename, version, raw):
+def html_for_file(filename, raw):
     base, extension = os.path.splitext(filename)
 
-    if extension in IMAGE_TYPES:
+    if extension in BINARY_TYPES:
+        return None
+    elif extension in IMAGE_TYPES:
         mime = IMAGE_TYPES[extension]
         raw_base64 = base64.standard_b64encode(raw)
-        return dict(raw=True, binary=False,
-                    html='<img src="data:%s;base64,%s">' % (mime, raw_base64,))
-    elif extension in BINARY_TYPES:
-        download_url = reverse('review-download', kwargs=dict(pk=version.pk))
-        return dict(raw=False, binary=True, url=download_url)
+        return dict(raw=True, html='<img src="data:%s;base64,%s">' % (mime, raw_base64,))
     else:
-        return dict(raw=False, binary=False,
-                    lines=split_lines(highlight_file(filename, raw, code_formatter)))
+        return dict(raw=False, lines=split_lines(highlight_file(filename, raw, code_formatter)))
 
 def get_zipfiles(version, old_version_number=None):
     extension = version.extension
@@ -112,20 +110,6 @@ def get_zipfiles(version, old_version_number=None):
     old_zipfile = old_version.get_zipfile('r')
 
     return old_zipfile, new_zipfile
-
-def get_filelist(zipfile, disallow_binary):
-    for name in zipfile.namelist():
-        if name.endswith('/'):
-            # There's no directory flag in the info, so I'm
-            # guessing this is the most reliable way to do it.
-            continue
-
-        if disallow_binary:
-            base, extension = os.path.splitext(name)
-            if extension in BINARY_TYPES:
-                continue
-
-        yield name
 
 def get_diff(old_zipfile, new_zipfile, filename):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
@@ -148,6 +132,9 @@ def get_diff(old_zipfile, new_zipfile, filename):
                 oldlines=oldlines,
                 newlines=newlines)
 
+def get_filelist(zipfile):
+    return set(n for n in zipfile.namelist() if not n.endswith('/'))
+
 @ajax_view
 @model_view(models.ExtensionVersion)
 def ajax_get_file_list_view(request, obj):
@@ -157,9 +144,7 @@ def ajax_get_file_list_view(request, obj):
 
     old_zipfile, new_zipfile = get_zipfiles(version, old_version_number)
 
-    disallow_binary = json.loads(request.GET['disallow_binary'])
-
-    new_filelist = set(get_filelist(new_zipfile, disallow_binary))
+    new_filelist = get_filelist(new_zipfile)
 
     if old_zipfile is None:
         return dict(unchanged=[],
@@ -167,7 +152,7 @@ def ajax_get_file_list_view(request, obj):
                     added=sorted(new_filelist),
                     deleted=[])
 
-    old_filelist = set(get_filelist(old_zipfile, disallow_binary))
+    old_filelist = get_filelist(old_zipfile)
 
     both    = new_filelist & old_filelist
     added   = new_filelist - old_filelist
@@ -227,7 +212,7 @@ def ajax_get_file_view(request, obj):
         raise Http404()
 
     raw = f.read()
-    return html_for_file(filename, obj, raw)
+    return html_for_file(filename, raw)
 
 def download_zipfile(request, pk):
     version = get_object_or_404(models.ExtensionVersion, pk=pk)

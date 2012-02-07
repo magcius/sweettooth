@@ -91,6 +91,11 @@
     color: #747474;
 }
 
+.fileselector.binary {
+    color: #AA0000;
+    cursor: auto;
+}
+
 .fileselector.selected {
     cursor: auto;
     color: #2e3436;
