@@ -73,6 +73,7 @@ p.nochanges {
     margin: 0;
     width: 100%;
     line-height: 1.2;
+    white-space: pre;
 }
 
 .linum {
@@ -82,14 +83,6 @@ p.nochanges {
     margin: 0;
     padding-right: 1em;
     border-right: 1px solid #ccc;
-}
-
-.diff-line {
-    white-space: pre;
-
-    /* makes blank lines "expand",
-     * keep in sync with line-height in .code */
-    height: 1.2em;
 }
 
 /* colors stolen from Splinter */
