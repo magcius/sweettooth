@@ -45,29 +45,32 @@ function($, messages, dbusProxy, extensionUtils) {
         $.fn.addExtensionSwitch = function() {
             // Don't show our switches -- CSS styles define a clickable
             // area even with no content.
-            $(this).find('.switch').hide();
+            return this.find('.switch').hide();
         };
 
         $.fn.addLocalExtensions = function() {
-            $(this).append("GNOME Shell Extensions cannot list your installed extensions.");
+            return this.append("GNOME Shell Extensions cannot list your installed extensions.");
         };
 
         $.fn.fillInErrors = function() {
-            var $form = $(this);
-            var $textarea = $form.find('textarea[name=error]');
-            var $hidden = $form.find('input:hidden[name=has_errors]');
+            var $textarea = this.find('textarea[name=error]');
+            var $hidden = this.find('input:hidden[name=has_errors]');
             $textarea.text("GNOME Shell Extensions cannot automatically detect any errors.").
                 addClass('no-errors').attr('disabled', 'disabled');
             $hidden.val('');
+            return this;
         };
 
         $.fn.addOutOfDateIndicator = function() {
+            return this;
         };
 
         $.fn.addLaunchExtensionPrefsButton = function() {
+            return this;
         };
 
         $.fn.checkForUpdates = function() {
+            return this;
         };
 
         return;
