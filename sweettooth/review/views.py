@@ -259,23 +259,25 @@ def submit_review_view(request, obj):
 
     messages.info(request, "Thank you for reviewing %s" % (extension.name,))
 
-    if can_approve_extension(request.user, obj.extension):
-        status_string = request.POST.get('status')
-        newstatus = dict(approve=models.STATUS_ACTIVE,
-                         reject=models.STATUS_REJECTED).get(status_string, None)
+    status_string = request.POST.get('status')
+    newstatus = dict(approve=models.STATUS_ACTIVE,
+                     reject=models.STATUS_REJECTED).get(status_string, None)
 
-        if newstatus is not None:
-            log = ChangeStatusLog(user=request.user,
-                                  version=obj,
-                                  newstatus=newstatus)
-            log.save()
+    if newstatus is not None:
+        if newstatus == models.STATUS_ACTIVE and not can_approve_extension(request.user, extension):
+            return HttpResponseForbidden()
 
-            obj.status = newstatus
-            obj.save()
+        log = ChangeStatusLog(user=request.user,
+                              version=obj,
+                              newstatus=newstatus)
+        log.save()
 
-            review.changelog = log
+        obj.status = newstatus
+        obj.save()
 
-            models.status_changed.send(sender=request, version=obj, log=log)
+        review.changelog = log
+
+        models.status_changed.send(sender=request, version=obj, log=log)
 
     review.save()
 
