@@ -17,7 +17,7 @@ class NoOpWidget(widgets.Widget):
         return u''
 
 class RatingCommentForm(CommentForm):
-    rating = fields.IntegerField(min_value=-1, max_value=4,
+    rating = fields.IntegerField(min_value=-1, max_value=5,
                                  required=False, widget=NoOpWidget())
 
     def clean_rating(self):
