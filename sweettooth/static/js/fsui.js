@@ -84,8 +84,6 @@ function($, dbusProxy, hashparamutils, modal) {
                     return false;
                 }).appendTo($fsui);
 
-            $fsui.append('<span>Compatible with</span>');
-
             function textForFilterValue(value) {
                 if (value === undefined)
                     return "All versions";
@@ -94,29 +92,32 @@ function($, dbusProxy, hashparamutils, modal) {
                 return "GNOME Shell version " + hp.shell_version;
             }
 
-            $link = makeDropdownLink(textForFilterValue(hp.shell_version)).
-                click(function() {
-                    var $dropdown = $('<div>', {'class': 'fsui-dropdown'}).
-                        appendTo($fsui).
-                        css('right', calculateRight($fsui, $(this))).
-                        hide().
-                        fadeIn('fast');
+            if (dbusProxy.ShellVersion !== undefined) {
+                $fsui.append('<span>Compatible with</span>');
 
-                    $(this).addClass('selected');
-                    var closeUI = makeCloseUI($(this), $dropdown);
-                    modal.activateModal($dropdown, closeUI);
+                $link = makeDropdownLink(textForFilterValue(hp.shell_version)).
+                    click(function() {
+                        var $dropdown = $('<div>', {'class': 'fsui-dropdown'}).
+                            appendTo($fsui).
+                            css('right', calculateRight($fsui, $(this))).
+                            hide().
+                            fadeIn('fast');
 
-                    var $filterUL = $('<ul>').appendTo($dropdown);
+                        $(this).addClass('selected');
+                        var closeUI = makeCloseUI($(this), $dropdown);
+                        modal.activateModal($dropdown, closeUI);
 
-                    $.each([undefined, dbusProxy.ShellVersion], function() {
-                        var $filterItem = makeLink('shell_version', this, textForFilterValue(this), closeUI).appendTo($filterUL);
-                        if (hp.shell_version === this)
-                            $filterItem.addClass('selected');
-                    });
+                        var $filterUL = $('<ul>').appendTo($dropdown);
 
-                    return false;
-                }).appendTo($fsui);
+                        $.each([undefined, dbusProxy.ShellVersion], function() {
+                            var $filterItem = makeLink('shell_version', this, textForFilterValue(this), closeUI).appendTo($filterUL);
+                            if (hp.shell_version === this)
+                                $filterItem.addClass('selected');
+                        });
 
+                        return false;
+                    }).appendTo($fsui);
+            }
         });
     };
 });
