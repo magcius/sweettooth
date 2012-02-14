@@ -60,6 +60,10 @@ function($, messages, dbusProxy, extensionUtils) {
             return this;
         };
 
+        $.fn.grayOutIfOutOfDate = function() {
+            return this;
+        };
+
         $.fn.addLaunchExtensionPrefsButton = function() {
             return this;
         };
@@ -239,6 +243,9 @@ function($, messages, dbusProxy, extensionUtils) {
                         if (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE)
                             $elem.addLaunchExtensionPrefsButton(true);
 
+                        if (extension.state === ExtensionState.OUT_OF_DATE)
+                            $elem.addClass('out-of-date');
+
                         $.ajax({
                             url: "/ajax/detail/",
                             dataType: "json",
@@ -333,6 +340,19 @@ function($, messages, dbusProxy, extensionUtils) {
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
                 addExtensionSwitch(uuid, meta, $extension);
             });
+        });
+    };
+
+    $.fn.grayOutIfOutOfDate = function() {
+        return this.each(function() {
+            var $elem = $(this);
+            var svm = $elem.data('svm');
+            if (!svm)
+                return;
+
+            var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+            if (vpk === null)
+                $elem.addClass('out-of-date');
         });
     };
 
