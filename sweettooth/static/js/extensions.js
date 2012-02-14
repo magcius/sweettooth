@@ -60,10 +60,6 @@ function($, messages, dbusProxy, extensionUtils) {
             return this;
         };
 
-        $.fn.addOutOfDateIndicator = function() {
-            return this;
-        };
-
         $.fn.addLaunchExtensionPrefsButton = function() {
             return this;
         };
@@ -243,9 +239,6 @@ function($, messages, dbusProxy, extensionUtils) {
                         if (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE)
                             $elem.addLaunchExtensionPrefsButton(true);
 
-                        if (extension.state === ExtensionState.OUT_OF_DATE)
-                            $elem.addOutOfDateIndicator(true);
-
                         $.ajax({
                             url: "/ajax/detail/",
                             dataType: "json",
@@ -340,30 +333,6 @@ function($, messages, dbusProxy, extensionUtils) {
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
                 addExtensionSwitch(uuid, meta, $extension);
             });
-        });
-    };
-
-    $.fn.addOutOfDateIndicator = function(force) {
-        function indicator($elem) {
-            $elem.
-                addClass('out-of-date').
-                attr('title', "This extension is incompatible with your version of GNOME").
-                tipsy({ gravity: 'c', fade: true });
-        }
-
-        return this.each(function() {
-            var $elem = $(this);
-            if (force) {
-                indicator($elem);
-            } else {
-                var svm = $elem.data('svm');
-                if (!svm)
-                    return;
-
-                var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-                if (vpk === null)
-                    indicator($elem);
-            }
         });
     };
 

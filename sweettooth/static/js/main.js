@@ -120,7 +120,6 @@ require(['jquery', 'messages', 'modal',
         $('#extensions-list').
             paginatorify('/ajax/extensions-list/').
             bind('page-loaded', function() {
-                $('li.extension').addOutOfDateIndicator();
                 $('#extensions-list .before-paginator').fsUIify();
 
                 // Scroll the page back up to the top.
