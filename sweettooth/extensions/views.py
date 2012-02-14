@@ -74,7 +74,7 @@ def shell_update(request):
 
 def get_versions_for_version_strings(version_strings):
     for version_string in version_strings:
-        version = models.ShellVersion.objects.lookup_for_version_string(version_string)
+        version = models.ShellVersion.objects.lookup_for_version_string(version_string, ignore_micro=True)
         if version is None:
             continue
         yield version
