@@ -45,24 +45,19 @@ define({
                 return;
             }
 
-            var apiVersion;
+            var apiVersion = "dummy";
 
             try {
-                if (window.SweetTooth)
+                if (window.SweetTooth) {
                     apiVersion = window.SweetTooth.apiVersion;
-            } catch (e) {
-                apiVersion = null;
-            }
+                }
+            } catch (e) { }
 
-            if (apiVersion) {
-                var scriptname = './versions/' + apiVersion + '/main';
-                // requirejs caches response.
-                req([scriptname], function(module) {
-                    onLoad(module);
-                });
-            } else {
-                onLoad();
-            }
+            var scriptname = './versions/' + apiVersion + '/main';
+            // requirejs caches response.
+            req([scriptname], function(module) {
+                onLoad(module);
+            });
         });
     }
 });

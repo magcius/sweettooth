@@ -2,6 +2,8 @@
 
 define(['jquery', 'dbus!API', 'versions/common/common'], function($, API, common) {
     var proxy = {
+        IsDummy: false,
+
         ListExtensions: common.ListExtensions,
         GetExtensionInfo: common.GetExtensionInfo,
         GetErrors: common.GetErrors,

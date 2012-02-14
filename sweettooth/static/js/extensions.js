@@ -33,8 +33,7 @@ function($, messages, dbusProxy, extensionUtils) {
     // While technically we shouldn't have mismatched API versions,
     // the plugin doesn't check whether the Shell matches, so if someone
     // is running with an old Shell version but a newer plugin, error out.
-    if (dbusProxy === undefined ||
-        dbusProxy.ShellVersion === undefined) {
+    if (dbusProxy.IsDummy) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
         messages.addError("You do not appear to have an up to date version " +
