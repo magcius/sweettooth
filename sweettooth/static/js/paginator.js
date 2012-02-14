@@ -1,6 +1,7 @@
 "use strict";
 
-define(['jquery', 'hashparamutils', 'jquery.hashchange'], function($, hashparamutils) {
+define(['jquery', 'hashparamutils',
+        'dbus!_', 'jquery.hashchange'], function($, hashparamutils, dbusProxy) {
 
     $.fn.paginatorify = function(url, context) {
         if (!this.length)
@@ -103,6 +104,9 @@ define(['jquery', 'hashparamutils', 'jquery.hashchange'], function($, hashparamu
                 hashParams.page = 1;
             else
                 hashParams.page = parseInt(hashParams.page);
+
+            if (hashParams.shell_version === undefined && dbusProxy.ShellVersion !== undefined)
+                hashParams.shell_version = dbusProxy.ShellVersion;
 
             loadPage();
         });

@@ -85,17 +85,21 @@ function($, dbusProxy, hashparamutils, modal) {
                 }).appendTo($fsui);
 
             function textForFilterValue(value) {
-                if (value === undefined)
+                if (value === 'all')
                     return "All versions";
                 else if (value === dbusProxy.ShellVersion)
                     return "Current version";
-                return "GNOME Shell version " + hp.shell_version;
+                return "GNOME Shell version " + value;
             }
 
             if (dbusProxy.ShellVersion !== undefined) {
+                var shellVersion = hp.shell_version;
+                if (shellVersion === undefined)
+                    shellVersion = dbusProxy.ShellVersion;
+
                 $fsui.append('<span>Compatible with</span>');
 
-                $link = makeDropdownLink(textForFilterValue(hp.shell_version)).
+                $link = makeDropdownLink(textForFilterValue(shellVersion)).
                     click(function() {
                         var $dropdown = $('<div>', {'class': 'fsui-dropdown'}).
                             appendTo($fsui).
@@ -109,9 +113,9 @@ function($, dbusProxy, hashparamutils, modal) {
 
                         var $filterUL = $('<ul>').appendTo($dropdown);
 
-                        $.each([undefined, dbusProxy.ShellVersion], function() {
+                        $.each(['all', dbusProxy.ShellVersion], function() {
                             var $filterItem = makeLink('shell_version', this, textForFilterValue(this), closeUI).appendTo($filterUL);
-                            if (hp.shell_version === this)
+                            if (shellVersion === this)
                                 $filterItem.addClass('selected');
                         });
 

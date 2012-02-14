@@ -88,8 +88,9 @@ def ajax_query_params_query(request):
     query_params = {}
 
     version_strings = request.GET.getlist('shell_version')
-    if version_strings:
-        query_params['versions__shell_versions__in'] = get_versions_for_version_strings(version_strings)
+    if version_strings and version_strings != ['all']:
+        versions = set(get_versions_for_version_strings(version_strings))
+        query_params['versions__shell_versions__in'] = versions
 
     uuids = request.GET.getlist('uuid')
     if uuids:
