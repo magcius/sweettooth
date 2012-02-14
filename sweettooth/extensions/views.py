@@ -97,7 +97,7 @@ def ajax_query_params_query(request):
 
     queryset = models.Extension.objects.visible().filter(**query_params)
 
-    sort = request.GET.get('sort', 'name')
+    sort = request.GET.get('sort', 'popularity')
     sort = dict(recent='created').get(sort, sort)
     if sort not in ('created', 'downloads', 'popularity', 'name'):
         raise Http404()

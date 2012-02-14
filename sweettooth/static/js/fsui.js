@@ -53,7 +53,7 @@ function($, dbusProxy, hashparamutils, modal) {
 
             var hp = hashparamutils.getHashParams();
             if (hp.sort === undefined || !sortCriteria.hasOwnProperty(hp.sort))
-                hp.sort = 'name';
+                hp.sort = 'popularity';
 
             var $fsui = $('<div>', {'class': 'fsui'}).appendTo($elem);
 
