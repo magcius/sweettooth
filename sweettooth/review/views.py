@@ -295,19 +295,16 @@ def review_version_view(request, obj):
     previous_reviews = version.reviews.all()
 
     can_approve = can_approve_extension(request.user, extension)
+    can_review = can_review_extension(request.user, extension)
 
     context = dict(extension=extension,
                    version=version,
                    all_versions=all_versions,
                    previous_reviews=previous_reviews,
-                   can_approve=can_approve)
+                   can_approve=can_approve,
+                   can_review=can_review)
 
-    if can_review_extension(request.user, extension):
-        template_name = "review/review_reviewer.html"
-    else:
-        template_name = "review/review.html"
-
-    return render(request, template_name, context)
+    return render(request, 'review/review.html', context)
 
 def send_email_on_submitted(sender, request, version, **kwargs):
     extension = version.extension
