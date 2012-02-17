@@ -45,13 +45,16 @@ define({
                 return;
             }
 
-            var apiVersion = "dummy";
+            var apiVersion = undefined;
 
             try {
                 if (window.SweetTooth) {
                     apiVersion = window.SweetTooth.apiVersion;
                 }
             } catch (e) { }
+
+            if (!apiVersion)
+                apiVersion = 'dummy';
 
             var scriptname = './versions/' + apiVersion + '/main';
             // requirejs caches response.
