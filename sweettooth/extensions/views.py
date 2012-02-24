@@ -86,6 +86,7 @@ def get_versions_for_version_strings(version_strings):
 
 def ajax_query_params_query(request):
     query_params = {}
+    query_params['versions__status__in'] = models.VISIBLE_STATUSES
 
     version_strings = request.GET.getlist('shell_version')
     if version_strings and version_strings != ['all']:
