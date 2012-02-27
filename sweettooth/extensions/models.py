@@ -4,7 +4,6 @@ try:
 except ImportError:
     import simplejson as json
 
-import uuid
 from zipfile import ZipFile, BadZipfile
 
 from django.core.urlresolvers import reverse
@@ -377,7 +376,7 @@ class ExtensionVersion(models.Model):
             self.extension.name = metadata.pop('name', "")
             self.extension.description = metadata.pop('description', "")
             self.extension.url = metadata.pop('url', "")
-            self.extension.uuid = metadata.pop('uuid', str(uuid.uuid1()))
+            self.extension.uuid = metadata['uuid']
             self.extension.save()
 
             # Due to Django ORM magic and stupidity, this is unfortunately necessary
