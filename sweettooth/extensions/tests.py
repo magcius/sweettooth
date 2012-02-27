@@ -33,13 +33,13 @@ class BasicUserTestCase(object):
 
 class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
-        metadata = {"name": "Test Metadata",
+        metadata = {"uuid": "test-metadata@mecheye.net",
+                    "name": "Test Metadata",
                     "description": "Simple test metadata",
                     "url": "http://test-metadata.gnome.org"}
 
-        extension = models.Extension(creator=self.user)
-        version = models.ExtensionVersion()
-        version.extension = extension
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion(extension=extension)
         version.parse_metadata_json(metadata)
 
         self.assertEquals(extension.name, "Test Metadata")
@@ -47,12 +47,11 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
     def test_simple_zipdata_data(self):
-        extension = models.Extension(creator=self.user)
-        version = models.ExtensionVersion()
-        version.extension = extension
-
         with get_test_zipfile('SimpleExtension') as f:
             metadata = models.parse_zipfile_metadata(f)
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion(extension=extension)
         version.parse_metadata_json(metadata)
 
         self.assertEquals(extension.uuid, "test-extension@mecheye.net")
@@ -61,12 +60,11 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
     def test_extra_metadata(self):
-        extension = models.Extension(creator=self.user)
-        version = models.ExtensionVersion()
-        version.extension = extension
-
         with get_test_zipfile('ExtraMetadata') as f:
             metadata = models.parse_zipfile_metadata(f)
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion(extension=extension)
         version.parse_metadata_json(metadata)
 
         extra = json.loads(version.extra_json_fields)
@@ -77,19 +75,17 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
 
 class ReplaceMetadataTest(BasicUserTestCase, TestCase):
     def test_replace_metadata(self):
-        extension = models.Extension(creator=self.user)
-        version = models.ExtensionVersion()
-        version.extension = extension
-
         old_zip_file = get_test_zipfile('LotsOfFiles')
 
         metadata = models.parse_zipfile_metadata(old_zip_file)
         old_zip_file.seek(0)
 
-        version.source = File(old_zip_file)
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion(extension=extension,
+                                          source=File(old_zip_file))
 
         version.parse_metadata_json(metadata)
-        version.replace_metadata_json()
+
         new_zip = version.get_zipfile('r')
 
         old_zip = ZipFile(File(old_zip_file), 'r')
@@ -166,13 +162,9 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
                     "description": "Simple test metadata",
                     "url": "http://test-metadata.gnome.org"}
 
-        extension = models.Extension(creator=self.user)
-        version = models.ExtensionVersion()
-        version.extension = extension
-        version.parse_metadata_json(metadata)
-
-        version.status = models.STATUS_ACTIVE
-        version.save()
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion.objects.create(extension=extension,
+                                                         status=models.STATUS_ACTIVE)
 
         self.assertEquals(version.version, 1)
         self.assertEquals(extension.latest_version, version)
@@ -183,20 +175,14 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
                     "description": "Simple test metadata",
                     "url": "http://test-metadata.gnome.org"}
 
-        extension = models.Extension(creator=self.user)
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
 
-        v1 = models.ExtensionVersion()
-        v1.extension = extension
-        v1.status = models.STATUS_ACTIVE
-        v1.parse_metadata_json(metadata)
-        v1.save()
+        v1 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE)
         self.assertEquals(v1.version, 1)
 
-        v2 = models.ExtensionVersion()
-        v2.extension = extension
-        v2.status = models.STATUS_ACTIVE
-        v2.parse_metadata_json(metadata)
-        v2.save()
+        v2 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE)
         self.assertEquals(v2.version, 2)
 
         self.assertEquals(list(extension.visible_versions.order_by('version')), [v1, v2])
@@ -208,30 +194,21 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
                     "description": "Simple test metadata",
                     "url": "http://test-metadata.gnome.org"}
 
-        extension = models.Extension(creator=self.user)
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
 
-        v1 = models.ExtensionVersion()
-        v1.extension = extension
-        v1.parse_metadata_json(metadata)
-        v1.status = models.STATUS_ACTIVE
-        v1.save()
+        v1 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE)
         self.assertEquals(v1.version, 1)
 
-        v2 = models.ExtensionVersion()
-        v2.extension = extension
-        v2.status = models.STATUS_NEW
-        v2.parse_metadata_json(metadata)
-        v2.save()
+        v2 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_NEW)
         self.assertEquals(v2.version, 2)
 
         self.assertEquals(list(extension.visible_versions.order_by('version')), [v1])
         self.assertEquals(extension.latest_version, v1)
 
-        v3 = models.ExtensionVersion()
-        v3.extension = extension
-        v3.status = models.STATUS_ACTIVE
-        v3.parse_metadata_json(metadata)
-        v3.save()
+        v3 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE)
         self.assertEquals(v3.version, 3)
 
         self.assertEquals(list(extension.visible_versions.order_by('version')), [v1, v3])
@@ -244,14 +221,11 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
                     "url": "http://test-metadata.gnome.org",
                     "shell-version": ["3.0.0", "3.0.1", "3.0.2"]}
 
-        extension = models.Extension(creator=self.user)
-
-        version = models.ExtensionVersion()
-        version.extension = extension
-        version.status = models.STATUS_ACTIVE
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion.objects.create(extension=extension,
+                                                         status=models.STATUS_ACTIVE)
         version.parse_metadata_json(metadata)
 
-        version.save()
         shell_versions = sorted(sv.version_string for sv in version.shell_versions.all())
         self.assertEquals(shell_versions, ["3.0.0", "3.0.1", "3.0.2"])
 
@@ -262,14 +236,12 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
                     "url": "http://test-metadata.gnome.org",
                     "shell-version": ["3.0", "3.2"]}
 
-        extension = models.Extension(creator=self.user)
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
 
-        version = models.ExtensionVersion()
-        version.extension = extension
-        version.status = models.STATUS_ACTIVE
+        version = models.ExtensionVersion.objects.create(extension=extension,
+                                                         status=models.STATUS_ACTIVE)
         version.parse_metadata_json(metadata)
 
-        version.save()
         shell_versions = sorted(sv.version_string for sv in version.shell_versions.all())
         self.assertEquals(shell_versions, ["3.0", "3.2"])
 

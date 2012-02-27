@@ -45,6 +45,12 @@ class ExtensionManager(models.Manager):
     def visible(self):
         return self.filter(versions__status__in=VISIBLE_STATUSES).distinct()
 
+    def create_from_metadata(self, metadata, **kwargs):
+        instance = self.model(**kwargs)
+        instance.parse_metadata_json(metadata)
+        instance.save()
+        return instance
+
 def build_shell_version_map(versions):
     shell_version_map = {}
     for version in versions:
@@ -121,6 +127,12 @@ class Extension(models.Model):
 
         if not validate_uuid(self.uuid):
             raise ValidationError("Invalid UUID")
+
+    def parse_metadata_json(self, metadata):
+        self.name = metadata.pop('name', "")
+        self.description = metadata.pop('description', "")
+        self.url = metadata.pop('url', "")
+        self.uuid = metadata['uuid']
 
     def save(self, replace_metadata_json=True, *args, **kwargs):
         super(Extension, self).save(*args, **kwargs)
@@ -364,29 +376,8 @@ class ExtensionVersion(models.Model):
         zipfile.writestr("metadata.json", self.make_metadata_json_string())
         zipfile.close()
 
-    def parse_metadata_json(self, metadata):
-        """
-        Given the contents of a metadata.json file, fill in the fields
-        of the version and associated extension.
-        """
+    def save(self, *args, **kwargs):
         assert self.extension is not None
-
-        # Only parse the standard data for a new extension
-        if self.extension.pk is None:
-            self.extension.name = metadata.pop('name', "")
-            self.extension.description = metadata.pop('description', "")
-            self.extension.url = metadata.pop('url', "")
-            self.extension.uuid = metadata['uuid']
-            self.extension.save()
-
-            # Due to Django ORM magic and stupidity, this is unfortunately necessary
-            self.extension = self.extension
-
-        # FIXME: We shouldn't do this, but Django saving requires it.
-        if self.status is None:
-            self.status = STATUS_NEW
-
-        self.extra_json_fields = json.dumps(metadata)
 
         # get version number
         ver_ids = self.extension.versions.order_by('-version')
@@ -398,8 +389,18 @@ class ExtensionVersion(models.Model):
 
         self.version = ver_id
 
-        # ManyToManyField requires a PK, so we need to save.
-        self.save()
+        super(ExtensionVersion, self).save(*args, **kwargs)
+
+    def parse_metadata_json(self, metadata):
+        """
+        Given the contents of a metadata.json file, fill in the fields
+        of the version and associated extension.
+
+        NOTE: This needs to be called after this has been saved, as we
+        need a PK to be able to add ourselves to a PK.
+        """
+
+        self.extra_json_fields = json.dumps(metadata)
 
         for sv_string in metadata.pop('shell-version', []):
             try:
@@ -410,8 +411,6 @@ class ExtensionVersion(models.Model):
                 pass
 
             self.shell_versions.add(sv)
-
-        self.save()
 
     def get_status_class(self):
         return STATUSES[self.status].lower()
