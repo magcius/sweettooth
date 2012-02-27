@@ -382,6 +382,8 @@ def upload_file(request, pk):
                     messages.error(request, "An extension with that UUID has already been added.")
                     return redirect('extensions-upload-file')
 
+            extension.parse_metadata_json(metadata)
+
             version = models.ExtensionVersion()
             version.extension = extension
             version.parse_metadata_json(metadata)

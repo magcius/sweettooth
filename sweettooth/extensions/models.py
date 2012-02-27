@@ -122,6 +122,12 @@ class Extension(models.Model):
         if not validate_uuid(self.uuid):
             raise ValidationError("Invalid UUID")
 
+    def parse_metadata_json(self, metadata):
+        self.name = metadata.pop('name', "")
+        self.description = metadata.pop('description', "")
+        self.url = metadata.pop('url', "")
+        self.uuid = metadata['uuid']
+
     def save(self, replace_metadata_json=True, *args, **kwargs):
         super(Extension, self).save(*args, **kwargs)
         if replace_metadata_json:
@@ -370,17 +376,6 @@ class ExtensionVersion(models.Model):
         of the version and associated extension.
         """
         assert self.extension is not None
-
-        # Only parse the standard data for a new extension
-        if self.extension.pk is None:
-            self.extension.name = metadata.pop('name', "")
-            self.extension.description = metadata.pop('description', "")
-            self.extension.url = metadata.pop('url', "")
-            self.extension.uuid = metadata['uuid']
-            self.extension.save()
-
-            # Due to Django ORM magic and stupidity, this is unfortunately necessary
-            self.extension = self.extension
 
         # FIXME: We shouldn't do this, but Django saving requires it.
         if self.status is None:
