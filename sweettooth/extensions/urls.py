@@ -4,11 +4,6 @@ from django.views.generic.simple import direct_to_template
 
 from extensions import views, models, feeds
 
-upload_patterns = patterns('',
-    url(r'^$', views.upload_file, dict(pk=None), name='extensions-upload-file'),
-    url(r'^new-version/(?P<pk>\d+)/$', views.upload_file, name='extensions-upload-file'),
-)
-
 ajax_patterns = patterns('',
     url(r'^edit/(?P<pk>\d+)', views.ajax_inline_edit_view, name='extensions-ajax-inline'),
     url(r'^submit/(?P<pk>\d+)', views.ajax_submit_and_lock_view, name='extensions-ajax-submit'),
@@ -53,7 +48,7 @@ urlpatterns = patterns('',
 
     url(r'^rss/', feeds.LatestExtensionsFeed(), name='extensions-rss-feed'),
 
-    url(r'^upload/', include(upload_patterns)),
+    url(r'^upload/', views.upload_file, name='extensions-upload-file'),
     url(r'^ajax/', include(ajax_patterns)),
     url(r'', include(shell_patterns)),
 )

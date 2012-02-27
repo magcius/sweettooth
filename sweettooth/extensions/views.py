@@ -342,16 +342,7 @@ def ajax_set_status_view(request, newstatus):
                 mvs=render_to_string('extensions/multiversion_status.html', context))
 
 @login_required
-def upload_file(request, pk):
-    if pk is None:
-        extension = models.Extension(creator=request.user)
-        extension_is_new = True
-    else:
-        extension = models.Extension.objects.get(pk=pk)
-        extension_is_new = False
-        if extension.creator != request.user:
-            return HttpResponseForbidden()
-
+def upload_file(request):
     errors = []
     extra_debug = None
 
@@ -365,30 +356,15 @@ def upload_file(request, pk):
                 uuid = metadata['uuid']
             except (models.InvalidExtensionData, KeyError), e:
                 messages.error(request, "Invalid extension data: %s" % (e.message,))
+                return redirect('extensions-upload-file')
 
-                if pk is not None:
-                    return redirect('extensions-upload-file', pk=pk)
-                else:
-                    return redirect('extensions-upload-file')
-
-            existing = models.Extension.objects.filter(uuid=uuid)
-            if pk is None and existing.exists():
-                # Error out if we already have an extension with the same
-                # uuid -- or correct their mistake if they're the same user.
-                ext = existing.get()
-                if request.user == ext.creator:
-                    return upload_file(request, ext.pk)
-                else:
-                    messages.error(request, "An extension with that UUID has already been added.")
-                    return redirect('extensions-upload-file')
-
-            extension.parse_metadata_json(metadata)
-
-            version = models.ExtensionVersion()
-            version.extension = extension
-            version.parse_metadata_json(metadata)
+            extension, created = models.Extension.objects.get_or_create(uuid=uuid)
+            if request.user != extension.creator and not created:
+                messages.error(request, "An extension with that UUID has already been added.")
+                return redirect('extensions-upload-file')
 
             extension.creator = request.user
+            extension.parse_metadata_json(metadata)
 
             try:
                 extension.full_clean()
@@ -402,10 +378,6 @@ def upload_file(request, pk):
                 else:
                     errors = e.messages
 
-                version.delete()
-                if extension_is_new:
-                    extension.delete()
-
                 extra_debug = repr(e)
             else:
                 is_valid = True
@@ -413,7 +385,9 @@ def upload_file(request, pk):
             if is_valid:
                 extension.save()
 
+                version = models.ExtensionVersion()
                 version.extension = extension
+                version.parse_metadata_json(metadata)
                 version.source = file_source
                 version.status = models.STATUS_NEW
                 version.save()
