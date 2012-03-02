@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponseForbidden, HttpResponseServerError, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -342,6 +343,7 @@ def ajax_set_status_view(request, newstatus):
                 mvs=render_to_string('extensions/multiversion_status.html', context))
 
 @login_required
+@transaction.commit_manually
 def upload_file(request):
     errors = []
     extra_debug = None
@@ -351,6 +353,8 @@ def upload_file(request):
         if form.is_valid():
             file_source = form.cleaned_data['source']
 
+            sid = transaction.savepoint()
+
             try:
                 metadata = models.parse_zipfile_metadata(file_source)
                 uuid = metadata['uuid']
@@ -358,19 +362,30 @@ def upload_file(request):
                 messages.error(request, "Invalid extension data: %s" % (e.message,))
                 return redirect('extensions-upload-file')
 
-            extension, created = models.Extension.objects.get_or_create(uuid=uuid)
-            if request.user != extension.creator and not created:
-                messages.error(request, "An extension with that UUID has already been added.")
-                return redirect('extensions-upload-file')
+            try:
+                extension = models.Extension.objects.get(uuid=uuid)
+            except models.Extension.DoesNotExist:
+                extension = models.Extension(creator=request.user)
+            else:
+                if request.user != extension.creator:
+                    messages.error(request, "An extension with that UUID has already been added.")
+                    return redirect('extensions-upload-file')
 
             extension.creator = request.user
             extension.parse_metadata_json(metadata)
+            extension.save()
+
+            version = models.ExtensionVersion()
+            version.extension = extension
+            version.parse_metadata_json(metadata)
+            version.source = file_source
+            version.status = models.STATUS_NEW
+            version.save()
+            version.replace_metadata_json()
 
             try:
                 extension.full_clean()
             except ValidationError, e:
-                is_valid = False
-
                 # Output a specialized error message for a common mistake:
                 if getattr(e, 'message_dict', None) and 'url' in e.message_dict:
                     errors = [mark_safe("You have an invalid URL. Make sure your URL "
@@ -379,21 +394,9 @@ def upload_file(request):
                     errors = e.messages
 
                 extra_debug = repr(e)
+                transaction.savepoint_rollback(sid)
             else:
-                is_valid = True
-
-            if is_valid:
-                extension.save()
-
-                version = models.ExtensionVersion()
-                version.extension = extension
-                version.parse_metadata_json(metadata)
-                version.source = file_source
-                version.status = models.STATUS_NEW
-                version.save()
-
-                version.replace_metadata_json()
-
+                transaction.savepoint_commit(sid)
                 return redirect('extensions-version-detail',
                                 pk=version.pk,
                                 ext_pk=extension.pk,
