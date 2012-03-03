@@ -168,46 +168,47 @@ class ExtensionPopularityItem(models.Model):
 class InvalidShellVersion(Exception):
     pass
 
-class ShellVersionManager(models.Manager):
-    def parse_version_string(self, version_string, ignore_micro):
-        version = version_string.split('.')
-        major, minor = version[:2]
 
+def parse_version_string(version_string, ignore_micro):
+    version = version_string.split('.')
+
+    try:
+        major, minor = version[:2]
+        major, minor = int(major), int(minor)
+    except ValueError, e:
+        raise InvalidShellVersion()
+
+    if ignore_micro:
+        valid_lengths = (3, 4)
+    else:
+        valid_lengths = (3,)
+
+    if len(version) in valid_lengths:
+        # 3.0.1, 3.1.4
         try:
-            major, minor = int(major), int(minor)
+            point = int(version[2])
         except ValueError, e:
             raise InvalidShellVersion()
 
-        if ignore_micro:
-            valid_lengths = (3, 4)
-        else:
-            valid_lengths = (3,)
+    elif len(version) == 2 and minor % 2 == 0:
+        # 3.0, 3.2
+        point = -1
+    else:
+        # Two-digit odd versions are illegal: 3.1, 3.3
+        raise InvalidShellVersion()
 
-        if len(version) in valid_lengths:
-            # 3.0.1, 3.1.4
-            try:
-                point = int(version[2])
-            except ValueError, e:
-                raise InvalidShellVersion()
+    return major, minor, point
 
-        elif len(version) == 2 and minor % 2 == 0:
-            # 3.0, 3.2
-            point = -1
-        else:
-            # Two-digit odd versions are illegal: 3.1, 3.3
-            raise InvalidShellVersion()
-
-        return major, minor, point
-
+class ShellVersionManager(models.Manager):
     def lookup_for_version_string(self, version_string, ignore_micro=False):
-        major, minor, point = self.parse_version_string(version_string, ignore_micro)
+        major, minor, point = parse_version_string(version_string, ignore_micro)
         try:
             return self.get(major=major, minor=minor, point=point)
         except self.model.DoesNotExist:
             return None
 
     def get_for_version_string(self, version_string):
-        major, minor, point = self.parse_version_string(version_string, ignore_micro=False)
+        major, minor, point = parse_version_string(version_string, ignore_micro=False)
         obj, created = self.get_or_create(major=major, minor=minor, point=point)
         return obj
 
@@ -229,31 +230,6 @@ class ShellVersion(models.Model):
             return "%d.%d" % (self.major, self.minor)
 
         return "%d.%d.%d" % (self.major, self.minor, self.point)
-
-    @property
-    def is_unstable(self):
-        return self.minor % 2 != 0
-
-    @property
-    def is_stable(self):
-        return self.minor % 2 == 0
-
-    @property
-    def base_version(self):
-        if self.point == -1:
-            return None
-
-        if self.is_unstable:
-            return None
-
-        try:
-            # This is intended to be use to easily query for all extensions
-            # that are compatible with a specific shell version. As such,
-            # this doesn't use get_or_create -- no sense creating a shell
-            # version that no extensions are going to match.
-            return self._default_manager.get(major=self.major, minor=self.minor, point=-1)
-        except self.DoesNotExist:
-            return None
 
 class InvalidExtensionData(Exception):
     pass

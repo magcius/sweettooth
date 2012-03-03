@@ -74,16 +74,29 @@ def shell_update(request):
     return operations
 
 def get_versions_for_version_strings(version_strings):
-    for version_string in version_strings:
-        version = models.ShellVersion.objects.lookup_for_version_string(version_string, ignore_micro=True)
-        if version is None:
-            continue
-        yield version
+    def get_version(major, minor, point):
+        try:
+            return models.ShellVersion.objects.get(major=major, minor=minor, point=point)
+        except models.ShellVersion.DoesNotExist:
+            return None
 
-        base_version = version.base_version
-        if base_version is None:
+    for version_string in version_strings:
+        try:
+            major, minor, point = models.parse_version_string(version_string, ignore_micro=True)
+        except models.InvalidShellVersion:
             continue
-        yield base_version
+
+        version = get_version(major, minor, point)
+        if version:
+            yield version
+
+        # If we already have a base version, don't bother querying it again...
+        if point == -1:
+            continue
+
+        base_version = get_version(major, minor, -1)
+        if base_version:
+            yield base_version
 
 def ajax_query_params_query(request):
     query_params = {}

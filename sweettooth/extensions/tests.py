@@ -254,31 +254,14 @@ class ShellVersionTest(TestCase):
         self.assertEquals(version.major, 3)
         self.assertEquals(version.minor, 0)
         self.assertEquals(version.point, 0)
-        self.assertTrue(version.is_stable)
 
         version = get_version("3.2")
         self.assertEquals(version.major, 3)
         self.assertEquals(version.minor, 2)
         self.assertEquals(version.point, -1)
-        self.assertTrue(version.is_stable)
 
         with self.assertRaises(models.InvalidShellVersion):
             version = get_version("3.1")
-
-        # Test that we don't track shell versions for unstable extensions
-        # (it doesn't really matter because we can't really create a base
-        # shell version for unstable extensions *anyway*, but oh well)
-        version = get_version("3.1.4")
-        self.assertEquals(version.base_version, None)
-
-        # Test that we don't create shell versions
-        version = get_version("3.4.1")
-        self.assertEquals(lookup_version("3.4"), None)
-        self.assertEquals(version.base_version, None)
-
-        # OK, go and create the base version and make sure we track it
-        base_version = get_version("3.4")
-        self.assertEquals(version.base_version, base_version)
 
 class UpdateVersionTest(TestCase):
     fixtures = [os.path.join(testdata_dir, 'test_upgrade_data.json')]
@@ -395,3 +378,24 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         # And now that we have a new version on two, we should have both...
         uuids = self.gather_uuids(dict(uuid=[one.uuid, two.uuid]))
         self.assertEqual(uuids, [one.uuid, two.uuid])
+
+    def test_shell_versions(self):
+        one = self.create_extension("one")
+        two = self.create_extension("two")
+
+        v = models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
+        v.parse_metadata_json({"shell-version": ["3.2"]})
+
+        v = models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_ACTIVE)
+        v.parse_metadata_json({"shell-version": ["3.3.90"]})
+
+        # Basic querying...
+        uuids = self.gather_uuids(dict(shell_version="3.2"))
+        self.assertEqual(uuids, [one.uuid])
+
+        uuids = self.gather_uuids(dict(shell_version="3.3.90"))
+        self.assertEqual(uuids, [two.uuid])
+
+        # Base version querying.
+        uuids = self.gather_uuids(dict(shell_version="3.2.2"))
+        self.assertEqual(uuids, [one.uuid])
