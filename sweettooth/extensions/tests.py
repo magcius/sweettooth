@@ -69,6 +69,18 @@ class ExtensionPropertiesTest(BasicUserTestCase, TestCase):
         extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
         self.assertEquals(extension.first_line_of_description, "")
 
+    def test_shell_versions_json(self):
+        metadata = {"uuid": "test-metadata@mecheye.net",
+                    "name": "Test Metadata",
+                    "shell-version": ["3.2", "3.2.1"]}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version = models.ExtensionVersion.objects.create(extension=extension,
+                                                         status=models.STATUS_NEW)
+        version.parse_metadata_json(metadata)
+
+        self.assertEquals(version.shell_versions_json, '["3.2", "3.2.1"]')
+
 class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
         metadata = {"uuid": "test-metadata@mecheye.net",
