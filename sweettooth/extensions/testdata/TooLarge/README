@@ -1,0 +1,3 @@
+metadata.json is about 6MB worth of zeroes, just over the size limit for the
+zipfile. The idea is that any sort of basic compression, even the ones in git,
+should make the file relatively small -- the limit is the uncompressed size.

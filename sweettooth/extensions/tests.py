@@ -74,6 +74,11 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
         bad_data = StringIO("deadbeef")
         self.assertRaises(models.InvalidExtensionData, models.parse_zipfile_metadata, bad_data)
 
+        with get_test_zipfile('TooLarge') as f:
+            with self.assertRaises(models.InvalidExtensionData) as cm:
+                models.parse_zipfile_metadata(f)
+            self.assertEquals(cm.exception.message, "Zip file is too large")
+
 class ReplaceMetadataTest(BasicUserTestCase, TestCase):
     @expectedFailure
     def test_replace_metadata(self):

@@ -248,7 +248,7 @@ def parse_zipfile_metadata(uploaded_file):
         raise InvalidExtensionData("Invalid zip file")
 
     total_uncompressed = sum(i.file_size for i in zipfile.infolist())
-    if total_uncompressed > 5*1024**3: # 5 MB
+    if total_uncompressed > 5*1024*1024: # 5 MB
         raise InvalidExtensionData("Zip file is too large")
 
     try:
