@@ -354,3 +354,44 @@ class UpdateVersionTest(TestCase):
 
         response = self.grab_response(installed)
         self.assertEqual(self.full_expected, response)
+
+class QueryExtensionsTest(BasicUserTestCase, TestCase):
+    def get_response(self, params):
+        response = self.client.get(reverse('extensions-query'), params)
+        return json.loads(response.content)
+
+    def gather_uuids(self, params):
+        return sorted(details['uuid'] for details in self.get_response(params))
+
+    def create_extension(self, name):
+        return models.Extension.objects.create_from_metadata(dict(uuid=name + "@mecheye.net", name=name), creator=self.user)
+
+    def test_basic(self):
+        one = self.create_extension("one")
+        two = self.create_extension("two")
+
+        models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
+        models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_ACTIVE)
+
+        uuids = self.gather_uuids(dict(uuid=one.uuid))
+        self.assertEqual(uuids, [one.uuid])
+
+        uuids = self.gather_uuids(dict(uuid=[one.uuid, two.uuid]))
+        self.assertEqual(uuids, [one.uuid, two.uuid])
+
+    def test_basic_visibility(self):
+        one = self.create_extension("one")
+        two = self.create_extension("two")
+
+        models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
+        models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_NEW)
+
+        # Since two is new, it shouldn't be visible.
+        uuids = self.gather_uuids(dict(uuid=[one.uuid, two.uuid]))
+        self.assertEqual(uuids, [one.uuid])
+
+        models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_ACTIVE)
+
+        # And now that we have a new version on two, we should have both...
+        uuids = self.gather_uuids(dict(uuid=[one.uuid, two.uuid]))
+        self.assertEqual(uuids, [one.uuid, two.uuid])

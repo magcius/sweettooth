@@ -20,7 +20,7 @@ ajax_patterns = patterns('',
 )
 
 shell_patterns = patterns('',
-    url(r'^extension-query/', views.ajax_query_view),
+    url(r'^extension-query/', views.ajax_query_view, name='extensions-query'),
 
     url(r'^extension-info/', views.ajax_details_view),
 
