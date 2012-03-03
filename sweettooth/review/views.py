@@ -16,7 +16,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.template import Context
 from django.template.loader import render_to_string
 from django.utils.html import escape
-from django.utils import simplejson as json
 from django.views.decorators.http import require_POST
 
 from review.diffutils import get_chunks, split_lines
