@@ -101,16 +101,32 @@ class Extension(models.Model):
     def __unicode__(self):
         return self.uuid
 
-    @property
-    def visible_versions(self):
-        return self.versions.filter(status__in=VISIBLE_STATUSES)
+    def parse_metadata_json(self, metadata):
+        self.name = metadata.pop('name', "")
+        self.description = metadata.pop('description', "")
+        self.url = metadata.pop('url', "")
+        self.uuid = metadata['uuid']
 
-    @property
-    def latest_version(self):
-        try:
-            return self.visible_versions.latest()
-        except ExtensionVersion.DoesNotExist:
-            return None
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if not validate_uuid(self.uuid):
+            raise ValidationError("Invalid UUID")
+
+    def save(self, replace_metadata_json=True, *args, **kwargs):
+        super(Extension, self).save(*args, **kwargs)
+        if replace_metadata_json:
+            for version in self.versions.all():
+                if version.source:
+                    try:
+                        version.replace_metadata_json()
+                    except BadZipfile, e:
+                        # Ignore bad zipfiles, we don't care
+                        pass
+
+    def get_absolute_url(self):
+        return reverse('extensions-detail', kwargs=dict(pk=self.pk,
+                                                        slug=self.slug))
 
     def user_can_edit(self, user):
         if user == self.creator:
@@ -125,29 +141,17 @@ class Extension(models.Model):
             return ""
         return self.description.splitlines()[0]
 
-    def clean(self):
-        from django.core.exceptions import ValidationError
+    @property
+    def visible_versions(self):
+        return self.versions.filter(status__in=VISIBLE_STATUSES)
 
-        if not validate_uuid(self.uuid):
-            raise ValidationError("Invalid UUID")
+    @property
+    def latest_version(self):
+        try:
+            return self.visible_versions.latest()
+        except ExtensionVersion.DoesNotExist:
+            return None
 
-    def parse_metadata_json(self, metadata):
-        self.name = metadata.pop('name', "")
-        self.description = metadata.pop('description', "")
-        self.url = metadata.pop('url', "")
-        self.uuid = metadata['uuid']
-
-    def save(self, replace_metadata_json=True, *args, **kwargs):
-        super(Extension, self).save(*args, **kwargs)
-        if replace_metadata_json:
-            for version in self.versions.all():
-                if version.source:
-                    try:
-                        version.replace_metadata_json()
-                    except BadZipfile, e:
-                        # Ignore bad zipfiles, we don't care
-                        pass
- 
     @property
     def visible_shell_version_map(self):
         return build_shell_version_map(self.visible_versions)
@@ -155,12 +159,6 @@ class Extension(models.Model):
     @property
     def visible_shell_version_map_json(self):
         return json.dumps(self.visible_shell_version_map)
-
-    def get_absolute_url(self):
-        return reverse('extensions-detail', kwargs=dict(pk=self.pk,
-                                                        slug=self.slug))
-
-
 
 class ExtensionPopularityItem(models.Model):
     extension = models.ForeignKey(Extension, db_index=True,
