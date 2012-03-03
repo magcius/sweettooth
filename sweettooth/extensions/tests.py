@@ -46,6 +46,29 @@ class UUIDPolicyTest(TestCase):
 
         self.assertTrue(models.validate_uuid("bar@i-love-gnome.org"))
 
+class ExtensionPropertiesTest(BasicUserTestCase, TestCase):
+    def test_description_parsing(self):
+        metadata = {"uuid": "test-metadata@mecheye.net",
+                    "name": "Test Metadata",
+                    "description": "Simple test metadata"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        self.assertEquals(extension.first_line_of_description, "Simple test metadata")
+
+        metadata = {"uuid": "test-metadata-2@mecheye.net",
+                    "name": "Test Metadata",
+                    "description": "First line\n\Second line"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        self.assertEquals(extension.first_line_of_description, "First line")
+
+        metadata = {"uuid": "test-metadata-3@mecheye.net",
+                    "name": "Test Metadata",
+                    "description": ""}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        self.assertEquals(extension.first_line_of_description, "")
+
 class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
         metadata = {"uuid": "test-metadata@mecheye.net",

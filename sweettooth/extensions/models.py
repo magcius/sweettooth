@@ -119,6 +119,7 @@ class Extension(models.Model):
             return True
         return False
 
+    @property
     def first_line_of_description(self):
         if not self.description:
             return ""
