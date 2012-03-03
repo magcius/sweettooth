@@ -415,6 +415,12 @@ def upload_file(request):
     else:
         form = UploadForm()
 
-    return render(request, 'extensions/upload.html', dict(form=form,
-                                                          errors=errors,
-                                                          extra_debug=extra_debug))
+    # XXX - context managers may dirty the connection, so we need
+    # to force a clean state after this.
+    response = render(request, 'extensions/upload.html', dict(form=form,
+                                                              errors=errors,
+                                                              extra_debug=extra_debug))
+
+    transaction.set_clean()
+
+    return response

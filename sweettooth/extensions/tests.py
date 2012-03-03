@@ -182,6 +182,10 @@ class UploadTest(BasicUserTestCase, TestCase):
                                          gplv2_compliant=True,
                                          tos_compliant=True), follow=True)
 
+    def test_upload_page_works(self):
+        response = self.client.get(reverse('extensions-upload-file'))
+        self.assertEquals(response.status_code, 200)
+
     def test_upload_parsing(self):
         response = self.upload_file('SimpleExtension')
         extension = models.Extension.objects.get(uuid="test-extension@mecheye.net")
