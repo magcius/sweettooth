@@ -89,20 +89,28 @@ def html_for_file(filename, raw):
     else:
         return dict(raw=False, lines=split_lines(highlight_file(filename, raw, code_formatter)))
 
-def get_zipfiles(version, old_version_number=None):
+def get_old_version(version, old_version_number):
     extension = version.extension
 
+    if old_version_number is not None:
+        old_version = extension.versions.get(version=old_version_number)
+    else:
+        # Try to get the latest version that's less than the current version
+        # that actually has a source field. Sometimes the upload validation
+        # fails, so work around it here.
+        old_version = extension.versions.filter(version__lt=version.version).exclude(source="").latest()
+
+    return old_version
+
+def get_zipfiles(version, old_version_number):
     new_zipfile = version.get_zipfile('r')
-    if version.version == 1:
+    old_version = get_old_version(version, old_version_number)
+
+    if old_version is None:
         return None, new_zipfile
-
-    if old_version_number is None:
-        old_version_number = version.version - 1
-
-    old_version = extension.versions.get(version=old_version_number)
-    old_zipfile = old_version.get_zipfile('r')
-
-    return old_zipfile, new_zipfile
+    else:
+        old_zipfile = old_version.get_zipfile('r')
+        return old_zipfile, new_zipfile
 
 def get_diff(old_zipfile, new_zipfile, filename):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
@@ -144,9 +152,7 @@ def get_filelist(zipfile):
 def ajax_get_file_list_view(request, obj):
     version, extension = obj, obj.extension
 
-    old_version_number = request.GET.get('oldver', None)
-
-    old_zipfile, new_zipfile = get_zipfiles(version, old_version_number)
+    old_zipfile, new_zipfile = get_zipfiles(version, request.GET.get('oldver', None))
 
     new_filelist = get_filelist(new_zipfile)
 
@@ -185,7 +191,6 @@ def ajax_get_file_diff_view(request, obj):
     version, extension = obj, obj.extension
 
     filename = request.GET['filename']
-    old_version_number = request.GET.get('oldver', None)
 
     file_base, file_extension = os.path.splitext(filename)
     if file_extension in IMAGE_TYPES:
@@ -194,7 +199,7 @@ def ajax_get_file_diff_view(request, obj):
     if file_extension in BINARY_TYPES:
         return None
 
-    old_zipfile, new_zipfile = get_zipfiles(version, old_version_number)
+    old_zipfile, new_zipfile = get_zipfiles(version, request.GET.get('oldver', None))
 
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())

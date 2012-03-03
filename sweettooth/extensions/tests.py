@@ -6,10 +6,11 @@ from zipfile import ZipFile
 from django.test import TestCase
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 from django.utils import simplejson as json
 from django.utils.unittest import expectedFailure
 from extensions import models
+
+from testutils import BasicUserTestCase
 
 testdata_dir = os.path.join(os.path.dirname(__file__), 'testdata')
 
@@ -21,16 +22,6 @@ def get_test_zipfile(testname):
     original.close()
 
     return new_temp
-
-class BasicUserTestCase(object):
-    def setUp(self):
-        super(BasicUserTestCase, self).setUp()
-        self.username = 'TestUser1'
-        self.email = 'non-existant@non-existant.tld'
-        self.password = 'a random password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
-        self.client.login(username=self.username, password=self.password)
 
 class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
