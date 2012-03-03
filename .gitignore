@@ -1,16 +1,48 @@
-.ropeproject
+# Emacs
 *~
-#*#
-*.pyc
-*.pyo
-*.db
-.#*
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
 *_flymake*
+
+# Python
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# coverage reports
+.coverage
+htmlcov
+
+# Rope
+.ropeproject
+
+# Virtualenv
 venv
+
+# sweettooth-specific
 Demos
 sweettooth/uploaded-files
-local_settings.py
 sweettooth.wsgi
+local_settings.py
 *.crt
 *.csr
 *.key
