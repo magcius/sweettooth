@@ -105,10 +105,10 @@ class Extension(models.Model):
 
     @property
     def latest_version(self):
-        qs = self.visible_versions.order_by("-version")
-        if qs.exists():
-            return qs[0]
-        return None
+        try:
+            return self.visible_versions.latest()
+        except ExtensionVersion.DoesNotExist:
+            return None
 
     def user_can_edit(self, user):
         if user == self.creator:
@@ -282,6 +282,7 @@ class ExtensionVersion(models.Model):
 
     class Meta:
         unique_together = ('extension', 'version'),
+        get_latest_by = 'version'
 
     def __unicode__(self):
         return "Version %d of %s" % (self.version, self.extension)
@@ -355,15 +356,13 @@ class ExtensionVersion(models.Model):
     def save(self, *args, **kwargs):
         assert self.extension is not None
 
-        # get version number
-        ver_ids = self.extension.versions.order_by('-version')
+        # Get version number
         try:
-            ver_id = ver_ids[0].version + 1
-        except IndexError:
-            # New extension, no versions yet
-            ver_id = 1
-
-        self.version = ver_id
+            # Don't use extension.latest_version, as that will
+            # give us the latest visible version.
+            self.version = self.extension.versions.latest().version + 1
+        except self.DoesNotExist:
+            self.version = 1
 
         super(ExtensionVersion, self).save(*args, **kwargs)
 
