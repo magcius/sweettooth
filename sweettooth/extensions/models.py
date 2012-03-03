@@ -384,9 +384,9 @@ class ExtensionVersion(models.Model):
             except InvalidShellVersion:
                 # For now, ignore invalid shell versions, rather than
                 # causing a fit.
-                pass
-
-            self.shell_versions.add(sv)
+                continue
+            else:
+                self.shell_versions.add(sv)
 
     def get_status_class(self):
         return STATUSES[self.status].lower()

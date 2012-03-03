@@ -1,0 +1,7 @@
+{
+    "uuid": "bad-shell-version@mecheye.net",
+    "name": "Bad shell-version test",
+    "description": "Simple test metadata",
+    "url": "http://test-metadata.gnome.org",
+    "shell-version": ["3.2.2.1"]
+}

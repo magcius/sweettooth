@@ -139,8 +139,6 @@ class UploadTest(BasicUserTestCase, TestCase):
         self.assertEquals(version2.status, models.STATUS_NEW)
         self.assertEquals(version2.version, version1.version+1)
 
-
-
     def test_upload_large_uuid(self):
         self.upload_file('LargeUUID')
 
@@ -154,6 +152,11 @@ class UploadTest(BasicUserTestCase, TestCase):
         self.assertEquals(extension.description, "Simple test metadata")
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
+    def test_upload_bad_shell_version(self):
+        response = self.upload_file('BadShellVersion')
+        extension = models.Extension.objects.get(uuid="bad-shell-version@mecheye.net")
+        version1 = extension.versions.order_by("-version")[0]
+        self.assertIsNotNone(version1.source)
 
 class ExtensionVersionTest(BasicUserTestCase, TestCase):
     def test_single_version(self):
