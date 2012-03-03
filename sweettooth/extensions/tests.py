@@ -3,6 +3,11 @@ import os.path
 import tempfile
 from zipfile import ZipFile
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 from django.test import TestCase
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
@@ -64,6 +69,10 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
         self.assertEquals(extra["extra"], "This is some good data")
         self.assertTrue("description" not in extra)
         self.assertTrue("url" not in extra)
+
+    def test_bad_zipfile_metadata(self):
+        bad_data = StringIO("deadbeef")
+        self.assertRaises(models.InvalidExtensionData, models.parse_zipfile_metadata, bad_data)
 
 class ReplaceMetadataTest(BasicUserTestCase, TestCase):
     @expectedFailure
