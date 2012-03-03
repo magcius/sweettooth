@@ -84,6 +84,11 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
                 models.parse_zipfile_metadata(f)
             self.assertEquals(cm.exception.message, "Missing metadata.json")
 
+        with get_test_zipfile('BadMetadata') as f:
+            with self.assertRaises(models.InvalidExtensionData) as cm:
+                models.parse_zipfile_metadata(f)
+            self.assertEquals(cm.exception.message, "Invalid JSON data")
+
 class ReplaceMetadataTest(BasicUserTestCase, TestCase):
     @expectedFailure
     def test_replace_metadata(self):
