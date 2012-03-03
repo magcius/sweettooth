@@ -399,3 +399,17 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         # Base version querying.
         uuids = self.gather_uuids(dict(shell_version="3.2.2"))
         self.assertEqual(uuids, [one.uuid])
+
+    def test_complex_visibility(self):
+        one = self.create_extension("one")
+
+        v = models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
+        v.parse_metadata_json({"shell-version": ["3.2"]})
+
+        v = models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_NEW)
+        v.parse_metadata_json({"shell-version": ["3.3.90"]})
+
+        # Make sure that we don't see one, here - the version that
+        # has this shell version is NEW.
+        uuids = self.gather_uuids(dict(shell_version="3.3.90"))
+        self.assertEqual(uuids, [])

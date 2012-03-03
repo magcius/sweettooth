@@ -99,18 +99,18 @@ def get_versions_for_version_strings(version_strings):
             yield base_version
 
 def ajax_query_params_query(request):
-    query_params = {}
+    version_qs = models.ExtensionVersion.objects.visible()
 
     version_strings = request.GET.getlist('shell_version')
     if version_strings and version_strings != ['all']:
         versions = set(get_versions_for_version_strings(version_strings))
-        query_params['versions__shell_versions__in'] = versions
+        version_qs = version_qs.filter(shell_versions__in=versions)
+
+    queryset = models.Extension.objects.distinct().filter(versions__in=version_qs)
 
     uuids = request.GET.getlist('uuid')
     if uuids:
-        query_params['uuid__in'] = uuids
-
-    queryset = models.Extension.objects.visible().filter(**query_params)
+        queryset = queryset.filter(uuid__in=uuids)
 
     sort = request.GET.get('sort', 'popularity')
     sort = dict(recent='created').get(sort, sort)
