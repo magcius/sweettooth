@@ -266,22 +266,50 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
         self.assertEquals(shell_versions, ["3.0", "3.2"])
 
 class ShellVersionTest(TestCase):
-    def test_shell_version_parsing_basic(self):
+    def test_shell_version_parsing(self):
         lookup_version = models.ShellVersion.objects.lookup_for_version_string
         get_version = models.ShellVersion.objects.get_for_version_string
 
+        # Make sure we don't create a new version
+        self.assertEquals(lookup_version("3.0.0"), None)
         version = get_version("3.0.0")
+        self.assertEquals(lookup_version("3.0.0"), version)
         self.assertEquals(version.major, 3)
         self.assertEquals(version.minor, 0)
         self.assertEquals(version.point, 0)
 
+        self.assertEquals(lookup_version("3.2"), None)
         version = get_version("3.2")
+        self.assertEquals(lookup_version("3.2"), version)
         self.assertEquals(version.major, 3)
         self.assertEquals(version.minor, 2)
         self.assertEquals(version.point, -1)
 
         with self.assertRaises(models.InvalidShellVersion):
-            version = get_version("3.1")
+            get_version("3.1")
+            lookup_version("3.1")
+
+    def test_bad_shell_versions(self):
+        with self.assertRaises(models.InvalidShellVersion):
+            models.parse_version_string("3", ignore_micro=False)
+
+        with self.assertRaises(models.InvalidShellVersion):
+            models.parse_version_string("3.2.2.2.1", ignore_micro=False)
+
+        with self.assertRaises(models.InvalidShellVersion):
+            models.parse_version_string("a.b", ignore_micro=False)
+
+        with self.assertRaises(models.InvalidShellVersion):
+            models.parse_version_string("3.2.a", ignore_micro=False)
+
+    def test_ignore_micro(self):
+        with self.assertRaises(models.InvalidShellVersion):
+            models.parse_version_string("4.3.2.1", ignore_micro=False)
+
+        major, minor, point = models.parse_version_string("4.3.2.1", ignore_micro=True)
+        self.assertEquals(major, 4)
+        self.assertEquals(minor, 3)
+        self.assertEquals(point, 2)
 
 class UpdateVersionTest(TestCase):
     fixtures = [os.path.join(testdata_dir, 'test_upgrade_data.json')]
