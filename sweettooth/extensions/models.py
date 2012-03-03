@@ -254,8 +254,8 @@ def parse_zipfile_metadata(uploaded_file):
     try:
         metadata = json.load(zipfile.open('metadata.json', 'r'))
     except KeyError:
-        # no metadata.json in archive, return nothing
-        metadata = {}
+        # no metadata.json in archive, raise error
+        raise InvalidExtensionData("Missing metadata.json")
     except ValueError:
         # invalid JSON file, raise error
         raise InvalidExtensionData("Invalid JSON data")
