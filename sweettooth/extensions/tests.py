@@ -1,6 +1,7 @@
 
 import os.path
 import tempfile
+import uuid
 from zipfile import ZipFile
 
 try:
@@ -27,6 +28,23 @@ def get_test_zipfile(testname):
     original.close()
 
     return new_temp
+
+class UUIDPolicyTest(TestCase):
+    def test_uuid_policy(self):
+        self.assertTrue(models.validate_uuid("foo@mecheye.net"))
+        self.assertTrue(models.validate_uuid("foo_2@mecheye.net"))
+        self.assertTrue(models.validate_uuid("foo-3@mecheye.net"))
+        self.assertTrue(models.validate_uuid("Foo4@mecheye.net"))
+
+        for i in xrange(10):
+            self.assertTrue(models.validate_uuid(str(uuid.uuid4())))
+
+        self.assertFalse(models.validate_uuid("<Wonderful>"))
+
+        self.assertFalse(models.validate_uuid("foo@gnome.org"))
+        self.assertFalse(models.validate_uuid("bar@people.gnome.org"))
+
+        self.assertTrue(models.validate_uuid("bar@i-love-gnome.org"))
 
 class ParseZipfileTest(BasicUserTestCase, TestCase):
     def test_simple_metadata(self):
