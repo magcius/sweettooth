@@ -119,11 +119,14 @@ def ajax_query_params_query(request):
 
     queryset = queryset.order_by(sort)
 
-    # sort by DESC for name, ASC for everything else
-    default_order = dict(name='asc').get(sort, 'desc')
+    # Sort by DESC for name, ASC for everything else.
+    if sort == 'name':
+        default_order = 'asc'
+    else:
+        default_order = 'desc'
 
-    if request.GET.get('order', default_order) == 'desc':
-        queryset = queryset.reverse()
+    order = request.GET.get('order', default_order)
+    queryset.query.standard_order = (order == 'asc')
 
     return queryset
 
