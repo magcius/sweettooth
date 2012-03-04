@@ -404,6 +404,7 @@ def upload_file(request):
                                                                  status=models.STATUS_NEW)
                 version.parse_metadata_json(metadata)
                 version.replace_metadata_json()
+                version.save()
 
                 return redirect('extensions-version-detail',
                                 pk=version.pk,
