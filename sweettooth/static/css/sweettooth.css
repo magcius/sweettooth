@@ -385,7 +385,12 @@ li.extension:last-child {
 }
 
 .extension .upload input {
-    display: none;
+    /* Hack: WebKit doesn't pop up the uploader
+     * for invisible input fields, so just stuff
+     * it off-screen.
+     */
+    position: absolute;
+    left: -9999em;
 }
 
 .extension .uninstall {
