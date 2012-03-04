@@ -368,8 +368,6 @@ def upload_file(request):
         if form.is_valid():
             file_source = form.cleaned_data['source']
 
-            sid = transaction.savepoint()
-
             try:
                 metadata = models.parse_zipfile_metadata(file_source)
                 uuid = metadata['uuid']
@@ -397,9 +395,9 @@ def upload_file(request):
                     errors = e.messages
 
                 extra_debug = repr(e)
-                transaction.savepoint_rollback(sid)
+                transaction.rollback()
             else:
-                transaction.savepoint_commit(sid)
+                transaction.commit()
 
                 version = models.ExtensionVersion.objects.create(extension=extension,
                                                                  source=file_source,
