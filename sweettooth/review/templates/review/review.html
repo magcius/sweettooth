@@ -69,14 +69,14 @@
       {% for ver in all_versions %}
       <tr>
         <td>
-          {% if ver.version == version.version %}
-          <span class="current_version">{{ ver.version }}</span>
-          {% else %}
           <a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=ver.pk %}">{{ ver.version }}</a>
-          {% endif %}
         </td>
         <td>
+          {% if ver.version == version.version %}
+          <span class="current_version {{ ver.get_status_class }}">{{ ver.get_status_display }}</a>
+          {% else %}
           <a class="{{ ver.get_status_class }}" href="{% url review-version pk=ver.pk %}">{{ ver.get_status_display }}</a>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}
