@@ -9,7 +9,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
 from django.utils import simplejson as json
@@ -174,7 +174,7 @@ class ReplaceMetadataTest(BasicUserTestCase, TestCase):
         old_zip.close()
         new_zip.close()
 
-class UploadTest(BasicUserTestCase, TestCase):
+class UploadTest(BasicUserTestCase, TransactionTestCase):
     def upload_file(self, zipfile):
         with get_test_zipfile(zipfile) as f:
             return self.client.post(reverse('extensions-upload-file'),

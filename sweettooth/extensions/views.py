@@ -397,14 +397,14 @@ def upload_file(request):
                 extra_debug = repr(e)
                 transaction.rollback()
             else:
-                transaction.commit()
-
                 version = models.ExtensionVersion.objects.create(extension=extension,
                                                                  source=file_source,
                                                                  status=models.STATUS_NEW)
                 version.parse_metadata_json(metadata)
                 version.replace_metadata_json()
                 version.save()
+
+                transaction.commit()
 
                 return redirect('extensions-version-detail',
                                 pk=version.pk,
