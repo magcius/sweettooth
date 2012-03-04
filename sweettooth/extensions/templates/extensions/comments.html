@@ -2,7 +2,6 @@
   <h4>User comments</h4>
   {% load comments %}
   {% load gravatar %}
-  {% load rating %}
   {% get_comment_list for extension as comments %}
   {% for comment in comments %}
   {% if comment.user == extension.creator %}
