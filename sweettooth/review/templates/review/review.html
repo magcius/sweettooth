@@ -35,13 +35,13 @@
   </div>
 </div>
 
-{% if version.version > 1 %}
+{% if has_old_version %}
 <h2 class="expandy_header expanded"> Diff Against Previous Version </h2>
 <div id="diff" data-pk="{{ version.pk }}">
 </div>
 {% endif %}
 
-{% if version.version > 1 %}
+{% if has_old_version %}
 <h2 class="expandy_header"> Files </h2>
 {% else %}
 <h2 class="expandy_header expanded"> Files </h2>

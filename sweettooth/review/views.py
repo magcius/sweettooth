@@ -299,6 +299,7 @@ def review_version_view(request, obj):
     # Other reviews on the same version.
     previous_reviews = version.reviews.all()
 
+    has_old_version = get_old_version(version, None) is not None
     can_approve = can_approve_extension(request.user, extension)
     can_review = can_review_extension(request.user, extension)
 
@@ -306,6 +307,7 @@ def review_version_view(request, obj):
                    version=version,
                    all_versions=all_versions,
                    previous_reviews=previous_reviews,
+                   has_old_version=has_old_version,
                    can_approve=can_approve,
                    can_review=can_review)
 
