@@ -201,7 +201,7 @@ hr.bottom_shadow {
     background-color: #fff;
     position: absolute;
     margin-top: -4px;
-    border-radius: 0 0 4px 4px;
+    border-radius: 4px 0 4px 4px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
     z-index: 999;
 }
@@ -217,8 +217,7 @@ hr.bottom_shadow {
     list-style-type: none;
     cursor: pointer;
     margin-left: 0;
-    padding: .2em;
-    padding-left: 2em;
+    padding: .2em 1em .2em 2em;
 }
 
 .fsui-dropdown-item.selected {
