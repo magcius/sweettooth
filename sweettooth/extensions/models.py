@@ -15,13 +15,13 @@ import autoslug
 import re
 from sorl import thumbnail
 
-(STATUS_NEW, STATUS_LOCKED,
+(STATUS_NEW, STATUS_UNREVIEWED,
  STATUS_REJECTED, STATUS_INACTIVE,
  STATUS_ACTIVE) = xrange(5)
 
 STATUSES = {
     STATUS_NEW: u"New",
-    STATUS_LOCKED: u"Unreviewed",
+    STATUS_UNREVIEWED: u"Unreviewed",
     STATUS_REJECTED: u"Rejected",
     STATUS_INACTIVE: u"Inactive",
     STATUS_ACTIVE: u"Active",
@@ -268,8 +268,8 @@ def parse_zipfile_metadata(uploaded_file):
 filename_max_length = Extension._meta.get_field('uuid').max_length + len(".v000.shell-version.zip")
 
 class ExtensionVersionManager(models.Manager):
-    def locked(self):
-        return self.filter(status=STATUS_LOCKED)
+    def unreviewed(self):
+        return self.filter(status=STATUS_UNREVIEWED)
 
     def visible(self):
         return self.filter(status__in=VISIBLE_STATUSES)

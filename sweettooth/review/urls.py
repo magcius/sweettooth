@@ -6,7 +6,7 @@ from extensions.models import ExtensionVersion
 from review import views
 
 urlpatterns = patterns('',
-    url(r'^$', object_list, dict(queryset=ExtensionVersion.objects.locked(),
+    url(r'^$', object_list, dict(queryset=ExtensionVersion.objects.unreviewed(),
                                  template_object_name='version',
                                  template_name='review/list.html'),
         name='review-list'),

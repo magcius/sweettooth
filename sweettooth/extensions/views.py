@@ -192,8 +192,7 @@ def extension_version_view(request, obj, **kwargs):
 
     status = version.status
     if status == models.STATUS_NEW:
-        # If it's unreviewed and unlocked, this is a preview
-        # for pre-lock.
+        # If it's new, this is a preview before it's submitted
         is_preview = True
 
     # Redirect if we don't match the slug or extension PK.
@@ -252,14 +251,14 @@ def ajax_adjust_popularity_view(request):
 @ajax_view
 @require_POST
 @model_view(models.ExtensionVersion)
-def ajax_submit_and_lock_view(request, obj):
+def ajax_submit_extension_view(request, obj):
     if not obj.extension.user_can_edit(request.user):
         return HttpResponseForbidden()
 
     if obj.status != models.STATUS_NEW:
         return HttpResponseForbidden()
 
-    obj.status = models.STATUS_LOCKED
+    obj.status = models.STATUS_UNREVIEWED
     obj.save()
 
     models.submitted_for_review.send(sender=request, request=request, version=obj)
