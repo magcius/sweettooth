@@ -126,7 +126,7 @@ def ajax_query_params_query(request):
         default_order = 'desc'
 
     order = request.GET.get('order', default_order)
-    queryset.query.standard_order = (order == 'asc')
+    queryset.query.standard_ordering = (order == 'asc')
 
     return queryset
 

@@ -455,10 +455,16 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         return json.loads(response.content)
 
     def gather_uuids(self, params):
-        return sorted(details['uuid'] for details in self.get_response(params))
+        if 'sort' not in params:
+            params['sort'] = 'name'
 
-    def create_extension(self, name):
-        return models.Extension.objects.create_from_metadata(dict(uuid=name + "@mecheye.net", name=name), creator=self.user)
+        return [details['uuid'] for details in self.get_response(params)]
+
+    def create_extension(self, name, **kwargs):
+        metadata = dict(uuid=name + "@mecheye.net", name=name)
+        return models.Extension.objects.create_from_metadata(metadata,
+                                                             creator=self.user,
+                                                             **kwargs)
 
     def test_basic(self):
         one = self.create_extension("one")
@@ -524,3 +530,32 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         # has this shell version is NEW.
         uuids = self.gather_uuids(dict(shell_version="3.3.90"))
         self.assertEqual(uuids, [])
+
+    def test_sort(self):
+        one = self.create_extension("one", downloads=50, popularity=15)
+        models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
+
+        two = self.create_extension("two", downloads=40, popularity=20)
+        models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_ACTIVE)
+
+        uuids = self.gather_uuids(dict(sort="name"))
+        self.assertEqual(uuids, [one.uuid, two.uuid])
+        # name gets asc sort by default
+        uuids = self.gather_uuids(dict(sort="name", order="asc"))
+        self.assertEqual(uuids, [one.uuid, two.uuid])
+        uuids = self.gather_uuids(dict(sort="name", order="desc"))
+        self.assertEqual(uuids, [two.uuid, one.uuid])
+
+        uuids = self.gather_uuids(dict(sort="popularity"))
+        self.assertEqual(uuids, [two.uuid, one.uuid])
+        uuids = self.gather_uuids(dict(sort="popularity", order="desc"))
+        self.assertEqual(uuids, [two.uuid, one.uuid])
+        uuids = self.gather_uuids(dict(sort="popularity", order="asc"))
+        self.assertEqual(uuids, [one.uuid, two.uuid])
+
+        uuids = self.gather_uuids(dict(sort="downloads"))
+        self.assertEqual(uuids, [one.uuid, two.uuid])
+        uuids = self.gather_uuids(dict(sort="downloads", order="desc"))
+        self.assertEqual(uuids, [one.uuid, two.uuid])
+        uuids = self.gather_uuids(dict(sort="downloads", order="asc"))
+        self.assertEqual(uuids, [two.uuid, one.uuid])
