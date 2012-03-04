@@ -242,6 +242,12 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
         extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
         version = models.ExtensionVersion.objects.create(extension=extension,
                                                          status=models.STATUS_ACTIVE)
+        self.assertEquals(version.version, 1)
+        # Make sure that saving again doesn't change the version.
+        version.save()
+        self.assertEquals(version.version, 1)
+        version.save()
+        self.assertEquals(version.version, 1)
 
         self.assertEquals(version.version, 1)
         self.assertEquals(extension.latest_version, version)

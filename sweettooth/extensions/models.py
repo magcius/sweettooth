@@ -357,13 +357,14 @@ class ExtensionVersion(models.Model):
     def save(self, *args, **kwargs):
         assert self.extension is not None
 
-        # Get version number
-        try:
-            # Don't use extension.latest_version, as that will
-            # give us the latest visible version.
-            self.version = self.extension.versions.latest().version + 1
-        except self.DoesNotExist:
-            self.version = 1
+        if self.version == 0:
+            # Get version number
+            try:
+                # Don't use extension.latest_version, as that will
+                # give us the latest visible version.
+                self.version = self.extension.versions.latest().version + 1
+            except self.DoesNotExist:
+                self.version = 1
 
         super(ExtensionVersion, self).save(*args, **kwargs)
 
