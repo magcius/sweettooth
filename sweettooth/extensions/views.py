@@ -196,10 +196,6 @@ def extension_version_view(request, obj, **kwargs):
         # for pre-lock.
         is_preview = True
 
-        # Don't allow anybody (even moderators) to peek pre-lock.
-        if extension.creator != request.user:
-            raise Http404()
-
     # Redirect if we don't match the slug or extension PK.
     slug = kwargs.get('slug')
     extpk = kwargs.get('ext_pk')
