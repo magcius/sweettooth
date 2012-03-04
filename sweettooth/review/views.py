@@ -56,13 +56,13 @@ def can_review_extension(user, extension):
     if user == extension.creator:
         return True
 
-    if user.has_perm("review.can-approve-extensions"):
+    if user.has_perm("review.can-review-extensions"):
         return True
 
     return False
 
 def can_approve_extension(user, extension):
-    return user.has_perm("review.can-approve-extensions")
+    return user.has_perm("review.can-review-extensions")
 
 def highlight_file(filename, raw, formatter):
     try:

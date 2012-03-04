@@ -6,7 +6,7 @@ from django.db.models import Q
 from extensions.models import ExtensionVersion, STATUSES
 
 def get_all_reviewers():
-    perm = Permission.objects.get(codename="can-approve-extensions")
+    perm = Permission.objects.get(codename="can-review-extensions")
 
     # Dark magic to get all the users with a specific permission
     # Thanks to <schinckel> in #django
@@ -22,7 +22,7 @@ class CodeReview(models.Model):
 
     class Meta:
         permissions = (
-            ("can-approve-extensions", "Can approve extensions"),
+            ("can-review-extensions", "Can review extensions"),
         )
 
 class ChangeStatusLog(models.Model):
