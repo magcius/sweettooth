@@ -98,7 +98,12 @@ def get_old_version(version, old_version_number):
         # Try to get the latest version that's less than the current version
         # that actually has a source field. Sometimes the upload validation
         # fails, so work around it here.
-        old_version = extension.versions.filter(version__lt=version.version).exclude(source="").latest()
+        try:
+            old_version = extension.versions.filter(version__lt=version.version).exclude(source="").latest()
+        except models.ExtensionVersion.DoesNotExist:
+            # There's nothing before us that has a source, or this is the
+            # first version.
+            return None
 
     return old_version
 
