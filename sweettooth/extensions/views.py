@@ -149,12 +149,8 @@ def ajax_extensions_list(request):
     except InvalidPage:
         raise Http404()
 
-    context = dict(paginator=paginator,
-                   page_obj=page_obj,
-                   extension_list=page_obj.object_list)
-
-    return dict(html=render_to_string('extensions/list_bare.html', context),
-                numpages = paginator.num_pages)
+    return dict(html=render_to_string('extensions/list_bare.html', dict(extension_list=page_obj.object_list)),
+                numpages=paginator.num_pages)
 
 @model_view(models.Extension)
 def extension_view(request, obj, **kwargs):
