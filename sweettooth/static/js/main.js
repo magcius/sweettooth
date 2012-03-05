@@ -117,15 +117,26 @@ require(['jquery', 'messages', 'modal',
 
         $('#extension_shell_versions_info').buildShellVersionsInfo();
 
-        $('#extensions-list').
-            paginatorify('/ajax/extensions-list/').
+        function injectSearch() {
+            return { search: $('#search_input').val() };
+        }
+
+        var $extensionsList = $('#extensions-list').
+            paginatorify('/ajax/extensions-list/', injectSearch).
             bind('page-loaded', function() {
                 $('li.extension').grayOutIfOutOfDate();
-                $('#extensions-list .before-paginator').fsUIify();
+
+                // If we're searching, don't add FSUI for now.
+                if (!injectSearch().search)
+                    $('#extensions-list .before-paginator').fsUIify();
 
                 // Scroll the page back up to the top.
                 document.documentElement.scrollTop = 0;
             });
+
+        $('#search_input').bind('keyup', function() {
+            $extensionsList.trigger('load-page');
+        });
 
         $('#error_report').fillInErrors();
 

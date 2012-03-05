@@ -46,7 +46,7 @@
     <!-- header -->
     <div id="gnome_header">
       <div class="maxwidth">
-        <h1><a href="/"><img src="/static/images/foot.png" alt="GNOME" />Shell Extensions</a><span class="alpha-banner">Alpha!</span></h1>
+        <h1><a href="/"><img src="/static/images/foot.png" alt="GNOME" />Extensions</a><span class="alpha-banner">Alpha!</span></h1>
         
         <ul id="globalnav" class="{% block navclass %}{% endblock %}">
           <li class="main"><a href="{% url extensions-index %}">Extensions</a></li>
@@ -55,9 +55,9 @@
           <li class="about"><a href="{% url extensions-about %}">About</a></li>
         </ul>
         
-        <!-- <div class="right"> -->
-        <!--   <input id="search_input" type="text" placeholder="Search..." /> -->
-        <!-- </div> -->
+        <div class="right">
+          <input id="search_input" type="text" placeholder="Search..." />
+        </div>
         
         <div class="clear"></div>
       </div>

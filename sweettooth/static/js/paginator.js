@@ -3,7 +3,7 @@
 define(['jquery', 'hashparamutils',
         'dbus!_', 'jquery.hashchange'], function($, hashparamutils, dbusProxy) {
 
-    $.fn.paginatorify = function(url, context) {
+    $.fn.paginatorify = function(url, additionalHashParams, context) {
         if (!this.length)
             return this;
 
@@ -24,10 +24,16 @@ define(['jquery', 'hashparamutils',
             $elem.addClass('loading');
             $loadingPageContent.prependTo($elem);
 
+            var hashCopy;
+            if (additionalHashParams)
+                hashCopy = $.extend(additionalHashParams(), hashParams);
+            else
+                hashCopy = hashParams;
+
             $.ajax({
                 url: url,
                 dataType: 'json',
-                data: hashParams,
+                data: hashCopy,
                 type: 'GET'
             }).done(function(result) {
                 if ($beforePaginator)
@@ -112,6 +118,8 @@ define(['jquery', 'hashparamutils',
         });
 
         $(window).hashchange();
+
+        this.bind('load-page', loadPage);
 
         return this;
     };
