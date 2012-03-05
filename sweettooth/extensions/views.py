@@ -119,7 +119,7 @@ def ajax_query_params_query(request):
 
     queryset = queryset.order_by(sort)
 
-    # Sort by DESC for name, ASC for everything else.
+    # Sort by ASC for name, DESC for everything else.
     if sort == 'name':
         default_order = 'asc'
     else:
