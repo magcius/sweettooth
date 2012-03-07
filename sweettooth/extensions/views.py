@@ -1,4 +1,6 @@
 
+from math import ceil
+
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
@@ -13,7 +15,7 @@ from django.utils import simplejson as json
 from django.views.decorators.http import require_POST
 from sorl.thumbnail.shortcuts import get_thumbnail
 
-from extensions import models
+from extensions import models, search
 from extensions.forms import UploadForm
 
 from decorators import ajax_view, model_view
@@ -98,7 +100,7 @@ def get_versions_for_version_strings(version_strings):
         if base_version:
             yield base_version
 
-def ajax_query_params_query(request):
+def ajax_query_params_query(request, n_per_page=10):
     version_qs = models.ExtensionVersion.objects.visible()
 
     version_strings = request.GET.getlist('shell_version')
@@ -128,29 +130,60 @@ def ajax_query_params_query(request):
     order = request.GET.get('order', default_order)
     queryset.query.standard_ordering = (order == 'asc')
 
-    return queryset
-
-@ajax_view
-def ajax_extensions_list(request):
-    queryset = ajax_query_params_query(request)
-
-    paginator = Paginator(queryset, 10)
+    # Paginate the query
+    paginator = Paginator(queryset, n_per_page)
     page = request.GET.get('page', 1)
     try:
         page_number = int(page)
     except ValueError:
-        if page == 'last':
-            page_number = paginator.num_pages
-        else:
-            # Page is not 'last', nor can it be converted to an int.
-            raise Http404()
+        raise Http404()
+
     try:
         page_obj = paginator.page(page_number)
     except InvalidPage:
         raise Http404()
 
-    return dict(html=render_to_string('extensions/list_bare.html', dict(extension_list=page_obj.object_list)),
-                numpages=paginator.num_pages)
+    return page_obj.object_list, paginator.num_pages
+
+def ajax_query_search_query(request, n_per_page=10):
+    querystring = request.GET.get('search', '')
+
+    enquire = search.enquire(querystring)
+
+    page = request.GET.get('page', 1)
+    try:
+        offset = (int(page) - 1) * n_per_page
+    except ValueError:
+        raise Http404()
+
+    mset = enquire.get_mset(offset, n_per_page)
+    pks = [match.document.get_data() for match in mset]
+
+    num_pages = int(ceil(float(mset.get_matches_estimated()) / n_per_page))
+
+    # filter doesn't guarantee an order, so we need to get all the
+    # possible models then look them up to get the ordering
+    # returned by xapian. This hits the database all at once, rather
+    # than pagesize times.
+    extension_lookup = {}
+    for extension in models.Extension.objects.filter(pk__in=pks):
+        extension_lookup[str(extension.pk)] = extension
+
+    extensions = [extension_lookup[pk] for pk in pks]
+
+    return extensions, num_pages
+
+@ajax_view
+def ajax_extensions_list(request):
+    if request.GET.get('search',  ''):
+        func = ajax_query_search_query
+    else:
+        func = ajax_query_params_query
+
+    object_list, num_pages = func(request)
+
+    return dict(html=render_to_string('extensions/list_bare.html', dict(extension_list=object_list)),
+                numpages=num_pages)
 
 @model_view(models.Extension)
 def extension_view(request, obj, **kwargs):
@@ -327,7 +360,11 @@ def ajax_details_view(request):
 
 @ajax_view
 def ajax_query_view(request):
-    return [ajax_details(e) for e in ajax_query_params_query(request)]
+    if 'search' in request.GET:
+        query = ajax_query_search_query(request)
+    else:
+        query = ajax_query_params_query(request)
+    return [ajax_details(e) for e in query]
 
 @ajax_view
 def ajax_set_status_view(request, newstatus):

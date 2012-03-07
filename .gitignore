@@ -41,6 +41,7 @@ venv
 # sweettooth-specific
 Demos
 sweettooth/uploaded-files
+xapian.db
 sweettooth.wsgi
 local_settings.py
 *.crt
