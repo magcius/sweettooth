@@ -20,6 +20,8 @@ define(['jquery', 'hashparamutils',
         var $beforePaginator = null;
         var $afterPaginator = null;
 
+        var currentRequest = null;
+
         function loadPage() {
             $elem.addClass('loading');
             $loadingPageContent.prependTo($elem);
@@ -30,7 +32,10 @@ define(['jquery', 'hashparamutils',
             else
                 hashCopy = hashParams;
 
-            $.ajax({
+            if (currentRequest !== null)
+                currentRequest.abort();
+
+            currentRequest = $.ajax({
                 url: url,
                 dataType: 'json',
                 data: hashCopy,
