@@ -134,9 +134,15 @@ require(['jquery', 'messages', 'modal',
                 document.documentElement.scrollTop = 0;
             });
 
+        var term = null;
         $('#search_input').bind('keyup', function() {
-            $extensionsList.trigger('load-page');
-        });
+            var newTerm = $.trim($(this).val());
+
+            if (newTerm != term) {
+                term = newTerm;
+                $extensionsList.trigger('load-page');
+            }
+        }).trigger('keyup');
 
         $('#error_report').fillInErrors();
 
