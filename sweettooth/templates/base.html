@@ -54,10 +54,9 @@
           <li class="local"><a href="{% url extensions-local %}">Installed extensions</a></li>
           <li class="about"><a href="{% url extensions-about %}">About</a></li>
         </ul>
-        
-        <div class="right">
-          <input id="search_input" type="text" placeholder="Search..." />
-        </div>
+
+        {% block search-bar %}
+        {% endblock %}
         
         <div class="clear"></div>
       </div>
