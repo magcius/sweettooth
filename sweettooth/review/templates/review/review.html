@@ -111,13 +111,13 @@
   <form id="review_form" action="{% url review-submit pk=version.pk %}" method="POST">
     {% csrf_token %}
     <textarea id="comments" name="comments"></textarea>
-{% if can_approve %}
     <select name="status">
       <option value="none" selected>No change</option>
+{% if can_approve %}
       <option value="approve" class="approve">Approve</option>
+{% endif %}
       <option value="reject" class="reject">Reject</option>
     </select>
-{% endif %}
     <input type="submit" value="Submit">
   </form>
 </div>
