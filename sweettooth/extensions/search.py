@@ -18,13 +18,9 @@ def index_extension(extension):
     doc = xapian.Document()
     termgen.set_document(doc)
 
-    name = extension.name.lower()
-    uuid = extension.uuid.lower()
-    description = extension.description.lower()
-
-    termgen.index_text(name, 10)
-    termgen.index_text(uuid)
-    termgen.index_text(description)
+    termgen.index_text(extension.name, 10)
+    termgen.index_text(extension.uuid)
+    termgen.index_text(extension.description)
 
     doc.set_data(str(extension.pk))
 
