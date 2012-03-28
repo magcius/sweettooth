@@ -344,12 +344,16 @@ def ajax_details(extension):
 @ajax_view
 def ajax_details_view(request):
     uuid = request.GET.get('uuid', None)
+    pk = request.GET.get('pk', None)
     version = request.GET.get('version', None)
 
-    if uuid is None:
+    if uuid is not None:
+        extension = get_object_or_404(models.Extension, uuid=uuid)
+    elif pk is not None:
+        extension = get_object_or_404(models.Extension, pk=pk)
+    else:
         raise Http404()
 
-    extension = get_object_or_404(models.Extension, uuid=uuid)
     details = ajax_details(extension)
 
     if version is not None:
