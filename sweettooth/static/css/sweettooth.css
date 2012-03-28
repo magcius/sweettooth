@@ -75,14 +75,14 @@
 }
 
 .alpha-banner {
-    -webkit-transform: rotate(7deg);
-    -moz-transform: rotate(7deg);
-    -ms-transform: rotate(7deg);
-    -o-transform: rotate(7deg);
-    transform: rotate(7deg);
+    -webkit-transform: rotate(-7deg);
+    -moz-transform: rotate(-7deg);
+    -ms-transform: rotate(-7deg);
+    -o-transform: rotate(-7deg);
+    transform: rotate(-7deg);
     font-size: .6em;
-    background-color: #BC4242;
-    background-color: rgba(188, 66, 66, 0.7);
+    background-color: #42BC42;
+    background-color: rgba(66, 188, 66, 0.7);
     color: white;
     text-shadow: none;
     padding: .4em;
