@@ -337,6 +337,7 @@ def ajax_details(extension):
     return dict(uuid = extension.uuid,
                 name = extension.name,
                 creator = extension.creator.username,
+                description = extension.description,
                 link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
                 icon = extension.icon.url,
                 shell_version_map = extension.visible_shell_version_map_json)
