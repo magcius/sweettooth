@@ -95,23 +95,8 @@ function($, messages, dbusProxy, extensionUtils) {
     function addExtensionSwitch(uuid, extension, $elem) {
         var $switch = $elem.find('.switch');
         var _state = ExtensionState.UNINSTALLED;
-        var svm = $elem.data('svm');
-
-        var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-
-        if (vpk === null) {
-            if (svm) {
-                _state = ExtensionState.OUT_OF_DATE;
-            } else {
-                // Allow the local extensions code to work without an svm.
-                _state = extension.state;
-            }
-        } else if (extension && !$.isEmptyObject(extension)) {
-            _state = extension.state;
-        }
 
         $elem.data({'elem': $elem,
-                    'pk': (vpk === null ? 0 : vpk.pk),
                     'state': _state,
                     'uninstalled': false,
                     'undo-uninstall-message': null});
@@ -134,7 +119,7 @@ function($, messages, dbusProxy, extensionUtils) {
                 if (oldState == ExtensionState.UNINSTALLED) {
                     // If the extension is uninstalled and we
                     // flick the switch on, install.
-                    dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
+                    dbusProxy.InstallExtension(uuid);
                     sendPopularity('enable');
                 } else if (oldState == ExtensionState.DISABLED ||
                            oldState == ExtensionState.INITIALIZED) {
@@ -204,7 +189,7 @@ function($, messages, dbusProxy, extensionUtils) {
                         var uuid = extension.uuid;
 
                         function reinstall() {
-                            dbusProxy.InstallExtension(uuid, $elem.data('pk').toString());
+                            dbusProxy.InstallExtension(uuid);
 
                             // If the user clicks "Install" we need to show that we
                             // installed it by reattaching the element, but we can't do

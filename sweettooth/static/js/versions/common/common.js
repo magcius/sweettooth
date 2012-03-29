@@ -36,8 +36,12 @@ define(['jquery', 'dbus!API'], function($, API) {
             API.setExtensionEnabled(uuid, false);
         },
 
-        InstallExtension: function(uuid, server_uuid) {
-            API.installExtension(uuid, server_uuid);
+        InstallExtensionOne: function(uuid) {
+            API.installExtension(uuid);
+        },
+
+        InstallExtensionTwo: function(uuid) {
+            API.installExtension(uuid, -1);
         },
 
         UninstallExtension: function(uuid) {
