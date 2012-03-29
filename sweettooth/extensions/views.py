@@ -23,16 +23,11 @@ from utils import render
 
 def shell_download(request, uuid):
     pk = request.GET['version_tag']
-    if pk == 'latest':
-        extension = get_object_or_404(models.Extension, uuid=uuid)
-        version = extension.latest_version
+    version = get_object_or_404(models.ExtensionVersion, pk=pk)
+    extension = version.extension
 
-    else:
-        version = get_object_or_404(models.ExtensionVersion, pk=pk)
-        extension = version.extension
-
-        if version.extension.uuid != uuid:
-            raise Http404()
+    if version.extension.uuid != uuid:
+        raise Http404()
 
     if version.status != models.STATUS_ACTIVE:
         return HttpResponseForbidden()
