@@ -21,16 +21,49 @@ from extensions.forms import UploadForm
 from decorators import ajax_view, model_view
 from utils import render
 
+def get_versions_for_version_strings(version_strings):
+    def get_version(major, minor, point):
+        try:
+            return models.ShellVersion.objects.get(major=major, minor=minor, point=point)
+        except models.ShellVersion.DoesNotExist:
+            return None
+
+    for version_string in version_strings:
+        try:
+            major, minor, point = models.parse_version_string(version_string, ignore_micro=True)
+        except models.InvalidShellVersion:
+            continue
+
+        version = get_version(major, minor, point)
+        if version:
+            yield version
+
+        # If we already have a base version, don't bother querying it again...
+        if point == -1:
+            continue
+
+        base_version = get_version(major, minor, -1)
+        if base_version:
+            yield base_version
+
 def shell_download(request, uuid):
-    pk = request.GET['version_tag']
-    version = get_object_or_404(models.ExtensionVersion, pk=pk)
-    extension = version.extension
+    extension = get_object_or_404(models.Extension, uuid=uuid)
 
-    if version.extension.uuid != uuid:
-        raise Http404()
+    if request.GET.get('version_tag', -1) >= 0:
+        try:
+            version = extension.visible_versions.get(pk=request.GET['version_tag'])
+        except models.ExtensionVersion.DoesNotExist:
+            raise Http404()
+    else:
+        shell_version = request.GET['shell_version']
+        shell_versions = set(get_versions_for_version_strings([shell_version]))
+        if not shell_versions:
+            raise Http404()
 
-    if version.status != models.STATUS_ACTIVE:
-        return HttpResponseForbidden()
+        try:
+            version = extension.visible_versions.filter(shell_versions__in=shell_versions).order_by('-version')[0]
+        except models.ExtensionVersion.DoesNotExist:
+            raise Http404()
 
     extension.downloads += 1
     extension.save(replace_metadata_json=False)
@@ -69,31 +102,6 @@ def shell_update(request):
                                     version=extension.latest_version.pk)
 
     return operations
-
-def get_versions_for_version_strings(version_strings):
-    def get_version(major, minor, point):
-        try:
-            return models.ShellVersion.objects.get(major=major, minor=minor, point=point)
-        except models.ShellVersion.DoesNotExist:
-            return None
-
-    for version_string in version_strings:
-        try:
-            major, minor, point = models.parse_version_string(version_string, ignore_micro=True)
-        except models.InvalidShellVersion:
-            continue
-
-        version = get_version(major, minor, point)
-        if version:
-            yield version
-
-        # If we already have a base version, don't bother querying it again...
-        if point == -1:
-            continue
-
-        base_version = get_version(major, minor, -1)
-        if base_version:
-            yield base_version
 
 def ajax_query_params_query(request, n_per_page=10):
     version_qs = models.ExtensionVersion.objects.visible()

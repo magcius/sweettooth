@@ -374,6 +374,91 @@ class ShellVersionTest(TestCase):
         self.assertEquals(minor, 3)
         self.assertEquals(point, 2)
 
+class DownloadExtensionTest(BasicUserTestCase, TestCase):
+    def download(self, uuid, shell_version):
+        url = reverse('extensions-shell-download', kwargs=dict(uuid=uuid))
+        return self.client.get(url, dict(shell_version=shell_version), follow=True)
+
+    def test_basic(self):
+        zipfile = get_test_zipfile("SimpleExtension")
+
+        metadata = {"name": "Test Metadata 6",
+                    "uuid": "test-6@gnome.org",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+
+        v1 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version1.zip"))
+        v1.parse_metadata_json({"shell-version": ['3.2']})
+
+        v2 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version1.zip"))
+        v2.parse_metadata_json({"shell-version": ['3.4']})
+
+        self.assertRedirects(self.download(metadata['uuid'], '3.2'), v1.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.4'), v2.source.url)
+
+    def test_bare_versions(self):
+        zipfile = get_test_zipfile("SimpleExtension")
+
+        metadata = {"name": "Test Metadata 7",
+                    "uuid": "test-7@gnome.org",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+
+        v1 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version1.zip"))
+        v1.parse_metadata_json({"shell-version": ['3.2']})
+
+        v2 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version2.zip"))
+        v2.parse_metadata_json({"shell-version": ['3.2.1']})
+
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.0'), v1.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.1'), v2.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.2'), v1.source.url)
+
+        v3 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version3.zip"))
+        v3.parse_metadata_json({"shell-version": ['3.2']})
+
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.0'), v3.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.1'), v3.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.2'), v3.source.url)
+
+    def test_multiple_versions(self):
+        zipfile = get_test_zipfile("SimpleExtension")
+
+        metadata = {"name": "Test Metadata 8",
+                    "uuid": "test-8@gnome.org",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+
+        v1 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version1.zip"))
+        v1.parse_metadata_json({"shell-version": ['3.2.0', '3.2.1', '3.2.2']})
+
+        v2 = models.ExtensionVersion.objects.create(extension=extension,
+                                                    status=models.STATUS_ACTIVE,
+                                                    source=File(zipfile, "version2.zip"))
+        v2.parse_metadata_json({"shell-version": ['3.2.2']})
+
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.0'), v1.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.1'), v1.source.url)
+        self.assertRedirects(self.download(metadata['uuid'], '3.2.2'), v2.source.url)
+
 class UpdateVersionTest(TestCase):
     fixtures = [os.path.join(testdata_dir, 'test_upgrade_data.json')]
 
