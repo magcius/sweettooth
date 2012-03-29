@@ -49,9 +49,9 @@ def get_versions_for_version_strings(version_strings):
 def shell_download(request, uuid):
     extension = get_object_or_404(models.Extension, uuid=uuid)
 
-    if request.GET.get('version_tag', -1) >= 0:
+    if request.GET.get('version_tag', ''):
         try:
-            version = extension.visible_versions.get(pk=request.GET['version_tag'])
+            version = extension.visible_versions.get(pk=int(request.GET['version_tag']))
         except models.ExtensionVersion.DoesNotExist:
             raise Http404()
     else:
