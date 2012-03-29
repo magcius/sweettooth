@@ -299,7 +299,7 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
 
     def test_shell_versions_simple(self):
         metadata = {"name": "Test Metadata 4",
-                    "uuid": "test-4@gnome.org",
+                    "uuid": "test-4@mecheye.net",
                     "description": "Simple test metadata",
                     "url": "http://test-metadata.gnome.org",
                     "shell-version": ["3.0.0", "3.0.1", "3.0.2"]}
@@ -314,7 +314,7 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
 
     def test_shell_versions_stable(self):
         metadata = {"name": "Test Metadata 5",
-                    "uuid": "test-5@gnome.org",
+                    "uuid": "test-5@mecheye.net",
                     "description": "Simple test metadata",
                     "url": "http://test-metadata.gnome.org",
                     "shell-version": ["3.0", "3.2"]}
