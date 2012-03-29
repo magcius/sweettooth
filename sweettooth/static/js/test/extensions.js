@@ -1,19 +1,5 @@
 require(['extensionUtils', 'jquery', 'test/qunit'], function(extensionUtils) {
 
-    var versionCheck = extensionUtils.versionCheck;
-    test("versionCheck", function() {
-        equal(versionCheck(["3.2.1"], "3.2.1"), true, "testing basic capability");
-        equal(versionCheck(["3.3.1"], "3.2.1"), false);
-
-        equal(versionCheck(["3.3.1", "3.2.1"], "3.2.1"), true, "multiple versions");
-        equal(versionCheck(["3.3.1", "3.3.2"], "3.2.1"), false);
-
-        equal(versionCheck(["3.2"], "3.2.1"), true, "stable release checking");
-        equal(versionCheck(["3.3"], "3.3.1"), false);
-
-        equal(versionCheck(["3.2.2"], "3.2.2.1"), true, "ignoring the fourth field");
-    });
-
     var grabProperExtensionVersion = extensionUtils.grabProperExtensionVersion;
     test("grabProperExtensionVersion", function() {
         var map = { "3.0": { version: 1, pk: 1 },
