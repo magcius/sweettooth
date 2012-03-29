@@ -3,6 +3,7 @@ import os.path
 
 from django.conf.urls.defaults import patterns, include, url, handler404, handler500
 from django.conf import settings
+from django.http import HttpResponse
 
 from django.contrib import admin
 from django.views import static
@@ -28,7 +29,7 @@ if settings.DEBUG:
                            dict(document_root=settings.MEDIA_ROOT), name='extension-data'))
 else:
     # and a dummy to reverse on for production.
-    urlpatterns.append(url(r'^static/extension-data/(?P<path>.*)', lambda n: None,
+    urlpatterns.append(url(r'^static/extension-data/(?P<path>.*)', lambda *a, **kw: HttpResponse(),
                            name='extension-data'))
 
 if settings.DEBUG:
