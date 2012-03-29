@@ -2,6 +2,7 @@
 import os.path
 import tempfile
 import uuid
+import unittest
 from zipfile import ZipFile
 
 try:
@@ -13,7 +14,6 @@ from django.test import TestCase, TransactionTestCase
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
 from django.utils import simplejson as json
-from django.utils.unittest import expectedFailure
 from extensions import models
 
 from testutils import BasicUserTestCase
@@ -143,7 +143,7 @@ class ParseZipfileTest(BasicUserTestCase, TestCase):
             self.assertEquals(cm.exception.message, "Invalid JSON data")
 
 class ReplaceMetadataTest(BasicUserTestCase, TestCase):
-    @expectedFailure
+    @unittest.expectedFailure
     def test_replace_metadata(self):
         old_zip_file = get_test_zipfile('LotsOfFiles')
 
