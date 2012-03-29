@@ -1,8 +1,8 @@
 
 import os.path
 import tempfile
-import uuid
 import unittest
+from uuid import uuid4
 from zipfile import ZipFile
 
 try:
@@ -37,7 +37,7 @@ class UUIDPolicyTest(TestCase):
         self.assertTrue(models.validate_uuid("Foo4@mecheye.net"))
 
         for i in xrange(10):
-            self.assertTrue(models.validate_uuid(str(uuid.uuid4())))
+            self.assertTrue(models.validate_uuid(str(uuid4())))
 
         self.assertFalse(models.validate_uuid("<Wonderful>"))
 
