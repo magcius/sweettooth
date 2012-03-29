@@ -60,10 +60,11 @@ def shell_download(request, uuid):
         if not shell_versions:
             raise Http404()
 
-        try:
-            version = extension.visible_versions.filter(shell_versions__in=shell_versions).order_by('-version')[0]
-        except models.ExtensionVersion.DoesNotExist:
+        versions = extension.visible_versions.filter(shell_versions__in=shell_versions)
+        if versions.count() < 1:
             raise Http404()
+        else:
+            version = versions.order_by('-version')[0]
 
     extension.downloads += 1
     extension.save(replace_metadata_json=False)
