@@ -188,6 +188,17 @@ def ajax_extensions_list(request):
     return dict(html=render_to_string('extensions/list_bare.html', dict(extension_list=object_list)),
                 numpages=num_pages)
 
+@ajax_view
+def ajax_query_view(request):
+    if request.GET.get('search',  ''):
+        func = ajax_query_search_query
+    else:
+        func = ajax_query_params_query
+
+    object_list, num_pages = func(request)
+
+    return [ajax_details(e) for e in object_list]
+
 @model_view(models.Extension)
 def extension_view(request, obj, **kwargs):
     extension, versions = obj, obj.visible_versions
@@ -365,14 +376,6 @@ def ajax_details_view(request):
         details['pk'] = version.pk
 
     return details
-
-@ajax_view
-def ajax_query_view(request):
-    if 'search' in request.GET:
-        query = ajax_query_search_query(request)
-    else:
-        query = ajax_query_params_query(request)
-    return [ajax_details(e) for e in query]
 
 @ajax_view
 def ajax_set_status_view(request, newstatus):
