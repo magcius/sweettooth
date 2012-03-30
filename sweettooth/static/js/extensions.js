@@ -199,14 +199,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                                 if (result) {
                                     $elem.fadeOut({ queue: false }).slideUp({ queue: false });
 
-                                    // Construct a dummy <p> node as we need something
-                                    // to stuff everything else in...
-                                    var messageHTML = $("<p>You uninstalled </p>").
-                                        append($('<b>').text(extension.name)).
-                                        append(". ").
-                                        append($('<a>', {'href': '#'}).text("Undo?")).html();
-
-                                    var $message = messages.addInfo(messageHTML);
+                                    var $message = messages.addInfo(templates.extensions.uninstall(extension));
                                     $message.delegate('a', 'click', reinstall);
                                     $elem.data('undo-uninstall-message', $message);
                                 }
