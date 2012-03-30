@@ -36,10 +36,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
     if (dbusProxy.IsDummy) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
-        messages.addError("You do not appear to have an up to date version " +
-                          "of GNOME3. You won't be able to install extensions " +
-                          "from here. See the <a href=\"/about/#old-version\">about page</a> " +
-                          "for more information");
+        messages.addError(templates.messages.dummy_proxy());
 
         $.fn.addExtensionSwitch = function() {
             // Don't show our switches -- CSS styles define a clickable
@@ -48,13 +45,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         };
 
         $.fn.addLocalExtensions = function() {
-            return this.append("GNOME Shell Extensions cannot list your installed extensions.");
+            return this.append(templates.messages.cannot_list_local());
         };
 
         $.fn.fillInErrors = function() {
             var $textarea = this.find('textarea[name=error]');
             var $hidden = this.find('input:hidden[name=has_errors]');
-            $textarea.text("GNOME Shell Extensions cannot automatically detect any errors.").
+            $textarea.text(templates.messages.cannot_list_errors()).
                 addClass('no-errors').attr('disabled', 'disabled');
             $hidden.val('');
             return this;
