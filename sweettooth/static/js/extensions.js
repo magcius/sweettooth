@@ -265,29 +265,11 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             var $textarea = $form.find('textarea');
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
                 dbusProxy.GetErrors($form.data('uuid')).done(function(errors) {
-                    var errorString;
+                    var context = { sv: dbusProxy.ShellVersion,
+                                    ev: (meta && meta.version) ? meta.version : null,
+                                    errors: errors };
 
-                    var versionInformation = "";
-                    versionInformation += "    Shell version: " + dbusProxy.ShellVersion + "\n";
-                    versionInformation += "    Extension version: ";
-                    if (meta && meta.version) {
-                        versionInformation += meta.version;
-                    } else {
-                        versionInformation += "Not found";
-                    }
-
-                    if (errors && errors.length) {
-                        errorString = errors.join('\n\n================\n\n');
-                    } else {
-                        errorString = "GNOME Shell Extensions did not detect any errors with this extension.";
-                    }
-
-                    var template = ("What's wrong?\n\n\n\n" +
-                                    "What have you tried?\n\n\n\n" +
-                                    "Automatically detected errors:\n\n" + errorString +
-                                    "\n\nVersion information:\n\n" + versionInformation);
-
-                    $textarea.text(template);
+                    $textarea.text(templates.extensions.error_report_template(context));
                 });
             });
         });
