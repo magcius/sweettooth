@@ -2,24 +2,36 @@
 
 define(['templates/templatedata', 'mustache'], function(templatedata) {
     var module = {};
+    var partials = module._P = {};
     module._T = templatedata;
 
     function compile(template) {
         // We have our own template caching, don't use Mustache's.
-        return Mustache.compile(v, { cache: false });
+        var compiled = Mustache.compile(template, { cache: false });
+        var wrapper = function(view) {
+            return compiled(view, partials);
+        };
+        wrapper.compiled = true;
+        return wrapper;
     }
 
-    function _compileTemplateData(data, out) {
+    function _compileTemplateData(data, out, prefix) {
         for (var propname in data) {
-            var v = data[propname];
-            if (typeof(v) === typeof({}))
-                out[propname] = _compileTemplateData(v, {});
+            var v = data[propname], pkey;
+            if (prefix)
+                pkey = prefix + "." + propname;
             else
-                out[propname] = compile(v);
+                pkey = propname;
+
+            if (typeof(v) === typeof({})) {
+                out[propname] = _compileTemplateData(v, {}, pkey);
+            } else {
+                out[propname] = partials[pkey] = compile(v);
+            }
         }
         return out;
     }
 
-    _compileTemplateData(templatedata, module);
+    _compileTemplateData(templatedata, module, "");
     return module;
 });
