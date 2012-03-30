@@ -89,9 +89,10 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         });
     };
 
-    function addExtensionSwitch(uuid, extension, $elem) {
+    function addExtensionSwitch(extension, $elem) {
+        var uuid = extension.uuid;
         var $switch = $elem.find('.switch');
-        var _state = ExtensionState.UNINSTALLED;
+        var _state = extension.state !== undefined ? extension.state : ExtensionState.UNINSTALLED;
 
         $elem.data({'elem': $elem,
                     'state': _state,
@@ -206,20 +207,23 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             });
                         }
 
-                        var $elem = $('<div>', {'class': 'extension'}).
-                            append($('<div>', {'class': 'switch'})).
-                            append($('<img>', {'class': 'icon'})).
-                            append($('<h3>', {'class': 'extension-name'}).text(extension.name)).
-                            append($('<span>', {'class': 'author'})).
-                            append($('<p>', {'class': 'description'}).text(extension.description));
+                        // Give us a dummy element that we'll replace when
+                        // rendering below, to keep renderExtension simple.
+                        var $elem = $('<a>');
 
-                        $elem.data('uuid', extension.uuid);
+                        function renderExtension() {
+                            var svm = extension.shell_version_map;
+                            if (svm)
+                                extension.want_uninstall = (extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion) !== null);
+                            extension.want_configure = (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE);
 
-                        if (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE)
-                            $elem.addLaunchExtensionPrefsButton(true);
+                            $elem = $(templates.extensions.info(extension)).replaceAll($elem);
 
-                        if (extension.state === ExtensionState.OUT_OF_DATE)
-                            $elem.addClass('out-of-date');
+                            if (extension.state === ExtensionState.OUT_OF_DATE)
+                                $elem.addClass('out-of-date');
+
+                            addExtensionSwitch(extension, $elem);
+                        }
 
                         $.ajax({
                             url: "/ajax/detail/",
@@ -228,25 +232,12 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                                     version: extension.version },
                             type: "GET",
                         }).done(function(result) {
-                            $elem.
-                                find('span.author').text(" by ").append($('<a>', {'href': "/accounts/profile/" + result.creator}).text(result.creator)).end().
-                                find('img.icon').detach().end().
-                                find('h3').html($('<a>', {'href': result.link}).append($('<img>', {'class': 'icon', 'src': result.icon})).append(extension.name)).end();
-
-                            // The PK might not exist if the extension wasn't
-                            // installed from GNOME Shell Extensions.
-                            if (result.pk !== undefined) {
-                                $elem.
-                                    data('pk', result.pk).
-                                    append($('<button>', {'class': 'uninstall', 'title': "Uninstall"}).text("Uninstall").bind('click', uninstall));
-                            }
-
-                            addExtensionSwitch(uuid, extension, $elem);
-                        }).fail(function(e) {
-                            // If the extension doesn't exist, add a switch anyway
-                            // so the user can toggle the enabled state.
-                            if (e.status == 404)
-                                addExtensionSwitch(uuid, extension, $elem);
+                            $.extend(extension, result);
+                            renderExtension();
+                        }).fail(function(error) {
+                            // Had an error looking up the data for the
+                            //extension -- that's OK, just render it anyway.
+                            renderExtension();
                         });
 
                         $container.append($elem);
@@ -295,7 +286,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             });
 
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
-                addExtensionSwitch(uuid, meta, $extension);
+                addExtensionSwitch(meta, $extension);
             });
         });
     };
@@ -317,8 +308,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         function launchExtensionPrefsButton($elem, uuid) {
             $elem.
                 find('.description').
-                before($('<span>', {'class': 'launch-prefs-button'}).
-                       text("Configure").
+                before($(templates.extensions.configure_button()).
                        click(function() {
                            dbusProxy.LaunchExtensionPrefs(uuid);
                        }));
