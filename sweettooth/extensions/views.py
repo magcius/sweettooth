@@ -352,6 +352,7 @@ def ajax_details(extension):
     return dict(uuid = extension.uuid,
                 name = extension.name,
                 creator = extension.creator.username,
+                creator_url = reverse('auth-profile', kwargs=dict(user=extension.creator.username)),
                 description = extension.description,
                 link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
                 download_url = reverse('extensions-shell-download', kwargs=dict(uuid=extension.uuid)),
