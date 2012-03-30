@@ -354,6 +354,7 @@ def ajax_details(extension):
                 creator = extension.creator.username,
                 description = extension.description,
                 link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
+                download_url = reverse('extensions-shell-download', kwargs=dict(uuid=extension.uuid)),
                 icon = extension.icon.url,
                 shell_version_map = extension.visible_shell_version_map)
 
