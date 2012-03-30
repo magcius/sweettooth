@@ -1,7 +1,7 @@
 "use strict";
 
-define(['jquery', 'hashparamutils',
-        'dbus!_', 'jquery.hashchange'], function($, hashparamutils, dbusProxy) {
+define(['jquery', 'hashparamutils', 'dbus!_', 'templates',
+        'jquery.hashchange'], function($, hashparamutils, dbusProxy, templates) {
 
     $.fn.paginatorify = function(url, additionalHashParams, context) {
         if (!this.length)
@@ -12,8 +12,7 @@ define(['jquery', 'hashparamutils',
         if (context === undefined)
             context = 3;
 
-        var $loadingPageContent = $('<div>', {'class': 'loading-page'}).
-            text("Loading page... please wait");
+        var $loadingPageContent = $(templates.paginator.loading_page());
 
         var $elem = $(this);
         var numPages = 0;

@@ -1,8 +1,8 @@
 "use strict";
 
-define(['jquery', 'messages', 'dbus!_', 'extensionUtils', 'paginator',
-        'switch', 'jquery.tipsy'],
-function($, messages, dbusProxy, extensionUtils) {
+define(['jquery', 'messages', 'dbus!_', 'extensionUtils', 'templates',
+        'paginator', 'switch', 'jquery.tipsy'],
+function($, messages, dbusProxy, extensionUtils, templates) {
 
     var ExtensionState = extensionUtils.ExtensionState;
 
@@ -392,16 +392,15 @@ function($, messages, dbusProxy, extensionUtils) {
                 if (!meta)
                     return;
 
-                if (vpk.version > meta.version) {
-                    var msg = "You have version " + meta.version + " of";
-                    msg += "\"" + extensionName + "\"";
-                    msg += ". The latest version is version " + vpk.version;
-                    msg += ". Click here to upgrade.";
+                var context = { latest_version: vpk.version,
+                                current_version: meta.version,
+                                extension_name: extensionName };
 
+                if (vpk.version > meta.version) {
+                    var msg = templates.upgrade.need_upgrade(context);
                     $upgradeMe.append($('<a>', { href: '#' }).text(msg).click(upgrade));
                 } else if (vpk.version == meta.version) {
-                    var msg = "You have the latest version of ";
-                    msg += "\"" + extensionName + "\"";
+                    var msg = templates.upgrade.latest_version(context);
                     $upgradeMe.text(msg);
                 }
             });
