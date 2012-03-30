@@ -17,10 +17,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django',
-        'USER': 'test-deploy',                      # Not used with sqlite3.
-        'PASSWORD': 'test-deploy',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'USER': 'test-deploy',
+        'PASSWORD': 'test-deploy',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
