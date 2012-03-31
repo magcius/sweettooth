@@ -1,10 +1,9 @@
 "use strict";
 
 define(['jquery', 'hashParamUtils'], function($, hashParamUtils) {
+    var exports = {};
 
-    var module = {};
-
-    var makeLink = module.makeLink = function(pageNumber, styleClass, text) {
+    function makeLink(pageNumber, styleClass, text) {
         styleClass = styleClass === undefined ? "" : styleClass;
         text = text === undefined ? pageNumber.toString() : text;
 
@@ -13,9 +12,9 @@ define(['jquery', 'hashParamUtils'], function($, hashParamUtils) {
 
         return $('<a>', {'class': 'number ' + styleClass,
                          'href': '#' + $.param(hp)}).text(text);
-    };
+    }
 
-    var buildPaginator = module.buildPaginator = function(page, numPages, context) {
+    exports.buildPaginator = function(page, numPages, context) {
         var number = page;
         var contextLeft = Math.max(number-context, 2);
         var contextRight = Math.min(number+context+2, numPages);
@@ -48,6 +47,5 @@ define(['jquery', 'hashParamUtils'], function($, hashParamUtils) {
         return $('<div>', {'class': 'paginator'}).append($elem);
     };
 
-    return module;
-
+    return exports;
 });

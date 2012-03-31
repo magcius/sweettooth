@@ -2,13 +2,13 @@
 
 define([], function() {
 
-    var module = {};
+    var exports = {};
 
     // ExtensionState is stolen and should be kept in sync with the Shell.
     // Licensed under GPL2+
     // See: http://git.gnome.org/browse/gnome-shell/tree/js/ui/extensionSystem.js
 
-    module.ExtensionState = {
+    exports.ExtensionState = {
         ENABLED: 1,
         DISABLED: 2,
         ERROR: 3,
@@ -21,7 +21,7 @@ define([], function() {
         UNINSTALLED: 99
     };
 
-    module.grabProperExtensionVersion = function(map, current) {
+    exports.grabProperExtensionVersion = function(map, current) {
         if (!map)
             return null;
 
@@ -53,7 +53,7 @@ define([], function() {
         }
     };
 
-    module.findNextHighestVersion = function(map, current) {
+    exports.findNextHighestVersion = function(map, current) {
         function saneParseInt(p) {
             return parseInt(p, 10);
         }
@@ -86,6 +86,6 @@ define([], function() {
                 'version': nextHighestParts.join('.')};
     };
 
-    return module;
+    return exports;
 
 });

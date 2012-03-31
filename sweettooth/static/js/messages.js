@@ -1,6 +1,8 @@
 "use strict";
 
 define(['jquery'], function($) {
+    var exports = {};
+
     var $container = $('#message_container');
 
     var SORT_ORDER = ['error', 'warning', 'info'];
@@ -34,7 +36,7 @@ define(['jquery'], function($) {
         $container.append(messages);
     }
 
-    function addMessage(tag, message) {
+    var addMessage = exports.addMessage = function(tag, message) {
         var message = $('<p>').addClass('message').addClass(tag)
             .append(message).appendTo($container);
 
@@ -43,22 +45,17 @@ define(['jquery'], function($) {
         return message;
     }
 
-    function addInfo(message) {
+    exports.addInfo = function(message) {
         return addMessage('info', message);
     }
 
-    function addWarning(message) {
+    exports.addWarning = function(message) {
         return addMessage('info', message);
     }
 
-    function addError(message) {
+    exports.addError = function(message) {
         return addMessage('error', message);
     }
 
-    return {
-        addMessage: addMessage,
-        addError: addError,
-        addWarning: addWarning,
-        addInfo: addInfo
-    };
+    return exports;
 });

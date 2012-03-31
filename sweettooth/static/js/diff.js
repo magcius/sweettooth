@@ -1,6 +1,7 @@
 "use strict";
 
 define(['jquery'], function($) {
+    var exports = {};
 
     // Each table row has four columns:
     // ===================================================================
@@ -177,7 +178,7 @@ define(['jquery'], function($) {
         'replace': buildReplaceChunk
     };
 
-    function buildDiffTable(chunks, oldContents, newContents) {
+    exports.buildDiffTable = function(chunks, oldContents, newContents) {
         var $table = $('<table>', {'class': 'code'});
 
         $.each(chunks, function() {
@@ -187,6 +188,5 @@ define(['jquery'], function($) {
         return $table;
     };
 
-    return { buildDiffTable: buildDiffTable };
-
+    return exports;
 });

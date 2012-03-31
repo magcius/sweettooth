@@ -1,9 +1,10 @@
 "use strict";
 
 define(['templates/templatedata', 'mustache'], function(templatedata) {
-    var module = {};
-    var partials = module._P = {};
-    module._T = templatedata;
+
+    var exports = {};
+    var partials = exports._P = {};
+    exports._T = templatedata;
 
     function compile(template) {
         // We have our own template caching, don't use Mustache's.
@@ -32,6 +33,6 @@ define(['templates/templatedata', 'mustache'], function(templatedata) {
         return out;
     }
 
-    _compileTemplateData(templatedata, module, "");
-    return module;
+    _compileTemplateData(templatedata, exports, "");
+    return exports;
 });

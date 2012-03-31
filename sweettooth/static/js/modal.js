@@ -1,6 +1,7 @@
 "use strict";
 
 define(['jquery'], function($) {
+    var exports = {};
 
     // jQuery doesn't support events in the capturing phase natively.
     // This is a trick that fires jQuery's event handler during the
@@ -9,7 +10,7 @@ define(['jquery'], function($) {
         $.event.handle.apply(document.body, arguments);
     }
 
-    function activateModal(elem, closeFunction) {
+    exports.activateModal = function(elem, closeFunction) {
         $(document.body).click(function(e) {
             // If the user clicked inside the modal popup, don't
             // close it.
@@ -29,8 +30,5 @@ define(['jquery'], function($) {
         document.body.addEventListener('click', captureHandler, true);
     }
 
-    return {
-        activateModal: activateModal
-    };
-
+    return exports;
 });

@@ -1,8 +1,9 @@
 "use strict";
 
 define(["jquery"], function($) {
+    var exports = {};
 
-    function getHashParams() {
+    var getHashParams = exports.getHashParams = function() {
         var hash = window.location.hash;
         if (!hash)
             return {};
@@ -24,23 +25,20 @@ define(["jquery"], function($) {
         }
 
         return obj;
-    }
+    };
 
-    function setHashParam(name, value) {
+    var setHashParams = exports.setHashParams = function(obj) {
+        window.location.hash = $.param(obj);
+    };
+
+    var setHashParam = exports.setHashParam = function(name, value) {
         var hp = getHashParams();
         if (value === undefined)
             delete hp[name];
         else
             hp[name] = value;
         setHashParams(hp);
-    }
+    };
 
-    function setHashParams(obj) {
-        window.location.hash = $.param(obj);
-    }
-
-    return { getHashParams: getHashParams,
-             setHashParam:  setHashParam,
-             setHashParams: setHashParams };
-
+    return exports;
 });
