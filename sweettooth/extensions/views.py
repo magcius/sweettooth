@@ -46,25 +46,34 @@ def get_versions_for_version_strings(version_strings):
         if base_version:
             yield base_version
 
+def grab_proper_extension_version(extension, shell_version):
+    shell_versions = set(get_versions_for_version_strings([shell_version]))
+    if not shell_versions:
+        return None
+
+    versions = extension.visible_versions.filter(shell_versions__in=shell_versions)
+    if versions.count() < 1:
+        return None
+    else:
+        return versions.order_by('-version')[0]
+
+def find_extension_version_from_params(extension, params):
+    vpk = params.get('version_tag', '')
+    shell_version = params.get('shell_version', '')
+
+    if vpk:
+        try:
+            return extension.visible_versions.get(pk=int(vpk))
+        except models.ExtensionVersion.DoesNotExist:
+            return None
+    elif shell_version:
+        return grab_proper_extension_version(extension, shell_version)
+    else:
+        return None
+
 def shell_download(request, uuid):
     extension = get_object_or_404(models.Extension, uuid=uuid)
-
-    if request.GET.get('version_tag', ''):
-        try:
-            version = extension.visible_versions.get(pk=int(request.GET['version_tag']))
-        except models.ExtensionVersion.DoesNotExist:
-            raise Http404()
-    else:
-        shell_version = request.GET['shell_version']
-        shell_versions = set(get_versions_for_version_strings([shell_version]))
-        if not shell_versions:
-            raise Http404()
-
-        versions = extension.visible_versions.filter(shell_versions__in=shell_versions)
-        if versions.count() < 1:
-            raise Http404()
-        else:
-            version = versions.order_by('-version')[0]
+    version = find_extension_version_from_params(extension, request.GET)
 
     extension.downloads += 1
     extension.save(replace_metadata_json=False)
@@ -337,22 +346,27 @@ def ajax_upload_icon_view(request, obj):
     obj.save(replace_metadata_json=False)
     return obj.icon.url
 
-def ajax_details(extension):
-    return dict(uuid = extension.uuid,
-                name = extension.name,
-                creator = extension.creator.username,
-                creator_url = reverse('auth-profile', kwargs=dict(user=extension.creator.username)),
-                description = extension.description,
-                link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
-                download_url = reverse('extensions-shell-download', kwargs=dict(uuid=extension.uuid)),
-                icon = extension.icon.url,
-                shell_version_map = extension.visible_shell_version_map)
+def ajax_details(extension, version=None):
+    details = dict(uuid = extension.uuid,
+                   name = extension.name,
+                   creator = extension.creator.username,
+                   creator_url = reverse('auth-profile', kwargs=dict(user=extension.creator.username)),
+                   description = extension.description,
+                   link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
+                   icon = extension.icon.url,
+                   shell_version_map = extension.visible_shell_version_map)
+
+    if version is not None:
+        download_url = reverse('extensions-shell-download', kwargs=dict(uuid=extension.uuid))
+        details['version'] = version.version
+        details['version_tag'] = version.pk
+        details['download_url'] = "%s?version_tag=%d" % (download_url, version.pk)
+    return details
 
 @ajax_view
 def ajax_details_view(request):
     uuid = request.GET.get('uuid', None)
     pk = request.GET.get('pk', None)
-    version = request.GET.get('version', None)
 
     if uuid is not None:
         extension = get_object_or_404(models.Extension, uuid=uuid)
@@ -361,13 +375,8 @@ def ajax_details_view(request):
     else:
         raise Http404()
 
-    details = ajax_details(extension)
-
-    if version is not None:
-        version = extension.versions.get(version=version)
-        details['pk'] = version.pk
-
-    return details
+    version = find_extension_version_from_params(extension, request.GET)
+    return ajax_details(extension, version)
 
 @ajax_view
 def ajax_set_status_view(request, newstatus):
