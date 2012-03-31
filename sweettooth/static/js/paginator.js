@@ -1,6 +1,7 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates'], function($, hashParamUtils, paginatorUtils, dbusProxy, templates) {
+    "use strict";
 
     $.fn.paginatorify = function(context) {
         if (!this.length)

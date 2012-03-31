@@ -1,6 +1,7 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define([], function() {
+    "use strict";
 
     var exports = {};
 

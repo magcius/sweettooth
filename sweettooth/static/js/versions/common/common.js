@@ -1,6 +1,8 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'dbus!API'], function($, API) {
+    "use strict";
+
     function _makePromise(result) {
         // Make a new completed promise -- when we move the plugin
         // over to async, we can remove this.

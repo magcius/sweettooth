@@ -1,6 +1,8 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery'], function($) {
+    "use strict";
+
     $.fn.uploadify = function(url) {
         var $elem = $(this), $input = $elem.find('input');
         if ($elem.data('uploader'))

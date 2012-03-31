@@ -1,6 +1,8 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery'], function($) {
+    "use strict";
+
     var exports = {};
 
     // jQuery doesn't support events in the capturing phase natively.

@@ -1,10 +1,11 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 // FSUI is short for "Filtering and Sorting UI", which contains
 // controls for filtering and sorting the extensions list
 
 define(['jquery', 'dbus!_', 'hashParamUtils', 'modal'],
 function($, dbusProxy, hashParamUtils, modal) {
+    "use strict";
 
     function makeDropdownLink(text) {
         return $('<a>', {'class': 'fsui-dropdown-link'}).

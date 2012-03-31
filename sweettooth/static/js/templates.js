@@ -1,6 +1,7 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['templates/templatedata', 'mustache'], function(templatedata) {
+    "use strict";
 
     var exports = {};
     var partials = exports._P = {};

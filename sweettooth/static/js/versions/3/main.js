@@ -1,6 +1,8 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'dbus!API', 'versions/common/common'], function($, API, common) {
+    "use strict";
+
     var proxy = {
         IsDummy: false,
 

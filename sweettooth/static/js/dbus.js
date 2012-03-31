@@ -1,4 +1,4 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 // We need to abuse the plugin system so that we can defer the
 // load completion until our dynamically built requirement is
@@ -9,6 +9,8 @@
 
 define({
     load: function(name, req, onLoad, config) {
+        "use strict";
+
         req(['jquery'], function ($) {
             if (!('SweetTooth' in window)) {
                 try {

@@ -1,6 +1,8 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'hashParamUtils'], function($, hashParamUtils) {
+    "use strict";
+
     var exports = {};
 
     function makeLink(pageNumber, styleClass, text) {

@@ -1,6 +1,8 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery'], function($) {
+    "use strict";
+
     var exports = {};
 
     // Each table row has four columns:

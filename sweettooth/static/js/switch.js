@@ -1,6 +1,7 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery'], function($) {
+    "use strict";
 
     function getSides($elem, $slider) {
         var bl = parseInt($elem.css('borderLeftWidth')) + parseInt($slider.css('borderLeftWidth'));

@@ -1,6 +1,7 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'diff'], function($, diff) {
+    "use strict";
 
     var REVIEW_URL_BASE = '/review/ajax';
 

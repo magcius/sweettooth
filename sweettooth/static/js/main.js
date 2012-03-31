@@ -1,9 +1,12 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'messages', 'modal',
          'extensions', 'uploader', 'fsui',
          'jquery.cookie', 'jquery.jeditable',
-         'jquery.timeago', 'jquery.raty'], function($, messages, modal) {
+         'jquery.timeago', 'jquery.raty'],
+function($, messages, modal) {
+    "use strict";
+
     if (!$.ajaxSettings.headers)
         $.ajaxSettings.headers = {};
 

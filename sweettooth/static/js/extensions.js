@@ -1,8 +1,9 @@
-"use strict";
+// -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'messages', 'dbus!_', 'extensionUtils', 'templates',
         'paginator', 'switch', 'jquery.tipsy'],
 function($, messages, dbusProxy, extensionUtils, templates) {
+    "use strict";
 
     var ExtensionState = extensionUtils.ExtensionState;
 
