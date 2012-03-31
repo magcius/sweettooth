@@ -4,10 +4,10 @@ define(['jquery'], function($) {
     "use strict";
 
     function getSides($elem, $slider) {
-        var bl = parseInt($elem.css('borderLeftWidth')) + parseInt($slider.css('borderLeftWidth'));
-        var br = parseInt($elem.css('borderRightWidth')) + parseInt($slider.css('borderRightWidth'));
+        var bl = parseInt($elem.css('borderLeftWidth'), 10) + parseInt($slider.css('borderLeftWidth'), 10);
+        var br = parseInt($elem.css('borderRightWidth'), 10) + parseInt($slider.css('borderRightWidth'), 10);
         var left = -bl + 1;
-        var right = $elem.innerWidth() - $slider.innerWidth() - parseInt($elem.css('borderRightWidth'));
+        var right = $elem.innerWidth() - $slider.innerWidth() - parseInt($elem.css('borderRightWidth'), 10);
         var center = right / 2 + left;
         return {left: left, right: right, center: center};
     }
