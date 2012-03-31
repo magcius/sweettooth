@@ -543,7 +543,9 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         if 'sort' not in params:
             params['sort'] = 'name'
 
-        return [details['uuid'] for details in self.get_response(params)]
+        response = self.get_response(params)
+        extensions = response['extensions']
+        return [details['uuid'] for details in extensions]
 
     def create_extension(self, name, **kwargs):
         metadata = dict(uuid=name + "@mecheye.net", name=name)

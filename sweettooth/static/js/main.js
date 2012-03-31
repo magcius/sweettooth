@@ -117,17 +117,13 @@ require(['jquery', 'messages', 'modal',
 
         $('#extension_shell_versions_info').buildShellVersionsInfo();
 
-        function injectSearch() {
-            return { search: $('#search_input').val() };
-        }
-
         var $extensionsList = $('#extensions-list').
-            paginatorify('/ajax/extensions-list/', injectSearch).
+            paginatorify().
             bind('page-loaded', function() {
                 $('li.extension').grayOutIfOutOfDate();
 
                 // If we're searching, don't add FSUI for now.
-                if (!injectSearch().search)
+                if (!$('search_input').val())
                     $('#extensions-list .before-paginator').fsUIify();
 
                 // Scroll the page back up to the top.

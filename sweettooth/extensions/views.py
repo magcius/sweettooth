@@ -178,18 +178,6 @@ def ajax_query_search_query(request, n_per_page=10):
     return extensions, num_pages
 
 @ajax_view
-def ajax_extensions_list(request):
-    if request.GET.get('search',  ''):
-        func = ajax_query_search_query
-    else:
-        func = ajax_query_params_query
-
-    object_list, num_pages = func(request)
-
-    return dict(html=render_to_string('extensions/list_bare.html', dict(extension_list=object_list)),
-                numpages=num_pages)
-
-@ajax_view
 def ajax_query_view(request):
     if request.GET.get('search',  ''):
         func = ajax_query_search_query
@@ -198,7 +186,8 @@ def ajax_query_view(request):
 
     object_list, num_pages = func(request)
 
-    return [ajax_details(e) for e in object_list]
+    return dict(extensions=[ajax_details(e) for e in object_list],
+                numpages=num_pages)
 
 @model_view(models.Extension)
 def extension_view(request, obj, **kwargs):
