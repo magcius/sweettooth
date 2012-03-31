@@ -1,6 +1,6 @@
 "use strict";
 
-require(['jquery', 'messages', 'modal',
+define(['jquery', 'messages', 'modal',
          'extensions', 'uploader', 'fsui',
          'jquery.cookie', 'jquery.jeditable',
          'jquery.timeago', 'jquery.raty'], function($, messages, modal) {

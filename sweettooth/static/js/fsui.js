@@ -3,8 +3,7 @@
 // FSUI is short for "Filtering and Sorting UI", which contains
 // controls for filtering and sorting the extensions list
 
-require(['jquery', 'dbus!_',
-         'hashParamUtils', 'modal'],
+define(['jquery', 'dbus!_', 'hashParamUtils', 'modal'],
 function($, dbusProxy, hashParamUtils, modal) {
 
     function makeDropdownLink(text) {
