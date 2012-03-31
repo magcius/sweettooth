@@ -4,8 +4,8 @@
 // controls for filtering and sorting the extensions list
 
 require(['jquery', 'dbus!_',
-         'hashparamutils', 'modal'],
-function($, dbusProxy, hashparamutils, modal) {
+         'hashParamUtils', 'modal'],
+function($, dbusProxy, hashParamUtils, modal) {
 
     function makeDropdownLink(text) {
         return $('<a>', {'class': 'fsui-dropdown-link'}).
@@ -21,7 +21,7 @@ function($, dbusProxy, hashparamutils, modal) {
         return $('<li>', {'class': 'fsui-dropdown-item'}).
             text(text).
             click(function() {
-                hashparamutils.setHashParam(key, value);
+                hashParamUtils.setHashParam(key, value);
                 closeUI();
             });
     }
@@ -51,7 +51,7 @@ function($, dbusProxy, hashparamutils, modal) {
                 };
             }
 
-            var hp = hashparamutils.getHashParams();
+            var hp = hashParamUtils.getHashParams();
             if (hp.sort === undefined || !sortCriteria.hasOwnProperty(hp.sort))
                 hp.sort = 'popularity';
 

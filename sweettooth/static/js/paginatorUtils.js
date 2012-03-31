@@ -1,6 +1,6 @@
 "use strict";
 
-define(['jquery', 'hashparamutils'], function($, hashparamutils) {
+define(['jquery', 'hashParamUtils'], function($, hashParamUtils) {
 
     var module = {};
 
@@ -8,7 +8,7 @@ define(['jquery', 'hashparamutils'], function($, hashparamutils) {
         styleClass = styleClass === undefined ? "" : styleClass;
         text = text === undefined ? pageNumber.toString() : text;
 
-        var hp = hashparamutils.getHashParams();
+        var hp = hashParamUtils.getHashParams();
         hp.page = pageNumber;
 
         return $('<a>', {'class': 'number ' + styleClass,

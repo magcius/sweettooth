@@ -1,6 +1,6 @@
 "use strict";
 
-define(['jquery', 'hashparamutils', 'paginatorUtils', 'dbus!_', 'templates'], function($, hashparamutils, paginatorUtils, dbusProxy, templates) {
+define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates'], function($, hashParamUtils, paginatorUtils, dbusProxy, templates) {
 
     $.fn.paginatorify = function(context) {
         if (!this.length)
@@ -24,7 +24,7 @@ define(['jquery', 'hashparamutils', 'paginatorUtils', 'dbus!_', 'templates'], fu
             if (currentRequest !== null)
                 currentRequest.abort();
 
-            var queryParams = hashparamutils.getHashParams();
+            var queryParams = hashParamUtils.getHashParams();
             if (queryParams.page === undefined)
                 queryParams.page = 1;
             if (queryParams.shell_version === undefined)
