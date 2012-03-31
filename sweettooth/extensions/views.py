@@ -72,7 +72,7 @@ def find_extension_version_from_params(extension, params):
         return None
 
 def shell_download(request, uuid):
-    extension = get_object_or_404(models.Extension, uuid=uuid)
+    extension = get_object_or_404(models.Extension.objects.visible(), uuid=uuid)
     version = find_extension_version_from_params(extension, request.GET)
 
     extension.downloads += 1
@@ -369,9 +369,9 @@ def ajax_details_view(request):
     pk = request.GET.get('pk', None)
 
     if uuid is not None:
-        extension = get_object_or_404(models.Extension, uuid=uuid)
+        extension = get_object_or_404(models.Extension.objects.visible(), uuid=uuid)
     elif pk is not None:
-        extension = get_object_or_404(models.Extension, pk=pk)
+        extension = get_object_or_404(models.Extension.objects.visible(), pk=pk)
     else:
         raise Http404()
 
@@ -382,7 +382,7 @@ def ajax_details_view(request):
 def ajax_set_status_view(request, newstatus):
     pk = request.GET['pk']
 
-    version = get_object_or_404(models.ExtensionVersion, pk=pk)
+    version = get_object_or_404(models.ExtensionVersion.objects.visible(), pk=pk)
     extension = version.extension
 
     if not extension.user_can_edit(request.user):
