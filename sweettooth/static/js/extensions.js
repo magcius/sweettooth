@@ -145,11 +145,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 $switch.switchify('activate', false);
             } else if (newState == ExtensionState.ENABLED) {
                 $switch.switchify('activate', true);
+                $elem.removeClass('out-of-date');
             } else if (newState == ExtensionState.ERROR) {
                 $switch.switchify('customize', "ERROR", 'error');
             } else if (newState == ExtensionState.OUT_OF_DATE) {
                 var svm = meta.shell_version_map || $elem.data('svm');
                 var version = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+                $elem.addClass('out-of-date');
                 if (version === null) {
                     $switch.switchify('customize', "OUTDATED", 'outdated');
                 } else {
@@ -229,9 +231,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
                             $elem = $(templates.extensions.info(extension)).replaceAll($elem);
                             $elem.find('.uninstall').on('click', uninstall);
-
-                            if (extension.state === ExtensionState.OUT_OF_DATE)
-                                $elem.addClass('out-of-date');
 
                             addExtensionSwitch(uuid, $elem, extension);
                         }
