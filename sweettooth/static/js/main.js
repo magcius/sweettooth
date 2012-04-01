@@ -169,8 +169,6 @@ function($, messages, modal) {
             return false;
         });
 
-        $('div.extension').checkForUpdates();
-
         var pk = $('.extension.single-page.can-edit').data('epk');
         if (pk) {
             var inlineEditURL = '/ajax/edit/' + pk;

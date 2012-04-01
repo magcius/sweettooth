@@ -66,10 +66,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             return this;
         };
 
-        $.fn.checkForUpdates = function() {
-            return this;
-        };
-
         return;
     }
 
@@ -113,6 +109,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                              action: action } });
         }
 
+        function upgradeExtension() {
+            $switch.switchify('customize').off('button-changed', upgradeExtension);
+            dbusProxy.UninstallExtension(uuid).done(function() {
+                dbusProxy.InstallExtension(uuid);
+            });
+        }
+
         $switch.bind('changed', function(e, newValue) {
             var oldState = $elem.data('state');
             if (newValue) {
@@ -143,7 +146,15 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             } else if (newState == ExtensionState.ENABLED) {
                 $switch.switchify('activate', true);
             } else if (newState == ExtensionState.ERROR) {
+                $switch.switchify('customize', "ERROR", 'error');
             } else if (newState == ExtensionState.OUT_OF_DATE) {
+                var svm = meta.shell_version_map || $elem.data('svm');
+                var version = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+                if (version === null) {
+                    $switch.switchify('customize', "OUTDATED", 'outdated');
+                } else {
+                    $switch.switchify('customize', "UPDATE", 'update').on('click', upgradeExtension);
+                }
             }
 
             if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||
@@ -328,45 +339,4 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             }
         });
     };
-
-    $.fn.checkForUpdates = function() {
-        return this.each(function() {
-            var $elem = $(this);
-            var svm = $elem.data('svm');
-            var uuid = $elem.data('uuid');
-            if (!svm)
-                return;
-
-            var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-
-            if (vpk === null)
-                return;
-
-            function upgrade() {
-                dbusProxy.UninstallExtension(uuid).done(function() {
-                    dbusProxy.InstallExtension(uuid, vpk.pk.toString());
-                });
-            }
-
-            dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
-                var extensionName = $elem.find('.extension-name').text();
-                var $upgradeMe = $elem.find('.upgrade-me');
-                if (!meta)
-                    return;
-
-                var context = { latest_version: vpk.version,
-                                current_version: meta.version,
-                                extension_name: extensionName };
-
-                if (vpk.version > meta.version) {
-                    var msg = templates.upgrade.need_upgrade(context);
-                    $upgradeMe.append($('<a>', { href: '#' }).text(msg).click(upgrade));
-                } else if (vpk.version == meta.version) {
-                    var msg = templates.upgrade.latest_version(context);
-                    $upgradeMe.text(msg);
-                }
-            });
-        });
-    };
-
 });

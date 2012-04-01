@@ -316,6 +316,21 @@ li.extension:last-child {
     margin-top: 8px;
 }
 
+._gnome-switch.customized .update {
+    border-color: #559424;
+    background-color: #60b94a;
+    cursor: pointer;
+}
+
+._gnome-switch.customized .update:hover {
+    background-color: #71ca5b;
+}
+
+._gnome-switch.customized .error {
+    border-color: #a43465;
+    background-color: #d94a60;
+}
+
 @media screen and (max-width: 1165px) {
     .maxwidth {
         margin-left: 105px;
