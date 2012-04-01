@@ -199,13 +199,18 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                         }
 
                         function uninstall() {
+                            var svm = extension.shell_version_map;
+                            var wantUndo = (extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion) !== null);
+
                             dbusProxy.UninstallExtension(uuid).done(function(result) {
                                 if (result) {
                                     $elem.fadeOut({ queue: false }).slideUp({ queue: false });
 
-                                    var $message = messages.addInfo(templates.extensions.uninstall(extension));
-                                    $message.delegate('a', 'click', reinstall);
-                                    $elem.data('undo-uninstall-message', $message);
+                                    if (wantUndo) {
+                                        var $message = messages.addInfo(templates.extensions.uninstall(extension));
+                                        $message.delegate('a', 'click', reinstall);
+                                        $elem.data('undo-uninstall-message', $message);
+                                    }
                                 }
                             });
                         }
@@ -215,9 +220,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                         var $elem = $('<a>');
 
                         function renderExtension() {
-                            var svm = extension.shell_version_map;
-                            if (svm)
-                                extension.want_uninstall = (extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion) !== null);
                             extension.want_configure = (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE);
 
                             $elem = $(templates.extensions.info(extension)).replaceAll($elem);
