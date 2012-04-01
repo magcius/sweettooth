@@ -8,7 +8,7 @@ import pygments.lexers
 import pygments.formatters
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
@@ -330,12 +330,10 @@ def send_email_on_submitted(sender, request, version, **kwargs):
     subject = subject.replace('\n', '')
     subject = subject.replace('\r', '')
 
-    message = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
+    body = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
 
-    send_mail(subject=subject,
-              message=message,
-              from_email=settings.DEFAULT_FROM_EMAIL,
-              recipient_list=reviewers)
+    message = EmailMessage(subject=subject, body=body, to=reviewers)
+    message.send()
 
 models.submitted_for_review.connect(send_email_on_submitted)
 
@@ -355,7 +353,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
     subject = subject.replace('\n', '')
     subject = subject.replace('\r', '')
 
-    message = render_to_string('review/reviewed_mail.txt', data, Context(autoescape=False)).strip()
+    body = render_to_string('review/reviewed_mail.txt', data, Context(autoescape=False)).strip()
 
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
     recipient_list.append(extension.creator.email)
@@ -364,9 +362,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
         # Don't spam the reviewer with his own review.
         recipient_list.remove(review.reviewer.email)
 
-    send_mail(subject=subject,
-              message=message,
-              from_email=settings.DEFAULT_FROM_EMAIL,
-              recipient_list=recipient_list)
+    message = EmailMessage(subject=subject, body=body, to=recipient_list)
+    message.send()
 
 models.reviewed.connect(send_email_on_reviewed)
