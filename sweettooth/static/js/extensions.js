@@ -1,7 +1,7 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'messages', 'dbus!_', 'extensionUtils', 'templates',
-        'paginator', 'switch', 'jquery.tipsy'],
+        'paginator', 'switch'],
 function($, messages, dbusProxy, extensionUtils, templates) {
     "use strict";
 
@@ -136,7 +136,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
         $elem.bind('state-changed', function(e, newState) {
             $elem.data('state', newState);
-            $switch.tipsy({ gravity: 'w', fade: true });
             if (newState == ExtensionState.DISABLED ||
                 newState == ExtensionState.INITIALIZED ||
                 newState == ExtensionState.UNINSTALLED) {
@@ -144,7 +143,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             } else if (newState == ExtensionState.ENABLED) {
                 $switch.switchify('activate', true);
             } else if (newState == ExtensionState.ERROR) {
-                $switch.attr('title', "This extension had an error.");
             } else if (newState == ExtensionState.OUT_OF_DATE) {
             }
 
