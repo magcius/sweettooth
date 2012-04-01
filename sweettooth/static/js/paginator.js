@@ -30,7 +30,8 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
                 queryParams.page = 1;
             if (queryParams.shell_version === undefined)
                 queryParams.shell_version = dbusProxy.ShellVersion;
-            queryParams.search = $('#search_input').val();
+            if ($('#search_input').val())
+                queryParams.search = $('#search_input').val();
 
             currentRequest = $.ajax({
                 url: '/extension-query/',
