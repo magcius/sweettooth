@@ -151,7 +151,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 $switch.attr('title', "This extension had an error.");
             } else if (newState == ExtensionState.OUT_OF_DATE) {
                 $switch.switchify('insensitive', true);
-                $elem.trigger('out-of-date');
             }
 
             if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||
