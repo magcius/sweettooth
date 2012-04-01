@@ -227,7 +227,7 @@ class UploadTest(BasicUserTestCase, TransactionTestCase):
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
     def test_upload_bad_shell_version(self):
-        response = self.upload_file('BadShellVersion')
+        self.upload_file('BadShellVersion')
         extension = models.Extension.objects.get(uuid="bad-shell-version@mecheye.net")
         version1 = extension.versions.order_by("-version")[0]
         self.assertIsNotNone(version1.source)
