@@ -279,11 +279,12 @@ li.extension:last-child {
     position: relative;
 }
 
-.extension.out-of-date * {
+.extension.out-of-date > * {
     opacity: 0.5;
 }
 
-.extension.out-of-date .uninstall {
+.extension.out-of-date .uninstall,
+.extension.out-of-date ._gnome-switch.customized.update {
     opacity: 1.0;
 }
 
