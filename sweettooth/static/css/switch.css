@@ -1,21 +1,11 @@
 
 ._gnome-switch {
-    background-color: #000;
-    border: 2px solid #2e3436;
     color: white;
-    width: 64px;
-    padding: 1px 6px;
-    border-radius: 4px;
+    width: 80px;
     position: relative;
     margin-top: 10px;
     font-size: 14px;
     line-height: 1.6;
-
-    -webkit-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-    -moz-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-    -ms-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-    -o-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
 /* create a new BFC to have floating label work correctly.
@@ -29,7 +19,7 @@
   clear: both;
 }
 
-,switch { display : inline-block; }
+._gnome-switch { display : inline-block; }
 ._gnome-switch { display : block; }
 
 
@@ -48,9 +38,10 @@
 
 ._gnome-switch .slider {
     position: absolute;
-    width: 50%;
-    top: -4px;
-    bottom: -4px;
+    /* (80px / 2) - 2px */
+    width: 38px;
+    top: -2px;
+    bottom: -2px;
 
     border: 3px solid #5f5f5f;
     background-color: #000;
@@ -71,54 +62,60 @@
     border-color: #5f5f5f;
 }
 
-._gnome-switch .off, ._gnome-switch .on {
+._gnome-switch .off,
+._gnome-switch .on,
+._gnome-switch.customized .custom-content {
     font-weight: bold;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6),
                  0 1px 0   rgba(0, 0, 0, 0.6);
-    width: 50%;
-    margin: 0 -3px;
+    border-style: solid;
+    border-width: 2px;
     text-align: center;
+    padding: 1px 0;
+}
+
+._gnome-switch .off,
+._gnome-switch .on {
+    /* 80px / 2 - 2px */
+    width: 38px;
+}
+
+._gnome-switch .custom-content {
+    /* To aid with writing style sheets, put the default color styles
+     * in a less specified selector, so they're easily overridden. */
+    display: none;
+
+    /* default colors */
+    background-color: #000000;
+    border-color: #2e3436;
+}
+
+._gnome-switch.customized .custom-content {
+    display: block;
+
+    /* 80px - 4px */
+    width: 76px;
+    border-radius: 4px;
 }
 
 ._gnome-switch .off {
     float: right;
+    border-color: #2e3436;
+    border-left-style: none;
+    border-radius: 0 4px 4px 0;
+    background-color: #000000;
 }
 
 ._gnome-switch .on {
     float: left;
-}
-
-._gnome-switch.insensitive .off {
-    visibility: visible;
-    color: #666;
-}
-
-._gnome-switch.insensitive.activated .off {
-    visibility: hidden;
-}
-
-._gnome-switch.insensitive .on {
-    visibility: hidden;
-}
-
-._gnome-switch.insensitive.activated .on {
-    visibility: visible;
-    color: #235493;
-    text-shadow: none;
-}
-
-._gnome-switch.activated {
     border-color: #3465a4;
+    border-right-style: none;
+    border-radius: 4px 0 0 4px;
     background-color: #4a90d9;
 }
 
-._gnome-switch.insensitive .slider {
-    margin-top: 1px;
-    margin-left: 1px;
-    background: none;
-    border-color: transparent;
-}
-
-._gnome-switch.insensitive.activated .slider .handle {
-    border-color: #235493;
+._gnome-switch.customized .on,
+._gnome-switch.customized .off,
+._gnome-switch.customized .slider {
+    display: none;
 }

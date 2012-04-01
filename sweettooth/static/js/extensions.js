@@ -105,8 +105,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
         $switch.data('elem', $elem);
         $switch.switchify();
-        if ($switch.hasClass('insensitive'))
-            return;
 
         function sendPopularity(action) {
             $.ajax({ url: '/ajax/adjust-popularity/',
@@ -138,7 +136,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
         $elem.bind('state-changed', function(e, newState) {
             $elem.data('state', newState);
-            $switch.switchify('insensitive', false);
             $switch.tipsy({ gravity: 'w', fade: true });
             if (newState == ExtensionState.DISABLED ||
                 newState == ExtensionState.INITIALIZED ||
@@ -147,10 +144,8 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             } else if (newState == ExtensionState.ENABLED) {
                 $switch.switchify('activate', true);
             } else if (newState == ExtensionState.ERROR) {
-                $switch.switchify('insensitive', true);
                 $switch.attr('title', "This extension had an error.");
             } else if (newState == ExtensionState.OUT_OF_DATE) {
-                $switch.switchify('insensitive', true);
             }
 
             if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||

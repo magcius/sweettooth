@@ -27,7 +27,7 @@
          data-uuid="{{ extension.uuid }}"
          data-ver-url-base="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk='' %}"
          data-svm="{{ shell_version_map }}">
-      <div class="switch{% if is_rejected %} insensitive{% endif %}"></div>
+      <div class="switch"></div>
 
       {% block icon %}
       <img src="{{ extension.icon.url }}" class="icon">
