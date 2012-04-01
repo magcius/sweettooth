@@ -90,10 +90,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         });
     };
 
-    function addExtensionSwitch(extension, $elem) {
-        var uuid = extension.uuid;
+    function addExtensionSwitch(uuid, $elem, meta) {
         var $switch = $elem.find('.switch');
-        var _state = extension.state !== undefined ? extension.state : ExtensionState.UNINSTALLED;
+        var _state;
+        if (meta && meta.state)
+            _state = meta.state;
+        else
+            _state = ExtensionState.UNINSTALLED;
 
         $elem.data({'elem': $elem,
                     'state': _state,
@@ -223,7 +226,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             if (extension.state === ExtensionState.OUT_OF_DATE)
                                 $elem.addClass('out-of-date');
 
-                            addExtensionSwitch(extension, $elem);
+                            addExtensionSwitch(uuid, $elem, extension);
                         }
 
                         $.ajax({
@@ -287,7 +290,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             });
 
             dbusProxy.GetExtensionInfo(uuid).done(function(meta) {
-                addExtensionSwitch(meta, $extension);
+                addExtensionSwitch(uuid, $extension, meta);
             });
         });
     };
