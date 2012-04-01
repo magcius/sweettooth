@@ -222,6 +222,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             extension.want_configure = (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE);
 
                             $elem = $(templates.extensions.info(extension)).replaceAll($elem);
+                            $elem.find('.uninstall').on('click', uninstall);
 
                             if (extension.state === ExtensionState.OUT_OF_DATE)
                                 $elem.addClass('out-of-date');
