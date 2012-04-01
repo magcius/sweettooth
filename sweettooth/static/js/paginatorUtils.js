@@ -19,7 +19,7 @@ define(['jquery', 'hashParamUtils'], function($, hashParamUtils) {
     exports.buildPaginator = function(page, numPages, context) {
         var number = page;
         var contextLeft = Math.max(number-context, 2);
-        var contextRight = Math.min(number+context+2, numPages);
+        var contextRight = Math.min(number+context+1, numPages);
 
         var $elem = $('<div>', {'class': 'paginator-content'});
 
