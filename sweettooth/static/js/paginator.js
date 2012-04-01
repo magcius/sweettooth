@@ -1,6 +1,6 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
-define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates'], function($, hashParamUtils, paginatorUtils, dbusProxy, templates) {
+define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jquery.hashchange'], function($, hashParamUtils, paginatorUtils, dbusProxy, templates) {
     "use strict";
 
     $.fn.paginatorify = function(context) {
@@ -45,7 +45,7 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates'], fu
 
                 $loadingPageContent.detach();
 
-                var page = queryParams.page;
+                var page = parseInt(queryParams.page, 10);
                 var numPages = result.numpages;
 
                 var $paginator = paginatorUtils.buildPaginator(page, numPages, context);
@@ -69,6 +69,8 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates'], fu
                     trigger('page-loaded');
             });
         }
+
+        $(window).hashchange(loadPage);
 
         this.bind('load-page', loadPage);
 
