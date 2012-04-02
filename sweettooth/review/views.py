@@ -149,7 +149,7 @@ def get_fake_chunks(numlines, tag):
               'collapsable': False,
               'meta': None }]
 
-def get_filelist(zipfile):
+def get_file_list(zipfile):
     return set(n for n in zipfile.namelist() if not n.endswith('/'))
 
 @ajax_view
@@ -159,7 +159,7 @@ def ajax_get_file_list_view(request, obj):
 
     old_zipfile, new_zipfile = get_zipfiles(version, request.GET.get('oldver', None))
 
-    new_filelist = get_filelist(new_zipfile)
+    new_filelist = get_file_list(new_zipfile)
 
     if old_zipfile is None:
         return dict(unchanged=[],
@@ -167,7 +167,7 @@ def ajax_get_file_list_view(request, obj):
                     added=sorted(new_filelist),
                     deleted=[])
 
-    old_filelist = get_filelist(old_zipfile)
+    old_filelist = get_file_list(old_zipfile)
 
     both    = new_filelist & old_filelist
     added   = new_filelist - old_filelist
