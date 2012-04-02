@@ -39,7 +39,7 @@ venv
 
 # sweettooth-specific
 Demos
-sweettooth/uploaded-files
+uploaded-files
 xapian.db
 sweettooth.wsgi
 local_settings.py
