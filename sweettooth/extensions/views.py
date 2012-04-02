@@ -246,9 +246,7 @@ def extension_version_view(request, obj, **kwargs):
         extpk = None
 
     if slug != extension.slug or extpk != extension.pk:
-        kwargs.update(dict(slug=extension.slug,
-                           ext_pk=extension.pk))
-        return redirect('extensions-version-detail', **kwargs)
+        return redirect(version)
 
     # If the user can edit the model, let him do so.
     if extension.user_can_edit(request.user):
@@ -446,10 +444,7 @@ def upload_file(request):
 
                 transaction.commit()
 
-                return redirect('extensions-version-detail',
-                                pk=version.pk,
-                                ext_pk=extension.pk,
-                                slug=extension.slug)
+                return redirect(version)
 
     else:
         form = UploadForm()

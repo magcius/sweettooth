@@ -69,7 +69,7 @@
       {% for ver in all_versions %}
       <tr>
         <td>
-          <a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=ver.pk %}">{{ ver.version }}</a>
+          <a href="{{ ver.get_absolute_uri }}">{{ ver.version }}</a>
         </td>
         <td>
           {% if ver.version == version.version %}

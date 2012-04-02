@@ -60,7 +60,7 @@
       <tbody>
       {% for version in all_versions %}
       <tr data-pk="{{ version.pk }}">
-        <td> <a href="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk=version.pk %}"> {{ version.version }} </a> </td>
+        <td> <a href="{{ version.get_absolute_url }}"> {{ version.version }} </a> </td>
         <td class="mvs">
           {% include "extensions/multiversion_status.html" %}
         </td>
