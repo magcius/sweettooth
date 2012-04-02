@@ -232,6 +232,8 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
                         function renderExtension() {
                             extension.want_uninstall = true;
+                            if (extension.description)
+                                extension.first_line_of_description = extension.description.split('\n')[0];
 
                             $elem = $(templates.extensions.info(extension)).replaceAll($elem);
                             $elem.find('.uninstall').on('click', uninstall);

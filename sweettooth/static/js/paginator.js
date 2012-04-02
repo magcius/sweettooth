@@ -54,9 +54,13 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
                 $afterPaginator = $paginator.clone().addClass('after-paginator');
                 $paginator.empty();
 
-                // Serialize out the svm as we want it to be JSON in the data attribute.
                 $.each(result.extensions, function() {
+                    // Serialize out the svm as we want it to be JSON
+                    // in the data attribute.
                     this.shell_version_map = JSON.stringify(this.shell_version_map);
+
+                    if (this.description)
+                        this.first_line_of_description = this.description.split('\n')[0];
                 });
 
                 var $newContent = $(templates.extensions.info_list(result));
