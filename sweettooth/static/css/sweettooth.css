@@ -121,6 +121,9 @@ hr.bottom_shadow {
     transform: rotate(180deg);
 }
 
+/* Paginator, Filtering and Sorting UI */
+/* ==================================================================== */
+
 .paginator {
     display: block;
     background-color: #EEEEEC;
@@ -134,41 +137,12 @@ hr.bottom_shadow {
     min-width: 1.5em;
     text-align: center;
     margin: 0 4px;
+    border-radius: 4px;
 }
 
-.paginator .number:first-child {
-    margin-left: 0;
-}
-
-.paginator .number:last-child {
-    margin-right: 0;
-}
-
-.paginator .number.current {
-    background-color: white;
-    border: 1px solid rgb(200, 200, 200);
-    border-radius: 3px;
-}
-
-.paginator-content {
-    text-align: center;
-}
-
-/* Filtering and Sorting UI */
-/* ==================================================================== */
-
-.fsui {
-    float: right;
-    font-size: 0.8em;
-    line-height: 2.2em;
-    position: relative;
-    top: -2.2em;
-}
-
+.paginator .number,
 .fsui-dropdown-link {
     border-radius: 4px;
-    padding: 0.2em 0.4em;
-    margin: 0 0.6em;
     cursor: pointer;
 
     text-decoration: none;
@@ -181,20 +155,51 @@ hr.bottom_shadow {
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.fsui-dropdown-link-arrow {
-    position: relative;
-    margin-left: .25em;
-    top: -.25em;
+.fsui-dropdown-link {
+    padding: 0.2em 0.4em;
+    margin: 0 0.6em;
 }
 
+.paginator .number:hover,
 .fsui-dropdown-link:hover {
     background-color: #f4f4f4;
 }
 
+.paginator .number.current,
 .fsui-dropdown-link.selected {
-    background-color: #fff;
+    background-color: #ffffff;
     text-decoration: none;
     color: #222;
+}
+
+.paginator .number.current {
+    border: 1px solid rgb(200, 200, 200);
+}
+
+.paginator .number:first-child {
+    margin-left: 0;
+}
+
+.paginator .number:last-child {
+    margin-right: 0;
+}
+
+.paginator-content {
+    text-align: center;
+}
+
+.fsui {
+    float: right;
+    font-size: 0.8em;
+    line-height: 2.2em;
+    position: relative;
+    top: -2.2em;
+}
+
+.fsui-dropdown-link-arrow {
+    position: relative;
+    margin-left: .25em;
+    top: -.25em;
 }
 
 .fsui-dropdown {
