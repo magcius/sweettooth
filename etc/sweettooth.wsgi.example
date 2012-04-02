@@ -5,7 +5,7 @@ import sys
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sweettooth.settings'
 
-_path = os.path.dirname(__file__)
+_path = os.path.dirname(os.path.realpath(__file__))
 
 _venv = os.path.join(_path, 'venv/lib/python2.7/site-packages/')
 if os.path.exists(_venv):
