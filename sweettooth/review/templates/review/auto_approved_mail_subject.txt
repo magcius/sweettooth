@@ -1,0 +1,1 @@
+GNOME Shell Extensions — Auto-approved: "{{ extension.name }}", v{{ version.version }}

@@ -1,5 +1,6 @@
 
 import base64
+import itertools
 import os.path
 
 import pygments
@@ -104,6 +105,16 @@ def get_old_version(version):
 
     return old_version
 
+def get_latest_active_version(version):
+    extension = version.extension
+
+    try:
+        old_version = extension.versions.filter(version__lt=version.version, status__in=models.VISIBLE_STATUSES).latest()
+    except models.ExtensionVersion.DoesNotExist:
+        return None
+
+    return old_version
+
 def get_zipfiles(*args):
     for version in args:
         if version is None:
@@ -146,13 +157,7 @@ def get_fake_chunks(numlines, tag):
 def get_file_list(zipfile):
     return set(n for n in zipfile.namelist() if not n.endswith('/'))
 
-@ajax_view
-@model_view(models.ExtensionVersion)
-def ajax_get_file_list_view(request, obj):
-    version, extension = obj, obj.extension
-
-    old_zipfile, new_zipfile = get_zipfiles(version, get_old_version(version))
-
+def get_file_changeset(old_zipfile, new_zipfile):
     new_filelist = get_file_list(new_zipfile)
 
     if old_zipfile is None:
@@ -186,9 +191,13 @@ def ajax_get_file_list_view(request, obj):
 
 @ajax_view
 @model_view(models.ExtensionVersion)
-def ajax_get_file_diff_view(request, obj):
-    version, extension = obj, obj.extension
+def ajax_get_file_list_view(request, version):
+    old_zipfile, new_zipfile = get_zipfiles(get_old_version(version), version)
+    return get_file_changeset(old_zipfile, new_zipfile)
 
+@ajax_view
+@model_view(models.ExtensionVersion)
+def ajax_get_file_diff_view(request, version):
     filename = request.GET['filename']
 
     file_base, file_extension = os.path.splitext(filename)
@@ -315,7 +324,7 @@ def render_mail(template, data):
 
     return subject.strip(), body.strip()
 
-def send_email_on_submitted(sender, request, version, **kwargs):
+def send_email_submitted(request, version):
     extension = version.extension
 
     url = request.build_absolute_uri(reverse('review-version',
@@ -335,7 +344,65 @@ def send_email_on_submitted(sender, request, version, **kwargs):
     message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
     message.send()
 
-models.submitted_for_review.connect(send_email_on_submitted)
+def send_email_auto_approved(request, version, changeset):
+    extension = version.extension
+
+    review_url = request.build_absolute_uri(reverse('review-version',
+                                                    kwargs=dict(pk=version.pk)))
+    version_url = request.build_absolute_uri(version.get_absolute_url())
+
+    data = dict(version=version,
+                extension=extension,
+                changes=changeset['changed'],
+                version_url=version_url)
+
+    subject, body = render_mail('auto_approved', data)
+
+    recipient_list = list(get_all_reviewers().values_list('email', flat=True))
+    recipient_list.append(extension.creator.email)
+
+    extra_headers = {'X-SweetTooth-Purpose': 'AutoApproved',
+                     'X-SweetTooth-ExtensionCreator': extension.creator.username}
+
+    message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
+    message.send()
+
+def safe_to_auto_approve(changes):
+    for filename in itertools.chain(changes['changed'], changes['added']):
+        # metadata.json updates are safe.
+        if filename == 'metadata.json':
+            continue
+
+        name, ext = os.path.splitext(filename)
+
+        # Translations and stylesheet updates are safe.
+        if ext in set(['.mo', '.po', '.css']):
+            continue
+
+        # Image updates are safe.
+        if ext in IMAGE_TYPES:
+            continue
+
+        return False
+
+    return True
+
+def extension_submitted(sender, request, version, **kwargs):
+    old_zipfile, new_zipfile = get_zipfiles(get_latest_active_version(version), version)
+    changeset = get_file_changeset(old_zipfile, new_zipfile)
+
+    if safe_to_auto_approve(changeset):
+        ChangeStatusLog.objects.create(user=request.user,
+                                       version=version,
+                                       newstatus=models.STATUS_ACTIVE,
+                                       auto_approved=True)
+        version.status = models.STATUS_ACTIVE
+        version.save()
+        send_email_auto_approved(request, version, changeset)
+    else:
+        send_email_submitted(request, version)
+
+models.submitted_for_review.connect(extension_submitted)
 
 def send_email_on_reviewed(sender, request, version, review, **kwargs):
     extension = version.extension
