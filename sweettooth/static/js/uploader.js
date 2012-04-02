@@ -61,7 +61,7 @@ define(['jquery'], function($) {
             }
 
             return false;
-        }
+        });
 
         $elem.on('click', function(e) {
             var bubbledFromInput = $input.index(e.target) >= 0;
