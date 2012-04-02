@@ -3,7 +3,7 @@ SweetTooth-Web
 ==============
 
 **SweetTooth-Web** is a Django-powered web application that, in co-operation
-with some co-horts in GNOME Shell and other places, allows users to install,
+with some `co-horts in GNOME Shell`_ and other places, allows users to install,
 upgrade and enable/disable their own Shell Extensions. All operations with
 the Shell are done through a special NPAPI plugin which proxies over to the
 Shell by DBus.
@@ -11,7 +11,7 @@ Shell by DBus.
 Since extensions can be dangerous, all extensions uploaded to the repository
 must go through code review and testing.
 
-.. _sweettooth-plugin: http://git.gnome.org/browse/gnome-shell/tree/browser-plugin
+.. _co-horts in GNOME Shell: http://git.gnome.org/browse/gnome-shell/tree/browser-plugin
 
 Getting Started
 ---------------
@@ -20,11 +20,14 @@ You can get started developing the website with::
 
   $ git clone git://github.com/magcius/sweettooth.git
   $ cd sweettooth
-  $ virtualenv_ --no-site-packages ./venv
+  $ virtualenv_ --system-site-packages ./venv
   $ . ./venv/bin/activate
   $ pip_ install -r requirements.txt
   $ # ... Database setup...
   $ python sweettooth/manage.py `runserver_plus`_
+
+I use `--system-site-packages` because we require Xapian, which doesn't have
+its Python bindings in PyPI.
 
 Create a superuser, and log in. You should be able to upload extensions and
 review extensions.
@@ -86,6 +89,7 @@ Requirements
   * sorl-thumbnail_
   * south_
   * django-registration_
+  * xapian_
 
 I develop with PostgreSQL_ at home, but Django should be able to use SQLite_,
 MySQL_, and others. South_ is used for migrations.
@@ -99,3 +103,4 @@ MySQL_, and others. South_ is used for migrations.
 .. _MySQL: http://www.mysql.com/
 .. _south: http://south.aeracode.org/
 .. _django-registration: http://pypi.python.org/pypi/django-registration
+.. _xapian: http://www.xapian.org/
