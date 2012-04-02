@@ -5,8 +5,6 @@ define(['jquery'], function($) {
 
     $.fn.uploadify = function(url) {
         var $elem = $(this), $input = $elem.find('input');
-        if ($elem.data('uploader'))
-            return;
 
         var BOUNDARY = ' -- 598275094719306587185414';
         // Stolen from http://demos.hacks.mozilla.org/openweb/imageUploader/js/extends/xhr.js
@@ -20,14 +18,14 @@ define(['jquery'], function($) {
             return body;
         }
 
-        function upload(e) {
-            function uploadComplete(result) {
-                var $old = $elem.children().first();
-                var $img = $('<img>', { 'src': result });
-                $img.replaceAll($old);
-                $elem.removeClass('placeholder');
-            }
+        function uploadComplete(result) {
+            var $old = $elem.children().first();
+            var $img = $('<img>', { 'src': result });
+            $img.replaceAll($old);
+            $elem.removeClass('placeholder');
+        }
 
+        $input.on('change', function(e) {
             var dt, file;
             if (e.originalEvent.dataTransfer)
                 dt = e.originalEvent.dataTransfer;
@@ -65,20 +63,12 @@ define(['jquery'], function($) {
             return false;
         }
 
-        var inClick = false;
-        $elem.on('click', function() {
-            // Prevent the handler from running twice from bubbling.
-            if (inClick)
-                return;
+        $elem.on('click', function(e) {
+            var bubbledFromInput = $input.index(e.target) >= 0;
+            if (!bubbledFromInput)
+                $input.get(0).click();
 
-            inClick = true;
-            $input[0].click();
-            inClick = false;
             return false;
         });
-
-        $input.on('change', upload);
-
-        $elem.data('uploader', true);
     };
 });
