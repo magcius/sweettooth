@@ -116,6 +116,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             });
         }
 
+        // When the user flips the switch...
         $switch.bind('changed', function(e, newValue) {
             var oldState = $elem.data('state');
             if (newValue) {
@@ -137,6 +138,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             }
         });
 
+        // When the extension changes state...
         $elem.bind('state-changed', function(e, newState) {
             $elem.data('state', newState);
 
