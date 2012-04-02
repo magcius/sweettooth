@@ -332,7 +332,10 @@ def send_email_on_submitted(sender, request, version, **kwargs):
 
     body = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
 
-    message = EmailMessage(subject=subject, body=body, to=reviewers)
+    extra_headers = {'X-SweetTooth-Purpose': 'NewExtension',
+                     'X-SweetTooth-ExtensionCreator': extension.creator.username}
+
+    message = EmailMessage(subject=subject, body=body, to=reviewers, headers=extra_headers)
     message.send()
 
 models.submitted_for_review.connect(send_email_on_submitted)
@@ -362,7 +365,10 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
         # Don't spam the reviewer with his own review.
         recipient_list.remove(review.reviewer.email)
 
-    message = EmailMessage(subject=subject, body=body, to=recipient_list)
+    extra_headers = {'X-SweetTooth-Purpose': 'NewReview',
+                     'X-SweetTooth-Reviewer': review.reviewer.username}
+
+    message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
     message.send()
 
 models.reviewed.connect(send_email_on_reviewed)
