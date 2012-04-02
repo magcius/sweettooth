@@ -207,7 +207,7 @@ def ajax_get_file_diff_view(request, version):
     if file_extension in BINARY_TYPES:
         return None
 
-    old_zipfile, new_zipfile = get_zipfiles(version, get_old_version(version))
+    old_zipfile, new_zipfile = get_zipfiles(get_old_version(version), version)
 
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())
