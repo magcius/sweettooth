@@ -81,7 +81,7 @@ function($, messages, modal) {
         });
 
         $('#local_extensions').addLocalExtensions();
-        $('.extension.single-page').addExtensionSwitch().addLaunchExtensionPrefsButton();
+        $('.extension.single-page').addExtensionSwitch();
 
         $.extend($.fn.raty.defaults, {
             path: '/static/images/',

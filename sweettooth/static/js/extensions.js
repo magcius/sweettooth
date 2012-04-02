@@ -62,10 +62,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             return this;
         };
 
-        $.fn.addLaunchExtensionPrefsButton = function() {
-            return this;
-        };
-
         return;
     }
 
@@ -93,6 +89,15 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             _state = meta.state;
         else
             _state = ExtensionState.UNINSTALLED;
+
+        if (meta && meta.hasPrefs && meta.state !== ExtensionState.OUT_OF_DATE) {
+            $elem
+                .addClass('configurable')
+                .find('.configure-button')
+                .on('click', function() {
+                    dbusProxy.LaunchExtensionPrefs(uuid);
+                });
+        }
 
         $elem.data({'elem': $elem,
                     'state': _state,
@@ -226,7 +231,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                         var $elem = $('<a>');
 
                         function renderExtension() {
-                            extension.want_configure = (extension.hasPrefs && extension.state !== ExtensionState.OUT_OF_DATE);
                             extension.want_uninstall = true;
 
                             $elem = $(templates.extensions.info(extension)).replaceAll($elem);
@@ -311,31 +315,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             var vpk = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
             if (vpk === null)
                 $elem.addClass('out-of-date');
-        });
-    };
-
-    $.fn.addLaunchExtensionPrefsButton = function(force) {
-        function launchExtensionPrefsButton($elem, uuid) {
-            $elem.
-                find('.description').
-                before($(templates.extensions.configure_button()).
-                       click(function() {
-                           dbusProxy.LaunchExtensionPrefs(uuid);
-                       }));
-        }
-
-        return this.each(function() {
-            var $elem = $(this);
-            var uuid = $elem.data('uuid');
-
-            if (force) {
-                launchExtensionPrefsButton($elem, uuid);
-            } else {
-                dbusProxy.GetExtensionInfo(uuid).done(function(data) {
-                    if (data.hasPrefs && data.state !== ExtensionState.OUT_OF_DATE)
-                        launchExtensionPrefsButton($elem, uuid);
-                });
-            }
         });
     };
 });

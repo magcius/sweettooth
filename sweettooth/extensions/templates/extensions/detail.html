@@ -28,6 +28,7 @@
          data-ver-url-base="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk='' %}"
          data-svm="{{ shell_version_map }}">
       <div class="switch"></div>
+      <div class="configure-button"></div>
 
       {% block icon %}
       <img src="{{ extension.icon.url }}" class="icon">

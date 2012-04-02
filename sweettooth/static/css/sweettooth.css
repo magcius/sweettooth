@@ -332,9 +332,9 @@ li.extension:last-child {
     background-color: #d94a60;
 }
 
-@media screen and (max-width: 1165px) {
+@media screen and (max-width: 1244px) {
     .maxwidth {
-        margin-left: 105px;
+        margin-left: 144px;
     }
 }
 
@@ -811,16 +811,37 @@ input[type=submit], button {
     transform: rotate(90deg);
 }
 
-.launch-prefs-button {
-    background-color: #4D90FE;
-    border: 1px solid #3079ED;
-    border-radius: 2px;
-    color: white;
-    margin-left: 25px;
-    padding: 2px 10px;
+.extension .configure-button {
+    display: none;
+}
+
+.extension.configurable .configure-button {
+    display: block;
+
+    position: absolute;
+    margin-left: -136px;
+    margin-top: 8px;
+    height: 24px;
+    width: 24px;
+
+    /* stolen from switch.css */
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6),
+                 0 1px 0   rgba(0, 0, 0, 0.6);
+    border-style: solid;
+    border-width: 2px;
+    text-align: center;
+
+    background-color: #4a90d9;
+    background-image: url(../images/configure-extension.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border-radius: 4px;
+    border-color: #3465a4;
     cursor: pointer;
 }
 
-.launch-prefs-button:hover {
-    background-color: #5EA1FF;
+.extension.configurable .configure-button:hover {
+    background-color: #5ba1ff;
+    border-color: #5485c4;
 }
