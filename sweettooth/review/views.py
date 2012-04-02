@@ -316,11 +316,7 @@ def send_email_on_submitted(sender, request, version, **kwargs):
                 extension=extension,
                 url=url)
 
-    subject = render_to_string('review/submitted_mail_subject.txt', data, Context(autoescape=False))
-    subject = subject.strip()
-    subject = subject.replace('\n', '')
-    subject = subject.replace('\r', '')
-
+    subject = render_to_string('review/submitted_mail_subject.txt', data, Context(autoescape=False)).strip()
     body = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
 
     recipient_list = get_all_reviewers().values_list('email', flat=True)
@@ -344,11 +340,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
                 review=review,
                 url=url)
 
-    subject = render_to_string('review/reviewed_mail_subject.txt', data, Context(autoescape=False))
-    subject = subject.strip()
-    subject = subject.replace('\n', '')
-    subject = subject.replace('\r', '')
-
+    subject = render_to_string('review/reviewed_mail_subject.txt', data, Context(autoescape=False)).strip()
     body = render_to_string('review/reviewed_mail.txt', data, Context(autoescape=False)).strip()
 
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
