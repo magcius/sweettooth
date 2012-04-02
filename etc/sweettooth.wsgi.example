@@ -7,9 +7,9 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'sweettooth.settings'
 
 _path = os.path.dirname(os.path.realpath(__file__))
 
-_venv = os.path.join(_path, 'venv/lib/python2.7/site-packages/')
+_venv = os.path.join(_path, 'venv/bin/activate_this.py')
 if os.path.exists(_venv):
-    site.addsitedir(_venv)
+    execfile(_venv, dict(__file__=_venv))
 
 sys.path.extend([_path, os.path.join(_path, 'sweettooth')])
 
