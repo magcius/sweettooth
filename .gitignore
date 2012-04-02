@@ -37,6 +37,10 @@ htmlcov
 # Virtualenv
 venv
 
+# Data dumps
+*.sql
+*.tar.xz
+
 # sweettooth-specific
 Demos
 uploaded-files
