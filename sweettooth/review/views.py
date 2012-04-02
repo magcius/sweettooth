@@ -317,8 +317,6 @@ def send_email_on_submitted(sender, request, version, **kwargs):
                 extension=extension,
                 url=url)
 
-    reviewers = get_all_reviewers().values_list('email', flat=True)
-
     subject = render_to_string('review/submitted_mail_subject.txt', data, Context(autoescape=False))
     subject = subject.strip()
     subject = subject.replace('\n', '')
@@ -326,10 +324,12 @@ def send_email_on_submitted(sender, request, version, **kwargs):
 
     body = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
 
+    recipient_list = get_all_reviewers().values_list('email', flat=True)
+
     extra_headers = {'X-SweetTooth-Purpose': 'NewExtension',
                      'X-SweetTooth-ExtensionCreator': extension.creator.username}
 
-    message = EmailMessage(subject=subject, body=body, to=reviewers, headers=extra_headers)
+    message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
     message.send()
 
 models.submitted_for_review.connect(send_email_on_submitted)
