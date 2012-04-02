@@ -65,41 +65,16 @@ define(['jquery'], function($) {
             return false;
         }
 
-        var $drop = $('<span>', { 'class': 'drop' }).hide().appendTo($elem);
-
         var inClick = false;
-        $elem.on({
-            click: function() {
-                // Prevent the handler from running twice from bubbling.
-                if (inClick)
-                    return;
+        $elem.on('click', function() {
+            // Prevent the handler from running twice from bubbling.
+            if (inClick)
+                return;
 
-                inClick = true;
-                $input[0].click();
-                inClick = false;
-                return false;
-            },
-
-            dragover: function() {
-                // Have to prevent default action to define a drop target.
-                return false;
-            },
-
-            dragenter: function(e) {
-                if (e.relatedTarget == $elem[0])
-                    $drop.fadeIn();
-
-                return false;
-            },
-
-            dragleave: function(e) {
-                if (e.relatedTarget == $elem[0])
-                    $drop.fadeOut();
-
-                return false;
-            },
-
-            drop: upload
+            inClick = true;
+            $input[0].click();
+            inClick = false;
+            return false;
         });
 
         $input.on('change', upload);
