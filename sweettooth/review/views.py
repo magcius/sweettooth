@@ -306,6 +306,15 @@ def review_version_view(request, obj):
 
     return render(request, 'review/review.html', context)
 
+def render_mail(template, data):
+    subject_template = 'review/%s_mail_subject.txt' % (template,)
+    body_template = 'review/%s_mail.txt' % (template,)
+
+    subject = render_to_string(subject_template, data, Context(autoescape=False))
+    body = render_to_string(body_template, data, Context(autoescape=False))
+
+    return subject.strip(), body.strip()
+
 def send_email_on_submitted(sender, request, version, **kwargs):
     extension = version.extension
 
@@ -316,8 +325,7 @@ def send_email_on_submitted(sender, request, version, **kwargs):
                 extension=extension,
                 url=url)
 
-    subject = render_to_string('review/submitted_mail_subject.txt', data, Context(autoescape=False)).strip()
-    body = render_to_string('review/submitted_mail.txt', data, Context(autoescape=False)).strip()
+    subject, body = render_mail('submitted', data)
 
     recipient_list = get_all_reviewers().values_list('email', flat=True)
 
@@ -340,8 +348,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
                 review=review,
                 url=url)
 
-    subject = render_to_string('review/reviewed_mail_subject.txt', data, Context(autoescape=False)).strip()
-    body = render_to_string('review/reviewed_mail.txt', data, Context(autoescape=False)).strip()
+    subject, body = render_mail('reviewed', data)
 
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
     recipient_list.append(extension.creator.email)
