@@ -264,10 +264,9 @@ def submit_review_view(request, obj):
         if newstatus == models.STATUS_ACTIVE and not can_approve_extension(request.user, extension):
             return HttpResponseForbidden()
 
-        log = ChangeStatusLog(user=request.user,
-                              version=obj,
-                              newstatus=newstatus)
-        log.save()
+        log = ChangeStatusLog.objects.create(user=request.user,
+                                             version=obj,
+                                             newstatus=newstatus)
 
         obj.status = newstatus
         obj.save()
