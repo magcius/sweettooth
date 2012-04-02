@@ -89,33 +89,27 @@ def html_for_file(filename, raw):
     else:
         return dict(raw=False, lines=split_lines(highlight_file(filename, raw, code_formatter)))
 
-def get_old_version(version, old_version_number):
+def get_old_version(version):
     extension = version.extension
 
-    if old_version_number is not None:
-        old_version = extension.versions.get(version=old_version_number)
-    else:
-        # Try to get the latest version that's less than the current version
-        # that actually has a source field. Sometimes the upload validation
-        # fails, so work around it here.
-        try:
-            old_version = extension.versions.filter(version__lt=version.version).exclude(source="").latest()
-        except models.ExtensionVersion.DoesNotExist:
-            # There's nothing before us that has a source, or this is the
-            # first version.
-            return None
+    # Try to get the latest version that's less than the current version
+    # that actually has a source field. Sometimes the upload validation
+    # fails, so work around it here.
+    try:
+        old_version = extension.versions.filter(version__lt=version.version).exclude(source="").latest()
+    except models.ExtensionVersion.DoesNotExist:
+        # There's nothing before us that has a source, or this is the
+        # first version.
+        return None
 
     return old_version
 
-def get_zipfiles(version, old_version_number):
-    new_zipfile = version.get_zipfile('r')
-    old_version = get_old_version(version, old_version_number)
-
-    if old_version is None:
-        return None, new_zipfile
-    else:
-        old_zipfile = old_version.get_zipfile('r')
-        return old_zipfile, new_zipfile
+def get_zipfiles(*args):
+    for version in args:
+        if version is None:
+            yield None
+        else:
+            yield version.get_zipfile('r')
 
 def get_diff(old_zipfile, new_zipfile, filename):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
@@ -157,7 +151,7 @@ def get_file_list(zipfile):
 def ajax_get_file_list_view(request, obj):
     version, extension = obj, obj.extension
 
-    old_zipfile, new_zipfile = get_zipfiles(version, request.GET.get('oldver', None))
+    old_zipfile, new_zipfile = get_zipfiles(version, get_old_version(version))
 
     new_filelist = get_file_list(new_zipfile)
 
@@ -204,7 +198,7 @@ def ajax_get_file_diff_view(request, obj):
     if file_extension in BINARY_TYPES:
         return None
 
-    old_zipfile, new_zipfile = get_zipfiles(version, request.GET.get('oldver', None))
+    old_zipfile, new_zipfile = get_zipfiles(version, get_old_version(version))
 
     new_filelist = set(new_zipfile.namelist())
     old_filelist = set(old_zipfile.namelist())
@@ -299,7 +293,7 @@ def review_version_view(request, obj):
     # Other reviews on the same version.
     previous_reviews = version.reviews.all()
 
-    has_old_version = get_old_version(version, None) is not None
+    has_old_version = get_old_version(version) is not None
     can_approve = can_approve_extension(request.user, extension)
     can_review = can_review_extension(request.user, extension)
 
