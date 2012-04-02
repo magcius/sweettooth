@@ -68,7 +68,7 @@ define(['jquery'], function($) {
         var $drop = $('<span>', { 'class': 'drop' }).hide().appendTo($elem);
 
         var inClick = false;
-        $elem.bind({
+        $elem.on({
             click: function() {
                 // Prevent the handler from running twice from bubbling.
                 if (inClick)
@@ -102,7 +102,7 @@ define(['jquery'], function($) {
             drop: upload
         });
 
-        $input.bind('change', upload);
+        $input.on('change', upload);
 
         $elem.data('uploader', true);
     };

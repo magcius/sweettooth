@@ -77,7 +77,7 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
 
         $(window).hashchange(loadPage);
 
-        this.bind('load-page', loadPage);
+        this.on('load-page', loadPage);
 
         return this;
     };

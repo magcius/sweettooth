@@ -122,7 +122,7 @@ function($, messages, modal) {
 
         var $extensionsList = $('#extensions-list').
             paginatorify().
-            bind('page-loaded', function() {
+            on('page-loaded', function() {
                 $('li.extension').grayOutIfOutOfDate();
 
                 // If we're searching, don't add FSUI for now.
@@ -134,7 +134,7 @@ function($, messages, modal) {
             });
 
         var term = null;
-        $('#search_input').bind('keyup', function() {
+        $('#search_input').on('keyup', function() {
             var newTerm = $.trim($(this).val());
 
             if (newTerm != term) {

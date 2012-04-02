@@ -117,7 +117,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         }
 
         // When the user flips the switch...
-        $switch.bind('changed', function(e, newValue) {
+        $switch.on('changed', function(e, newValue) {
             var oldState = $elem.data('state');
             if (newValue) {
                 if (oldState == ExtensionState.UNINSTALLED) {
@@ -139,7 +139,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         });
 
         // When the extension changes state...
-        $elem.bind('state-changed', function(e, newState) {
+        $elem.on('state-changed', function(e, newState) {
             $elem.data('state', newState);
 
             $elem.toggleClass('configurable', meta.hasPrefs && newState !== ExtensionState.OUT_OF_DATE);
@@ -219,7 +219,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
                                     if (wantUndo) {
                                         var $message = messages.addInfo(templates.extensions.uninstall(extension));
-                                        $message.delegate('a', 'click', reinstall);
+                                        $message.on('click', 'a', reinstall);
                                         $elem.data('undo-uninstall-message', $message);
                                     }
                                 }
@@ -287,7 +287,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             var $extension = $(this);
             var uuid = $extension.data('uuid');
 
-            $extension.bind('out-of-date', function() {
+            $extension.on('out-of-date', function() {
                 var svm = $extension.data('svm');
                 var nhvOperation = extensionUtils.findNextHighestVersion(svm, dbusProxy.ShellVersion);
                 if (nhvOperation.operation === 'upgrade' &&

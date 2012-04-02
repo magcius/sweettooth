@@ -13,7 +13,7 @@ define(['jquery'], function($) {
     }
 
     exports.activateModal = function(elem, closeFunction) {
-        $(document.body).click(function(e) {
+        $(document.body).on('click', function(e) {
             // If the user clicked inside the modal popup, don't
             // close it.
             if ($(elem).has(e.target).length) {
@@ -21,7 +21,7 @@ define(['jquery'], function($) {
             }
 
             if (closeFunction()) {
-                $(document.body).unbind(e);
+                $(document.body).off(e);
                 document.body.removeEventListener('click', captureHandler, true);
                 return false;
             }
