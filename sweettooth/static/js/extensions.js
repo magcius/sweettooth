@@ -90,14 +90,9 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         else
             _state = ExtensionState.UNINSTALLED;
 
-        if (meta && meta.hasPrefs && meta.state !== ExtensionState.OUT_OF_DATE) {
-            $elem
-                .addClass('configurable')
-                .find('.configure-button')
-                .on('click', function() {
-                    dbusProxy.LaunchExtensionPrefs(uuid);
-                });
-        }
+        $elem.find('.configure-button').on('click', function() {
+            dbusProxy.LaunchExtensionPrefs(uuid);
+        });
 
         $elem.data({'elem': $elem,
                     'state': _state,
@@ -144,6 +139,9 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
         $elem.bind('state-changed', function(e, newState) {
             $elem.data('state', newState);
+
+            $elem.toggleClass('configurable', meta.hasPrefs && newState !== ExtensionState.OUT_OF_DATE);
+
             if (newState == ExtensionState.DISABLED ||
                 newState == ExtensionState.INITIALIZED ||
                 newState == ExtensionState.UNINSTALLED) {
