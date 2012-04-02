@@ -354,7 +354,8 @@ def send_email_auto_approved(request, version, changeset):
     data = dict(version=version,
                 extension=extension,
                 changes=changeset['changed'],
-                version_url=version_url)
+                version_url=version_url,
+                review_url=review_url)
 
     subject, body = render_mail('auto_approved', data)
 
