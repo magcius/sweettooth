@@ -16,7 +16,3 @@ class LatestExtensionsFeed(Feed):
 
     def item_description(self, item):
         return item.description
-
-    def item_link(self, item):
-        return reverse('extensions-detail', kwargs=dict(pk=item.pk,
-                                                        slug=item.slug))

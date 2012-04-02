@@ -211,7 +211,7 @@ def extension_view(request, obj, **kwargs):
     if slug != extension.slug:
         kwargs.update(dict(slug=extension.slug,
                            pk=extension.pk))
-        return redirect('extensions-detail', **kwargs)
+        return redirect(extension)
 
     # If the user can edit the model, let him do so.
     if extension.user_can_edit(request.user):
@@ -350,7 +350,7 @@ def ajax_details(extension, version=None):
                    creator = extension.creator.username,
                    creator_url = reverse('auth-profile', kwargs=dict(user=extension.creator.username)),
                    description = extension.description,
-                   link = reverse('extensions-detail', kwargs=dict(pk=extension.pk)),
+                   link = extension.get_absolute_url(),
                    icon = extension.icon.url,
                    shell_version_map = extension.visible_shell_version_map)
 
