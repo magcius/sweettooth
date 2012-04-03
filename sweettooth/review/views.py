@@ -322,7 +322,7 @@ def render_mail(template, data):
     subject = render_to_string(subject_template, data, Context(autoescape=False))
     body = render_to_string(body_template, data, Context(autoescape=False))
 
-    return subject.strip(), body.strip()
+    return EmailMessage(subject=subject.strip(), body=body.strip())
 
 def send_email_submitted(request, version):
     extension = version.extension
@@ -334,14 +334,11 @@ def send_email_submitted(request, version):
                 extension=extension,
                 url=url)
 
-    subject, body = render_mail('submitted', data)
+    message = render_mail('submitted', data)
+    message.to = get_all_reviewers().values_list('email', flat=True)
+    message.extra_headers.update({'X-SweetTooth-Purpose': 'NewExtension',
+                                  'X-SweetTooth-ExtensionCreator': extension.creator.username})
 
-    recipient_list = get_all_reviewers().values_list('email', flat=True)
-
-    extra_headers = {'X-SweetTooth-Purpose': 'NewExtension',
-                     'X-SweetTooth-ExtensionCreator': extension.creator.username}
-
-    message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
     message.send()
 
 def send_email_auto_approved(request, version, changeset):
@@ -357,15 +354,13 @@ def send_email_auto_approved(request, version, changeset):
                 version_url=version_url,
                 review_url=review_url)
 
-    subject, body = render_mail('auto_approved', data)
-
     recipient_list = list(get_all_reviewers().values_list('email', flat=True))
     recipient_list.append(extension.creator.email)
 
-    extra_headers = {'X-SweetTooth-Purpose': 'AutoApproved',
-                     'X-SweetTooth-ExtensionCreator': extension.creator.username}
-
-    message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
+    message = render_mail('auto_approved', data)
+    message.to = recipient_list
+    message.extra_headers.update({'X-SweetTooth-Purpose': 'AutoApproved',
+                                  'X-SweetTooth-ExtensionCreator': extension.creator.username})
     message.send()
 
 def safe_to_auto_approve(extension, changes):
@@ -424,8 +419,6 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
                 review=review,
                 url=url)
 
-    subject, body = render_mail('reviewed', data)
-
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
     recipient_list.append(extension.creator.email)
 
@@ -433,10 +426,10 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
         # Don't spam the reviewer with his own review.
         recipient_list.remove(review.reviewer.email)
 
-    extra_headers = {'X-SweetTooth-Purpose': 'NewReview',
-                     'X-SweetTooth-Reviewer': review.reviewer.username}
-
-    message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
+    message = render_mail('reviewed', data)
+    message.to = recipient_list
+    message.extra_headers.update({'X-SweetTooth-Purpose': 'NewReview',
+                                  'X-SweetTooth-Reviewer': review.reviewer.username})
     message.send()
 
 models.reviewed.connect(send_email_on_reviewed)
