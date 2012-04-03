@@ -132,6 +132,12 @@ hr.bottom_shadow {
     padding: 3px;
 }
 
+.paginator.loading {
+    background-image: url(../images/spinner.gif);
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+}
+
 .paginator .number {
     display: inline-block;
     min-width: 1.5em;
@@ -239,26 +245,6 @@ hr.bottom_shadow {
 
 #extensions-list {
     position: relative;
-}
-
-#extensions-list.loading {
-    opacity: 0.5;
-}
-
-#extensions-list .loading-page {
-    background: #EEEEEC;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    padding: .5em;
-    text-align: center;
-
-    position: absolute;
-    left: 50%;
-    width: 300px;
-    margin-left: -150px;
-
-    z-index: 999;
 }
 
 ul.extensions {

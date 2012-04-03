@@ -10,8 +10,6 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
         if (context === undefined)
             context = 3;
 
-        var $loadingPageContent = $(templates.paginator.loading_page());
-
         var $elem = $(this);
         var $beforePaginator = null;
         var $afterPaginator = null;
@@ -19,11 +17,11 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
         var currentRequest = null;
 
         function loadPage() {
-            $elem.addClass('loading');
-            $loadingPageContent.prependTo($elem);
-
             if (currentRequest !== null)
                 currentRequest.abort();
+
+            if ($beforePaginator !== null)
+                $beforePaginator.addClass('loading');
 
             var queryParams = hashParamUtils.getHashParams();
             if (queryParams.page === undefined)
@@ -43,8 +41,6 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
                     $beforePaginator.detach();
                 if ($afterPaginator)
                     $afterPaginator.detach();
-
-                $loadingPageContent.detach();
 
                 var page = parseInt(queryParams.page, 10);
                 var numPages = result.numpages;

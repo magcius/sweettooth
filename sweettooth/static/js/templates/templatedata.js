@@ -13,8 +13,5 @@ define({
     "cannot_list_errors": "GNOME Shell Extensions cannot automatically detect any errors.", 
     "cannot_list_local": "GNOME Shell Extensions cannot list your installed extensions.", 
     "dummy_proxy": "You do not appear to have an up to date version of GNOME3. You won't be able to install extensions from here. See the <a href=\"about/#old-version\">about page</a> for more information."
-  }, 
-  "paginator": {
-    "loading_page": "<div class=\"loading-page\">\n  Loading page... please wait.\n</div>"
   }
 });
