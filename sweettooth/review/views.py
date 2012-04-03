@@ -376,6 +376,10 @@ def safe_to_auto_approve(changes):
 
         name, ext = os.path.splitext(filename)
 
+        # Harmless common metadata files.
+        if name in ['README', 'CHANGELOG', 'COPYING', 'LICENSE']:
+            continue
+
         # Translations and stylesheet updates are safe.
         if ext in ['.mo', '.po', '.css']:
             continue
