@@ -1,1 +1,1 @@
-GNOME Shell Extensions — {{ extension.creator }}'s extension, "{{ extension.name }}", v{{ version.version }}, has a new review
+Re: {% include "review/submitted_mail_subject.txt %}
