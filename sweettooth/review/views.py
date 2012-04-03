@@ -363,9 +363,9 @@ def send_email_auto_approved(request, version, changeset):
                                   'X-SweetTooth-ExtensionCreator': extension.creator.username})
     message.send()
 
-def safe_to_auto_approve(extension, changes):
+def safe_to_auto_approve(changes, extension=None):
     # If a user can approve extensions, don't bother making him do so.
-    if can_approve_extension(extension.creator, extension):
+    if extension is not None and can_approve_extension(extension.creator, extension):
         return True
 
     for filename in itertools.chain(changes['changed'], changes['added']):
@@ -395,7 +395,7 @@ def extension_submitted(sender, request, version, **kwargs):
     old_zipfile, new_zipfile = get_zipfiles(get_latest_active_version(version), version)
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
-    if safe_to_auto_approve(version.extension, changeset):
+    if safe_to_auto_approve(changeset, extension=version.extension):
         ChangeStatusLog.objects.create(user=request.user,
                                        version=version,
                                        newstatus=models.STATUS_ACTIVE,
