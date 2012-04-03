@@ -377,7 +377,7 @@ def safe_to_auto_approve(changes):
         name, ext = os.path.splitext(filename)
 
         # Translations and stylesheet updates are safe.
-        if ext in set(['.mo', '.po', '.css']):
+        if ext in ['.mo', '.po', '.css']:
             continue
 
         # Image updates are safe.
