@@ -46,10 +46,6 @@ def post_version_save_handler(instance, **kwargs):
     index_extension(instance.extension)
 signals.post_save.connect(post_version_save_handler, sender=ExtensionVersion)
 
-def post_version_delete_handler(instance, **kwargs):
-    delete_extension(instance.extension)
-signals.post_delete.connect(post_version_delete_handler, sender=ExtensionVersion)
-
 def enquire(querystring):
     try:
         db = xapian.Database(settings.XAPIAN_DB_PATH)
