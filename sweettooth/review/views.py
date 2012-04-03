@@ -326,7 +326,11 @@ def render_mail(version, template, data):
     subject = render_to_string(subject_template, data, Context(autoescape=False))
     body = render_to_string(body_template, data, Context(autoescape=False))
 
-    return EmailMessage(subject=subject.strip(), body=body.strip())
+    references = "<%s-review-v%d@extensions.gnome.org>" % (extension.uuid, version.version)
+    headers = {'In-Reply-To': references,
+               'References': references}
+
+    return EmailMessage(subject=subject.strip(), body=body.strip(), headers=headers)
 
 def send_email_submitted(request, version):
     extension = version.extension
