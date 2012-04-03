@@ -2,6 +2,4 @@ A new extension version, "{{ extension.name }}", version {{ version.version }} h
 
 Please review the extension at {{ url }}
 
-—
-
-This email was sent automatically by GNOME Shell Extensions. Do not reply.
+{% include "review/mail_footer.txt" %}

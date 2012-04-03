@@ -8,6 +8,4 @@ Please use the review page to follow up:
 
 {{ url }}
 
-—
-
-This email was sent automatically by GNOME Shell Extensions. Do not reply.
+{% include "review/mail_footer.txt" %}
