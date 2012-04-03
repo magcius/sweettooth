@@ -368,7 +368,11 @@ def send_email_auto_approved(request, version, changeset):
     message = EmailMessage(subject=subject, body=body, to=recipient_list, headers=extra_headers)
     message.send()
 
-def safe_to_auto_approve(changes):
+def safe_to_auto_approve(extension, changes):
+    # If a user can approve extensions, don't bother making him do so.
+    if can_approve_extension(extension.creator, extension):
+        return True
+
     for filename in itertools.chain(changes['changed'], changes['added']):
         # metadata.json updates are safe.
         if filename == 'metadata.json':
@@ -396,7 +400,7 @@ def extension_submitted(sender, request, version, **kwargs):
     old_zipfile, new_zipfile = get_zipfiles(get_latest_active_version(version), version)
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
-    if safe_to_auto_approve(changeset):
+    if safe_to_auto_approve(version.extension, changeset):
         ChangeStatusLog.objects.create(user=request.user,
                                        version=version,
                                        newstatus=models.STATUS_ACTIVE,
