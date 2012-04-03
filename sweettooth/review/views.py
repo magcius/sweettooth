@@ -315,7 +315,11 @@ def review_version_view(request, obj):
 
     return render(request, 'review/review.html', context)
 
-def render_mail(template, data):
+def render_mail(version, template, data):
+    extension = version.extension
+
+    data.update(version=version, extension=extension)
+
     subject_template = 'review/%s_mail_subject.txt' % (template,)
     body_template = 'review/%s_mail.txt' % (template,)
 
@@ -330,11 +334,9 @@ def send_email_submitted(request, version):
     url = request.build_absolute_uri(reverse('review-version',
                                              kwargs=dict(pk=version.pk)))
 
-    data = dict(version=version,
-                extension=extension,
-                url=url)
+    data = dict(url=url)
 
-    message = render_mail('submitted', data)
+    message = render_mail(version, 'submitted', data)
     message.to = get_all_reviewers().values_list('email', flat=True)
     message.extra_headers.update({'X-SweetTooth-Purpose': 'NewExtension',
                                   'X-SweetTooth-ExtensionCreator': extension.creator.username})
@@ -348,16 +350,13 @@ def send_email_auto_approved(request, version, changeset):
                                                     kwargs=dict(pk=version.pk)))
     version_url = request.build_absolute_uri(version.get_absolute_url())
 
-    data = dict(version=version,
-                extension=extension,
-                changes=changeset['changed'],
-                version_url=version_url,
-                review_url=review_url)
-
     recipient_list = list(get_all_reviewers().values_list('email', flat=True))
     recipient_list.append(extension.creator.email)
 
-    message = render_mail('auto_approved', data)
+    data = dict(version_url=version_url,
+                review_url=review_url)
+
+    message = render_mail(version, 'auto_approved', data)
     message.to = recipient_list
     message.extra_headers.update({'X-SweetTooth-Purpose': 'AutoApproved',
                                   'X-SweetTooth-ExtensionCreator': extension.creator.username})
@@ -414,9 +413,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
     url = request.build_absolute_uri(reverse('review-version',
                                              kwargs=dict(pk=version.pk)))
 
-    data = dict(version=version,
-                extension=extension,
-                review=review,
+    data = dict(review=review,
                 url=url)
 
     recipient_list = list(version.reviews.values_list('reviewer__email', flat=True).distinct())
@@ -426,7 +423,7 @@ def send_email_on_reviewed(sender, request, version, review, **kwargs):
         # Don't spam the reviewer with his own review.
         recipient_list.remove(review.reviewer.email)
 
-    message = render_mail('reviewed', data)
+    message = render_mail(version, 'reviewed', data)
     message.to = recipient_list
     message.extra_headers.update({'X-SweetTooth-Purpose': 'NewReview',
                                   'X-SweetTooth-Reviewer': review.reviewer.username})
