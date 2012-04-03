@@ -374,7 +374,7 @@ def safe_to_auto_approve(changes):
         if filename == 'metadata.json':
             continue
 
-        name, ext = os.path.splitext(filename)
+        name, ext = os.path.splitext(os.path.basename(filename))
 
         # Harmless common metadata files.
         if name in ['README', 'CHANGELOG', 'COPYING', 'LICENSE']:
