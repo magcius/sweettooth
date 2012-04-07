@@ -358,7 +358,8 @@ def send_email_auto_approved(request, version, changeset):
     recipient_list.append(extension.creator.email)
 
     data = dict(version_url=version_url,
-                review_url=review_url)
+                review_url=review_url,
+                changeset=changeset)
 
     message = render_mail(version, 'auto_approved', data)
     message.to = recipient_list
