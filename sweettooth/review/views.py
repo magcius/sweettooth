@@ -400,10 +400,14 @@ def extension_submitted(sender, request, version, **kwargs):
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
     if safe_to_auto_approve(changeset, extension=version.extension):
-        ChangeStatusLog.objects.create(user=request.user,
-                                       version=version,
-                                       newstatus=models.STATUS_ACTIVE,
-                                       auto_approved=True)
+        log = ChangeStatusLog.objects.create(user=request.user,
+                                             version=version,
+                                             newstatus=models.STATUS_ACTIVE,
+                                             auto_approved=True)
+        CodeReview.objects.create(version=version,
+                                  reviewer=request.user,
+                                  comments="",
+                                  changelog=log)
         version.status = models.STATUS_ACTIVE
         version.save()
         send_email_auto_approved(request, version, changeset)
