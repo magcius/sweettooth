@@ -399,7 +399,7 @@ def extension_submitted(sender, request, version, **kwargs):
     old_zipfile, new_zipfile = get_zipfiles(get_latest_active_version(version), version)
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
-    if new_zipfile is not None and safe_to_auto_approve(changeset, extension=version.extension):
+    if old_zipfile is not None and safe_to_auto_approve(changeset, extension=version.extension):
         log = ChangeStatusLog.objects.create(user=request.user,
                                              version=version,
                                              newstatus=models.STATUS_ACTIVE,
