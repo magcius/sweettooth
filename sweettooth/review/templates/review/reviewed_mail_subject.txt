@@ -1,1 +1,1 @@
-Re: {% include "review/submitted_mail_subject.txt %}
+Re: {% include "review/submitted_mail_subject.txt" %}
