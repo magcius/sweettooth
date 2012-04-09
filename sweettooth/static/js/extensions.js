@@ -142,7 +142,8 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         $elem.on('state-changed', function(e, newState) {
             $elem.data('state', newState);
 
-            $elem.toggleClass('configurable', meta.hasPrefs && newState !== ExtensionState.OUT_OF_DATE);
+            var hasPrefs = !!(meta.hasPrefs && newState !== ExtensionState.OUT_OF_DATE);
+            $elem.toggleClass('configurable', hasPrefs);
 
             if (newState == ExtensionState.DISABLED ||
                 newState == ExtensionState.INITIALIZED ||
