@@ -340,8 +340,10 @@ def send_email_submitted(request, version):
 
     data = dict(url=url)
 
+    recipient_list = list(get_all_reviewers().values_list('email', flat=True))
+
     message = render_mail(version, 'submitted', data)
-    message.to = get_all_reviewers().values_list('email', flat=True)
+    message.to = recipient_list
     message.extra_headers.update({'X-SweetTooth-Purpose': 'NewExtension',
                                   'X-SweetTooth-ExtensionCreator': extension.creator.username})
 
