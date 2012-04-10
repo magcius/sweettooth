@@ -1,1 +1,1 @@
-require(['test/extensions']);
+require(['test/extensions', 'test/paginatorUtils']);
