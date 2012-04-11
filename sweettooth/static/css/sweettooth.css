@@ -93,6 +93,12 @@
     margin-top: -5px;
 }
 
+.beta-disclaimer {
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
+}
+
 .alpha-warning {
     font-weight: bold;
     color: #CC0000;
@@ -703,12 +709,6 @@ input[type=submit], button {
 
 .review blockquote.empty {
     color: #888;
-}
-
-.alpha-disclaimer {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
 }
 
 
