@@ -105,11 +105,11 @@ def shell_update(request):
 
         elif version < latest_version.version:
             operations[uuid] = dict(operation="upgrade",
-                                    version=extension.latest_version.pk)
+                                    version_tag=extension.latest_version.pk)
 
         elif version_obj.status in models.REJECTED_STATUSES:
             operations[uuid] = dict(operation="downgrade",
-                                    version=extension.latest_version.pk)
+                                    version_tag=extension.latest_version.pk)
 
     return operations
 
