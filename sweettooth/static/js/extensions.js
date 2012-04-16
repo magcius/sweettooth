@@ -94,6 +94,12 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             dbusProxy.LaunchExtensionPrefs(uuid);
         });
 
+        $elem.find('.upgrade-button').on('click', function() {
+            dbusProxy.UninstallExtension(uuid).done(function() {
+                dbusProxy.InstallExtension(uuid);
+            });
+        });
+
         $elem.data({'elem': $elem,
                     'state': _state,
                     'uninstalled': false,
@@ -107,13 +113,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                      type: 'POST',
                      data: { uuid: uuid,
                              action: action } });
-        }
-
-        function upgradeExtension() {
-            $switch.switchify('customize').off('button-changed', upgradeExtension);
-            dbusProxy.UninstallExtension(uuid).done(function() {
-                dbusProxy.InstallExtension(uuid);
-            });
         }
 
         // When the user flips the switch...
@@ -138,6 +137,11 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             }
         });
 
+        var svm = meta.shell_version_map || $elem.data('svm');
+        var latest = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+        if (latest !== null && latest.version > meta.version)
+            $elem.addClass('upgradable');
+
         // When the extension changes state...
         $elem.on('state-changed', function(e, newState) {
             $elem.data('state', newState);
@@ -155,14 +159,8 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             } else if (newState == ExtensionState.ERROR) {
                 $switch.switchify('customize', "ERROR", 'error');
             } else if (newState == ExtensionState.OUT_OF_DATE) {
-                var svm = meta.shell_version_map || $elem.data('svm');
-                var version = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
                 $elem.addClass('out-of-date');
-                if (version === null) {
-                    $switch.switchify('customize', "OUTDATED", 'outdated');
-                } else {
-                    $switch.switchify('customize', "UPDATE", 'update').on('click', upgradeExtension);
-                }
+                $switch.switchify('customize', "OUTDATED", 'outdated');
             }
 
             if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||

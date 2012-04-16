@@ -309,24 +309,14 @@ li.extension:last-child {
     margin-top: 8px;
 }
 
-._gnome-switch.customized .update {
-    border-color: #559424;
-    background-color: #60b94a;
-    cursor: pointer;
-}
-
-._gnome-switch.customized .update:hover {
-    background-color: #71ca5b;
-}
-
 ._gnome-switch.customized .error {
     border-color: #a43465;
     background-color: #d94a60;
 }
 
-@media screen and (max-width: 1244px) {
+@media screen and (max-width: 1308px) {
     .maxwidth {
-        margin-left: 144px;
+        margin-left: 176px;
     }
 }
 
@@ -797,37 +787,56 @@ input[type=submit], button {
     transform: rotate(90deg);
 }
 
-.extension .configure-button {
+.extension .extra-buttons {
+    position: absolute;
+    margin-left: -172px;
+    margin-top: 8px;
+    width: 72px;
+}
+
+.extension .configure-button,
+.extension .upgrade-button {
     display: none;
 }
 
-.extension.configurable .configure-button {
-    display: block;
+.extension.configurable .configure-button,
+.extension.upgradable .upgrade-button {
+    float: right;
 
-    position: absolute;
-    margin-left: -136px;
-    margin-top: 8px;
+    display: block;
     height: 24px;
     width: 24px;
 
-    /* stolen from switch.css */
     font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6),
-                 0 1px 0   rgba(0, 0, 0, 0.6);
     border-style: solid;
     border-width: 2px;
     text-align: center;
+    margin-right: 8px;
 
-    background-color: #4a90d9;
-    background-image: url(../images/configure-extension.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
     border-radius: 4px;
-    border-color: #3465a4;
     cursor: pointer;
+}
+
+.extension.configurable .configure-button {
+    background-color: #4a90d9;
+    background-image: url(../images/configure-extension.png);
+    border-color: #3465a4;
 }
 
 .extension.configurable .configure-button:hover {
     background-color: #5ba1ff;
     border-color: #5485c4;
+}
+
+.extension.upgradable .upgrade-button {
+    background-color: #60b94a;
+    background-image: url(../images/upgrade.png);
+    border-color: #559424;
+}
+
+.extension.upgradable .upgrade-button:hover {
+    background-color: #71ca5b;
+    border-color: #75a444;
 }
