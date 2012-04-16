@@ -108,6 +108,11 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         $switch.data('elem', $elem);
         $switch.switchify();
 
+        var svm = meta.shell_version_map || $elem.data('svm');
+        var latest = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
+        if (latest !== null && latest.version > meta.version)
+            $elem.addClass('upgradable');
+
         function sendPopularity(action) {
             $.ajax({ url: '/ajax/adjust-popularity/',
                      type: 'POST',
@@ -136,11 +141,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 }
             }
         });
-
-        var svm = meta.shell_version_map || $elem.data('svm');
-        var latest = extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion);
-        if (latest !== null && latest.version > meta.version)
-            $elem.addClass('upgradable');
 
         // When the extension changes state...
         $elem.on('state-changed', function(e, newState) {
