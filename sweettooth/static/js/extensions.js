@@ -252,7 +252,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             renderExtension();
                         }).fail(function(error) {
                             // Had an error looking up the data for the
-                            //extension -- that's OK, just render it anyway.
+                            // extension -- that's OK, just render it anyway.
                             renderExtension();
                         });
 
