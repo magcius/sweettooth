@@ -424,13 +424,7 @@ def upload_file(request):
             try:
                 extension.full_clean()
             except ValidationError, e:
-                # Output a specialized error message for a common mistake:
-                if getattr(e, 'message_dict', None) and 'url' in e.message_dict:
-                    errors = [mark_safe("You have an invalid URL. Make sure your URL "
-                                        "starts with <pre>http://</pre>")]
-                else:
-                    errors = e.messages
-
+                errors = e.messages
                 transaction.rollback()
             else:
                 version = models.ExtensionVersion.objects.create(extension=extension,
