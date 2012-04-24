@@ -230,12 +230,7 @@ def extension_view(request, obj, **kwargs):
 def extension_version_view(request, obj, **kwargs):
     extension, version = obj.extension, obj
 
-    is_preview = False
-
     status = version.status
-    if status == models.STATUS_NEW:
-        # If it's new, this is a preview before it's submitted
-        is_preview = True
 
     # Redirect if we don't match the slug or extension PK.
     slug = kwargs.get('slug')
@@ -260,7 +255,6 @@ def extension_version_view(request, obj, **kwargs):
     context = dict(version = version,
                    extension = extension,
                    shell_version_map = json.dumps(shell_version_map),
-                   is_preview = is_preview,
                    is_visible = status in models.VISIBLE_STATUSES,
                    is_rejected = status in models.REJECTED_STATUSES,
                    status = status)
@@ -286,21 +280,6 @@ def ajax_adjust_popularity_view(request):
         return HttpResponseServerError()
 
     pop.save()
-
-@ajax_view
-@require_POST
-@model_view(models.ExtensionVersion)
-def ajax_submit_extension_view(request, obj):
-    if not obj.extension.user_can_edit(request.user):
-        return HttpResponseForbidden()
-
-    if obj.status != models.STATUS_NEW:
-        return HttpResponseForbidden()
-
-    obj.status = models.STATUS_UNREVIEWED
-    obj.save()
-
-    models.submitted_for_review.send(sender=request, request=request, version=obj)
 
 @ajax_view
 @require_POST
@@ -428,15 +407,16 @@ def upload_file(request):
             else:
                 version = models.ExtensionVersion.objects.create(extension=extension,
                                                                  source=file_source,
-                                                                 status=models.STATUS_NEW)
+                                                                 status=models.STATUS_UNREVIEWED)
                 version.parse_metadata_json(metadata)
                 version.replace_metadata_json()
                 version.save()
 
+                models.submitted_for_review.send(sender=request, request=request, version=version)
+
                 transaction.commit()
 
                 return redirect(version)
-
     else:
         form = UploadForm()
 

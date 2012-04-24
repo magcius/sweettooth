@@ -191,7 +191,7 @@ class UploadTest(BasicUserTestCase, TransactionTestCase):
         extension = models.Extension.objects.get(uuid="test-extension@mecheye.net")
         version1 = extension.versions.order_by("-version")[0]
 
-        self.assertEquals(version1.status, models.STATUS_NEW)
+        self.assertEquals(version1.status, models.STATUS_UNREVIEWED)
         self.assertEquals(extension.creator, self.user)
         self.assertEquals(extension.name, "Test Extension")
         self.assertEquals(extension.description, "Simple test metadata")
@@ -210,7 +210,9 @@ class UploadTest(BasicUserTestCase, TransactionTestCase):
 
         version2 = extension.versions.order_by("-version")[0]
         self.assertNotEquals(version1, version2)
-        self.assertEquals(version2.status, models.STATUS_NEW)
+
+        # This should be auto-approved.
+        self.assertEquals(version2.status, models.STATUS_ACTIVE)
         self.assertEquals(version2.version, version1.version+1)
 
     def test_upload_large_uuid(self):
@@ -220,7 +222,7 @@ class UploadTest(BasicUserTestCase, TransactionTestCase):
         extension = models.Extension.objects.get(uuid=large_uuid)
         version1 = extension.versions.order_by("-version")[0]
 
-        self.assertEquals(version1.status, models.STATUS_NEW)
+        self.assertEquals(version1.status, models.STATUS_UNREVIEWED)
         self.assertEquals(extension.creator, self.user)
         self.assertEquals(extension.name, "Large UUID test")
         self.assertEquals(extension.description, "Simple test metadata")
@@ -569,7 +571,7 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         two = self.create_extension("two")
 
         models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
-        models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_NEW)
+        models.ExtensionVersion.objects.create(extension=two, status=models.STATUS_UNREVIEWED)
 
         # Since two is new, it shouldn't be visible.
         uuids = self.gather_uuids(dict(uuid=[one.uuid, two.uuid]))
@@ -608,7 +610,7 @@ class QueryExtensionsTest(BasicUserTestCase, TestCase):
         v = models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_ACTIVE)
         v.parse_metadata_json({"shell-version": ["3.2"]})
 
-        v = models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_NEW)
+        v = models.ExtensionVersion.objects.create(extension=one, status=models.STATUS_UNREVIEWED)
         v.parse_metadata_json({"shell-version": ["3.3.90"]})
 
         # Make sure that we don't see one, here - the version that

@@ -1,22 +1,5 @@
 {% extends "extensions/detail.html" %}
 
-{% block extra-body-header %}
-  {{ block.super }}
-  {% if is_preview %}
-  <div class="step">
-    <h2 class="steptitle">Step <span>2</span></h2>
-    <p>
-      Edit anything in yellow by clicking on it.
-    </p>
-
-    <p>
-      Give your extension some personality by uploading a screenshot
-      and icon. Make them identifiable!
-    </p>
-  </div>
-  {% endif %}
-{% endblock %}
-
 {% block comments %}
   {% if is_visible %}
     {% include "extensions/comments.html" %}
@@ -26,37 +9,25 @@
 {% endblock %}
 
 {% block extra %}
-  {% if is_preview %}
-  <div class="step lock">
-    <h2 class="steptitle">Step <span>3</span></h2>
-    <p>
-      After you're satisfied with how your extension looks, submit the extension for review.
+  <p class="step">
       A reviewer will review the extension you submitted to make sure there's nothing too
       dangerous. You'll be emailed the result of the review.
+  </p>
 
-      <button id="submit-ajax" data-url="{% url extensions-ajax-submit pk=version.pk %}">
-        Submit the extension for review.
-      </button>
-    </p>
-  </div>
-  {% endif %}
+  <h2 class="expandy_header expanded"> Admin </h2>
+  <ul>
+    <li><a href="{% url extensions-upload-file %}">Upload a new version</a></li>
+    {% if version %}
+    <li><a href="{% url review-version pk=version.pk %}">View review and source</a></li>
+    {% endif %}
+  </ul>
 
-  {% if not is_preview %}
-    <h2 class="expandy_header expanded"> Admin </h2>
-    <ul>
-      <li><a href="{% url extensions-upload-file %}">Upload a new version</a></li>
-      {% if version %}
-      <li><a href="{% url review-version pk=version.pk %}">View review and source</a></li>
-      {% endif %}
-    </ul>
-
-  {% if is_multiversion %}
-    <h2 class="expandy_header expanded"> Versions </h2>
-    <table>
-      <thead> <tr>
+  <h2 class="expandy_header expanded"> Versions </h2>
+  <table>
+    <thead> <tr>
         <th> Version </th> <th> Status </th> <th> Shell Versions </th> <th> Actions </th>
-      </tr> </thead>
-      <tbody>
+    </tr> </thead>
+    <tbody>
       {% for version in all_versions %}
       <tr data-pk="{{ version.pk }}">
         <td> <a href="{{ version.get_absolute_url }}"> {{ version.version }} </a> </td>
@@ -79,20 +50,18 @@
 
       </tr>
       {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="expandy_header expanded"> Shell Versions </h2>
+  <div>
+    <p> Shell versions mapped to their associated extension versions </p>
+    <table id="extension_shell_versions_info">
+      <thead> <th> Shell Version </th> <th> Extension Version </th> </thead>
+      <tbody>
       </tbody>
     </table>
-
-    <h2 class="expandy_header expanded"> Shell Versions </h2>
-    <div>
-      <p> Shell versions mapped to their associated extension versions </p>
-      <table id="extension_shell_versions_info">
-        <thead> <th> Shell Version </th> <th> Extension Version </th> </thead>
-        <tbody>
-        </tbody>
-      </table>
-    </div>
-  {% endif %}
-  {% endif %}
+  </div>
 {% endblock %}
 
 {% block screenshot %}

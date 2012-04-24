@@ -68,18 +68,6 @@ function($, messages, modal) {
             return false;
         });
 
-        $('#submit-ajax').click(function() {
-            var $elem = $(this);
-
-            var df = $.ajax({ url: $elem.data('url'),
-                              type: 'POST' });
-            df.done(function() {
-                messages.addInfo("Your extension has been submitted.").hide().slideDown();
-            });
-
-            return false;
-        });
-
         $('#local_extensions').addLocalExtensions();
         $('.extension.single-page').addExtensionSwitch();
 
