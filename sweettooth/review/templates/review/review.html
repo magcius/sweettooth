@@ -69,7 +69,7 @@
       {% for ver in all_versions %}
       <tr>
         <td>
-          <a href="{{ ver.get_absolute_uri }}">{{ ver.version }}</a>
+          <a href="{{ ver.get_absolute_url }}">{{ ver.version }}</a>
         </td>
         <td>
           {% if ver.version == version.version %}
