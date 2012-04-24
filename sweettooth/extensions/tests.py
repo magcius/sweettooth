@@ -478,10 +478,8 @@ class UpdateVersionTest(TestCase):
                                                          version_tag=downgrade_pk) }
 
     def grab_response(self, installed):
-        post_data = dict(installed=json.dumps(installed))
-
-        response = self.client.post(reverse('extensions-shell-update'),
-                                    post_data)
+        response = self.client.get(reverse('extensions-shell-update'),
+                                   dict(installed=json.dumps(installed)))
 
         return json.loads(response.content)
 

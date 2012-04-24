@@ -81,9 +81,8 @@ def shell_download(request, uuid):
     return redirect(version.source.url)
 
 @ajax_view
-@require_POST
 def shell_update(request):
-    installed = json.loads(request.POST['installed'])
+    installed = json.loads(request.GET['installed'])
     operations = {}
 
     for uuid, version in installed.iteritems():
