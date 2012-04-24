@@ -399,7 +399,6 @@ def ajax_set_status_view(request, newstatus):
 @transaction.commit_manually
 def upload_file(request):
     errors = []
-    extra_debug = None
 
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
@@ -432,7 +431,6 @@ def upload_file(request):
                 else:
                     errors = e.messages
 
-                extra_debug = repr(e)
                 transaction.rollback()
             else:
                 version = models.ExtensionVersion.objects.create(extension=extension,
@@ -452,8 +450,7 @@ def upload_file(request):
     # XXX - context managers may dirty the connection, so we need
     # to force a clean state after this.
     response = render(request, 'extensions/upload.html', dict(form=form,
-                                                              errors=errors,
-                                                              extra_debug=extra_debug))
+                                                              errors=errors))
 
     transaction.set_clean()
 
