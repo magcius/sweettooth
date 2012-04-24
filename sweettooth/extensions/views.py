@@ -83,6 +83,7 @@ def shell_download(request, uuid):
 @ajax_view
 def shell_update(request):
     installed = json.loads(request.GET['installed'])
+    shell_version = request.GET['shell_version']
     operations = {}
 
     for uuid, version in installed.iteritems():
@@ -97,18 +98,18 @@ def shell_update(request):
             # The user may have a newer version than what's on the site.
             continue
 
-        latest_version = extension.latest_version
+        proper_version = grab_proper_extension_version(extension, shell_version)
 
-        if latest_version is None:
+        if proper_version is None:
             operations[uuid] = dict(operation="blacklist")
 
-        elif version < latest_version.version:
+        elif version < proper_version.version:
             operations[uuid] = dict(operation="upgrade",
-                                    version_tag=extension.latest_version.pk)
+                                    version_tag=proper_version.pk)
 
         elif version_obj.status in models.REJECTED_STATUSES:
             operations[uuid] = dict(operation="downgrade",
-                                    version_tag=extension.latest_version.pk)
+                                    version_tag=proper_version.pk)
 
     return operations
 

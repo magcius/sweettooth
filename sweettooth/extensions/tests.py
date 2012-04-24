@@ -479,7 +479,7 @@ class UpdateVersionTest(TestCase):
 
     def grab_response(self, installed):
         response = self.client.get(reverse('extensions-shell-update'),
-                                   dict(installed=json.dumps(installed)))
+                                   dict(installed=json.dumps(installed), shell_version='3.2.0'))
 
         return json.loads(response.content)
 
