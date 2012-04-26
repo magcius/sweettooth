@@ -58,6 +58,13 @@
       {% endif %}
       </dl>
 
+      {% if not is_unreviewed %}
+      <p class="step">
+        A reviewer will review the extension you submitted to make sure there's nothing too
+        dangerous. You'll be emailed the result of the review.
+      </p>
+      {% endif %}
+
       <hr style="clear: both;">
 
       {% block comments %}
