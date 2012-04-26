@@ -276,7 +276,7 @@ li.extension:last-child {
 }
 
 .extension.out-of-date .uninstall,
-.extension.out-of-date ._gnome-switch.customized.update {
+.extension.out-of-date .upgrade-button {
     opacity: 1.0;
 }
 
