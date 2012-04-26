@@ -405,17 +405,17 @@ def upload_file(request):
                 transaction.rollback()
             else:
                 version = models.ExtensionVersion.objects.create(extension=extension,
-                                                                 source=file_source,
-                                                                 status=models.STATUS_UNREVIEWED)
-                 version.parse_metadata_json(metadata)
-                 version.replace_metadata_json()
-                 version.save()
+                                                                source=file_source,
+                                                                status=models.STATUS_UNREVIEWED)
+                version.parse_metadata_json(metadata)
+                version.replace_metadata_json()
+                version.save()
 
-                 models.submitted_for_review.send(sender=request, request=request, version=version)
+                models.submitted_for_review.send(sender=request, request=request, version=version)
 
-                 transaction.commit()
+                transaction.commit()
 
-                 return redirect(version)
+                return redirect(version)
      else:
          form = UploadForm()
 
