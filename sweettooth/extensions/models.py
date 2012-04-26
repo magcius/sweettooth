@@ -27,8 +27,8 @@ STATUSES = {
     STATUS_ACTIVE: u"Active",
 }
 
-LIVE_STATUSES = (STATUS_ACTIVE, STATUS_INACTIVE)
-REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
+APPROVED_STATUSES = (STATUS_INACTIVE, STATUS_ACTIVE)
+REVIEWED_STATUSES = (STATUS_INACTIVE, STATUS_ACTIVE, STATUS_REJECTED)
 
 def validate_uuid(uuid):
     if re.match(r'[-a-zA-Z0-9@._]+$', uuid) is None:
@@ -395,8 +395,8 @@ class ExtensionVersion(models.Model):
     def get_status_class(self):
         return STATUSES[self.status].lower()
 
-    def is_live(self):
-        return self.status in LIVE_STATUSES
+    def is_approved(self):
+        return self.status in APPROVED_STATUSES
 
     def is_active(self):
         return self.status == STATUS_ACTIVE
