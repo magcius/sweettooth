@@ -255,8 +255,7 @@ def extension_version_view(request, obj, **kwargs):
                    extension = extension,
                    shell_version_map = json.dumps(shell_version_map),
                    is_visible = status in models.VISIBLE_STATUSES,
-                   is_rejected = status in models.REJECTED_STATUSES,
-                   status = status)
+                   is_rejected = status in models.REJECTED_STATUSES)
 
     if extension.latest_version is not None:
         context['old_version'] = version.version < extension.latest_version.version
