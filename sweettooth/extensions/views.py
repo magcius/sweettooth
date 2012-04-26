@@ -254,6 +254,7 @@ def extension_version_view(request, obj, **kwargs):
     context = dict(version = version,
                    extension = extension,
                    shell_version_map = json.dumps(shell_version_map),
+                   is_unreviewed = status == models.STATUS_UNREVIEWED,
                    is_visible = status == models.STATUS_ACTIVE,
                    is_rejected = status == models.STATUS_REJECTED)
 
@@ -406,23 +407,23 @@ def upload_file(request):
                 version = models.ExtensionVersion.objects.create(extension=extension,
                                                                  source=file_source,
                                                                  status=models.STATUS_UNREVIEWED)
-                version.parse_metadata_json(metadata)
-                version.replace_metadata_json()
-                version.save()
+                 version.parse_metadata_json(metadata)
+                 version.replace_metadata_json()
+                 version.save()
 
-                models.submitted_for_review.send(sender=request, request=request, version=version)
+                 models.submitted_for_review.send(sender=request, request=request, version=version)
 
-                transaction.commit()
+                 transaction.commit()
 
-                return redirect(version)
-    else:
-        form = UploadForm()
+                 return redirect(version)
+     else:
+         form = UploadForm()
 
-    # XXX - context managers may dirty the connection, so we need
-    # to force a clean state after this.
-    response = render(request, 'extensions/upload.html', dict(form=form,
-                                                              errors=errors))
+     # XXX - context managers may dirty the connection, so we need
+     # to force a clean state after this.
+     response = render(request, 'extensions/upload.html', dict(form=form,
+                                                               errors=errors))
 
-    transaction.set_clean()
+     transaction.set_clean()
 
     return response

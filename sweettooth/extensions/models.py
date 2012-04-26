@@ -404,9 +404,6 @@ class ExtensionVersion(models.Model):
     def is_inactive(self):
         return self.status == STATUS_INACTIVE
 
-    def is_unreviewed(self):
-        return self.status == STATUS_UNREVIEWED
-
 submitted_for_review = Signal(providing_args=["request", "version"])
 reviewed = Signal(providing_args=["request", "version", "review"])
 status_changed = Signal(providing_args=["version", "log"])
