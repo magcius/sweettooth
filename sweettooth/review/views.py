@@ -109,7 +109,7 @@ def get_latest_active_version(version):
     extension = version.extension
 
     try:
-        old_version = extension.versions.filter(version__lt=version.version, status__in=models.VISIBLE_STATUSES).latest()
+        old_version = extension.versions.filter(version__lt=version.version, status=models.STATUS_ACTIVE).latest()
     except models.ExtensionVersion.DoesNotExist:
         return None
 

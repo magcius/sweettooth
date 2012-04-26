@@ -106,7 +106,7 @@ def shell_update(request):
             operations[uuid] = dict(operation="upgrade",
                                     version_tag=proper_version.pk)
 
-        elif version_obj.status in models.REJECTED_STATUSES:
+        elif version_obj.status == models.STATUS_REJECTED:
             operations[uuid] = dict(operation="downgrade",
                                     version_tag=proper_version.pk)
 
@@ -254,8 +254,8 @@ def extension_version_view(request, obj, **kwargs):
     context = dict(version = version,
                    extension = extension,
                    shell_version_map = json.dumps(shell_version_map),
-                   is_visible = status in models.VISIBLE_STATUSES,
-                   is_rejected = status in models.REJECTED_STATUSES)
+                   is_visible = status == models.STATUS_ACTIVE,
+                   is_rejected = status == models.STATUS_REJECTED)
 
     if extension.latest_version is not None:
         context['old_version'] = version.version < extension.latest_version.version

@@ -27,9 +27,7 @@ STATUSES = {
     STATUS_ACTIVE: u"Active",
 }
 
-VISIBLE_STATUSES = (STATUS_ACTIVE,)
 LIVE_STATUSES = (STATUS_ACTIVE, STATUS_INACTIVE)
-REJECTED_STATUSES = (STATUS_REJECTED,)
 REVIEWED_STATUSES = (STATUS_REJECTED, STATUS_INACTIVE, STATUS_ACTIVE)
 
 def validate_uuid(uuid):
@@ -45,7 +43,7 @@ def validate_uuid(uuid):
 
 class ExtensionManager(models.Manager):
     def visible(self):
-        return self.filter(versions__status__in=VISIBLE_STATUSES).distinct()
+        return self.filter(versions__status=STATUS_ACTIVE).distinct()
 
     def create_from_metadata(self, metadata, **kwargs):
         instance = self.model(**kwargs)
@@ -143,7 +141,7 @@ class Extension(models.Model):
 
     @property
     def visible_versions(self):
-        return self.versions.filter(status__in=VISIBLE_STATUSES)
+        return self.versions.filter(status=STATUS_ACTIVE)
 
     @property
     def latest_version(self):
@@ -272,7 +270,7 @@ class ExtensionVersionManager(models.Manager):
         return self.filter(status=STATUS_UNREVIEWED)
 
     def visible(self):
-        return self.filter(status__in=VISIBLE_STATUSES)
+        return self.filter(status=STATUS_ACTIVE)
 
 class ExtensionVersion(models.Model):
     extension = models.ForeignKey(Extension, related_name="versions")
