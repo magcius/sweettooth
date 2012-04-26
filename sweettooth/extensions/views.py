@@ -254,6 +254,7 @@ def extension_version_view(request, obj, **kwargs):
     context = dict(version = version,
                    extension = extension,
                    shell_version_map = json.dumps(shell_version_map),
+                   all_versions = extension.versions.order_by('-version'),
                    is_unreviewed = status == models.STATUS_UNREVIEWED,
                    is_visible = status == models.STATUS_ACTIVE,
                    is_rejected = status == models.STATUS_REJECTED)
