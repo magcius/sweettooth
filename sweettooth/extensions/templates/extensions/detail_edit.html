@@ -9,10 +9,12 @@
 {% endblock %}
 
 {% block extra %}
+  {% if not is_unreviewed %}
   <p class="step">
       A reviewer will review the extension you submitted to make sure there's nothing too
       dangerous. You'll be emailed the result of the review.
   </p>
+  {% endif %}
 
   <h2 class="expandy_header expanded"> Admin </h2>
   <ul>
