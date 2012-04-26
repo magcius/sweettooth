@@ -416,14 +416,14 @@ def upload_file(request):
                 transaction.commit()
 
                 return redirect(version)
-     else:
-         form = UploadForm()
+    else:
+        form = UploadForm()
 
-     # XXX - context managers may dirty the connection, so we need
-     # to force a clean state after this.
-     response = render(request, 'extensions/upload.html', dict(form=form,
-                                                               errors=errors))
+    # XXX - context managers may dirty the connection, so we need
+    # to force a clean state after this.
+    response = render(request, 'extensions/upload.html', dict(form=form,
+                                                              errors=errors))
 
-     transaction.set_clean()
+    transaction.set_clean()
 
     return response
