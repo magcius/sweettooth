@@ -406,8 +406,8 @@ def upload_file(request):
                 transaction.rollback()
             else:
                 version = models.ExtensionVersion.objects.create(extension=extension,
-                                                                source=file_source,
-                                                                status=models.STATUS_UNREVIEWED)
+                                                                 source=file_source,
+                                                                 status=models.STATUS_UNREVIEWED)
                 version.parse_metadata_json(metadata)
                 version.replace_metadata_json()
                 version.save()
