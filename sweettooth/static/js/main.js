@@ -1,10 +1,10 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
-define(['jquery', 'messages', 'modal',
+define(['jquery', 'messages', 'modal', 'hashParamUtils',
         'extensions', 'uploader', 'fsui',
         'jquery.cookie', 'jquery.jeditable',
         'jquery.timeago', 'jquery.raty'],
-function($, messages, modal) {
+function($, messages, modal, hashParamUtils) {
     "use strict";
 
     if (!$.ajaxSettings.headers)
@@ -127,6 +127,7 @@ function($, messages, modal) {
 
             if (newTerm != term) {
                 term = newTerm;
+                hashParamUtils.setHashParam('page', undefined);
                 $extensionsList.trigger('load-page');
             }
         }).trigger('keyup');
