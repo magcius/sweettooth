@@ -1,9 +1,9 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 define(['jquery', 'messages', 'modal',
-         'extensions', 'uploader', 'fsui',
-         'jquery.cookie', 'jquery.jeditable',
-         'jquery.timeago', 'jquery.raty'],
+        'extensions', 'uploader', 'fsui',
+        'jquery.cookie', 'jquery.jeditable',
+        'jquery.timeago', 'jquery.raty'],
 function($, messages, modal) {
     "use strict";
 
