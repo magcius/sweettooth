@@ -364,6 +364,9 @@ def ajax_set_status_view(request, newstatus):
     if not extension.user_can_edit(request.user):
         return HttpResponseForbidden()
 
+    if version.status not in (models.STATUS_ACTIVE, models.STATUS_INACTIVE):
+        return HttpResponseForbidden()
+
     version.status = newstatus
     version.save()
 
