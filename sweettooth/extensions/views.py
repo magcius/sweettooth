@@ -358,7 +358,7 @@ def ajax_details_view(request):
 def ajax_set_status_view(request, newstatus):
     pk = request.GET['pk']
 
-    version = get_object_or_404(models.ExtensionVersion.objects.visible(), pk=pk)
+    version = get_object_or_404(models.ExtensionVersion, pk=pk)
     extension = version.extension
 
     if not extension.user_can_edit(request.user):
