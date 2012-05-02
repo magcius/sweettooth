@@ -74,6 +74,9 @@ def shell_download(request, uuid):
     extension = get_object_or_404(models.Extension.objects.visible(), uuid=uuid)
     version = find_extension_version_from_params(extension, request.GET)
 
+    if version is None:
+        raise Http404()
+
     extension.downloads += 1
     extension.save(replace_metadata_json=False)
 
