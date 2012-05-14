@@ -119,7 +119,7 @@ def ajax_query_params_query(request, n_per_page=10):
     version_qs = models.ExtensionVersion.objects.visible()
 
     version_strings = request.GET.getlist('shell_version')
-    if version_strings and version_strings != ['all']:
+    if version_strings and version_strings not in (['all'], ['-1']):
         versions = set(get_versions_for_version_strings(version_strings))
         version_qs = version_qs.filter(shell_versions__in=versions)
 
