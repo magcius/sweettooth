@@ -102,9 +102,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         });
 
         $elem.data({'elem': $elem,
-                    'state': _state,
-                    'uninstalled': false,
-                    'undo-uninstall-message': null});
+                    'state': _state});
 
         $switch.data('elem', $elem);
         $switch.switchify();
@@ -163,15 +161,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 $elem.addClass('out-of-date');
                 $switch.switchify('customize', "OUTDATED", 'outdated');
             }
-
-            if ($elem.data('uninstalled') && (newState == ExtensionState.ENABLED ||
-                                              newState == ExtensionState.ERROR ||
-                                              newState == ExtensionState.OUT_OF_DATE)) {
-                $elem.fadeIn({ queue: false }).slideDown();
-                $elem.data('uninstalled', false);
-                $elem.data('undo-uninstall-message').slideUp();
-            }
-
         });
         $elem.trigger('state-changed', _state);
         elems[uuid] = $elem;
@@ -200,28 +189,11 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                     extensionValues.forEach(function(extension) {
                         var uuid = extension.uuid;
 
-                        function reinstall() {
-                            dbusProxy.InstallExtension(uuid);
-
-                            // If the user clicks "Install" we need to show that we
-                            // installed it by reattaching the element, but we can't do
-                            // that here -- the user might click "Cancel".
-                            $elem.data('uninstalled', true);
-                        }
-
                         function uninstall() {
-                            var svm = extension.shell_version_map;
-                            var wantUndo = (extensionUtils.grabProperExtensionVersion(svm, dbusProxy.ShellVersion) !== null);
-
                             dbusProxy.UninstallExtension(uuid).done(function(result) {
                                 if (result) {
                                     $elem.fadeOut({ queue: false }).slideUp({ queue: false });
-
-                                    if (wantUndo) {
-                                        var $message = messages.addInfo(templates.extensions.uninstall(extension));
-                                        $message.on('click', 'a', reinstall);
-                                        $elem.data('undo-uninstall-message', $message);
-                                    }
+                                    messages.addInfo(templates.extensions.uninstall(extension));
                                 }
                             });
                         }
