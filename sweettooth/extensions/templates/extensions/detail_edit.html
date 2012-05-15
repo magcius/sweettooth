@@ -9,14 +9,6 @@
 {% endblock %}
 
 {% block extra %}
-  <h2 class="expandy_header expanded"> Admin </h2>
-  <ul>
-    <li><a href="{% url extensions-upload-file %}">Upload a new version</a></li>
-    {% if version %}
-    <li><a href="{% url review-version pk=version.pk %}">View review and source</a></li>
-    {% endif %}
-  </ul>
-
   <h2 class="expandy_header expanded"> Versions </h2>
   <table>
     <thead> <tr>
