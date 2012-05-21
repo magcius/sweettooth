@@ -60,13 +60,13 @@ def find_extension_version_from_params(extension, params):
     vpk = params.get('version_tag', '')
     shell_version = params.get('shell_version', '')
 
-    if vpk:
+    if shell_version:
+        return grab_proper_extension_version(extension, shell_version)
+    elif vpk:
         try:
             return extension.visible_versions.get(pk=int(vpk))
         except models.ExtensionVersion.DoesNotExist:
             return None
-    elif shell_version:
-        return grab_proper_extension_version(extension, shell_version)
     else:
         return None
 
