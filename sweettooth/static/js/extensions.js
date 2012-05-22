@@ -68,17 +68,16 @@ function($, messages, dbusProxy, extensionUtils, templates) {
     // uuid => elem
     var elems = {};
 
-    dbusProxy.extensionStateChangedHandler = function(uuid, newState, _) {
+    function extensionStateChanged(uuid) {
         if (elems[uuid] !== undefined)
             elems[uuid].trigger('state-changed', newState);
-    };
+    }
+
+    dbusProxy.extensionStateChangedHandler = extensionStateChanged;
 
     dbusProxy.shellRestartHandler = function() {
         dbusProxy.ListExtensions().done(function(extensions) {
-            $.each(extensions, function(meta) {
-                if (elems[uuid] !== undefined)
-                    elems[uuid].trigger('state-changed', meta.state);
-            });
+            $.each(extensions, extensionStateChanged);
         });
     };
 
