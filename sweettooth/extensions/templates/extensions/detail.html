@@ -30,33 +30,38 @@
         <div class="configure-button"></div>
       </div>
 
-      {% block icon %}
-      <img src="{{ extension.icon.url }}" class="icon">
-      {% endblock icon %}
+      <div class="extension-header">
+        {% block icon %}
+        <img src="{{ extension.icon.url }}" class="icon">
+        {% endblock icon %}
 
-      {% if extension.screenshot %}
-      {% thumbnail extension.screenshot "300x200" as th %}
-      {% block screenshot %}
-      <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
-      {% endblock screenshot %}
-      {% endthumbnail %}
-      {% else %}
-      {% block no-screenshot %}
-      {% endblock %}
-      {% endif %}
+        <h3 class="extension-name" id="extension_name">{{ extension.name }}</h3>
+        <span class="author">by <a href="{% url auth-profile user=extension.creator.username %}">{{ extension.creator }}</a></span>
+      </div>
 
-      <h3 class="extension-name" id="extension_name">{{ extension.name }}</h3>
-      <span class="author">by <a href="{% url auth-profile user=extension.creator.username %}">{{ extension.creator }}</a></span>
-      <p class="description" id="extension_description">
-        {{ extension.description }}
-      </p>
+      <div class="extension-details">
+        {% if extension.screenshot %}
+        {% thumbnail extension.screenshot "300x200" as th %}
+        {% block screenshot %}
+        <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
+        {% endblock screenshot %}
+        {% endthumbnail %}
+        {% else %}
+        {% block no-screenshot %}
+        {% endblock %}
+        {% endif %}
 
-      <dl>
-      {% if extension.url %}
-        <dt>Extension Homepage</dt>
-        <dd><a href="{{ extension.url }}" id="extension_url">{{ extension.url }}</a></dd>
-      {% endif %}
-      </dl>
+        <p class="description" id="extension_description">
+          {{ extension.description }}
+        </p>
+
+        <dl>
+          {% if extension.url %}
+          <dt>Extension Homepage</dt>
+          <dd><a href="{{ extension.url }}" id="extension_url">{{ extension.url }}</a></dd>
+          {% endif %}
+        </dl>
+      </div>
 
       {% if is_unreviewed %}
       <p class="step">
