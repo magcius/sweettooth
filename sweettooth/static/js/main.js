@@ -119,18 +119,19 @@ function($, messages, modal, hashParamUtils) {
 
                 // Scroll the page back up to the top.
                 document.documentElement.scrollTop = 0;
-            });
+            }).trigger('load-page');
 
-        var term = null;
-        $('#search_input').on('keyup', function() {
+        var term = "";
+        $('#search_input').on('input', function() {
             var newTerm = $.trim($(this).val());
 
             if (newTerm != term) {
                 term = newTerm;
+                // On a new search parameter, reset page to 0.
                 hashParamUtils.setHashParam('page', undefined);
                 $extensionsList.trigger('load-page');
             }
-        }).trigger('keyup');
+        });
 
         $('#error_report').fillInErrors();
 
