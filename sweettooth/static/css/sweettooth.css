@@ -342,15 +342,6 @@ li.extension:last-child {
     font-weight: bold;
 }
 
-.extension .screenshot.upload .drop {
-    background: rgba(153, 255, 153, 0.5);
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-}
-
 .extension .icon {
     width: 32px;
     height: 32px;
