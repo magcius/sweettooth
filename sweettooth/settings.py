@@ -172,6 +172,8 @@ DEFAULT_FROM_EMAIL = "noreply@gnome.org"
 
 XAPIAN_DB_PATH = os.path.join(SITE_ROOT, '..', 'xapian.db')
 
+THUMBNAIL_DEBUG = True
+
 try:
     from local_settings import *
 except ImportError:
