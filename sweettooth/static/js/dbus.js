@@ -7,11 +7,12 @@
 // Thanks to James Burke for helping me with this.
 // http://groups.google.com/group/requirejs/msg/cc6016210c53a51d
 
-define({
-    load: function(name, req, onLoad, config) {
-        "use strict";
+define(['jquery'], function($) {
+    "use strict";
 
-        req(['jquery'], function ($) {
+    function load(name, req, onLoad, config) {
+
+        $(document).ready(function() {
             if (!('SweetTooth' in window)) {
                 try {
                     var MIME_TYPE = 'application/x-gnome-shell-integration';
@@ -65,4 +66,6 @@ define({
             });
         });
     }
+
+    return { load: load };
 });
