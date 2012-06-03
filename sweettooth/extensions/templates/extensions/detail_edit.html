@@ -54,8 +54,8 @@
 {% block screenshot %}
 <div class="screenshot upload">
   <img src="{{ th.url }}" />
-  <input type="file" accept="image/*">
 </div>
+<input type="file" accept="image/*">
 {% endblock %}
 
 {% block no-screenshot %}
@@ -63,16 +63,16 @@
   <div class="text">
     <span>Upload a screenshot</span>
   </div>
-  <input type="file" accept="image/*">
 </div>
+<input type="file" accept="image/*">
 {% endblock %}
 
 
 {% block icon %}
 <div class="icon upload">
   <img src="{{ extension.icon.url }}">
-  <input type="file" accept="image/*">
 </div>
+<input type="file" accept="image/*">
 {% endblock %}
 
 {% block extra-ext-class %}can-edit{% endblock %}

@@ -4,7 +4,7 @@ define(['jquery'], function($) {
     "use strict";
 
     $.fn.uploadify = function(url) {
-        var $elem = $(this), $input = $elem.find('input');
+        var $elem = $(this), $input = $elem.next('input');
 
         var BOUNDARY = ' -- 598275094719306587185414';
         // Stolen from http://demos.hacks.mozilla.org/openweb/imageUploader/js/extends/xhr.js
