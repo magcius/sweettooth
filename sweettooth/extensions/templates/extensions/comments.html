@@ -3,7 +3,7 @@
   {% load comments %}
   {% load gravatar %}
   {% get_comment_list for extension as comments %}
-  {% for comment in comments %}
+  {% for comment in comments reversed %}
   {% if comment.user == extension.creator %}
   <div class="comment extension-creator">
     <div class="extension-creator-badge">Author</div>
