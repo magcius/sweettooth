@@ -12,7 +12,7 @@ define(['jquery'], function($) {
 
     var exports = {};
 
-    var load = exports.load = function(name, req, onLoad, config) {
+    exports.load = function load(name, req, onLoad, config) {
 
         $(document).ready(function() {
             if (!('SweetTooth' in window)) {

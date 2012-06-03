@@ -38,7 +38,7 @@ define(['jquery'], function($) {
         $container.append(messages);
     }
 
-    var addMessage = exports.addMessage = function(tag, message) {
+    exports.addMessage = function addMessage(tag, message) {
         var message = $('<p>').addClass('message').addClass(tag)
             .append(message).appendTo($container);
 
