@@ -399,11 +399,13 @@ def upload_file(request):
             try:
                 extension = models.Extension.objects.get(uuid=uuid)
             except models.Extension.DoesNotExist:
-                extension = models.Extension.objects.create_from_metadata(metadata, creator=request.user)
+                extension = models.Extension.objects.create(creator=request.user)
             else:
                 if request.user != extension.creator:
                     messages.error(request, "An extension with that UUID has already been added.")
                     return redirect('extensions-upload-file')
+
+            extension.parse_metadata_json(metadata)
 
             try:
                 extension.full_clean()
