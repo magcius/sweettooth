@@ -104,7 +104,7 @@
     {% else %}
     posted a review
     {% endif %}
-    <time title="{{ review.date|date:"c" }}">{{ review.date|date:"F j, Y" }}</time>
+    <time title="{{ review.date|date:"c" }}Z">{{ review.date|date:"F j, Y" }}</time>
     <blockquote>{{ review.comments }}</blockquote>
   </div>
   {% empty %}
