@@ -75,7 +75,11 @@
 }
 
 .beta-banner {
+    -webkit-transform: rotate(-35deg);
     -moz-transform: rotate(-35deg);
+    -ms-transform: rotate(-35deg);
+    -o-transform: rotate(-35deg);
+    transform: rotate(-35deg);
     z-index: -1;
     display: block;
     text-align: center;
@@ -91,7 +95,11 @@
 
 .beta-banner span {
     display: block;
+    background-image: linear-gradient(#4e9a06, #73d216);
+    background-image: -o-linear-gradient(#4e9a06, #73d216);
+    background-image: -ms-linear-gradient(#4e9a06, #73d216);
     background-image: -moz-linear-gradient(#4e9a06, #73d216);
+    background-image: -webkit-linear-gradient(#4e9a06, #73d216);
     background-color: #73d216;
     color: white;
     text-shadow: 0px 2px 0 rgba(0, 0, 0, 0.4);
