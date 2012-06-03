@@ -118,7 +118,8 @@ function($, messages, modal, hashParamUtils) {
                     $('#extensions-list .before-paginator').fsUIify();
 
                 // Scroll the page back up to the top.
-                document.documentElement.scrollTop = 0;
+                document.documentElement.scrollTop = 0; // Firefox
+                document.body.scrollTop = 0; // WebKit
             }).trigger('load-page');
 
         var term = "";
