@@ -30,21 +30,5 @@
     </li>
     {% endfor %}
   </ul>
-
-  <h3> {{ display_name }} has reviewed </h3>
-  <div class="reviews">
-    {% for review in reviews %}
-    <div class="review">
-      <a href="{% url extensions-version-detail ext_pk=review.version.extension.pk slug=review.version.extension.slug pk=review.version.pk %}">
-        <span class="extension-name">{{ review.version.extension.name }}</span>
-        <span class="extension-version">(version {{ review.version.version }})</span>
-      </a>
-      <abbr class="timestamp" title="{{ review.date|date:"c" }}">{{ review.date|date:"F j, Y" }}</abbr>
-      <blockquote>{{ review.comments }}</blockquote>
-    </div>
-    {% empty %}
-      <p>No reviews.</p>
-    {% endfor %}
-  </div>
 </div>
 {% endblock %}
