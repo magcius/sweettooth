@@ -327,6 +327,7 @@ li.extension:last-child {
     margin: 0.5em;
     font-size: 1.2em;
     overflow: auto;
+    white-space: pre-line;
 }
 
 .extension .screenshot {
