@@ -23,8 +23,7 @@ function($, messages, modal, hashParamUtils) {
             }
 
             $elem.editable(url, $.extend(options || {},
-                                { select: true,
-                                  onblur: 'submit',
+                                { onblur: 'submit',
                                   ajaxoptions: { error: error, dataType: 'json' },
                                   callback: function(result, settings) {
                                       $elem.text(result);

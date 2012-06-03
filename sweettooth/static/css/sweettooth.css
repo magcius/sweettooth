@@ -330,6 +330,20 @@ li.extension:last-child {
     white-space: pre-line;
 }
 
+.extension textarea {
+    /* sync with fonts.css */
+    /* textareas don't inherit body fonts for whatever reason */
+    font-family: Cantarell, 'Droid Sans', Ubuntu, 'DejaVu Sans', Arial, sans-serif;
+}
+
+.extension textarea, .extension input {
+    border: 0;
+    border-radius: 0;
+
+    line-height: 1.6;
+    font-size: 100%;
+}
+
 .extension .screenshot {
     margin-right: 0.5em;
     border: 1px solid #cccccc;
@@ -573,6 +587,7 @@ p.message.warning {
 input, textarea, input[type=submit], button {
     border: 1px solid #999;
     border-radius: 4px;
+    background-color: #fff;
 }
 
 input[type=submit], button {
