@@ -10,7 +10,9 @@
 define(['jquery'], function($) {
     "use strict";
 
-    function load(name, req, onLoad, config) {
+    var exports = {};
+
+    var load = exports.load = function(name, req, onLoad, config) {
 
         $(document).ready(function() {
             if (!('SweetTooth' in window)) {
@@ -65,7 +67,7 @@ define(['jquery'], function($) {
                 onLoad(module);
             });
         });
-    }
+    };
 
-    return { load: load };
+    return exports;
 });
