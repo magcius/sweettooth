@@ -422,12 +422,12 @@ li.extension:last-child {
     display: table-cell;
 }
 
-.rejected, .reject {
+.extension-status.rejected, option.reject {
     color: #c00 !important;
     font-weight: bold;
 }
 
-.active, .approve {
+.extension-status.active, option.approve {
     color: #0a0 !important;
     font-weight: bold;
 }
