@@ -7,26 +7,32 @@
 <h2 class="expandy_header expanded"> Details Page Preview </h2>
 <div id="preview">
   <div class="extension">
-    <img src="{{ extension.icon.url }}" class="icon">
+    <h3 class="extension-name">
+      <a href="{{ extension.get_absolute_url }}">
+        <img src="{{ extension.icon.url }}" class="icon"> {{ extension.name }}
+      </a>
+    </h3>
 
-    {% if extension.screenshot %}
-    {% thumbnail extension.screenshot "300x200" as th %}
-    <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
-    {% endthumbnail %}
-    {% endif %}
-
-    <h3 class="extension-name"><a href="{{ extension.get_absolute_url }}">{{ extension.name }}</a></h3>
     <span class="author">by <a href="{% url auth-profile user=extension.creator %}">{{ extension.creator }}</a></span>
-    <p class="description">
-      {{ extension.description }}
-    </p>
 
-    <dl>
-      {% if extension.url %}
-      <dt>Extension Homepage</dt>
-      <dd><a href="{{ extension.url }}" id="extension_url">{{ extension.url }}</a></dd>
+    <div>
+      {% if extension.screenshot %}
+      {% thumbnail extension.screenshot "300x200" as th %}
+      <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
+      {% endthumbnail %}
       {% endif %}
-    </dl>
+
+      <p class="description">
+        {{ extension.description }}
+      </p>
+
+      <dl>
+        {% if extension.url %}
+        <dt>Extension Homepage</dt>
+        <dd><a href="{{ extension.url }}" id="extension_url">{{ extension.url }}</a></dd>
+        {% endif %}
+      </dl>
+    </div>
 
     <hr>
 

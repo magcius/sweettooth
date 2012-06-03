@@ -22,7 +22,7 @@
     {% for extension in extensions %}
     <li class="extension profile">
       <h4 class="extension-name"><a href="{{ extension.get_absolute_url }}">
-          <img src="{{ extension.icon.url }}" class="icon">{{ extension.name }}
+          <img src="{{ extension.icon.url }}" class="icon"> {{ extension.name }}
       </a></h4>
       <p class="description">
         {{ extension.description }}
