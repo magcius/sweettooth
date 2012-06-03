@@ -64,11 +64,7 @@ define(['jquery'], function($) {
         });
 
         $elem.on('click', function(e) {
-            var bubbledFromInput = $input.index(e.target) >= 0;
-            if (!bubbledFromInput)
-                $input.get(0).click();
-
-            return false;
+            $input.get(0).click();
         });
     };
 });
