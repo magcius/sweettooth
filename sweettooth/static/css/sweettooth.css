@@ -388,7 +388,7 @@ li.extension:last-child {
     text-align: center;
 }
 
-.extension .upload input {
+.extension .upload + input {
     /* Hack: WebKit doesn't pop up the uploader
      * for invisible input fields, so just stuff
      * it off-screen.
