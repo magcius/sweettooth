@@ -18,7 +18,7 @@
       <a class="comment-author" href="{% url auth-profile user=comment.user.username %}">{{ comment.user }}</a>
     </div>
     <p>{{ comment.comment }}</p>
-    <abbr class="timestamp" title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</abbr>
+    <time title="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"F j, Y" }}</time>
   </div>
   <hr>
   {% empty %}

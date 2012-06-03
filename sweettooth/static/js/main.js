@@ -44,7 +44,7 @@ function($, messages, modal, hashParamUtils) {
             return false;
         });
 
-        $("abbr.timestamp").timeago();
+        $("time").timeago();
 
         var $userPopupLink = $('#global_domain_bar .user');
         var $userPopup = $('#global_domain_bar .user_popup');
