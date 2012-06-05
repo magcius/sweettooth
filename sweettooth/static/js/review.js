@@ -54,92 +54,94 @@ define(['jquery', 'diff'], function($, diff) {
     }
 
     $.fn.reviewify = function(diff) {
-        var $elem = $(this);
-        var $fileList = $('<ul>', {'class': 'filelist'}).appendTo($elem);
-        var pk = $elem.data('pk');
+        return this.each(function() {
+            var $elem = $(this);
+            var $fileList = $('<ul>', {'class': 'filelist'}).appendTo($elem);
+            var pk = $elem.data('pk');
 
-        var $fileDisplay = $('<div>', {'class': 'filedisplay'}).appendTo($elem);
-        $fileDisplay.css('position', 'relative');
- 
-        var currentFilename;
-        var $currentFile = null;
+            var $fileDisplay = $('<div>', {'class': 'filedisplay'}).appendTo($elem);
+            $fileDisplay.css('position', 'relative');
 
-        var req = $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: REVIEW_URL_BASE + '/get-file-list/' + pk,
-        });
+            var currentFilename;
+            var $currentFile = null;
 
-        function showTable(filename, $file, $selector) {
-            $fileList.find('li a.fileselector').removeClass('selected');
-            $selector.addClass('selected');
+            var req = $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: REVIEW_URL_BASE + '/get-file-list/' + pk,
+            });
 
-            $file.css('position', 'relative');
+            function showTable(filename, $file, $selector) {
+                $fileList.find('li a.fileselector').removeClass('selected');
+                $selector.addClass('selected');
 
-            if ($currentFile != null) {
-                $currentFile.css({'position': 'absolute',
-                                  'top': '0'});
-                $currentFile.fadeOut();
-                $file.fadeIn();
-            } else {
-                $file.show();
+                $file.css('position', 'relative');
+
+                if ($currentFile != null) {
+                    $currentFile.css({'position': 'absolute',
+                                      'top': '0'});
+                    $currentFile.fadeOut();
+                    $file.fadeIn();
+                } else {
+                    $file.show();
+                }
+
+                currentFilename = filename;
+                $currentFile = $file;
             }
 
-            currentFilename = filename;
-            $currentFile = $file;
-        }
+            req.done(function(files) {
+                function createFileSelector(tag, filename) {
+                    var $selector = $('<a>').
+                        addClass(tag).
+                        addClass('fileselector').
+                        text(filename);
 
-        req.done(function(files) {
-            function createFileSelector(tag, filename) {
-                var $selector = $('<a>').
-                    addClass(tag).
-                    addClass('fileselector').
-                    text(filename);
+                    var $file = null;
 
-                var $file = null;
-
-                if (diff && isBinary(filename)) {
-                    // We don't show binary files in the diff view.
-                    return;
-                }
-
-                $('<li>').append($selector).appendTo($fileList);
-
-                if (isBinary(filename)) {
-                    $selector.addClass('binary');
-                    return;
-                }
-
-                $selector.click(function() {
-                    if ($selector.hasClass('selected'))
+                    if (diff && isBinary(filename)) {
+                        // We don't show binary files in the diff view.
                         return;
-
-                    if ($file === null) {
-                        var d = (diff ? createDiffView : createFileView)(filename, pk, diff);
-                        currentFilename = filename;
-                        d.done(function($table) {
-                            $file = $table;
-                            $file.hide().appendTo($fileDisplay);
-                            if (currentFilename === filename)
-                                showTable(filename, $file, $selector);
-                        });
-                    } else {
-                        showTable(filename, $file, $selector);
                     }
 
-                });
-            }
+                    $('<li>').append($selector).appendTo($fileList);
 
-            $.each(files.changed, function() { createFileSelector('changed', this); });
-            $.each(files.added, function() { createFileSelector('added', this); });
-            $.each(files.deleted, function() { createFileSelector('deleted', this); });
+                    if (isBinary(filename)) {
+                        $selector.addClass('binary');
+                        return;
+                    }
 
-            // Don't show the 'unchanged' section in a diff view.
-            if (!diff)
-                $.each(files.unchanged, function() { createFileSelector('unchanged', this); });
+                    $selector.click(function() {
+                        if ($selector.hasClass('selected'))
+                            return;
 
-            // Select the first item.
-            $fileList.find('li a.fileselector').first().click();
+                        if ($file === null) {
+                            var d = (diff ? createDiffView : createFileView)(filename, pk, diff);
+                            currentFilename = filename;
+                            d.done(function($table) {
+                                $file = $table;
+                                $file.hide().appendTo($fileDisplay);
+                                if (currentFilename === filename)
+                                    showTable(filename, $file, $selector);
+                            });
+                        } else {
+                            showTable(filename, $file, $selector);
+                        }
+
+                    });
+                }
+
+                $.each(files.changed, function() { createFileSelector('changed', this); });
+                $.each(files.added, function() { createFileSelector('added', this); });
+                $.each(files.deleted, function() { createFileSelector('deleted', this); });
+
+                // Don't show the 'unchanged' section in a diff view.
+                if (!diff)
+                    $.each(files.unchanged, function() { createFileSelector('unchanged', this); });
+
+                // Select the first item.
+                $fileList.find('li a.fileselector').first().click();
+            });
         });
     };
 });
