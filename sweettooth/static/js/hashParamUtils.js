@@ -5,7 +5,7 @@ define(["jquery"], function($) {
 
     var exports = {};
 
-    exports.getHashParams = function getHashParams() {
+    var getHashParams = exports.getHashParams = function() {
         var hash = window.location.hash;
         if (!hash)
             return {};
@@ -29,11 +29,11 @@ define(["jquery"], function($) {
         return obj;
     };
 
-    exports.setHashParams = function setHashParams(obj) {
+    var setHashParams = exports.setHashParams = function(obj) {
         window.location.hash = $.param(obj);
     };
 
-    exports.setHashParam = function setHashParam(name, value) {
+    var setHashParam = exports.setHashParam = function(name, value) {
         var hp = getHashParams();
         if (value === undefined)
             delete hp[name];
