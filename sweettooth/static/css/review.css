@@ -6,6 +6,10 @@
     margin: 0 1em;
 }
 
+#gnome_header .maxwidth {
+    margin-left: 150px;
+}
+
 #files table {
     width: 100%;
     border: 1px solid #aaa;
