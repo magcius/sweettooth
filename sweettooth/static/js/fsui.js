@@ -13,6 +13,14 @@ function($, dbusProxy, hashParamUtils, modal) {
             append($('<span>', {'class': 'fsui-dropdown-link-arrow'}).text('\u2304'));
     }
 
+    function makeDropdown($fsui, $link) {
+        return $('<div>', {'class': 'fsui-dropdown'}).
+            appendTo($fsui).
+            css('right', calculateRight($fsui, $link)).
+            hide().
+            fadeIn('fast');
+    }
+
     function calculateRight($fsui, $link) {
         return $fsui.innerWidth() - $link.position().left - $link.outerWidth() - parseFloat($link.css('marginLeft'));
     }
@@ -63,12 +71,7 @@ function($, dbusProxy, hashParamUtils, modal) {
 
             $link = makeDropdownLink(sortCriteria[hp.sort]).
                 click(function() {
-                    var $dropdown = $('<div>', {'class': 'fsui-dropdown'}).
-                        appendTo($fsui).
-                        css('right', calculateRight($fsui, $(this))).
-                        hide().
-                        fadeIn('fast');
-
+                    var $dropdown = makeDropdown($fsui, $(this));
                     $(this).addClass('selected');
                     var closeUI = makeCloseUI($(this), $dropdown);
                     modal.activateModal($dropdown, closeUI);
@@ -92,36 +95,32 @@ function($, dbusProxy, hashParamUtils, modal) {
                 return "GNOME Shell version " + value;
             }
 
-            if (dbusProxy.ShellVersion !== undefined) {
-                var shellVersion = hp.shell_version;
-                if (shellVersion === undefined)
-                    shellVersion = dbusProxy.ShellVersion;
+            if (dbusProxy.ShellVersion === undefined)
+                return;
 
-                $fsui.append('<span>Compatible with</span>');
+            var shellVersion = hp.shell_version;
+            if (shellVersion === undefined)
+                shellVersion = dbusProxy.ShellVersion;
 
-                $link = makeDropdownLink(textForFilterValue(shellVersion)).
-                    click(function() {
-                        var $dropdown = $('<div>', {'class': 'fsui-dropdown'}).
-                            appendTo($fsui).
-                            css('right', calculateRight($fsui, $(this))).
-                            hide().
-                            fadeIn('fast');
+            $fsui.append('<span>Compatible with</span>');
 
-                        $(this).addClass('selected');
-                        var closeUI = makeCloseUI($(this), $dropdown);
-                        modal.activateModal($dropdown, closeUI);
+            $link = makeDropdownLink(textForFilterValue(shellVersion)).
+                click(function() {
+                    var $dropdown = makeDropdown($fsui, $(this));
+                    $(this).addClass('selected');
+                    var closeUI = makeCloseUI($(this), $dropdown);
+                    modal.activateModal($dropdown, closeUI);
 
-                        var $filterUL = $('<ul>').appendTo($dropdown);
+                    var $filterUL = $('<ul>').appendTo($dropdown);
 
-                        $.each(['all', dbusProxy.ShellVersion], function() {
-                            var $filterItem = makeLink('shell_version', this, textForFilterValue(this), closeUI).appendTo($filterUL);
-                            if (shellVersion === this)
-                                $filterItem.addClass('selected');
-                        });
+                    $.each(['all', dbusProxy.ShellVersion], function() {
+                        var $filterItem = makeLink('shell_version', this, textForFilterValue(this), closeUI).appendTo($filterUL);
+                        if (shellVersion === this)
+                            $filterItem.addClass('selected');
+                    });
 
-                        return false;
-                    }).appendTo($fsui);
-            }
+                    return false;
+                }).appendTo($fsui);
         });
     };
 });
