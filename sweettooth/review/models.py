@@ -30,7 +30,7 @@ class ChangeStatusLog(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     newstatus = models.PositiveIntegerField(choices=STATUSES.items())
     version = models.ForeignKey(ExtensionVersion, related_name="status_log")
-    auto_approved = models.BooleanField(default=False)
+    auto = models.BooleanField(default=False)
 
     def get_newstatus_class(self):
         return STATUSES[self.newstatus].lower()

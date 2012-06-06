@@ -96,7 +96,7 @@
     <a class="review-author" href="{% url auth-profile user=review.reviewer.username %}">{{ review.reviewer }}</a>
     {% if review.changelog %}
     <span class="{{ review.changelog.get_newstatus_class }}">
-      {% if review.changelog.auto_approved %}auto-{% endif%}
+      {% if review.changelog.auto %}auto-{% endif%}
       {{ review.changelog.get_newstatus_display|lower }}
     </span>
     {% else %}

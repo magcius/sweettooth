@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.core.files.base import File, ContentFile, StringIO
 
 from extensions import models
-from review.views import get_old_version, safe_to_auto_approve
+from review.views import get_old_version, should_auto_approve, should_auto_reject
 
 from testutils import BasicUserTestCase
 
@@ -37,12 +37,51 @@ class TestAutoApproveLogic(TestCase):
                     unchanged=unchanged or [])
 
     def test_auto_approve_logic(self):
-        self.assertTrue(safe_to_auto_approve(self.build_changeset()))
-        self.assertTrue(safe_to_auto_approve(self.build_changeset(changed=['metadata.json'])))
-        self.assertTrue(safe_to_auto_approve(self.build_changeset(changed=['metadata.json', 'po/en_GB.po', 'images/new_fedora.png', 'stylesheet.css'])))
-        self.assertTrue(safe_to_auto_approve(self.build_changeset(changed=['stylesheet.css'], added=['po/zn_CH.po'])))
+        self.assertTrue(should_auto_approve(self.build_changeset()))
+        self.assertTrue(should_auto_approve(self.build_changeset(changed=['metadata.json'])))
+        self.assertTrue(should_auto_approve(self.build_changeset(changed=['metadata.json', 'po/en_GB.po', 'images/new_fedora.png', 'stylesheet.css'])))
+        self.assertTrue(should_auto_approve(self.build_changeset(changed=['stylesheet.css'], added=['po/zn_CH.po'])))
 
-        self.assertFalse(safe_to_auto_approve(self.build_changeset(changed=['extension.js'])))
-        self.assertFalse(safe_to_auto_approve(self.build_changeset(changed=['secret_keys.json'])))
-        self.assertFalse(safe_to_auto_approve(self.build_changeset(changed=['libbignumber/BigInteger.js'])))
-        self.assertFalse(safe_to_auto_approve(self.build_changeset(added=['libbignumber/BigInteger.js'])))
+        self.assertFalse(should_auto_approve(self.build_changeset(changed=['extension.js'])))
+        self.assertFalse(should_auto_approve(self.build_changeset(changed=['secret_keys.json'])))
+        self.assertFalse(should_auto_approve(self.build_changeset(changed=['libbignumber/BigInteger.js'])))
+        self.assertFalse(should_auto_approve(self.build_changeset(added=['libbignumber/BigInteger.js'])))
+
+class TestAutoReject(BasicUserTestCase, TestCase):
+    def test_shell_version_auto_reject(self):
+        metadata = {"name": "Test Metadata 10",
+                    "uuid": "test-10@mecheye.net",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version1 = models.ExtensionVersion.objects.create(extension=extension, status=models.STATUS_UNREVIEWED)
+        version1.parse_metadata_json({'shell-version': ["3.4", "3.2.1"]})
+
+        version2 = models.ExtensionVersion.objects.create(extension=extension, status=models.STATUS_UNREVIEWED)
+
+        version2.parse_metadata_json({'shell-version': ["3.4"]})
+        self.assertFalse(should_auto_reject(version1, version2))
+
+        version2.parse_metadata_json({'shell-version': ["3.2.1"]})
+        self.assertTrue(should_auto_reject(version1, version2))
+
+        # As this safely covers all of version 1's shell versions,
+        # it should be rejected
+        version2.parse_metadata_json({'shell-version': ["3.6"]})
+        self.assertTrue(should_auto_reject(version1, version2))
+
+    def test_existing_version_auto_reject(self):
+        metadata = {"name": "Test Metadata 11",
+                    "uuid": "test-11@mecheye.net",
+                    "description": "Simple test metadata",
+                    "url": "http://test-metadata.gnome.org"}
+
+        extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
+        version1 = models.ExtensionVersion.objects.create(extension=extension, status=models.STATUS_ACTIVE)
+        version1.parse_metadata_json({'shell-version': ["3.4", "3.2.1"]})
+
+        version2 = models.ExtensionVersion.objects.create(extension=extension, status=models.STATUS_UNREVIEWED)
+        version2.parse_metadata_json({'shell-version': ["3.4", "3.2.1"]})
+
+        self.assertFalse(should_auto_reject(version1, version2))

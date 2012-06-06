@@ -369,7 +369,7 @@ def send_email_auto_approved(request, version, changeset):
                                   'X-SweetTooth-ExtensionCreator': extension.creator.username})
     message.send()
 
-def safe_to_auto_approve(changes, extension=None):
+def should_auto_approve(changes, extension=None):
     # If a user can approve extensions, don't bother making him do so.
     if extension is not None and can_approve_extension(extension.creator, extension):
         return True
@@ -397,15 +397,24 @@ def safe_to_auto_approve(changes, extension=None):
 
     return True
 
+def should_auto_reject(old_version, new_version):
+    if old_version.status != models.STATUS_UNREVIEWED:
+        return False
+
+    old_svs = set(old_version.shell_versions.all())
+    new_svs = set(new_version.shell_versions.all())
+    return new_svs.issuperset(old_svs)
+
 def extension_submitted(sender, request, version, **kwargs):
-    old_zipfile, new_zipfile = get_zipfiles(get_latest_active_version(version), version)
+    old_version = get_latest_active_version(version)
+    old_zipfile, new_zipfile = get_zipfiles(old_version, version)
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
-    if old_zipfile is not None and safe_to_auto_approve(changeset, extension=version.extension):
+    if old_zipfile is not None and should_auto_approve(changeset, version.extension):
         log = ChangeStatusLog.objects.create(user=request.user,
                                              version=version,
                                              newstatus=models.STATUS_ACTIVE,
-                                             auto_approved=True)
+                                             auto=True)
         CodeReview.objects.create(version=version,
                                   reviewer=request.user,
                                   comments="",
@@ -413,8 +422,21 @@ def extension_submitted(sender, request, version, **kwargs):
         version.status = models.STATUS_ACTIVE
         version.save()
         send_email_auto_approved(request, version, changeset)
-    else:
-        send_email_submitted(request, version)
+        return
+
+    if should_auto_reject(old_version, version):
+        log = ChangeStatusLog.objects.create(user=request.user,
+                                             version=old_version,
+                                             newstatus=models.STATUS_REJECTED,
+                                             auto=True)
+        CodeReview.objects.create(version=old_version,
+                                  reviewer=request.user,
+                                  comments="",
+                                  changelog=log)
+        old_version.status = models.STATUS_REJECTED
+        version.save()
+
+    send_email_submitted(request, version)
 
 models.submitted_for_review.connect(extension_submitted)
 
