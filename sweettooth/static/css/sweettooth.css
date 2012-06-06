@@ -63,7 +63,6 @@
 
 #auth_form label {
     display: inline-block;
-    display: -moz-inline-block;
     width: 45%;
     margin-left: 5%;
     line-height: 1.8;
@@ -270,7 +269,7 @@ ul.extensions {
 
 li.extension {
     list-style-type: none;
-    list-style-position: inner;
+    list-style-position: inside;
     margin-left: 0px;
 
     border-bottom: 1px solid #ccc;
