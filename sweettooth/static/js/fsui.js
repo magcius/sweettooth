@@ -30,6 +30,7 @@ function($, dbusProxy, hashParamUtils, modal) {
             text(text).
             click(function() {
                 hashParamUtils.setHashParam(key, value);
+                hashParamUtils.setHashParam('page', undefined);
                 closeUI();
             });
     }
