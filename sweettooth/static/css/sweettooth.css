@@ -213,9 +213,8 @@ hr.bottom_shadow {
 .fsui {
     float: right;
     font-size: 0.8em;
-    line-height: 2.2em;
     position: relative;
-    top: -2.2em;
+    top: -1.9em;
 }
 
 .fsui-dropdown-link-arrow {
