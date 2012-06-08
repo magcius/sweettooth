@@ -379,61 +379,58 @@ def ajax_set_status_view(request, newstatus):
     return dict(svm=extension.visible_shell_version_map_json,
                 mvs=render_to_string('extensions/multiversion_status.html', context))
 
-@login_required
 @transaction.commit_manually
+def create_version(request, file_source):
+    try:
+        metadata = models.parse_zipfile_metadata(file_source)
+        uuid = metadata['uuid']
+    except (models.InvalidExtensionData, KeyError), e:
+        messages.error(request, "Invalid extension data: %s" % (e.message,))
+        return None, []
+
+    try:
+        extension = models.Extension.objects.get(uuid=uuid)
+    except models.Extension.DoesNotExist:
+        extension = models.Extension(creator=request.user)
+    else:
+        if request.user != extension.creator:
+            messages.error(request, "An extension with that UUID has already been added.")
+            return None, []
+
+    extension.parse_metadata_json(metadata)
+    extension.save()
+
+    try:
+        extension.full_clean()
+    except ValidationError, e:
+        transaction.rollback()
+        return None, e.messages
+
+    version = models.ExtensionVersion.objects.create(extension=extension,
+                                                     source=file_source,
+                                                     status=models.STATUS_UNREVIEWED)
+    version.parse_metadata_json(metadata)
+    version.replace_metadata_json()
+    version.save()
+
+    transaction.commit()
+    return version, []
+
+@login_required
 def upload_file(request):
     errors = []
-
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             file_source = form.cleaned_data['source']
-
-            try:
-                metadata = models.parse_zipfile_metadata(file_source)
-                uuid = metadata['uuid']
-            except (models.InvalidExtensionData, KeyError), e:
-                messages.error(request, "Invalid extension data: %s" % (e.message,))
-                return redirect('extensions-upload-file')
-
-            try:
-                extension = models.Extension.objects.get(uuid=uuid)
-            except models.Extension.DoesNotExist:
-                extension = models.Extension(creator=request.user)
-            else:
-                if request.user != extension.creator:
-                    messages.error(request, "An extension with that UUID has already been added.")
-                    return redirect('extensions-upload-file')
-
-            extension.parse_metadata_json(metadata)
-            extension.save()
-
-            try:
-                extension.full_clean()
-            except ValidationError, e:
-                errors = e.messages
-                transaction.rollback()
-            else:
-                version = models.ExtensionVersion.objects.create(extension=extension,
-                                                                 source=file_source,
-                                                                 status=models.STATUS_UNREVIEWED)
-                version.parse_metadata_json(metadata)
-                version.replace_metadata_json()
-                version.save()
-
+            version, errors = create_version(request, file_source)
+            if version is not None:
                 models.submitted_for_review.send(sender=request, request=request, version=version)
-
-                transaction.commit()
-
                 return redirect(version)
+            else:
+                return redirect('extensions-upload-file')
     else:
         form = UploadForm()
 
-    # XXX - context managers may dirty the connection, so we need
-    # to force a clean state after this.
-    response = render(request, 'extensions/upload.html', dict(form=form,
-                                                              errors=errors))
-
-    transaction.set_clean()
-
-    return response
+    return render(request, 'extensions/upload.html', dict(form=form,
+                                                          errors=errors))
