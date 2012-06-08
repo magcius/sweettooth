@@ -398,6 +398,9 @@ def should_auto_approve(changes, extension=None):
     return True
 
 def should_auto_reject(old_version, new_version):
+    if old_version is None:
+        return False
+
     if old_version.status != models.STATUS_UNREVIEWED:
         return False
 
