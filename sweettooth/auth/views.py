@@ -18,14 +18,12 @@ def profile(request, user):
 
     display_name = userobj.get_full_name() or userobj.username
     extensions = Extension.objects.visible().filter(creator=userobj)
-    reviews = CodeReview.objects.filter(reviewer=userobj)
 
     return render(request,
                   'registration/profile.html',
                   dict(user=userobj,
                        display_name=display_name,
                        extensions=extensions,
-                       reviews=reviews,
                        is_editable=is_editable))
 
 @ajax_view
