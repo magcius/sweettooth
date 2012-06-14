@@ -115,7 +115,7 @@ def shell_update(request):
 
     return operations
 
-def ajax_query_params_query(request, n_per_page=10):
+def ajax_query_params_query(request, n_per_page):
     version_qs = models.ExtensionVersion.objects.visible()
 
     version_strings = request.GET.getlist('shell_version')
@@ -145,6 +145,9 @@ def ajax_query_params_query(request, n_per_page=10):
     order = request.GET.get('order', default_order)
     queryset.query.standard_ordering = (order == 'asc')
 
+    if n_per_page == -1:
+        return queryset, 1
+
     # Paginate the query
     paginator = Paginator(queryset, n_per_page)
     page = request.GET.get('page', 1)
@@ -160,10 +163,10 @@ def ajax_query_params_query(request, n_per_page=10):
 
     return page_obj.object_list, paginator.num_pages
 
-def ajax_query_search_query(request, n_per_page=10):
+def ajax_query_search_query(request, n_per_page):
     querystring = request.GET.get('search', '')
 
-    enquire = search.enquire(querystring)
+    database, enquire = search.enquire(querystring)
 
     page = request.GET.get('page', 1)
     try:
@@ -171,10 +174,14 @@ def ajax_query_search_query(request, n_per_page=10):
     except ValueError:
         raise Http404()
 
-    mset = enquire.get_mset(offset, n_per_page)
-    pks = [match.document.get_data() for match in mset]
+    if n_per_page == -1:
+        mset = enquire.get_mset(offset, database.get_doccount())
+        num_pages = 1
+    else:
+        mset = enquire.get_mset(offset, n_per_page)
+        num_pages = int(ceil(float(mset.get_matches_estimated()) / n_per_page))
 
-    num_pages = int(ceil(float(mset.get_matches_estimated()) / n_per_page))
+    pks = [match.document.get_data() for match in mset]
 
     # filter doesn't guarantee an order, so we need to get all the
     # possible models then look them up to get the ordering
@@ -190,12 +197,17 @@ def ajax_query_search_query(request, n_per_page=10):
 
 @ajax_view
 def ajax_query_view(request):
+    try:
+        n_per_page = int(request.GET['n_per_page'])
+    except (KeyError, ValueError), e:
+        n_per_page = 10
+
     if request.GET.get('search',  ''):
         func = ajax_query_search_query
     else:
         func = ajax_query_params_query
 
-    object_list, num_pages = func(request)
+    object_list, num_pages = func(request, n_per_page)
 
     return dict(extensions=[ajax_details(e) for e in object_list],
                 numpages=num_pages)

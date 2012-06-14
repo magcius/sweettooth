@@ -60,4 +60,4 @@ def enquire(querystring):
     enquire = xapian.Enquire(db)
     enquire.set_query(qp.parse_query(querystring))
 
-    return enquire
+    return db, enquire
