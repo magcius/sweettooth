@@ -168,7 +168,7 @@ class InvalidShellVersion(Exception):
     pass
 
 
-def parse_version_string(version_string, ignore_micro):
+def parse_version_string(version_string):
     version = version_string.split('.')
 
     try:
@@ -177,12 +177,7 @@ def parse_version_string(version_string, ignore_micro):
     except ValueError, e:
         raise InvalidShellVersion()
 
-    if ignore_micro:
-        valid_lengths = (3, 4)
-    else:
-        valid_lengths = (3,)
-
-    if len(version) in valid_lengths:
+    if len(version) in (3, 4):
         # 3.0.1, 3.1.4
         try:
             point = int(version[2])
@@ -199,15 +194,15 @@ def parse_version_string(version_string, ignore_micro):
     return major, minor, point
 
 class ShellVersionManager(models.Manager):
-    def lookup_for_version_string(self, version_string, ignore_micro=False):
-        major, minor, point = parse_version_string(version_string, ignore_micro)
+    def lookup_for_version_string(self, version_string):
+        major, minor, point = parse_version_string(version_string)
         try:
             return self.get(major=major, minor=minor, point=point)
         except self.model.DoesNotExist:
             return None
 
     def get_for_version_string(self, version_string):
-        major, minor, point = parse_version_string(version_string, ignore_micro=False)
+        major, minor, point = parse_version_string(version_string)
         obj, created = self.get_or_create(major=major, minor=minor, point=point)
         return obj
 

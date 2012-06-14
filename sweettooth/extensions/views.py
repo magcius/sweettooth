@@ -29,7 +29,7 @@ def get_versions_for_version_strings(version_strings):
 
     for version_string in version_strings:
         try:
-            major, minor, point = models.parse_version_string(version_string, ignore_micro=True)
+            major, minor, point = models.parse_version_string(version_string)
         except models.InvalidShellVersion:
             continue
 

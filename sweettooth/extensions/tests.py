@@ -350,31 +350,27 @@ class ShellVersionTest(TestCase):
         self.assertEquals(version.minor, 2)
         self.assertEquals(version.point, -1)
 
+        version1 = get_version("3.2.2")
+        self.assertEquals(lookup_version("3.2.2.1"), version1)
+
         with self.assertRaises(models.InvalidShellVersion):
             get_version("3.1")
+
+        with self.assertRaises(models.InvalidShellVersion):
             lookup_version("3.1")
 
     def test_bad_shell_versions(self):
         with self.assertRaises(models.InvalidShellVersion):
-            models.parse_version_string("3", ignore_micro=False)
+            models.parse_version_string("3")
 
         with self.assertRaises(models.InvalidShellVersion):
-            models.parse_version_string("3.2.2.2.1", ignore_micro=False)
+            models.parse_version_string("3.2.2.2.1")
 
         with self.assertRaises(models.InvalidShellVersion):
-            models.parse_version_string("a.b", ignore_micro=False)
+            models.parse_version_string("a.b")
 
         with self.assertRaises(models.InvalidShellVersion):
-            models.parse_version_string("3.2.a", ignore_micro=False)
-
-    def test_ignore_micro(self):
-        with self.assertRaises(models.InvalidShellVersion):
-            models.parse_version_string("4.3.2.1", ignore_micro=False)
-
-        major, minor, point = models.parse_version_string("4.3.2.1", ignore_micro=True)
-        self.assertEquals(major, 4)
-        self.assertEquals(minor, 3)
-        self.assertEquals(point, 2)
+            models.parse_version_string("3.2.a")
 
 class DownloadExtensionTest(BasicUserTestCase, TestCase):
     def download(self, uuid, shell_version):
