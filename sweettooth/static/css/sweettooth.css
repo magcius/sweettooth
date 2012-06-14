@@ -367,7 +367,7 @@ li.extension:last-child {
     float: left;
 }
 
-.extension .icon {
+.extension .icon, .extension .icon img {
     width: 32px;
     height: 32px;
     display: inline-block;
