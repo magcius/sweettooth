@@ -77,9 +77,9 @@
         </td>
         <td>
           {% if ver.version == version.version %}
-          <span class="current_version {{ ver.get_status_class }}">{{ ver.get_status_display }}</a>
+          <span class="current_version extension-status {{ ver.get_status_class }}">{{ ver.get_status_display }}</a>
           {% else %}
-          <a class="{{ ver.get_status_class }}" href="{% url review-version pk=ver.pk %}">{{ ver.get_status_display }}</a>
+          <a class="extension-status {{ ver.get_status_class }}" href="{% url review-version pk=ver.pk %}">{{ ver.get_status_display }}</a>
           {% endif %}
         </td>
       </tr>
