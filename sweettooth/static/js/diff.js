@@ -78,30 +78,6 @@ define(['jquery'], function($) {
         return $elems;
     }
 
-    function buildInsertChunk(chunk, oldContents, newContents) {
-        return $.map(chunk.lines, function(line) {
-            var linum = line[2];
-            var contents = newContents[linum - 1];
-
-            return $('<tr>', {'class': 'diff-line inserted'}).
-                append($('<td>', {'class': 'linum'})).
-                append($('<td>', {'class': 'new linum'}).text(linum)).
-                append($('<td>', {'class': 'new contents'}).html(contents));
-        });
-    }
-
-    function buildDeleteChunk(chunk, oldContents, newContents) {
-        return $.map(chunk.lines, function(line) {
-            var linum = line[1];
-            var contents = oldContents[linum - 1];
-
-            return $('<tr>', {'class': 'diff-line deleted'}).
-                append($('<td>', {'class': 'old linum'}).text(linum)).
-                append($('<td>', {'class': 'linum'})).
-                append($('<td>', {'class': 'old contents'}).html(contents));
-        });
-    }
-
     // This is called for changes within lines in a 'replace' chunk,
     // one half-row at a time.  'contents' here is the line's contents
     //
@@ -123,10 +99,14 @@ define(['jquery'], function($) {
         function unchanged(text) { return span('unchanged', text); }
         function changed(text) { return span('changed', text); }
 
+        // We don't want anything fancy for delete/inserted chunks.
+        if (regions === undefined)
+            return unchanged(contents);
+
         // If there's no region, then SequentialMatcher failed to
         // find something useful (or the ratio was too low). Just
         // highlight the entire region as changed.
-        if (!regions || regions.length === 0)
+        if (regions === null || regions.length === 0)
             return changed(contents);
 
         var regionElems = [];
@@ -152,6 +132,38 @@ define(['jquery'], function($) {
         return regionElems;
     }
 
+    function buildInsertLine(line, contents) {
+        var linum = line[2];
+        var content = contents[linum - 1];
+        var region = line[4];
+
+        return $('<tr>', {'class': 'diff-line inserted'}).
+            append($('<td>', {'class': 'linum'})).
+            append($('<td>', {'class': 'new linum'}).text(linum)).
+            append($('<td>', {'class': 'new contents'}).
+                     append(flatten(buildReplaceRegions(region, content))));
+    }
+
+    function buildInsertChunk(chunk, oldContents, newContents) {
+        return $.map(chunk.lines, function(line) { buildInsertLine(line, newContents); });
+    }
+
+    function buildDeleteLine(line, contents) {
+        var linum = line[1];
+        var content = contents[linum - 1];
+        var region = line[3];
+
+        return $('<tr>', {'class': 'diff-line deleted'}).
+            append($('<td>', {'class': 'old linum'}).text(linum)).
+            append($('<td>', {'class': 'linum'})).
+            append($('<td>', {'class': 'old contents'}).
+                   append(flatten(buildReplaceRegions(region, content))));
+    }
+
+    function buildDeleteChunk(chunk, oldContents, newContents) {
+        return $.map(chunk.lines, function(line) { buildDeleteLine(line, oldContents); });
+    }
+
     function buildReplaceChunk(chunk, oldContents, newContents) {
         // Replace chunks are built up of a delete chunk and
         // an insert chunk, with special inline replace regions
@@ -162,23 +174,8 @@ define(['jquery'], function($) {
         $.each(chunk.lines, function() {
             var line = this;
 
-            var oldLinum = line[1], newLinum = line[2];
-            var oldRegion = line[3], newRegion = line[4];
-
-            var oldContent = oldContents[oldLinum - 1];
-            var newContent = newContents[newLinum - 1];
-
-            deleteChunk.push($('<tr>', {'class': 'diff-line deleted'}).
-                             append($('<td>', {'class': 'old linum'}).text(oldLinum)).
-                             append($('<td>', {'class': 'linum'})).
-                             append($('<td>', {'class': 'old contents'})
-                                    .append(flatten(buildReplaceRegions(oldRegion, oldContent)))));
-
-            insertChunk.push($('<tr>', {'class': 'diff-line inserted'}).
-                             append($('<td>', {'class': 'linum'})).
-                             append($('<td>', {'class': 'new linum'}).text(newLinum)).
-                             append($('<td>', {'class': 'new contents'})
-                                    .append(flatten(buildReplaceRegions(newRegion, newContent)))));
+            deleteChunk.push(buildDeleteLine(line, oldContents));
+            insertChunk.push(buildInsertLine(line, newContents));
         });
 
         return [flatten(deleteChunk), flatten(insertChunk)];
