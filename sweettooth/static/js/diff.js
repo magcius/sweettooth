@@ -103,7 +103,7 @@ define(['jquery'], function($) {
         // find something useful, or we're in a regular delete/inserted
         // chunk. Highlight the entire region as unchanged.
         if (!regions || regions.length === 0)
-            return changed(contents);
+            return unchanged(contents);
 
         var regionElems = [];
         var lastEnd = 0;
