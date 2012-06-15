@@ -94,6 +94,18 @@
     background-color: #99ff99;
 }
 
+.diff-line.deleted .contents:before {
+    content: '- ';
+}
+
+.diff-line.inserted .contents:before {
+    content: '+ ';
+}
+
+.diff-line.equal .contents:before {
+    content: '  ';
+}
+
 .contents {
     width: 100%;
 }
