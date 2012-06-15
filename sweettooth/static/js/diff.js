@@ -5,9 +5,9 @@ define(['jquery'], function($) {
 
     var exports = {};
 
-    // Each table row has four columns:
+    // Each table row has three columns:
     // ===================================================================
-    // | Old Line Number | Old Contents | New Line Number | New Contents |
+    // | Old Line Number | New Line Number | Diff |
     //
     // Each "buildChunk" function below should build full row(s).
 
@@ -52,7 +52,6 @@ define(['jquery'], function($) {
 
             var $row = $('<tr>', {'class': 'diff-line equal'}).
                 append($('<td>', {'class': 'old linum'}).text(oldLinum)).
-                append($('<td>', {'class': 'old contents'}).html(contents)).
                 append($('<td>', {'class': 'new linum'}).text(newLinum)).
                 append($('<td>', {'class': 'new contents'}).html(contents));
 
@@ -86,7 +85,6 @@ define(['jquery'], function($) {
 
             return $('<tr>', {'class': 'diff-line inserted'}).
                 append($('<td>', {'class': 'linum'})).
-                append($('<td>')).
                 append($('<td>', {'class': 'new linum'}).text(linum)).
                 append($('<td>', {'class': 'new contents'}).html(contents));
         });
@@ -99,9 +97,8 @@ define(['jquery'], function($) {
 
             return $('<tr>', {'class': 'diff-line deleted'}).
                 append($('<td>', {'class': 'old linum'}).text(linum)).
-                append($('<td>', {'class': 'old contents'}).html(contents)).
                 append($('<td>', {'class': 'linum'})).
-                append($('<td>'));
+                append($('<td>', {'class': 'old contents'}).html(contents));
         });
     }
 
@@ -156,21 +153,35 @@ define(['jquery'], function($) {
     }
 
     function buildReplaceChunk(chunk, oldContents, newContents) {
-        return $.map(chunk.lines, function(line) {
+        // Replace chunks are built up of a delete chunk and
+        // an insert chunk, with special inline replace regions
+        // for the inline modifications.
+
+        var deleteChunk = [], insertChunk = [];
+
+        $.each(chunk.lines, function() {
+            var line = this;
+
             var oldLinum = line[1], newLinum = line[2];
             var oldRegion = line[3], newRegion = line[4];
 
             var oldContent = oldContents[oldLinum - 1];
             var newContent = newContents[newLinum - 1];
 
-            return $('<tr>', {'class': 'diff-line replaced'}).
-                append($('<td>', {'class': 'old linum'}).text(oldLinum)).
-                append($('<td>', {'class': 'old contents'})
-                       .append(flatten(buildReplaceRegions(oldRegion, oldContent)))).
-                append($('<td>', {'class': 'new linum'}).text(newLinum)).
-                append($('<td>', {'class': 'new contents'})
-                       .append(flatten(buildReplaceRegions(newRegion, newContent))));
+            deleteChunk.push($('<tr>', {'class': 'diff-line deleted'}).
+                             append($('<td>', {'class': 'old linum'}).text(oldLinum)).
+                             append($('<td>', {'class': 'linum'})).
+                             append($('<td>', {'class': 'old contents'})
+                                    .append(flatten(buildReplaceRegions(oldRegion, oldContent)))));
+
+            insertChunk.push($('<tr>', {'class': 'diff-line inserted'}).
+                             append($('<td>', {'class': 'linum'})).
+                             append($('<td>', {'class': 'new linum'}).text(newLinum)).
+                             append($('<td>', {'class': 'new contents'})
+                                    .append(flatten(buildReplaceRegions(newRegion, newContent)))));
         });
+
+        return [flatten(deleteChunk), flatten(insertChunk)];
     }
 
     var operations = {

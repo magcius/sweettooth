@@ -63,6 +63,8 @@
     width: 100%;
     line-height: 1.2;
     white-space: pre;
+    border: 1px solid #ccc;
+    border-top: none;
 }
 
 .linum {
@@ -72,6 +74,7 @@
     margin: 0;
     padding-right: 1em;
     border-right: 1px solid #ccc;
+    padding: 0 6px;
 }
 
 /* colors stolen from Splinter */
@@ -83,12 +86,16 @@
     background-color: #bbffbb;
 }
 
-.diff-line.replaced {
-    background-color: #aaccff;
+.diff-line.deleted .diff-inline.changed {
+    background-color: #ffaa88;
 }
 
-.diff-inline.changed {
-    background-color: #cceeff;
+.diff-line.inserted .diff-inline.changed {
+    background-color: #99ff99;
+}
+
+.contents {
+    width: 100%;
 }
 
 .fileselector.unchanged {
