@@ -99,14 +99,10 @@ define(['jquery'], function($) {
         function unchanged(text) { return span('unchanged', text); }
         function changed(text) { return span('changed', text); }
 
-        // We don't want anything fancy for delete/inserted chunks.
-        if (regions === undefined)
-            return unchanged(contents);
-
         // If there's no region, then SequentialMatcher failed to
-        // find something useful (or the ratio was too low). Just
-        // highlight the entire region as changed.
-        if (regions === null || regions.length === 0)
+        // find something useful, or we're in a regular delete/inserted
+        // chunk. Highlight the entire region as unchanged.
+        if (!regions || regions.length === 0)
             return changed(contents);
 
         var regionElems = [];
