@@ -141,7 +141,7 @@ define(['jquery'], function($) {
     }
 
     function buildInsertChunk(chunk, oldContents, newContents) {
-        return $.map(chunk.lines, function(line) { buildInsertLine(line, newContents); });
+        return $.map(chunk.lines, function(line) { return buildInsertLine(line, newContents); });
     }
 
     function buildDeleteLine(line, contents) {
@@ -157,7 +157,7 @@ define(['jquery'], function($) {
     }
 
     function buildDeleteChunk(chunk, oldContents, newContents) {
-        return $.map(chunk.lines, function(line) { buildDeleteLine(line, oldContents); });
+        return $.map(chunk.lines, function(line) { return buildDeleteLine(line, oldContents); });
     }
 
     function buildReplaceChunk(chunk, oldContents, newContents) {
