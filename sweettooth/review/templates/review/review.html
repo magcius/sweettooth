@@ -72,9 +72,7 @@
       {% endcomment %}
       {% for ver in all_versions %}
       <tr>
-        <td>
-          <a href="{{ ver.get_absolute_url }}">{{ ver.version }}</a>
-        </td>
+        <td> {{ ver.version }} </td>
         <td>
           {% if ver.version == version.version %}
           <span class="current_version extension-status {{ ver.get_status_class }}">{{ ver.get_status_display }}</a>

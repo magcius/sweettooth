@@ -197,9 +197,8 @@ class UploadTest(BasicUserTestCase, TransactionTestCase):
         self.assertEquals(extension.description, "Simple test metadata")
         self.assertEquals(extension.url, "http://test-metadata.gnome.org")
 
-        url = reverse('extensions-version-detail', kwargs=dict(pk=version1.pk,
-                                                               ext_pk=extension.pk,
-                                                               slug=extension.slug))
+        url = reverse('extensions-detail', kwargs=dict(pk=extension.pk,
+                                                       slug=extension.slug))
         self.assertRedirects(response, url)
 
         version1.status = models.STATUS_ACTIVE

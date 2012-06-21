@@ -33,10 +33,6 @@ urlpatterns = patterns('',
 
     url(r'^about/$', direct_to_template, dict(template='extensions/about.html'), name='extensions-about'),
 
-    # we ignore PK of extension, and get extension from version PK
-    url(r'^extension/(?P<ext_pk>\d+)/(?P<slug>.+)/version/(?P<pk>.*)/$',
-        views.extension_version_view, name='extensions-version-detail'),
-
     url(r'^extension/(?P<pk>\d+)/(?P<slug>.+)/$',
         views.extension_view, name='extensions-detail'),
     url(r'^extension/(?P<pk>\d+)/$',

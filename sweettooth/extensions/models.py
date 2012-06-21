@@ -383,9 +383,7 @@ class ExtensionVersion(models.Model):
                 self.shell_versions.add(sv)
 
     def get_absolute_url(self):
-        return reverse('extensions-version-detail', kwargs=dict(pk=self.pk,
-                                                                ext_pk=self.extension.pk,
-                                                                slug=self.extension.slug))
+        return self.extension.get_absolute_url()
 
     def get_status_class(self):
         return STATUSES[self.status].lower()

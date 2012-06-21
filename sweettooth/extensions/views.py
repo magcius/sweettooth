@@ -236,46 +236,7 @@ def extension_view(request, obj, **kwargs):
     context = dict(shell_version_map = obj.visible_shell_version_map_json,
                    extension = extension,
                    all_versions = extension.versions.order_by('-version'),
-                   is_visible = True,
-                   is_multiversion = True)
-    return render(request, template_name, context)
-
-@model_view(models.ExtensionVersion)
-def extension_version_view(request, obj, **kwargs):
-    extension, version = obj.extension, obj
-
-    status = version.status
-
-    # Redirect if we don't match the slug or extension PK.
-    slug = kwargs.get('slug')
-    extpk = kwargs.get('ext_pk')
-    try:
-        extpk = int(extpk)
-    except ValueError:
-        extpk = None
-
-    if slug != extension.slug or extpk != extension.pk:
-        return redirect(version)
-
-    # If the user can edit the model, let him do so.
-    if extension.user_can_edit(request.user):
-        template_name = "extensions/detail_edit.html"
-    else:
-        template_name = "extensions/detail.html"
-
-    version_obj = dict(pk = version.pk, version = version.version)
-    shell_version_map = dict((sv.version_string, version_obj) for sv in version.shell_versions.all())
-
-    context = dict(version = version,
-                   extension = extension,
-                   shell_version_map = json.dumps(shell_version_map),
-                   all_versions = extension.versions.order_by('-version'),
-                   is_unreviewed = status == models.STATUS_UNREVIEWED,
-                   is_visible = status == models.STATUS_ACTIVE,
-                   is_rejected = status == models.STATUS_REJECTED)
-
-    if extension.latest_version is not None:
-        context['old_version'] = version.version < extension.latest_version.version
+                   is_visible = extension.latest_version is not None)
     return render(request, template_name, context)
 
 @require_POST
@@ -439,7 +400,7 @@ def upload_file(request):
             version, errors = create_version(request, file_source)
             if version is not None:
                 models.submitted_for_review.send(sender=request, request=request, version=version)
-                return redirect(version)
+                return redirect(version.extension)
             else:
                 return redirect('extensions-upload-file')
     else:

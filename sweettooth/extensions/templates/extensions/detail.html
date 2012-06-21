@@ -2,27 +2,10 @@
 {% load thumbnail %}
 {% block title %}{{ extension.name }} - {{ block.super }}{% endblock %}
 
-{% block extra-messages %}
-  {{ block.super }}
-  {% if is_rejected %}
-   {% spaceless %}
-    <p class="message error">
-      This version of {{ extension.name }} was rejected.
-      <a href="{{ extension.get_absolute_url }}">View the latest accepted version.</a>
-    </p>
-    {% endspaceless %}
-  {% else %} {% if old_version %}
-    <p class="message warning">
-      You are viewing an old version of <a href="{{ extension.get_absolute_url }}">{{ extension.name }}</a>
-    </p>
-  {% endif %} {% endif %}
-{% endblock %}
-
 {% block body %}
     <div class="extension single-page {% block extra-ext-class %}{% endblock %}"
          data-epk="{{ extension.pk }}"
          data-uuid="{{ extension.uuid }}"
-         data-ver-url-base="{% url extensions-version-detail ext_pk=extension.pk slug=extension.slug pk='' %}"
          data-svm="{{ shell_version_map }}">
       <div class="switch"></div>
       <div class="extra-buttons">
@@ -61,7 +44,7 @@
         </dl>
       </div>
 
-      {% if is_unreviewed %}
+      {% if not is_visible %}
       <p class="step">
         A reviewer will review the extension you submitted to make sure there's nothing too
         dangerous. You'll be emailed the result of the review.

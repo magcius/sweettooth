@@ -12,7 +12,6 @@ function($, messages, dbusProxy, extensionUtils, templates) {
             var $table = $(this);
             var $tbody = $table.find('tbody');
             var $extension = $table.parents('.extension');
-            var urlBase = $extension.data('ver-url-base');
 
             $tbody.children().remove();
 
@@ -22,11 +21,8 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                     continue;
 
                 var vpk = extensionUtils.grabProperExtensionVersion(svm, version);
-
                 var $tr = $('<tr>').appendTo($tbody);
-
                 $('<td>').append($('<code>').text(version)).appendTo($tr);
-                $('<td>').append($('<a>', {'href': urlBase + vpk.pk}).text(vpk.version)).appendTo($tr);
             }
         });
     };
