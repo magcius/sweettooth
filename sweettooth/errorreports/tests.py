@@ -31,7 +31,8 @@ class SubmitErrorReportTestCase(TestCase):
     def test_email_sent(self):
         comment = "YOUR EXTENSION SUCKS IT BROKE"
 
-        self.client.post(reverse('errorreports-report', kwargs=dict(pk=self.extension.pk)),
+        self.client.post(reverse('errorreports.views.report_error',
+                                 kwargs=dict(pk=extension.pk)),
                          dict(comment=comment), follow=True)
 
         self.assertEqual(len(mail.outbox), 1)

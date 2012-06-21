@@ -16,7 +16,7 @@ from decorators import model_view
 from utils import render
 
 @model_view(Extension.objects.visible())
-def report_error_view(request, extension):
+def report_error(request, extension):
     if request.method == 'POST':
         form = ErrorReportForm(data=request.POST)
 
@@ -33,7 +33,6 @@ def report_error_view(request, extension):
             return redirect('extensions-detail',
                             pk=extension.pk,
                             slug=extension.slug)
-
     else:
         form = ErrorReportForm()
 
@@ -42,13 +41,11 @@ def report_error_view(request, extension):
     return render(request, 'errorreports/report.html', context)
 
 @model_view(ErrorReport)
-def view_error_report_view(request, obj):
+def view_error_report(request, obj):
     return render(request, 'errorreports/view.html', dict(report=obj))
 
-
 def send_email_on_error_reported(sender, request, extension, report, **kwargs):
-
-    url = request.build_absolute_uri(reverse('errorreports-view',
+    url = request.build_absolute_uri(reverse('errorreports.views.view_error_report',
                                              kwargs=dict(pk=report.pk)))
 
     data = dict(extension=extension,

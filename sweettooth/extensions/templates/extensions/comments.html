@@ -32,7 +32,7 @@
     Leave a...
     <a href="javascript:void 0" id="leave_comment">Comment</a>
     <a href="javascript:void 0" id="leave_rating">Rating</a>
-    <a href="{% url errorreports-report pk=extension.pk %}">Bug report</a>
+    <a href="{% url errorreports.views.report_error pk=extension.pk %}">Bug report</a>
   </div>
   <div id="rating_form">
     {% render_comment_form for extension %}
