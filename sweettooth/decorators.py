@@ -1,6 +1,6 @@
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse
 from django.utils.safestring import mark_safe
 
 import functools
