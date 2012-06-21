@@ -342,6 +342,7 @@ def ajax_details(extension, version=None):
                    name = extension.name,
                    creator = extension.creator.username,
                    creator_url = reverse('auth-profile', kwargs=dict(user=extension.creator.username)),
+                   pk = extension.pk,
                    description = extension.description,
                    link = extension.get_absolute_url(),
                    icon = extension.icon.url,
