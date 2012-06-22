@@ -437,6 +437,7 @@ def extension_submitted(sender, request, version, **kwargs):
                                   comments="",
                                   changelog=log)
         old_version.status = models.STATUS_REJECTED
+        old_version.save()
         version.save()
 
     send_email_submitted(request, version)
