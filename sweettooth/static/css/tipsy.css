@@ -2,12 +2,11 @@
   .tipsy-inner { background-color: white; max-width: 200px; padding: 5px 8px 4px 8px; text-align: center; }
 
   /* Rounded corners */
-  .tipsy-inner { border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+  .tipsy-inner { border-radius: 3px; }
   
   .tipsy-inner {
       box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
       -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-      -moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
   }
   
   .tipsy-arrow { position: absolute; width: 0; height: 0; border: 5px solid transparent; }
