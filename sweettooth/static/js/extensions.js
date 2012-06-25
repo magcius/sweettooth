@@ -93,7 +93,12 @@ function($, messages, dbusProxy, extensionUtils, templates) {
 
         $elem.find('.upgrade-button').on('click', function() {
             $elem.removeClass('upgradable');
-            dbusProxy.UninstallExtension(uuid).done(function() {
+            dbusProxy.UninstallExtension(uuid).done(function(result) {
+                // If we weren't able to uninstall the extension, don't
+                // do anything more.
+                if (!result)
+                    return;
+
                 dbusProxy.InstallExtension(uuid);
             });
         });
