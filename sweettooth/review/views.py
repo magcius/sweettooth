@@ -8,7 +8,6 @@ import pygments.util
 import pygments.lexers
 import pygments.formatters
 
-from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.contrib import messages
