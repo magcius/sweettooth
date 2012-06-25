@@ -99,7 +99,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 if (!result)
                     return;
 
-                dbusProxy.InstallExtension(uuid);
+                dbusProxy.InstallExtension(uuid).done(function(result) {
+                    if (result === 'cancelled') {
+                        // WELP. We can't really do anything except leave the
+                        // thing uninstalled.
+                        $switch.switchify('activate', false);
+                    }
+                });
             });
         });
 
@@ -128,8 +134,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 if (oldState == ExtensionState.UNINSTALLED) {
                     // If the extension is uninstalled and we
                     // flick the switch on, install.
-                    dbusProxy.InstallExtension(uuid);
-                    sendPopularity('enable');
+                    dbusProxy.InstallExtension(uuid).done(function(result) {
+                        if (result === 'succeeded') {
+                            sendPopularity('enable');
+                        } else if (result === 'cancelled') {
+                            $switch.switchify('activate', false);
+                        }
+                    });
                 } else if (oldState == ExtensionState.DISABLED ||
                            oldState == ExtensionState.INITIALIZED) {
                     dbusProxy.EnableExtension(uuid);
