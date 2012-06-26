@@ -221,7 +221,6 @@ class MyersDiffer:
         up_min   = up_max   = up_k
 
         cost = 0
-        max_cost = max(256, self._very_approx_sqrt(self.max_lines * 4))
 
         while True:
             cost += 1
@@ -349,49 +348,6 @@ class MyersDiffer:
 
                 if best > 0:
                     return ret_x, ret_y, False, True
-
-            continue # XXX
-
-            # If we've reached or gone past the max cost, just give up now
-            # and report the halfway point between our best results.
-            if cost >= max_cost:
-                fx_best = bx_best = 0
-
-                # Find the forward diagonal that maximized x + y
-                fxy_best = -1
-                for d in xrange(down_max, down_min - 1, -2):
-                    x = min(down_vector[self.downoff + d], a_upper)
-                    y = x - d
-
-                    if b_upper < y:
-                        x = b_upper + d
-                        y = b_upper
-
-                    if fxy_best < x + y:
-                        fxy_best = x + y
-                        fx_best = x
-
-                # Find the backward diagonal that minimizes x + y
-                bxy_best = self.max_lines
-                for d in xrange(up_max, up_min - 1, -2):
-                    x = max(a_lower, up_vector[self.upoff + d])
-                    y = x - d
-
-                    if y < b_lower:
-                        x = b_lower + d
-                        y = b_lower
-
-                    if x + y < bxy_best:
-                        bxy_best = x + y
-                        bx_best = x
-
-                # Use the better of the two diagonals
-                if a_upper + b_upper - bxy_best < \
-                   fxy_best - (a_lower + b_lower):
-                    return fx_best, fxy_best - fx_best, True, False
-                else:
-                    return bx_best, bxy_best - bx_best, False, True
-
 
         raise Exception("The function should not have reached here.")
 
