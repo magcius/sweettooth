@@ -110,22 +110,15 @@ def get_zipfiles(*args):
         else:
             yield version.get_zipfile('r')
 
-def get_diff(old_zipfile, new_zipfile, filename):
-    old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
-    oldcontent, newcontent = old.read(), new.read()
-    old.close()
-    new.close()
-
-    if oldcontent == newcontent:
+def grab_lines(zipfile, filename):
+    try:
+        f = zipfile.open(filename, 'r')
+    except KeyError:
         return None
-
-    oldlines = oldcontent.splitlines()
-    newlines = newcontent.splitlines()
-
-    chunks = list(get_chunks(oldlines, newlines))
-    return dict(chunks=chunks,
-                oldlines=oldlines,
-                newlines=newlines)
+    else:
+        content = f.read()
+        f.close()
+        return content.splitlines()
 
 def get_fake_chunks(numlines, tag):
     # When a file is added/deleted, we want to show a view where
@@ -137,6 +130,21 @@ def get_fake_chunks(numlines, tag):
               'change': tag,
               'collapsable': False,
               'meta': None }]
+
+def get_diff(old_zipfile, new_zipfile, filename):
+    oldlines, newlines = grab_lines(old_zipfile, filename), grab_lines(new_zipfile, filename)
+
+    if oldlines == newlines:
+        return None
+    if oldlines is None:
+        return get_fake_chunks(len(newlines), 'insert')
+    if newlines is None:
+        return get_fake_chunks(len(oldlines), 'delete')
+
+    chunks = list(get_chunks(oldlines, newlines))
+    return dict(chunks=chunks,
+                oldlines=oldlines,
+                newlines=newlines)
 
 def get_file_list(zipfile):
     return set(n for n in zipfile.namelist() if not n.endswith('/'))
@@ -192,26 +200,7 @@ def ajax_get_file_diff_view(request, version):
         return None
 
     old_zipfile, new_zipfile = get_zipfiles(get_old_version(version), version)
-
-    new_filelist = set(new_zipfile.namelist())
-    old_filelist = set(old_zipfile.namelist())
-
-    if filename in old_filelist and filename in new_filelist:
-        return get_diff(old_zipfile, new_zipfile, filename)
-    elif filename in old_filelist:
-        # File was deleted.
-        f = old_zipfile.open(filename, 'r')
-        lines = f.read().splitlines()
-        f.close()
-        return dict(chunks=get_fake_chunks(len(lines), 'delete'), oldlines=lines, newlines=[])
-    elif filename in new_filelist:
-        # File was added.
-        f = new_zipfile.open(filename, 'r')
-        lines = f.read().splitlines()
-        f.close()
-        return dict(chunks=get_fake_chunks(len(lines), 'insert'), oldlines=[], newlines=lines)
-    else:
-        return None
+    return get_diff(old_zipfile, new_zipfile, filename)
 
 @ajax_view
 @model_view(models.ExtensionVersion)
