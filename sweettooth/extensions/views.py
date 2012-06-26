@@ -110,15 +110,11 @@ def shell_update(request):
         proper_version = grab_proper_extension_version(extension, shell_version)
 
         if proper_version is None:
-            operations[uuid] = dict(operation="blacklist")
-
+            operations[uuid] = "blacklist"
         elif version < proper_version.version:
-            operations[uuid] = dict(operation="upgrade",
-                                    version_tag=proper_version.pk)
-
+            operations[uuid] = "upgrade"
         elif version_obj.status == models.STATUS_REJECTED:
-            operations[uuid] = dict(operation="downgrade",
-                                    version_tag=proper_version.pk)
+            operations[uuid] = "downgrade"
 
     return operations
 

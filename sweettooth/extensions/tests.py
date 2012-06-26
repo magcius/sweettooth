@@ -464,16 +464,6 @@ class UpdateVersionTest(TestCase):
     downgrade_uuid = 'downgrade-extension@testcases.sweettooth.mecheye.net'
     nonexistant_uuid = "blah-blah-blah@testcases.sweettooth.mecheye.net"
 
-    def setUp(self):
-        upgrade_pk = models.Extension.objects.get(uuid=self.upgrade_uuid).latest_version.pk
-        downgrade_pk = models.Extension.objects.get(uuid=self.downgrade_uuid).latest_version.pk
-
-        self.full_expected = { self.upgrade_uuid: dict(operation='upgrade',
-                                                       version_tag=upgrade_pk),
-                               self.reject_uuid: dict(operation='blacklist'),
-                               self.downgrade_uuid: dict(operation='downgrade',
-                                                         version_tag=downgrade_pk) }
-
     def build_response(self, installed):
         return dict((k, dict(version=v)) for k, v in installed.iteritems())
 
@@ -488,7 +478,7 @@ class UpdateVersionTest(TestCase):
         uuid = self.upgrade_uuid
 
         # The user has an old version, upgrade him
-        expected = { uuid: self.full_expected[uuid] }
+        expected = { uuid: 'upgrade' }
         response = self.grab_response({ uuid: 1 })
         self.assertEqual(response, expected)
 
@@ -499,7 +489,7 @@ class UpdateVersionTest(TestCase):
     def test_reject_me(self):
         uuid = self.reject_uuid
 
-        expected = { uuid: self.full_expected[uuid] }
+        expected = { uuid: 'blacklist' }
         response = self.grab_response({ uuid: 1 })
         self.assertEqual(response, expected)
 
@@ -511,7 +501,7 @@ class UpdateVersionTest(TestCase):
         uuid = self.downgrade_uuid
 
         # The user has a rejected version, so downgrade.
-        expected = { uuid: self.full_expected[uuid] }
+        expected = { uuid: 'downgrade' }
         response = self.grab_response({ uuid: 2 })
         self.assertEqual(response, expected)
 
