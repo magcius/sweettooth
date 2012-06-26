@@ -124,7 +124,7 @@ def get_fake_chunks(numlines, tag):
     # When a file is added/deleted, we want to show a view where
     # we have nothing in one pane, and a bunch of inserted/delted
     # lines in the other.
-    lines = [[n, n, n, [], [], False] for n in range(1, numlines + 1)]
+    lines = [[n, n, n, [], []] for n in range(1, numlines + 1)]
     return [{ 'lines': lines,
               'numlines': numlines,
               'change': tag,

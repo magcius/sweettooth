@@ -698,7 +698,6 @@ class MyersDiffer:
         return result
 
 ALPHANUM_RE = re.compile(r'\w')
-WHITESPACE_RE = re.compile(r'\s')
 
 def get_line_changed_regions(oldline, newline):
     if oldline is None or newline is None:
@@ -752,12 +751,7 @@ def get_chunks(a, b):
         else:
             oldregion = newregion = []
 
-        is_whitespace = (oldlinenum, newlinenum) in meta['whitespace_lines']
-
-        result = [vlinenum,
-                  oldlinenum, newlinenum,
-                  oldregion, newregion,
-                  is_whitespace]
+        result = [vlinenum, oldlinenum, newlinenum, oldregion, newregion]
 
         if oldlinenum and oldlinenum in meta.get('moved', {}):
             destination = meta["moved"][oldlinenum]
@@ -855,31 +849,7 @@ def opcodes_with_metadata(differ):
     inserts = []
 
     for tag, i1, i2, j1, j2 in differ.get_opcodes():
-        meta = {
-            # True if this chunk is only whitespace.
-            "whitespace_chunk": False,
-
-            # List of tuples (x,y), with whitespace changes.
-            "whitespace_lines": [],
-        }
-
-        if tag == 'replace':
-            # replace groups are good for whitespace only changes.
-            assert (i2 - i1) == (j2 - j1)
-
-            for i, j in zip(xrange(i1, i2), xrange(j1, j2)):
-                if (WHITESPACE_RE.sub("", differ.a[i]) ==
-                    WHITESPACE_RE.sub("", differ.b[j])):
-                    # Both original lines are equal when removing all
-                    # whitespace, so include their original line number in
-                    # the meta dict.
-                    meta["whitespace_lines"].append((i + 1, j + 1))
-
-            # If all lines are considered to have only whitespace change,
-            # the whole chunk is considered a whitespace-only chunk.
-            if len(meta["whitespace_lines"]) == (i2 - i1):
-                meta["whitespace_chunk"] = True
-
+        meta = {}
         group = (tag, i1, i2, j1, j2, meta)
         groups.append(group)
 
