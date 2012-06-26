@@ -44,6 +44,8 @@ class MyersDiffer:
         self.max_lines = 0
         self.fdiag = None
         self.bdiag = None
+        self.downoff = 0
+        self.upoff = 0
 
     def ratio(self):
         self._gen_diff_data()
@@ -145,8 +147,8 @@ class MyersDiffer:
         if self.a_data and self.b_data:
             return
 
-        self.a_data = self.DiffData(self._gen_diff_codes(self.a, False))
-        self.b_data = self.DiffData(self._gen_diff_codes(self.b, True))
+        self.a_data = self.DiffData(self._gen_diff_codes(self.a))
+        self.b_data = self.DiffData(self._gen_diff_codes(self.b))
 
         self._discard_confusing_lines()
 
@@ -165,20 +167,17 @@ class MyersDiffer:
         self._shift_chunks(self.a_data, self.b_data)
         self._shift_chunks(self.b_data, self.a_data)
 
-    def _gen_diff_codes(self, lines, is_modified_file):
+    def _gen_diff_codes(self, lines):
         """
         Converts all unique lines of text into unique numbers. Comparing
         lists of numbers is faster than comparing lists of strings.
         """
         codes = []
 
-        linenum = 0
-
         for line in lines:
             # TODO: Handle ignoring/triming spaces, ignoring casing, and
             #       special hooks
 
-            raw_line = line
             stripped_line = line.lstrip()
 
             if self.ignore_space:
@@ -195,8 +194,6 @@ class MyersDiffer:
                 self.code_table[line] = code
 
             codes.append(code)
-
-            linenum += 1
 
         return codes
 
@@ -438,7 +435,7 @@ class MyersDiffer:
                     j += 1
 
             if i == i_end:
-                return;
+                return
 
             start = i
 
