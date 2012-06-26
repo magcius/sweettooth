@@ -181,6 +181,21 @@ def ajax_get_file_diff_view(request, version):
                 oldlines=oldlines,
                 newlines=newlines)
 
+def get_changelog(old_version, new_version, filename='CHANGELOG'):
+    old_zipfile, new_zipfile = get_zipfiles(old_version, new_version)
+    oldlines, newlines = grab_lines(old_zipfile, filename), grab_lines(new_zipfile, filename)
+    chunks = get_chunks(oldlines, newlines)
+
+    contents = []
+    for chunk in chunks:
+        if chunk['operation'] != 'insert':
+            continue
+
+        content = '\n'.join(newlines[line['newindex']] for line in chunk['lines'])
+        contents.append(content)
+
+    return '\n\n'.join(contents)
+
 
 @ajax_view
 @model_view(models.ExtensionVersion)
