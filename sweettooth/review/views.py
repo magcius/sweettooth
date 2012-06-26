@@ -104,16 +104,6 @@ def get_old_version(version):
 
     return old_version
 
-def get_latest_active_version(version):
-    extension = version.extension
-
-    try:
-        old_version = extension.versions.filter(version__lt=version.version, status=models.STATUS_ACTIVE).latest()
-    except models.ExtensionVersion.DoesNotExist:
-        return None
-
-    return old_version
-
 def get_zipfiles(*args):
     for version in args:
         if version is None:
@@ -408,7 +398,7 @@ def should_auto_reject(old_version, new_version):
     return new_svs.issuperset(old_svs)
 
 def extension_submitted(sender, request, version, **kwargs):
-    old_version = get_latest_active_version(version)
+    old_version = version.extension.latest_version
     old_zipfile, new_zipfile = get_zipfiles(old_version, version)
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
