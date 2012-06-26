@@ -45,14 +45,11 @@ define(['jquery'], function($) {
         var collapsed = false;
 
         var $elems = $.map(chunk.lines, function(line, i) {
-            var oldLinum = line[1];
-            var newLinum = line[2];
-
-            var contents = oldContents[oldLinum - 1];
+            var contents = oldContents[line.oldlinenum - 1];
 
             var $row = $('<tr>', {'class': 'diff-line equal'}).
-                append($('<td>', {'class': 'old linum'}).text(oldLinum)).
-                append($('<td>', {'class': 'new linum'}).text(newLinum)).
+                append($('<td>', {'class': 'old linum'}).text(line.oldlinenum)).
+                append($('<td>', {'class': 'new linum'}).text(line.newlinenum)).
                 append($('<td>', {'class': 'new contents'}).text(contents));
 
             if (chunk.collapsable) {
@@ -129,15 +126,12 @@ define(['jquery'], function($) {
     }
 
     function buildInsertLine(line, contents) {
-        var linum = line[2];
-        var content = contents[linum - 1];
-        var region = line[4];
-
+        var content = contents[line.newlinenum - 1];
         return $('<tr>', {'class': 'diff-line inserted'}).
             append($('<td>', {'class': 'linum'})).
-            append($('<td>', {'class': 'new linum'}).text(linum)).
+            append($('<td>', {'class': 'new linum'}).text(line.newlinenum)).
             append($('<td>', {'class': 'new contents'}).
-                     append(flatten(buildReplaceRegions(region, content))));
+                     append(flatten(buildReplaceRegions(line.newregion, content))));
     }
 
     function buildInsertChunk(chunk, oldContents, newContents) {
@@ -145,15 +139,12 @@ define(['jquery'], function($) {
     }
 
     function buildDeleteLine(line, contents) {
-        var linum = line[1];
-        var content = contents[linum - 1];
-        var region = line[3];
-
+        var content = contents[line.oldlinenum];
         return $('<tr>', {'class': 'diff-line deleted'}).
-            append($('<td>', {'class': 'old linum'}).text(linum)).
+            append($('<td>', {'class': 'old linum'}).text(line.oldlinenum)).
             append($('<td>', {'class': 'linum'})).
             append($('<td>', {'class': 'old contents'}).
-                   append(flatten(buildReplaceRegions(region, content))));
+                   append(flatten(buildReplaceRegions(line.oldregion, content))));
     }
 
     function buildDeleteChunk(chunk, oldContents, newContents) {

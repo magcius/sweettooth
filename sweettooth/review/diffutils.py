@@ -756,25 +756,19 @@ def new_chunk(lines, collapsable=False, tag='equal', meta=None):
 
 def get_fake_chunk(numlines, tag):
     linenums = xrange(numlines)
-    lines = [[n+1, n+1, n+1, [], []] for n in linenums]
+    lines = [dict(oldlinenum=n+1, newlinenum=n+1,
+                  oldregion=[], newregion=[]) for n in linenums]
     return new_chunk(lines, tag=tag)
 
 def get_chunks(a, b):
-    def diff_line(vlinenum, oldlinenum, newlinenum, oldline, newline):
-        # This function accesses the variable meta, defined in an outer context.
+    def diff_line(oldlinenum, newlinenum, oldline, newline):
         if oldline and newline and oldline != newline:
             oldregion, newregion = get_line_changed_regions(oldline, newline)
         else:
             oldregion = newregion = []
 
-        result = [vlinenum, oldlinenum, newlinenum, oldregion, newregion]
-
-        if oldlinenum and oldlinenum in meta.get('moved', {}):
-            destination = meta["moved"][oldlinenum]
-            result.append(destination)
-        elif newlinenum and newlinenum in meta.get('moved', {}):
-            destination = meta["moved"][newlinenum]
-            result.append(destination)
+        result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
+                      oldregion=oldregion, newregion=newregion)
 
         return result
 
@@ -801,7 +795,6 @@ def get_chunks(a, b):
         numlines = max(i2-i1, j2-j1)
 
         lines = map(diff_line,
-                    xrange(linenum, linenum + numlines),
                     xrange(i1 + 1, i2 + 1), xrange(j1 + 1, j2 + 1),
                     a[i1:i2], b[j1:j2])
 
