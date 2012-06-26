@@ -120,17 +120,6 @@ def grab_lines(zipfile, filename):
         f.close()
         return content.splitlines()
 
-def get_diff(old_zipfile, new_zipfile, filename):
-    oldlines, newlines = grab_lines(old_zipfile, filename), grab_lines(new_zipfile, filename)
-
-    if oldlines == newlines:
-        return None
-
-    chunks = list(get_chunks(oldlines, newlines))
-    return dict(chunks=chunks,
-                oldlines=oldlines,
-                newlines=newlines)
-
 def get_file_list(zipfile):
     return set(n for n in zipfile.namelist() if not n.endswith('/'))
 
@@ -185,7 +174,16 @@ def ajax_get_file_diff_view(request, version):
         return None
 
     old_zipfile, new_zipfile = get_zipfiles(get_old_version(version), version)
-    return get_diff(old_zipfile, new_zipfile, filename)
+    oldlines, newlines = grab_lines(old_zipfile, filename), grab_lines(new_zipfile, filename)
+
+    if oldlines == newlines:
+        return None
+
+    chunks = list(get_chunks(oldlines, newlines))
+    return dict(chunks=chunks,
+                oldlines=oldlines,
+                newlines=newlines)
+
 
 @ajax_view
 @model_view(models.ExtensionVersion)
