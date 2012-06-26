@@ -15,7 +15,6 @@ from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.template import Context
 from django.template.loader import render_to_string
-from django.utils.html import escape
 from django.views.decorators.http import require_POST
 
 from review.diffutils import get_chunks
@@ -121,11 +120,8 @@ def get_diff(old_zipfile, new_zipfile, filename):
     old.close()
     new.close()
 
-    oldmarkup = escape(oldcontent)
-    newmarkup = escape(newcontent)
-
-    oldlines = oldmarkup.splitlines()
-    newlines = newmarkup.splitlines()
+    oldlines = oldcontent.splitlines()
+    newlines = newcontent.splitlines()
 
     chunks = list(get_chunks(oldlines, newlines))
     return dict(chunks=chunks,
@@ -206,13 +202,13 @@ def ajax_get_file_diff_view(request, version):
     elif filename in old_filelist:
         # File was deleted.
         f = old_zipfile.open(filename, 'r')
-        lines = escape(f.read()).splitlines()
+        lines = f.read().splitlines()
         f.close()
         return dict(chunks=get_fake_chunks(len(lines), 'delete'), oldlines=lines, newlines=[])
     elif filename in new_filelist:
         # File was added.
         f = new_zipfile.open(filename, 'r')
-        lines = escape(f.read()).splitlines()
+        lines = f.read().splitlines()
         f.close()
         return dict(chunks=get_fake_chunks(len(lines), 'insert'), oldlines=[], newlines=lines)
     else:

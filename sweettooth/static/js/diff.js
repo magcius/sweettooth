@@ -53,7 +53,7 @@ define(['jquery'], function($) {
             var $row = $('<tr>', {'class': 'diff-line equal'}).
                 append($('<td>', {'class': 'old linum'}).text(oldLinum)).
                 append($('<td>', {'class': 'new linum'}).text(newLinum)).
-                append($('<td>', {'class': 'new contents'}).html(contents));
+                append($('<td>', {'class': 'new contents'}).text(contents));
 
             if (chunk.collapsable) {
                 if (i == 0) {
@@ -93,7 +93,7 @@ define(['jquery'], function($) {
     // half-row.
     function buildReplaceRegions(regions, contents) {
         function span(tag, text) {
-            return $('<span>', {'class': 'diff-inline'}).addClass(tag).html(text);
+            return $('<span>', {'class': 'diff-inline'}).addClass(tag).text(text);
         }
 
         function unchanged(text) { return span('unchanged', text); }
