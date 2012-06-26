@@ -88,7 +88,14 @@ def shell_update(request):
     shell_version = request.GET['shell_version']
     operations = {}
 
-    for uuid, version in installed.iteritems():
+    for uuid, meta in installed.iteritems():
+        try:
+            version = meta['version']
+        except KeyError:
+            # XXX - if the user has a locally installed version of
+            # an extension on SweetTooth, what should we do?
+            continue
+
         try:
             extension = models.Extension.objects.get(uuid=uuid)
         except models.Extension.DoesNotExist:

@@ -474,7 +474,11 @@ class UpdateVersionTest(TestCase):
                                self.downgrade_uuid: dict(operation='downgrade',
                                                          version_tag=downgrade_pk) }
 
+    def build_response(self, installed):
+        return dict((k, dict(version=v)) for k, v in installed.iteritems())
+
     def grab_response(self, installed):
+        installed = self.build_response(installed)
         response = self.client.get(reverse('extensions-shell-update'),
                                    dict(installed=json.dumps(installed), shell_version='3.2.0'))
 
