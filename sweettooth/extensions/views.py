@@ -90,7 +90,7 @@ def shell_update(request):
 
     for uuid, version in installed.iteritems():
         try:
-            extension = models.Extension.objects.visible().get(uuid=uuid)
+            extension = models.Extension.objects.get(uuid=uuid)
         except models.Extension.DoesNotExist:
             continue
 
