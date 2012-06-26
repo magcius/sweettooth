@@ -176,9 +176,6 @@ def ajax_get_file_diff_view(request, version):
     old_zipfile, new_zipfile = get_zipfiles(get_old_version(version), version)
     oldlines, newlines = grab_lines(old_zipfile, filename), grab_lines(new_zipfile, filename)
 
-    if oldlines == newlines:
-        return None
-
     chunks = list(get_chunks(oldlines, newlines))
     return dict(chunks=chunks,
                 oldlines=oldlines,

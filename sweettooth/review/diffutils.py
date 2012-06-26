@@ -728,11 +728,15 @@ def get_chunks(a, b):
 
         return result
 
-    if a is None or b is None:
-        if a is not None:
-            yield get_fake_chunk(len(a), tag='delete')
-        if b is not None:
-            yield get_fake_chunk(len(b), tag='insert')
+    if a == b:
+        return
+
+    if a is None:
+        yield get_fake_chunk(len(b), tag='insert')
+        return
+
+    if b is None:
+        yield get_fake_chunk(len(a), tag='delete')
         return
 
     a_num_lines = len(a)
