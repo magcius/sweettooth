@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
 
-from review.diffutils import get_chunks, split_lines
+from review.diffutils import get_chunks
 from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
 from extensions import models
 
@@ -87,7 +87,7 @@ def html_for_file(filename, raw):
         raw_base64 = base64.standard_b64encode(raw)
         return dict(raw=True, html='<img src="data:%s;base64,%s">' % (mime, raw_base64,))
     else:
-        return dict(raw=False, lines=split_lines(highlight_file(filename, raw, code_formatter)))
+        return dict(raw=False, lines=highlight_file(filename, raw, code_formatter).splitlines())
 
 def get_old_version(version):
     extension = version.extension
@@ -124,8 +124,8 @@ def get_diff(old_zipfile, new_zipfile, filename):
     oldmarkup = escape(oldcontent)
     newmarkup = escape(newcontent)
 
-    oldlines = split_lines(oldmarkup)
-    newlines = split_lines(newmarkup)
+    oldlines = oldmarkup.splitlines()
+    newlines = newmarkup.splitlines()
 
     chunks = list(get_chunks(oldlines, newlines))
     return dict(chunks=chunks,
@@ -206,13 +206,13 @@ def ajax_get_file_diff_view(request, version):
     elif filename in old_filelist:
         # File was deleted.
         f = old_zipfile.open(filename, 'r')
-        lines = split_lines(escape(f.read()))
+        lines = escape(f.read()).splitlines()
         f.close()
         return dict(chunks=get_fake_chunks(len(lines), 'delete'), oldlines=lines, newlines=[])
     elif filename in new_filelist:
         # File was added.
         f = new_zipfile.open(filename, 'r')
-        lines = split_lines(escape(f.read()))
+        lines = escape(f.read()).splitlines()
         f.close()
         return dict(chunks=get_fake_chunks(len(lines), 'insert'), oldlines=[], newlines=lines)
     else:

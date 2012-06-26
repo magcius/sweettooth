@@ -6,8 +6,6 @@
 import re
 from difflib import SequenceMatcher
 
-NEWLINES_RE = re.compile(r'\r?\n')
-
 class MyersDiffer:
     """
     An implementation of Eugene Myers's O(ND) Diff algorithm based on GNU diff.
@@ -1101,21 +1099,9 @@ def opcodes_with_metadata(differ):
 
     return groups
 
-def split_lines(raw):
-    if raw and raw[-1] != '\n':
-        raw += '\n'
-
-    lines = NEWLINES_RE.split(raw or '')
-
-    # Remove the trailing newline, now that we've split this. This will
-    # prevent a duplicate line number at the end of the diff.
-    del(lines[-1])
-
-    return lines
-
 def _test(oldfile, newfile):
     old, new = open(oldfile, 'r'), open(newfile, 'r')
-    a, b = split_lines(old.read()), split_lines(new.read())
+    a, b = old.read().splitlines(), new.read().splitlines()
 
     chunks = list(get_chunks(a, b))
     old.close()
