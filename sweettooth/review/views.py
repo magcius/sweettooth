@@ -113,12 +113,11 @@ def get_zipfiles(*args):
 def get_diff(old_zipfile, new_zipfile, filename):
     old, new = old_zipfile.open(filename, 'r'), new_zipfile.open(filename, 'r')
     oldcontent, newcontent = old.read(), new.read()
+    old.close()
+    new.close()
 
     if oldcontent == newcontent:
         return None
-
-    old.close()
-    new.close()
 
     oldlines = oldcontent.splitlines()
     newlines = newcontent.splitlines()
