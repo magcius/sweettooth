@@ -120,26 +120,11 @@ def grab_lines(zipfile, filename):
         f.close()
         return content.splitlines()
 
-def get_fake_chunks(numlines, tag):
-    # When a file is added/deleted, we want to show a view where
-    # we have nothing in one pane, and a bunch of inserted/delted
-    # lines in the other.
-    lines = [[n, n, n, [], []] for n in range(1, numlines + 1)]
-    return [{ 'lines': lines,
-              'numlines': numlines,
-              'change': tag,
-              'collapsable': False,
-              'meta': None }]
-
 def get_diff(old_zipfile, new_zipfile, filename):
     oldlines, newlines = grab_lines(old_zipfile, filename), grab_lines(new_zipfile, filename)
 
     if oldlines == newlines:
         return None
-    if oldlines is None:
-        return get_fake_chunks(len(newlines), 'insert')
-    if newlines is None:
-        return get_fake_chunks(len(oldlines), 'delete')
 
     chunks = list(get_chunks(oldlines, newlines))
     return dict(chunks=chunks,

@@ -743,6 +743,22 @@ def get_line_changed_regions(oldline, newline):
 
     return (oldchanges, newchanges)
 
+def new_chunk(lines, collapsable=False, tag='equal', meta=None):
+    if not meta:
+        meta = {}
+
+    return {
+        'lines': lines,
+        'change': tag,
+        'collapsable': collapsable,
+        'meta': meta,
+    }
+
+def get_fake_chunk(numlines, tag):
+    linenums = xrange(numlines)
+    lines = [[n+1, n+1, n+1, [], []] for n in linenums]
+    return new_chunk(lines, tag=tag)
+
 def get_chunks(a, b):
     def diff_line(vlinenum, oldlinenum, newlinenum, oldline, newline):
         # This function accesses the variable meta, defined in an outer context.
@@ -762,16 +778,12 @@ def get_chunks(a, b):
 
         return result
 
-    def new_chunk(lines, collapsable=False, tag='equal', meta=None):
-        if not meta:
-            meta = {}
-
-        return {
-            'lines': lines,
-            'change': tag,
-            'collapsable': collapsable,
-            'meta': meta,
-        }
+    if a is None or b is None:
+        if a is not None:
+            yield get_fake_chunk(len(a), tag='delete')
+        if b is not None:
+            yield get_fake_chunk(len(b), tag='insert')
+        return
 
     a_num_lines = len(a)
     b_num_lines = len(b)
