@@ -762,14 +762,12 @@ def get_chunks(a, b):
 
         return result
 
-    def new_chunk(lines, start, end, collapsable=False,
-                  tag='equal', meta=None):
+    def new_chunk(lines, collapsable=False, tag='equal', meta=None):
         if not meta:
             meta = {}
 
         return {
-            'lines': lines[start:end],
-            'numlines': end - start,
+            'lines': lines,
             'change': tag,
             'collapsable': collapsable,
             'meta': meta,
@@ -799,19 +797,18 @@ def get_chunks(a, b):
             last_range_start = numlines - context_num_lines
 
             if linenum == 1:
-                yield new_chunk(lines, 0, last_range_start, True)
-                yield new_chunk(lines, last_range_start, numlines)
+                yield new_chunk(lines[:last_range_start], collapsable=True)
+                yield new_chunk(lines[last_range_start:numlines])
             else:
-                yield new_chunk(lines, 0, context_num_lines)
+                yield new_chunk(lines[:context_num_lines])
 
                 if i2 == a_num_lines and j2 == b_num_lines:
-                    yield new_chunk(lines, context_num_lines, numlines, True)
+                    yield new_chunk(lines[context_num_lines:numlines], collapsable=True)
                 else:
-                    yield new_chunk(lines, context_num_lines,
-                                    last_range_start, True)
-                    yield new_chunk(lines, last_range_start, numlines)
+                    yield new_chunk(lines[context_num_lines:last_range_start], collapsable=True)
+                    yield new_chunk(lines[last_range_start:numlines])
         else:
-            yield new_chunk(lines, 0, numlines, False, tag, meta)
+            yield new_chunk(lines[:numlines], collapsable=False, tag=tag, meta=meta)
 
         linenum += numlines
 
