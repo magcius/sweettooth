@@ -757,17 +757,24 @@ def new_chunk(lines, collapsable=False, tag='equal', meta=None):
 def get_fake_chunk(numlines, tag):
     linenums = xrange(numlines)
     lines = [dict(oldlinenum=n+1, newlinenum=n+1,
+                  oldindex=n, newindex=n,
                   oldregion=[], newregion=[]) for n in linenums]
     return new_chunk(lines, tag=tag)
 
 def get_chunks(a, b):
-    def diff_line(oldlinenum, newlinenum, oldline, newline):
+    def diff_line(old, new):
+        oldindex, oldline = old
+        newindex, newline = new
+        oldlinenum = oldindex + 1
+        newlinenum = newindex + 1
+
         if oldline and newline and oldline != newline:
             oldregion, newregion = get_line_changed_regions(oldline, newline)
         else:
             oldregion = newregion = []
 
         result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
+                      oldindex=oldindex, newindex=newindex,
                       oldregion=oldregion, newregion=newregion)
 
         return result
@@ -794,9 +801,7 @@ def get_chunks(a, b):
     for tag, i1, i2, j1, j2, meta in opcodes_with_metadata(differ):
         numlines = max(i2-i1, j2-j1)
 
-        lines = map(diff_line,
-                    xrange(i1 + 1, i2 + 1), xrange(j1 + 1, j2 + 1),
-                    a[i1:i2], b[j1:j2])
+        lines = [diff_line(old, new) for old, new in zip(zip(xrange(i1, i2), a), zip(xrange(j1, j2), b))]
 
         if tag == 'equal' and numlines > collapse_threshold:
             last_range_start = numlines - context_num_lines
