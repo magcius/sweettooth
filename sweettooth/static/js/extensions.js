@@ -23,6 +23,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                 var vpk = extensionUtils.grabProperExtensionVersion(svm, version);
                 var $tr = $('<tr>').appendTo($tbody);
                 $('<td>').append($('<code>').text(version)).appendTo($tr);
+                $('<td>').text(vpk.version).appendTo($tr);
             }
         });
     };
