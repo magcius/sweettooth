@@ -598,6 +598,7 @@ p.message.warning {
 /* ==================================================================== */
 
 input, textarea, input[type=submit], button {
+    padding: 3px;
     border: 1px solid #999;
     border-radius: 4px;
     background-color: #fff;
