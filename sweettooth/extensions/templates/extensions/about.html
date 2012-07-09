@@ -77,6 +77,18 @@ of GNOME 3.2 that prevent it from working properly under WebKit-based
 browsers like Epiphany and Chromium. GNOME Shell 3.2.2.1 has fixed these
 problems, so make sure you are using it.
 </p>
+<p>
+Some distributions don't quite package GNOME correctly. Make sure that you
+have the <code>unzip</code> package installed.
+</p>
+<p>
+If you have checked all of these solutions and are still having trouble
+installing extensions, please file a bug report using the link in the footer
+of the page, giving your GNOME version, distribution and version, what
+solutions you have already tried, as well as what the Looking Glass says
+in both the Extensions and Errors tabs. It's also helpful to have a copy of
+the <code>~/.xsession-errors</code> file from the session that you installed
+extensions from.
 <h2 id="uninstall"> How do I uninstall my extensions? </h2>
 <p>
 Unfortunately, there are some bugs in GNOME 3.2 that prevented uninstallation
@@ -94,10 +106,13 @@ is completely uninstalled: open the run dialog with <kbd>Alt+F2</kbd>, and
 enter <code>restart</code>.
 <h2> How do I update my extensions? </h2>
 <p>
-To update your extension to the latest version, unfortunately you have to
-uninstall and reinstall the extension. Due to bugs in GNOME 3.2, you may need
-to uninstall extensions manually. See <a href="#uninstall">How do I uninstall
-extensions?</a> for more information.
+To update your extension to the latest version, go to the extension's page,
+or the "Installed Extensions" page, and click the green update arrow. If
+there is no arrow, your extensions should be fully up to date.
+</p>
+<p>
+An automatic updating extension framework has been added to GNOME 3.6, which
+should update your extensions automatically.
 </p>
 
 {% endblock %}
