@@ -4,6 +4,7 @@
 # Copyright 2011 Review Board Team
 
 import re
+from itertools import izip_longest
 from difflib import SequenceMatcher
 
 class MyersDiffer:
@@ -713,14 +714,19 @@ def get_fake_chunk(numlines, tag):
                   oldregion=[], newregion=[]) for n in linenums]
     return new_chunk(lines, tag=tag)
 
+def get_linenum(idx):
+    if idx is not None:
+        return idx + 1
+    else:
+        return None
+
 def get_chunks(a, b):
     def diff_line(old, new):
         oldindex, oldline = old
         newindex, newline = new
-        oldlinenum = oldindex + 1
-        newlinenum = newindex + 1
 
         oldregion, newregion = get_line_changed_regions(oldline, newline)
+        oldlinenum, newlinenum = get_linenum(oldindex), get_linenum(newindex)
 
         result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
                       oldindex=oldindex, newindex=newindex,
@@ -754,7 +760,10 @@ def get_chunks(a, b):
     for tag, i1, i2, j1, j2 in differ.get_opcodes():
         numlines = max(i2-i1, j2-j1)
 
-        lines = [diff_line(old, new) for old, new in zip(zip(xrange(i1, i2), a), zip(xrange(j1, j2), b))]
+        oldlines = izip_longest(xrange(i1, i2), a)
+        newlines = izip_longest(xrange(j1, j2), b)
+
+        lines = [diff_line(old, new) for old, new in zip(oldlines, newlines)]
 
         if tag == 'equal' and numlines > collapse_threshold:
             last_range_start = numlines - context_num_lines
