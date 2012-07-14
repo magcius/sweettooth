@@ -656,6 +656,9 @@ def get_line_changed_regions(oldline, newline):
     if oldline is None or newline is None:
         return (None, None)
 
+    if oldline == newline:
+        return (None, None)
+
     # Use the SequenceMatcher directly. It seems to give us better results
     # for this. We should investigate steps to move to the new differ.
     differ = SequenceMatcher(None, oldline, newline)
@@ -717,10 +720,7 @@ def get_chunks(a, b):
         oldlinenum = oldindex + 1
         newlinenum = newindex + 1
 
-        if oldline and newline and oldline != newline:
-            oldregion, newregion = get_line_changed_regions(oldline, newline)
-        else:
-            oldregion = newregion = []
+        oldregion, newregion = get_line_changed_regions(oldline, newline)
 
         result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
                       oldindex=oldindex, newindex=newindex,
