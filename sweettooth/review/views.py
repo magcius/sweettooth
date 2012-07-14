@@ -209,7 +209,10 @@ def ajax_get_file_view(request, obj):
         raise Http404()
 
     raw = f.read()
-    return html_for_file(filename, raw)
+    if request.GET.get('raw', False):
+        return raw
+    else:
+        return html_for_file(filename, raw)
 
 def download_zipfile(request, pk):
     version = get_object_or_404(models.ExtensionVersion, pk=pk)
