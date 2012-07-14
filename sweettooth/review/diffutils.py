@@ -720,20 +720,20 @@ def get_linenum(idx):
     else:
         return None
 
+def diff_line(old, new):
+    oldindex, oldline = old
+    newindex, newline = new
+
+    oldregion, newregion = get_line_changed_regions(oldline, newline)
+    oldlinenum, newlinenum = get_linenum(oldindex), get_linenum(newindex)
+
+    result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
+                  oldindex=oldindex, newindex=newindex,
+                  oldregion=oldregion, newregion=newregion)
+
+    return result
+
 def get_chunks(a, b):
-    def diff_line(old, new):
-        oldindex, oldline = old
-        newindex, newline = new
-
-        oldregion, newregion = get_line_changed_regions(oldline, newline)
-        oldlinenum, newlinenum = get_linenum(oldindex), get_linenum(newindex)
-
-        result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
-                      oldindex=oldindex, newindex=newindex,
-                      oldregion=oldregion, newregion=newregion)
-
-        return result
-
     if a == b:
         return
 
