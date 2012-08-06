@@ -17,7 +17,7 @@ from sorl import thumbnail
 
 (STATUS_NEW, STATUS_UNREVIEWED,
  STATUS_REJECTED, STATUS_INACTIVE,
- STATUS_ACTIVE) = xrange(5)
+ STATUS_ACTIVE, STATUS_WAITING) = xrange(6)
 
 STATUSES = {
     STATUS_NEW: u"New",
@@ -25,6 +25,7 @@ STATUSES = {
     STATUS_REJECTED: u"Rejected",
     STATUS_INACTIVE: u"Inactive",
     STATUS_ACTIVE: u"Active",
+    STATUS_WAITING: u"Waiting for author",
 }
 
 APPROVED_STATUSES = (STATUS_INACTIVE, STATUS_ACTIVE)

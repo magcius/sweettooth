@@ -227,7 +227,10 @@ def download_zipfile(request, pk):
 def submit_review_view(request, obj):
     extension, version = obj.extension, obj
 
-    if not can_review_extension(request.user, extension):
+    can_approve = can_approve_extension(request.user, extension)
+    can_review = can_review_extension(request.user, extension)
+
+    if not can_review:
         return HttpResponseForbidden()
 
     review = CodeReview(version=version,
@@ -238,21 +241,23 @@ def submit_review_view(request, obj):
 
     status_string = request.POST.get('status')
     newstatus = dict(approve=models.STATUS_ACTIVE,
+                     wait=models.STATUS_WAITING,
                      reject=models.STATUS_REJECTED).get(status_string, None)
 
+    # If a normal user didn't change the status and it was in WAITING,
+    # change it back to UNREVIEWED
+    if not can_approve and obj.status == models.STATUS_WAITING:
+        newstatus = models.STATUS_UNREVIEWED
+
     if newstatus is not None:
-        if newstatus == models.STATUS_ACTIVE and not can_approve_extension(request.user, extension):
+        if newstatus == models.STATUS_ACTIVE and not can_approve:
             return HttpResponseForbidden()
 
-        log = ChangeStatusLog.objects.create(user=request.user,
-                                             version=obj,
-                                             newstatus=newstatus)
-
+        review.changelog = ChangeStatusLog.objects.create(user=request.user,
+                                                          version=obj,
+                                                          newstatus=newstatus)
         obj.status = newstatus
         obj.save()
-
-        review.changelog = log
-
         models.status_changed.send(sender=request, version=obj, log=log)
 
     review.save()
