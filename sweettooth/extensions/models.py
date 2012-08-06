@@ -16,8 +16,10 @@ import re
 from sorl import thumbnail
 
 (STATUS_UNREVIEWED,
- STATUS_REJECTED, STATUS_INACTIVE,
- STATUS_ACTIVE, STATUS_WAITING) = xrange(5)
+ STATUS_REJECTED,
+ STATUS_INACTIVE,
+ STATUS_ACTIVE,
+ STATUS_WAITING) = xrange(5)
 
 STATUSES = {
     STATUS_UNREVIEWED: u"Unreviewed",
@@ -26,9 +28,6 @@ STATUSES = {
     STATUS_ACTIVE: u"Active",
     STATUS_WAITING: u"Waiting for author",
 }
-
-APPROVED_STATUSES = (STATUS_INACTIVE, STATUS_ACTIVE)
-REVIEWED_STATUSES = (STATUS_INACTIVE, STATUS_ACTIVE, STATUS_REJECTED)
 
 def validate_uuid(uuid):
     if re.match(r'[-a-zA-Z0-9@._]+$', uuid) is None:
@@ -389,7 +388,7 @@ class ExtensionVersion(models.Model):
         return STATUSES[self.status].lower()
 
     def is_approved(self):
-        return self.status in APPROVED_STATUSES
+        return self.status in (STATUS_ACTIVE, STATUS_INACTIVE)
 
     def is_active(self):
         return self.status == STATUS_ACTIVE
