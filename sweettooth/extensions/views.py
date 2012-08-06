@@ -236,7 +236,7 @@ def extension_view(request, obj, **kwargs):
     else:
         template_name = "extensions/detail.html"
 
-    context = dict(shell_version_map = obj.visible_shell_version_map_json,
+    context = dict(shell_version_map = extension.visible_shell_version_map_json,
                    extension = extension,
                    all_versions = extension.versions.order_by('-version'),
                    is_visible = extension.latest_version is not None)
@@ -263,8 +263,8 @@ def ajax_adjust_popularity_view(request):
 @ajax_view
 @require_POST
 @model_view(models.Extension)
-def ajax_inline_edit_view(request, obj):
-    if not obj.user_can_edit(request.user):
+def ajax_inline_edit_view(request, extension):
+    if not extension.user_can_edit(request.user):
         return HttpResponseForbidden()
 
     key = request.POST['id']
@@ -273,33 +273,33 @@ def ajax_inline_edit_view(request, obj):
         key = key[len('extension_'):]
 
     if key == 'name':
-        obj.name = value
+        extension.name = value
     elif key == 'description':
-        obj.description = value
+        extension.description = value
     elif key == 'url':
-        obj.url = value
+        extension.url = value
     else:
         return HttpResponseForbidden()
 
-    obj.save()
+    extension.save()
 
     return value
 
 @ajax_view
 @require_POST
 @model_view(models.Extension)
-def ajax_upload_screenshot_view(request, obj):
-    obj.screenshot = request.FILES['file']
-    obj.save(replace_metadata_json=False)
-    return get_thumbnail(obj.screenshot, request.GET['geometry']).url
+def ajax_upload_screenshot_view(request, extension):
+    extension.screenshot = request.FILES['file']
+    extension.save(replace_metadata_json=False)
+    return get_thumbnail(extension.screenshot, request.GET['geometry']).url
 
 @ajax_view
 @require_POST
 @model_view(models.Extension)
-def ajax_upload_icon_view(request, obj):
-    obj.icon = request.FILES['file']
-    obj.save(replace_metadata_json=False)
-    return obj.icon.url
+def ajax_upload_icon_view(request, extension):
+    extension.icon = request.FILES['file']
+    extension.save(replace_metadata_json=False)
+    return extension.icon.url
 
 def ajax_details(extension, version=None):
     details = dict(uuid = extension.uuid,

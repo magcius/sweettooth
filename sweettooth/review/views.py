@@ -238,7 +238,7 @@ def submit_review_view(request, obj):
 
     # If a normal user didn't change the status and it was in WAITING,
     # change it back to UNREVIEWED
-    if not can_approve and obj.status == models.STATUS_WAITING:
+    if not can_approve and version.status == models.STATUS_WAITING:
         newstatus = models.STATUS_UNREVIEWED
 
     review = CodeReview(version=version,
@@ -250,8 +250,8 @@ def submit_review_view(request, obj):
             return HttpResponseForbidden()
 
         review.new_status = newstatus
-        obj.status = newstatus
-        obj.save()
+        version.status = newstatus
+        version.save()
 
     review.save()
 
