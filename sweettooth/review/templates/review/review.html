@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load thumbnail %}
 
 {% block title %}Review "{{ extension.name }}" - {{ block.super }}{% endblock %}
 
@@ -17,9 +16,7 @@
 
     <div>
       {% if extension.screenshot %}
-      {% thumbnail extension.screenshot "300x200" as th %}
-      <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ th.url }}" /></a>
-      {% endthumbnail %}
+      <a href="{{ extension.screenshot.url }}" class="screenshot"><img src="{{ extension.screenshot.url }}"></a>
       {% endif %}
 
       <p class="description">{{ extension.description }}</p>

@@ -165,7 +165,7 @@ function($, messages, modal, hashParamUtils) {
             $('#extension_name, #extension_url').csrfEditable(inlineEditURL);
             $('#extension_description').csrfEditable(inlineEditURL, {type: 'textarea'});
 
-            $('.screenshot.upload').uploadify('/ajax/upload/screenshot/'+pk+'?geometry=300x200');
+            $('.screenshot.upload').uploadify('/ajax/upload/screenshot/'+pk);
             $('.icon.upload').uploadify('/ajax/upload/icon/'+pk);
         }
     });

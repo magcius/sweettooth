@@ -20,8 +20,7 @@ define(['jquery'], function($) {
 
         function uploadComplete(result) {
             var $old = $elem.children().first();
-            var $img = $('<img>', { 'src': result });
-            $img.replaceAll($old);
+            $old.attr('src', result);
             $elem.removeClass('placeholder');
         }
 

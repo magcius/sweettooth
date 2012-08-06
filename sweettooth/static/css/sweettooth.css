@@ -367,6 +367,13 @@ li.extension:last-child {
     float: left;
 }
 
+.extension .screenshot img {
+    max-width: 300px;
+    max-height: 200px;
+    -ms-interpolation-mode: bicubic;
+    image-rendering: optimizeQuality;
+}
+
 .extension .icon, .extension .icon img {
     width: 32px;
     height: 32px;

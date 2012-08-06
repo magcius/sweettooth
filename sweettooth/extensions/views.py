@@ -12,7 +12,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.utils import simplejson as json
 from django.views.decorators.http import require_POST
-from sorl.thumbnail.shortcuts import get_thumbnail
 
 from extensions import models, search
 from extensions.forms import UploadForm
@@ -291,7 +290,7 @@ def ajax_inline_edit_view(request, extension):
 def ajax_upload_screenshot_view(request, extension):
     extension.screenshot = request.FILES['file']
     extension.save(replace_metadata_json=False)
-    return get_thumbnail(extension.screenshot, request.GET['geometry']).url
+    return extension.screenshot.url
 
 @ajax_view
 @require_POST

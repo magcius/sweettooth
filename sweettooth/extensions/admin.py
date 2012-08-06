@@ -1,6 +1,5 @@
 
 from django.contrib import admin
-from sorl.thumbnail.admin import AdminImageMixin
 
 from extensions.models import Extension, ExtensionVersion
 from extensions.models import STATUS_ACTIVE, STATUS_REJECTED

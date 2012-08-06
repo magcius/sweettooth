@@ -13,7 +13,6 @@ from django.dispatch import Signal
 
 import autoslug
 import re
-from sorl import thumbnail
 
 (STATUS_UNREVIEWED,
  STATUS_REJECTED,
@@ -86,7 +85,7 @@ class Extension(models.Model):
     def make_screenshot_filename(self, filename=None):
         return "screenshots/screenshot_%d.png" % (self.pk,)
 
-    screenshot = thumbnail.ImageField(upload_to=make_screenshot_filename, blank=True)
+    screenshot = models.ImageField(upload_to=make_screenshot_filename, blank=True)
 
     def make_icon_filename(self, filename=None):
         return "icons/icon_%d.png" % (self.pk,)
