@@ -92,10 +92,10 @@
   {% for review in previous_reviews %}
   <div class="review">
     <a class="review-author" href="{% url auth-profile user=review.reviewer.username %}">{{ review.reviewer }}</a>
-    {% if review.changelog %}
-    <span class="extension-status {{ review.changelog.get_newstatus_class }}">
-      {% if review.changelog.auto %}auto-{% endif%}
-      {{ review.changelog.get_newstatus_display|lower }}
+    {% if review.new_status %}
+    <span class="extension-status {{ review.get_new_status_display|lower }}">
+      {% if review.auto %}auto-{% endif%}
+      {{ review.get_new_status_display|lower }}
     </span>
     {% else %}
     posted a review

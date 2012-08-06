@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 
 from review.diffutils import get_chunks
-from review.models import CodeReview, ChangeStatusLog, get_all_reviewers
+from review.models import CodeReview, get_all_reviewers
 from extensions import models
 
 from decorators import ajax_view, model_view
@@ -229,10 +229,6 @@ def submit_review_view(request, obj):
     if not can_review:
         return HttpResponseForbidden()
 
-    review = CodeReview(version=version,
-                        reviewer=request.user,
-                        comments=request.POST.get('comments'))
-
     messages.info(request, "Thank you for reviewing %s" % (extension.name,))
 
     status_string = request.POST.get('status')
@@ -245,13 +241,15 @@ def submit_review_view(request, obj):
     if not can_approve and obj.status == models.STATUS_WAITING:
         newstatus = models.STATUS_UNREVIEWED
 
+    review = CodeReview(version=version,
+                        reviewer=request.user,
+                        comments=request.POST.get('comments'))
+
     if newstatus is not None:
         if newstatus == models.STATUS_ACTIVE and not can_approve:
             return HttpResponseForbidden()
 
-        review.changelog = ChangeStatusLog.objects.create(user=request.user,
-                                                          version=obj,
-                                                          newstatus=newstatus)
+        review.new_status = newstatus
         obj.status = newstatus
         obj.save()
 
@@ -374,14 +372,11 @@ def extension_submitted(sender, request, version, **kwargs):
     changeset = get_file_changeset(old_zipfile, new_zipfile)
 
     if old_zipfile is not None and should_auto_approve(changeset, version.extension):
-        log = ChangeStatusLog.objects.create(user=request.user,
-                                             version=version,
-                                             newstatus=models.STATUS_ACTIVE,
-                                             auto=True)
         CodeReview.objects.create(version=version,
                                   reviewer=request.user,
                                   comments="",
-                                  changelog=log)
+                                  new_status=models.STATUS_ACTIVE,
+                                  auto=True)
         version.status = models.STATUS_ACTIVE
         version.save()
         send_email_auto_approved(request, version, changeset)

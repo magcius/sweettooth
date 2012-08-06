@@ -18,19 +18,10 @@ class CodeReview(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField(blank=True)
     version = models.ForeignKey(ExtensionVersion, related_name="reviews")
-    changelog = models.OneToOneField('ChangeStatusLog', null=True)
+    new_status = models.PositiveIntegerField(choices=STATUSES.items(), null=True)
+    auto = models.BooleanField(default=False)
 
     class Meta:
         permissions = (
             ("can-review-extensions", "Can review extensions"),
         )
-
-class ChangeStatusLog(models.Model):
-    user = models.ForeignKey(User)
-    date = models.DateTimeField(auto_now_add=True)
-    newstatus = models.PositiveIntegerField(choices=STATUSES.items())
-    version = models.ForeignKey(ExtensionVersion, related_name="status_log")
-    auto = models.BooleanField(default=False)
-
-    def get_newstatus_class(self):
-        return STATUSES[self.newstatus].lower()
