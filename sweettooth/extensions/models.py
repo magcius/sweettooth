@@ -153,10 +153,6 @@ class Extension(models.Model):
     def visible_shell_version_map(self):
         return build_shell_version_map(self.visible_versions)
 
-    @property
-    def visible_shell_version_map_json(self):
-        return json.dumps(self.visible_shell_version_map)
-
 class ExtensionPopularityItem(models.Model):
     extension = models.ForeignKey(Extension, db_index=True,
                                   related_name='popularity_items')

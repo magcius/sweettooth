@@ -236,7 +236,7 @@ def extension_view(request, obj, **kwargs):
     else:
         template_name = "extensions/detail.html"
 
-    context = dict(shell_version_map = extension.visible_shell_version_map_json,
+    context = dict(shell_version_map = json.dumps(extension.visible_shell_version_map),
                    extension = extension,
                    all_versions = extension.versions.order_by('-version'),
                    is_visible = extension.latest_version is not None)
@@ -353,7 +353,7 @@ def ajax_set_status_view(request, newstatus):
     context = dict(version=version,
                    extension=extension)
 
-    return dict(svm=extension.visible_shell_version_map_json,
+    return dict(svm=json.dumps(extension.visible_shell_version_map),
                 mvs=render_to_string('extensions/multiversion_status.html', context))
 
 @transaction.commit_manually
