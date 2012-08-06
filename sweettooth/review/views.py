@@ -254,7 +254,6 @@ def submit_review_view(request, obj):
                                                           newstatus=newstatus)
         obj.status = newstatus
         obj.save()
-        models.status_changed.send(sender=request, version=obj, log=log)
 
     review.save()
 
