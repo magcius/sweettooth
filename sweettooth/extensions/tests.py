@@ -76,7 +76,7 @@ class ExtensionPropertiesTest(BasicUserTestCase, TestCase):
 
         extension = models.Extension.objects.create_from_metadata(metadata, creator=self.user)
         version = models.ExtensionVersion.objects.create(extension=extension,
-                                                         status=models.STATUS_NEW)
+                                                         status=models.STATUS_UNREVIEWED)
         version.parse_metadata_json(metadata)
 
         self.assertEquals(version.shell_versions_json, '["3.2", "3.2.1"]')
@@ -285,7 +285,7 @@ class ExtensionVersionTest(BasicUserTestCase, TestCase):
         self.assertEquals(v1.version, 1)
 
         v2 = models.ExtensionVersion.objects.create(extension=extension,
-                                                    status=models.STATUS_NEW)
+                                                    status=models.STATUS_UNREVIEWED)
         self.assertEquals(v2.version, 2)
 
         self.assertEquals(list(extension.visible_versions.order_by('version')), [v1])

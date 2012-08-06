@@ -15,12 +15,11 @@ import autoslug
 import re
 from sorl import thumbnail
 
-(STATUS_NEW, STATUS_UNREVIEWED,
+(STATUS_UNREVIEWED,
  STATUS_REJECTED, STATUS_INACTIVE,
- STATUS_ACTIVE, STATUS_WAITING) = xrange(6)
+ STATUS_ACTIVE, STATUS_WAITING) = xrange(5)
 
 STATUSES = {
-    STATUS_NEW: u"New",
     STATUS_UNREVIEWED: u"Unreviewed",
     STATUS_REJECTED: u"Rejected",
     STATUS_INACTIVE: u"Inactive",

@@ -216,10 +216,6 @@ def ajax_get_file_view(request, obj):
 
 def download_zipfile(request, pk):
     version = get_object_or_404(models.ExtensionVersion, pk=pk)
-
-    if version.status == models.STATUS_NEW:
-        return HttpResponseForbidden()
-
     return redirect(version.source.url)
 
 @require_POST
