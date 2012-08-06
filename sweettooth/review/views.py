@@ -373,17 +373,6 @@ def should_auto_approve(changes, extension=None):
 
     return True
 
-def should_auto_reject(old_version, new_version):
-    if old_version is None:
-        return False
-
-    if old_version.status != models.STATUS_UNREVIEWED:
-        return False
-
-    old_svs = set(old_version.shell_versions.all())
-    new_svs = set(new_version.shell_versions.all())
-    return new_svs.issuperset(old_svs)
-
 def extension_submitted(sender, request, version, **kwargs):
     old_version = version.extension.latest_version
     old_zipfile, new_zipfile = get_zipfiles(old_version, version)
@@ -402,19 +391,6 @@ def extension_submitted(sender, request, version, **kwargs):
         version.save()
         send_email_auto_approved(request, version, changeset)
         return
-
-    if should_auto_reject(old_version, version):
-        log = ChangeStatusLog.objects.create(user=request.user,
-                                             version=old_version,
-                                             newstatus=models.STATUS_REJECTED,
-                                             auto=True)
-        CodeReview.objects.create(version=old_version,
-                                  reviewer=request.user,
-                                  comments="",
-                                  changelog=log)
-        old_version.status = models.STATUS_REJECTED
-        old_version.save()
-        version.save()
 
     send_email_submitted(request, version)
 
