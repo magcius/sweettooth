@@ -4,7 +4,6 @@
 # Copyright 2011 Review Board Team
 
 import re
-from itertools import izip_longest
 from difflib import SequenceMatcher
 
 class MyersDiffer:
@@ -760,8 +759,8 @@ def get_chunks(a, b):
     for tag, i1, i2, j1, j2 in differ.get_opcodes():
         numlines = max(i2-i1, j2-j1)
 
-        oldlines = izip_longest(xrange(i1, i2), a)
-        newlines = izip_longest(xrange(j1, j2), b)
+        oldlines = zip(xrange(i1, i2), a[i1:i2])
+        newlines = zip(xrange(j1, j2), b[j1:j2])
 
         lines = [diff_line(old, new) for old, new in zip(oldlines, newlines)]
 
