@@ -708,10 +708,7 @@ def new_chunk(lines, collapsable=False, tag='equal'):
     }
 
 def get_fake_chunk(numlines, tag):
-    linenums = xrange(numlines)
-    lines = [dict(oldlinenum=n+1, newlinenum=n+1,
-                  oldindex=n, newindex=n,
-                  oldregion=[], newregion=[]) for n in linenums]
+    lines = [new_line(oldindex=n, newindex=n) for n in xrange(numlines)]
     return new_chunk(lines, tag=tag)
 
 def get_linenum(idx):
@@ -720,18 +717,18 @@ def get_linenum(idx):
     else:
         return None
 
+def new_line(oldindex, newindex, oldregion=None, newregion=None):
+    oldlinenum, newlinenum = get_linenum(oldindex), get_linenum(newindex)
+    return dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
+                oldindex=oldindex, newindex=newindex,
+                oldregion=oldregion, newregion=newregion)
+
 def diff_line(old, new):
     oldindex, oldline = old
     newindex, newline = new
 
     oldregion, newregion = get_line_changed_regions(oldline, newline)
-    oldlinenum, newlinenum = get_linenum(oldindex), get_linenum(newindex)
-
-    result = dict(oldlinenum=oldlinenum, newlinenum=newlinenum,
-                  oldindex=oldindex, newindex=newindex,
-                  oldregion=oldregion, newregion=newregion)
-
-    return result
+    return new_line(oldindex, newindex, oldregion, newregion)
 
 def get_chunks(a, b):
     if a == b:
@@ -760,10 +757,10 @@ def get_chunks(a, b):
     for tag, i1, i2, j1, j2 in differ.get_opcodes():
         numlines = max(i2-i1, j2-j1)
 
-        oldlines = izip_longest(xrange(i1, i2), a[i1:j2])
-        newlines = izip_longest(xrange(j1, j2), b[j1:j2])
+        oldlines = zip(xrange(i1, i2), a[i1:i2])
+        newlines = zip(xrange(j1, j2), b[j1:j2])
 
-        lines = [diff_line(old, new) for old, new in zip(oldlines, newlines)]
+        lines = [diff_line(old, new) for old, new in izip_longest(oldlines, newlines, fillvalue=(None, None))]
 
         if tag == 'equal' and numlines > collapse_threshold:
             last_range_start = numlines - context_num_lines

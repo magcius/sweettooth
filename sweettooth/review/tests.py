@@ -7,6 +7,8 @@ from review.views import get_old_version, should_auto_approve
 
 from testutils import BasicUserTestCase
 
+from difftests import DiffTests
+
 class DiffViewTest(BasicUserTestCase, TestCase):
     def test_get_zipfiles(self):
         metadata = {"uuid": "test-metadata@mecheye.net",
