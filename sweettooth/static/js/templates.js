@@ -1,21 +1,10 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
-define(['templates/templatedata', 'mustache'], function(templatedata) {
+define(['templates/templatedata', 'mustache'], function(templatedata, mustache) {
     "use strict";
 
     var exports = {};
-    var partials = exports._P = {};
     exports._T = templatedata;
-
-    function compile(template) {
-        // We have our own template caching, don't use Mustache's.
-        var compiled = Mustache.compile(template, { cache: false });
-        var wrapper = function(view) {
-            return compiled(view, partials);
-        };
-        wrapper.compiled = true;
-        return wrapper;
-    }
 
     function _compileTemplateData(data, out, prefix) {
         for (var propname in data) {
@@ -26,9 +15,11 @@ define(['templates/templatedata', 'mustache'], function(templatedata) {
                 pkey = propname;
 
             if (typeof(v) === typeof({})) {
+                // Subdirectory. Recurse.
                 out[propname] = _compileTemplateData(v, {}, pkey);
             } else {
-                out[propname] = partials[pkey] = compile(v);
+                // Template. Mustache will cache all partials for us.
+                out[propname] = mustache.compilePartial(pkey, v);
             }
         }
         return out;
