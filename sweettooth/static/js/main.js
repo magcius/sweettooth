@@ -4,10 +4,10 @@
 require.s.contexts._.defined['jquery'] = jQuery;
 
 define(['jquery', 'messages', 'modal', 'hashParamUtils',
-        'extensions', 'uploader', 'fsui',
+        'templates', 'extensions', 'uploader', 'fsui',
         'jquery.cookie', 'jquery.jeditable',
         'jquery.timeago', 'jquery.raty'],
-function($, messages, modal, hashParamUtils) {
+function($, messages, modal, hashParamUtils, templates) {
     "use strict";
 
     if (!$.ajaxSettings.headers)
@@ -162,14 +162,30 @@ function($, messages, modal, hashParamUtils) {
             return false;
         });
 
-        var pk = $('.extension.single-page.can-edit').data('epk');
-        if (pk) {
-            var inlineEditURL = '/ajax/edit/' + pk;
-            $('#extension_name, #extension_url').csrfEditable(inlineEditURL);
-            $('#extension_description').csrfEditable(inlineEditURL, {type: 'textarea'});
+        $('.extension.single-page').each(function() {
+            var pk = $(this).data('epk');
+            if ($(this).hasClass('can-edit')) {
+                var inlineEditURL = '/ajax/edit/' + pk;
+                $('#extension_name, #extension_url').csrfEditable(inlineEditURL);
+                $('#extension_description').csrfEditable(inlineEditURL, {type: 'textarea'});
 
-            $('.screenshot.upload').uploadify('/ajax/upload/screenshot/'+pk);
-            $('.icon.upload').uploadify('/ajax/upload/icon/'+pk);
-        }
+                $('.screenshot.upload').uploadify('/ajax/upload/screenshot/'+pk);
+                $('.icon.upload').uploadify('/ajax/upload/icon/'+pk);
+            }
+
+            $(this).find('#comments').each(function() {
+                var $loadingText = $(this).find('p');
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { pk: pk },
+                    url: '/comments/all/',
+                }).done(function(comments) {
+                    var $newContent = $(templates.extensions.comments_list(comments));
+                    $newContent.find('time').timeago();
+                    $loadingText.replaceWith($newContent);
+                });
+            });
+        });
     });
 });

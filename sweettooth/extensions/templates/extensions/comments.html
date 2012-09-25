@@ -1,27 +1,6 @@
 <div id="comments">
   <h4>User comments</h4>
-  {% load comments %}
-  {% load gravatar %}
-  {% get_comment_list for extension as comments %}
-  {% for comment in comments reversed %}
-  <div class="comment">
-  {% if comment.user == extension.creator %}
-    <div class="extension-creator-badge">Author</div>
-  {% endif %}
-    <img src="{% gravatar_url request comment.email %}" class="gravatar">
-    <div class="rating-author">
-      {% if comment.rating != -1 %}
-      <div class="rating" data-rating-value="{{ comment.rating }}"></div> by
-      {% endif %}
-      <a class="comment-author" href="{% url auth-profile user=comment.user.username %}">{{ comment.user }}</a>
-    </div>
-    <p>{{ comment.comment }}</p>
-    <time title="{{ comment.submit_date|date:"c" }}Z">{{ comment.submit_date|date:"F j, Y" }}</time>
-  </div>
-  <hr>
-  {% empty %}
-  There are no comments.
-  {% endfor %}
+  <p>Loading comments...</p>
 </div>
 <div id="opinion_form">
   <h4>Your opinion</h4>
@@ -33,6 +12,7 @@
     <a href="{% url errorreports.views.report_error pk=extension.pk %}">Bug report</a>
   </div>
   <div id="rating_form">
+    {% load comments %}
     {% render_comment_form for extension %}
   </div>
   {% else %}
