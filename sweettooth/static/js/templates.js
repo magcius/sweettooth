@@ -4,27 +4,32 @@ define(['templates/templatedata', 'mustache'], function(templatedata, mustache) 
     "use strict";
 
     var exports = {};
-    exports._T = templatedata;
+    var cache = {};
 
-    function _compileTemplateData(data, out, prefix) {
-        for (var propname in data) {
-            var v = data[propname], pkey;
+    function _processPartials(prefix, data) {
+        for (var prop in data) {
+            var value = data[prop];
+            var name;
+
             if (prefix)
-                pkey = prefix + "." + propname;
+                name = prefix + "/" + prop;
             else
-                pkey = propname;
+                name = prop;
 
-            if (typeof(v) === typeof({})) {
+            if (typeof(value) === typeof({})) {
                 // Subdirectory. Recurse.
-                out[propname] = _compileTemplateData(v, {}, pkey);
+                _processPartials(name, value);
             } else {
                 // Template. Mustache will cache all partials for us.
-                out[propname] = mustache.compilePartial(pkey, v);
+                cache[name] = mustache.compilePartial(name, value);
             }
         }
-        return out;
+    }
+    _processPartials("", templatedata);
+
+    exports.get = function get(name) {
+        return cache[name];
     }
 
-    _compileTemplateData(templatedata, exports, "");
     return exports;
 });

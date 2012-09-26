@@ -181,7 +181,7 @@ function($, messages, modal, hashParamUtils, templates) {
                     data: { pk: pk },
                     url: '/comments/all/',
                 }).done(function(comments) {
-                    var $newContent = $(templates.extensions.comments_list(comments));
+                    var $newContent = $(templates.get('extensions/comments_list')(comments));
                     $newContent.find('time').timeago();
                     $loadingText.replaceWith($newContent);
                 });

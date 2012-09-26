@@ -34,7 +34,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
     if (dbusProxy.IsDummy) {
         // We don't have a proper DBus proxy -- it's probably an old
         // version of GNOME3 or the Shell.
-        messages.addError(templates.messages.dummy_proxy());
+        messages.addError(templates.get('messages/dummy_proxy')());
 
         $.fn.addExtensionSwitch = function() {
             // Don't show our switches -- CSS styles define a clickable
@@ -43,13 +43,13 @@ function($, messages, dbusProxy, extensionUtils, templates) {
         };
 
         $.fn.addLocalExtensions = function() {
-            return this.append(templates.messages.cannot_list_local());
+            return this.append(templates.get('messages/cannot_list_local')());
         };
 
         $.fn.fillInErrors = function() {
             var $textarea = this.find('textarea[name=error]');
             var $hidden = this.find('input:hidden[name=has_errors]');
-            $textarea.text(templates.messages.cannot_list_errors()).
+            $textarea.text(templates.get('messages/cannot_list_errors')()).
                 addClass('no-errors').attr('disabled', 'disabled');
             $hidden.val('');
             return this;
@@ -207,7 +207,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             dbusProxy.UninstallExtension(uuid).done(function(result) {
                                 if (result) {
                                     $elem.fadeOut({ queue: false }).slideUp({ queue: false });
-                                    messages.addInfo(templates.extensions.uninstall(extension));
+                                    messages.addInfo(templates.get('extension/uninstall')(extension));
                                 }
                             });
                         }
@@ -221,7 +221,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             if (extension.description)
                                 extension.first_line_of_description = extension.description.split('\n')[0];
 
-                            $elem = $(templates.extensions.info(extension)).replaceAll($elem);
+                            $elem = $(templates.get('extension/info')(extension)).replaceAll($elem);
                             $elem.find('.uninstall').on('click', uninstall);
 
                             addExtensionSwitch(uuid, $elem, extension);
@@ -262,7 +262,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                                     ev: (meta && meta.version) ? meta.version : null,
                                     errors: errors };
 
-                    $textarea.text(templates.extensions.error_report_template(context));
+                    $textarea.text(templates.get('extensions/error_report_template')(context));
                 });
             });
         });

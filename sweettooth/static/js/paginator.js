@@ -59,7 +59,7 @@ define(['jquery', 'hashParamUtils', 'paginatorUtils', 'dbus!_', 'templates', 'jq
                         this.first_line_of_description = this.description.split('\n')[0];
                 });
 
-                var $newContent = $(templates.extensions.info_list(result));
+                var $newContent = $(templates.get('extensions/info_list')(result));
 
                 $elem.
                     removeClass('loading').
