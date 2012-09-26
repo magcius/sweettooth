@@ -4,8 +4,6 @@ import json
 import os
 import os.path
 
-compile_template = "c(%s)"
-
 def _build_templates(directory):
     templates = {}
     for filename in os.listdir(directory):
