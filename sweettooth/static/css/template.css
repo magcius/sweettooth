@@ -146,6 +146,7 @@ a:visited {
     display: block;
     margin: 14px auto 0 auto;
     width: 70px;
+    height: 70px;
     background-color: #fff;
     background-size: contain;
     border: 2px solid #8b8b8b;
