@@ -1,5 +1,8 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
+// Do a horrible hack to fix jQuery plugin loading.
+require.s.contexts._.defined['jquery'] = jQuery;
+
 define(['jquery', 'messages', 'modal', 'hashParamUtils',
         'extensions', 'uploader', 'fsui',
         'jquery.cookie', 'jquery.jeditable',
