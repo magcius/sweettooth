@@ -6,15 +6,18 @@ import os.path
 
 def _build_templates(directory):
     templates = {}
-    for filename in os.listdir(directory):
-        joined = os.path.join(directory, filename)
-        name, ext = os.path.splitext(filename)
-        if os.path.isdir(joined):
-            templates[name] = _build_templates(joined)
-        elif ext == ".mustache":
-            f = open(joined, 'r')
-            templates[name] = f.read().strip()
-            f.close()
+    for path, dirs, files in os.walk(directory):
+        relpath = os.path.relpath(path, directory)
+        path_parts = relpath.split(os.path.sep)
+        for filename in files:
+            name, ext = os.path.splitext(filename)
+            if ext != ".mustache":
+                continue
+
+            with open(os.path.join(path, filename)) as f:
+                template = f.read().strip()
+            full_name = '/'.join(path_parts + [name])
+            templates[full_name] = template
     return templates
 
 def build_templates(directory):

@@ -6,26 +6,10 @@ define(['templates/templatedata', 'mustache'], function(templatedata, mustache) 
     var exports = {};
     var cache = {};
 
-    function _processPartials(prefix, data) {
-        for (var prop in data) {
-            var value = data[prop];
-            var name;
-
-            if (prefix)
-                name = prefix + "/" + prop;
-            else
-                name = prop;
-
-            if (typeof(value) === typeof({})) {
-                // Subdirectory. Recurse.
-                _processPartials(name, value);
-            } else {
-                // Template. Mustache will cache all partials for us.
-                cache[name] = mustache.compilePartial(name, value);
-            }
-        }
+    for (var prop in templatedata) {
+        var value = templatedata[prop];
+        cache[prop] = mustache.compilePartial(prop, value);
     }
-    _processPartials("", templatedata);
 
     exports.get = function get(name) {
         return cache[name];
