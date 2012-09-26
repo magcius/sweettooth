@@ -173,18 +173,30 @@ function($, messages, modal, hashParamUtils, templates) {
                 $('.icon.upload').uploadify('/ajax/upload/icon/'+pk);
             }
 
-            $(this).find('#comments').each(function() {
-                var $loadingText = $(this).find('p');
+            function fetchComments(base, showAll) {
                 $.ajax({
                     type: 'GET',
                     dataType: 'json',
-                    data: { pk: pk },
+                    data: { pk: pk, all: showAll },
                     url: '/comments/all/',
                 }).done(function(comments) {
-                    var $newContent = $(templates.get('extensions/comments_list')(comments));
+                    var $commentsHolder = base.find('.comments-holder');
+
+                    var data = { comments: comments, show_all: showAll };
+                    var $newContent = $('<div>').append(templates.get('extensions/comments_list')(data));
+                    $newContent.addClass('comments-holder');
+
                     $newContent.find('time').timeago();
-                    $loadingText.replaceWith($newContent);
+                    $newContent.find('.show-all').on('click', function() {
+                        $(this).addClass('loading');
+                        fetchComments(base, true);
+                    });
+                    $commentsHolder.replaceWith($newContent);
                 });
+            }
+
+            $(this).find('#comments').each(function() {
+                fetchComments($(this), false);
             });
         });
     });

@@ -518,6 +518,21 @@ li.extension:last-child {
     margin-right: 30px;
 }
 
+#comments .show-all {
+    font-weight: bold;
+    cursor: pointer;
+    color: #204a87;
+}
+
+#comments .show-all:hover {
+    color: #3465a4;
+}
+
+#comments .show-all.loading {
+    color: #EEEEEC;
+    cursor: default;
+}
+
 .comment {
     margin-left: 90px;
 }
@@ -540,7 +555,7 @@ li.extension:last-child {
     font-weight: bold;
 }
 
-.comment .timestamp {
+.comment time {
     color: #999;
 }
 

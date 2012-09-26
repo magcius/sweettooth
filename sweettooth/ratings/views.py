@@ -1,4 +1,6 @@
 
+import json
+
 from django.core.urlresolvers import reverse
 from django.contrib import comments
 from django.contrib.messages import info
@@ -32,5 +34,10 @@ def comment_details(request, comment):
 @ajax_view
 def get_comments(request):
     extension = models.Extension.objects.get(pk=request.GET['pk'])
+    show_all = json.loads(request.GET.get('all', 'false'))
+
     comment_list = comments.get_model().objects.for_model(extension)
+    if not show_all:
+        comment_list = comment_list[:5]
+
     return [comment_details(request, comment) for comment in comment_list]
