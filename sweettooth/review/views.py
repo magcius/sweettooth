@@ -10,7 +10,6 @@ import pygments.formatters
 
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
-from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.template import Context
@@ -228,8 +227,6 @@ def submit_review_view(request, obj):
 
     if not can_review:
         return HttpResponseForbidden()
-
-    messages.info(request, "Thank you for reviewing %s" % (extension.name,))
 
     status_string = request.POST.get('status')
     newstatus = dict(approve=models.STATUS_ACTIVE,
