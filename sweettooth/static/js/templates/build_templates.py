@@ -27,7 +27,7 @@ def build_templates(directory):
 "use strict";
 
 define(%s);
-""" % (json.dumps(templates, sort_keys=True, indent=2),))
+""" % (json.dumps(templates, sort_keys=True, indent=2, separators=(',', ': ')),))
     f.close()
 
 if __name__ == "__main__":
