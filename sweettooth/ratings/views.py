@@ -37,6 +37,8 @@ def get_comments(request):
     show_all = json.loads(request.GET.get('all', 'false'))
 
     comment_list = comments.get_model().objects.for_model(extension)
+    comment_list = comment_list.order_by('-submit_date')
+
     if not show_all:
         comment_list = comment_list[:5]
 
