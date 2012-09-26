@@ -1,8 +1,9 @@
-@import url(fonts.css);
+
+@import url("fonts.css");
+
 
 /* Main Elements */
 /* ========================================================================== */
-
 
 body {
     font-family: Cantarell, 'Droid Sans', Ubuntu, 'DejaVu Sans', Arial, sans-serif;
@@ -11,7 +12,7 @@ body {
     color: #2e3436;
 }
 h1, h2, h3, h4, h5, h6, dt {
-    color: #0489B7;
+    color: #0489b7;
 }
 h1 {
     font-size: 42px;
@@ -22,10 +23,10 @@ h2 {
 h3, dt {
     font-size: 21px;
     margin: 0.4em 0 0.5em;
-    color: #2E3436;
+    color: #2e3436;
 }
 dt {
-    color: #E36615;
+    color: #e36615;
 }
 dt a:hover {
     color: #fa7721;    
