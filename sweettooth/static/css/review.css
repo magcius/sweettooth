@@ -25,7 +25,7 @@
     list-style-type: none;
     overflow: hidden;
     border: 1px solid #aaa;
-    background-color: #EAF0F7;
+    background-color: #eaf0f7;
 }
 
 .filelist li {
@@ -115,16 +115,16 @@
 }
 
 .fileselector.binary {
-    color: #AA0000;
+    color: #aa0000;
     cursor: auto;
 }
 
 .fileselector.selected {
     cursor: auto;
     color: #2e3436;
-    background-color: #C8D0D5;
+    background-color: #c8d0d5;
     margin: 0;
-    border: 1px solid #A6B0B3;
+    border: 1px solid #a6b0b3;
     border-style: none solid;
 }
 
