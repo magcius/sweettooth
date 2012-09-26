@@ -1,8 +1,69 @@
 
 @import url("reset.css");
-@import url("text.css");
+@import url("fonts.css");
 @import url("switch.css");
 @import url("jquery.rating.css");
+
+
+/* Base text and layout structure */
+/* ========================================================================== */
+
+body {
+    font-family: Cantarell, 'Droid Sans', Ubuntu, 'DejaVu Sans', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #2e3436;
+}
+h1, h2, h3, h4, h5, h6, dt {
+    color: #0489b7;
+}
+h1 {
+    font-size: 42px;
+}
+h2 {
+    font-size: 25px;
+}
+h3, dt {
+    font-size: 21px;
+    margin: 0.4em 0 0.5em;
+    color: #2e3436;
+}
+dt {
+    color: #e36615;
+}
+dt a:hover {
+    color: #fa7721;    
+}
+h4 {
+    font-size: 16px;
+    color: #ce5c00;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 12px;
+}
+ol {
+    list-style:decimal;
+}
+ul {
+    list-style:square;
+}
+li {
+    margin-left:30px;
+}
+dl,dt,h1,h2,h3,h4,h5,h6,pre,table,address,fieldset {
+    margin: 0.8em 0 0.4em;
+}
+p, dd, .action_box, ul, ol {
+    margin: 0.4em 0 1em;
+}
+code {
+    background: #ececec;
+    background: rgba(0,0,0,0.1);
+    padding: 1px;
+}
 
 
 /* Base information */
@@ -315,6 +376,8 @@ a:visited {
 /* Footer */
 
 #footer {
+    font-size: 11px;
+    line-height: 1.5em;
     clear: left;
     background: #d3d7cf;
     color: #555753;
@@ -356,13 +419,13 @@ a:visited {
     transition: background-color 100ms ease-in;
 }
 
-#footer #footnotes {
+#footnotes {
     margin-top: 20px;
 }
-#footer #footnotes small {
+#footnotes small {
     font-size: 88%;
 }
-#footer #footnotes a {
+#footnotes a {
     color: inherit;
 }
 
@@ -765,8 +828,8 @@ li.extension:last-child {
 }
 
 .extension textarea {
-    /* sync with text.css */
-    /* textareas don't inherit body fonts for whatever reason */
+    /* Sync with body selector at the top of the file, please.
+     * textareas don't inherit body fonts for whatever reason. */
     font-family: Cantarell, 'Droid Sans', Ubuntu, 'DejaVu Sans', Arial, sans-serif;
 }
 
