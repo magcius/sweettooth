@@ -128,9 +128,10 @@
 
 {% endblock %}
 
-{% block js-main %}review-main{% endblock %}
-
 {% block head %}
   {{ block.super }}
   <link rel="stylesheet" href="/static/css/review.css" />
+  <script>
+    require(['review-main'], function(){});
+  </script>
 {% endblock %}
