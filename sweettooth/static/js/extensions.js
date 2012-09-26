@@ -207,7 +207,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             dbusProxy.UninstallExtension(uuid).done(function(result) {
                                 if (result) {
                                     $elem.fadeOut({ queue: false }).slideUp({ queue: false });
-                                    messages.addInfo(templates.get('extension/uninstall')(extension));
+                                    messages.addInfo(templates.get('extensions/uninstall')(extension));
                                 }
                             });
                         }
@@ -221,7 +221,7 @@ function($, messages, dbusProxy, extensionUtils, templates) {
                             if (extension.description)
                                 extension.first_line_of_description = extension.description.split('\n')[0];
 
-                            $elem = $(templates.get('extension/info')(extension)).replaceAll($elem);
+                            $elem = $(templates.get('extensions/info')(extension)).replaceAll($elem);
                             $elem.find('.uninstall').on('click', uninstall);
 
                             addExtensionSwitch(uuid, $elem, extension);
