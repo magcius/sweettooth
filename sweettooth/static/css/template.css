@@ -139,6 +139,16 @@ a:visited {
     list-style-type: none;
     margin-left: 0;
 }
+#global_domain_bar ul, #global_domain_bar .avatar {
+    display: inline-block;
+}
+#global_domain_bar .avatar {
+    background-color: #fff;
+    background-size: contain;
+    border: 2px solid #8b8b8b;
+    border-radius: 5px;
+    margin-left: 16px;
+}
 
 
 /* GNOME Header */
