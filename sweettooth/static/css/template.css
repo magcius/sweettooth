@@ -122,32 +122,36 @@ a:visited {
     right: 0;
     top: -10px;
     margin: 32px 0 0 0;
-    padding: 8px 0 0 0;
     min-width: 140px;
     border-radius: 10px;
 }
-#global_domain_bar .user_popup a {
+#global_domain_bar .user_popup a.text {
     color: #fff;
     text-decoration: none;
     display: block;
     padding: 3px 16px;
 }
-#global_domain_bar .user_settings a:hover {
+#global_domain_bar .user_settings a.text:hover {
     background: rgba(100%, 100%, 100%, 0.2);
+}
+#global_domain_bar .user_settings ul {
+    margin: 14px 0;
 }
 #global_domain_bar .user_settings li {
     list-style-type: none;
     margin-left: 0;
 }
-#global_domain_bar ul, #global_domain_bar .avatar {
-    display: inline-block;
-}
 #global_domain_bar .avatar {
+    display: block;
+    margin: 14px auto 0 auto;
+    width: 70px;
     background-color: #fff;
     background-size: contain;
     border: 2px solid #8b8b8b;
     border-radius: 5px;
-    margin-left: 16px;
+}
+#global_domain_bar .avatar:hover {
+    border: 2px solid #bbbbbb;
 }
 
 
