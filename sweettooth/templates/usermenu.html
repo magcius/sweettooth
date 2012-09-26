@@ -4,8 +4,8 @@
   <img class="avatar" src="{% gravatar_url request request.user.email %}">
   <ul>
     <li><a href="{% url auth-profile user=request.user.username %}">Your profile</a></li>
-    <li><a href="{% url auth-settings user=request.user.username %}">Settings</a></li>
-    <li><a href="{% url auth-logout %}">Log out</a></li>
+    <li><a href="{% url auth-settings user=request.user.username %}">Website Settings</a></li>
+    <li><a href="{% url auth-logout %}">Log Out</a></li>
   </ul>
 </div>
 {% else %}
