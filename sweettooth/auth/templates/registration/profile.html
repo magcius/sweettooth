@@ -28,5 +28,17 @@
     </li>
     {% endfor %}
   </ul>
+
+  {% for version in pending %}
+  {% with version.extension as extension %}
+  <li class="extension profile">
+    <h4 class="extension-name"><a href="{% url review-version pk=version.pk %}">
+        <img src="{{ extension.icon.url }}" class="icon"> {{ extension.name }} <span class="version">(v{{ version.version }})</span>
+    </a></h4>
+
+    <p class="description">{{ extension.first_line_of_description }}</p>
+  </li>
+  {% endwith %}
+  {% endfor %}
 </div>
 {% endblock %}

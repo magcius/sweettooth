@@ -957,6 +957,10 @@ li.extension:last-child {
     font-weight: bold;
 }
 
+.version {
+    color: #6a6a6a;
+    font-size: smaller;
+}
 
 /* Error Reports */
 /* ==================================================================== */

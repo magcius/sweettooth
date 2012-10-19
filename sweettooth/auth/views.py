@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
 from review.models import CodeReview
-from extensions.models import Extension
+from extensions.models import Extension, ExtensionVersion
 
 from decorators import ajax_view
 from utils import render
@@ -19,11 +19,17 @@ def profile(request, user):
     display_name = userobj.get_full_name() or userobj.username
     extensions = Extension.objects.visible().filter(creator=userobj).order_by('name')
 
+    if is_editable:
+        unreviewed = ExtensionVersion.objects.unreviewed().filter(creator=userobj)
+    else:
+        unreviewed = []
+
     return render(request,
                   'registration/profile.html',
                   dict(user=userobj,
                        display_name=display_name,
                        extensions=extensions,
+                       unreviewed=nureviewed,
                        is_editable=is_editable))
 
 @ajax_view
