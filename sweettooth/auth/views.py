@@ -21,8 +21,10 @@ def profile(request, user):
 
     if is_editable:
         unreviewed = ExtensionVersion.objects.unreviewed().filter(extension__creator=userobj)
+        waiting = ExtensionVersion.objects.waiting().filter(extension__creator=userobj)
     else:
         unreviewed = []
+        waiting = []
 
     return render(request,
                   'registration/profile.html',
@@ -30,6 +32,7 @@ def profile(request, user):
                        display_name=display_name,
                        extensions=extensions,
                        unreviewed=unreviewed,
+                       waiting=waiting,
                        is_editable=is_editable))
 
 @ajax_view

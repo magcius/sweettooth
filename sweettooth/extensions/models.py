@@ -258,6 +258,9 @@ class ExtensionVersionManager(models.Manager):
     def unreviewed(self):
         return self.filter(status=STATUS_UNREVIEWED)
 
+    def waiting(self):
+        return self.filter(status=STATUS_WAITING)
+
     def visible(self):
         return self.filter(status=STATUS_ACTIVE)
 
