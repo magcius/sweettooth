@@ -77,12 +77,16 @@ function($, messages, modal, hashParamUtils, templates) {
             size: 25
         });
 
-        $('.comment .rating').each(function() {
-            $(this).raty({
-                start: $(this).data('rating-value'),
-                readOnly: true
+        $.fn.ratify = function() {
+            return this.each(function() {
+                $(this).raty({
+                    start: $(this).data('rating-value'),
+                    readOnly: true
+                });
             });
-        });
+        };
+
+        $('.comment .rating').ratify();
         $('#rating_form').hide();
         $('#rating_form .rating').raty({ scoreName: 'rating' });
 
@@ -184,6 +188,7 @@ function($, messages, modal, hashParamUtils, templates) {
                     $newContent.addClass('comments-holder');
 
                     $newContent.find('time').timeago();
+                    $newContent.find('.rating').ratify();
                     $newContent.find('.show-all').on('click', function() {
                         $(this).addClass('loading');
                         fetchComments(base, true);
