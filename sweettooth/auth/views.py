@@ -20,7 +20,7 @@ def profile(request, user):
     extensions = Extension.objects.visible().filter(creator=userobj).order_by('name')
 
     if is_editable:
-        unreviewed = ExtensionVersion.objects.unreviewed().filter(creator=userobj)
+        unreviewed = ExtensionVersion.objects.unreviewed().filter(extension__creator=userobj)
     else:
         unreviewed = []
 
