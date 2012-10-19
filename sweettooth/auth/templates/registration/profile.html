@@ -29,7 +29,7 @@
     {% endfor %}
   </ul>
 
-  {% for version in pending %}
+  {% for version in unreviewed %}
   {% with version.extension as extension %}
   <li class="extension profile">
     <h4 class="extension-name"><a href="{% url review-version pk=version.pk %}">
