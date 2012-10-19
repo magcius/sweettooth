@@ -29,7 +29,7 @@ def profile(request, user):
                   dict(user=userobj,
                        display_name=display_name,
                        extensions=extensions,
-                       unreviewed=nureviewed,
+                       unreviewed=unreviewed,
                        is_editable=is_editable))
 
 @ajax_view
