@@ -14,7 +14,7 @@ from utils import render
 def profile(request, user):
     userobj = get_object_or_404(models.User, username=user)
 
-    is_editable = request.user == userobj
+    is_editable = (request.user == userobj) or request.user.has_perm('review.can-review-extensions')
 
     display_name = userobj.get_full_name() or userobj.username
     extensions = Extension.objects.visible().filter(creator=userobj).order_by('name')
