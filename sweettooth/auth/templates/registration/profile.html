@@ -5,9 +5,7 @@
 {% load gravatar %}
 <div class="profile">
   {% if is_editable %}
-  <h2 class="editable"
-      id="new_display_name"
-      editurl="{% url auth-ajax-edit-display-name %}">{{ display_name }}</h2>
+  <h2 class="editable" id="new_display_name">{{ display_name }}</h2>
   {% else %}
   <h2>{{ display_name }}</h2>
   {% endif %}
