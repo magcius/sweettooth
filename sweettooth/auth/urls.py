@@ -10,7 +10,7 @@ urlpatterns = patterns('',
         dict(template_name='registration/login.html',
              authentication_form=forms.AuthenticationForm), name='auth-login'),
 
-    url(r'^ajax/edit/display_name/', views.ajax_change_display_name, name='auth-ajax-edit-display-name'),
+    url(r'^change_display_name', views.ajax_change_display_name),
 
     url(r'^logout/', logout,
         dict(next_page='/'), name='auth-logout'),

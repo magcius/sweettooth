@@ -45,7 +45,7 @@ function($, messages, modal, hashParamUtils, templates) {
 
         $("time").timeago();
 
-        $("#new_display_name").csrfEditable('/ajax/edit/display_name');
+        $("#new_display_name").csrfEditable('/accounts/change_display_name');
 
         var $userPopupLink = $('#global_domain_bar .user');
         var $userPopup = $('#global_domain_bar .user_popup');
