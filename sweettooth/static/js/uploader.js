@@ -42,7 +42,7 @@ define(['jquery'], function($) {
 
                 var df = $.ajax(url, { type: 'POST',
                                        // Let the XMLHttpRequest figure out the mimetype from the FormData
-                                       // http://dev.w3.org/2006/webapi/XMLHttpRequest-2/Overview.html#the-send-method
+                                       // http://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#the-send%28%29-method
                                        contentType: false,
                                        processData: false,
                                        data: fd });
