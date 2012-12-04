@@ -212,6 +212,7 @@ def ajax_query_view(request):
     object_list, num_pages = func(request, n_per_page)
 
     return dict(extensions=[ajax_details(e) for e in object_list],
+                total=len(object_list),
                 numpages=num_pages)
 
 @model_view(models.Extension)
