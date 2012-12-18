@@ -372,6 +372,7 @@ def create_version(request, file_source):
     else:
         if request.user != extension.creator:
             messages.error(request, "An extension with that UUID has already been added.")
+            transaction.rollback()
             return None, []
 
     extension.parse_metadata_json(metadata)
