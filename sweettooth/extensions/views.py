@@ -363,6 +363,7 @@ def create_version(request, file_source):
         uuid = metadata['uuid']
     except (models.InvalidExtensionData, KeyError), e:
         messages.error(request, "Invalid extension data: %s" % (e.message,))
+        transaction.rollback()
         return None, []
 
     try:
