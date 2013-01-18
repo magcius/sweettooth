@@ -370,7 +370,7 @@ def create_version(request, file_source):
     except models.Extension.DoesNotExist:
         extension = models.Extension(creator=request.user)
     else:
-        if request.user != extension.creator:
+        if request.user != extension.creator and not request.user.is_superuser:
             messages.error(request, "An extension with that UUID has already been added.")
             transaction.rollback()
             return None, []
