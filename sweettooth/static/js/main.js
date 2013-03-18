@@ -177,6 +177,9 @@ function($, messages, modal, hashParamUtils, templates) {
             }
 
             function fetchComments(base, showAll) {
+                var $loading = base.find('.loading');
+                $loading.show();
+
                 $.ajax({
                     type: 'GET',
                     dataType: 'json',
@@ -192,9 +195,10 @@ function($, messages, modal, hashParamUtils, templates) {
                     $newContent.find('time').timeago();
                     $newContent.find('.rating').ratify();
                     $newContent.find('.show-all').on('click', function() {
-                        $(this).addClass('loading');
+                        $(this).hide();
                         fetchComments(base, true);
                     });
+
                     $commentsHolder.replaceWith($newContent);
                 });
             }

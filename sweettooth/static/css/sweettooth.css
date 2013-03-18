@@ -1017,6 +1017,14 @@ li.extension:last-child {
     margin-right: 30px;
 }
 
+#comments .loading {
+    background-image: url(../images/spinner.gif);
+    background-repeat: no-repeat;
+    padding-left: 24px;
+    margin-left: 8px;
+    line-height: 16px;
+}
+
 #comments .show-all {
     font-weight: bold;
     cursor: pointer;
