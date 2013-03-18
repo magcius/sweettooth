@@ -406,8 +406,6 @@ def upload_file(request):
             if version is not None:
                 models.submitted_for_review.send(sender=request, request=request, version=version)
                 return redirect(version.extension)
-            else:
-                return redirect('extensions-upload-file')
     else:
         form = UploadForm()
 
