@@ -26,6 +26,9 @@ def index_extension(extension):
 
     idterm = "Q%s" % (extension.pk,)
     doc.add_boolean_term(idterm)
+    for shell_version in extension.visible_shell_version_map.iterkeys():
+        doc.add_boolean_term("V%s" % (shell_version,))
+
     db.replace_document(idterm, doc)
 
 def delete_extension(extension):
@@ -46,7 +49,16 @@ def post_version_save_handler(instance, **kwargs):
     index_extension(instance.extension)
 signals.post_save.connect(post_version_save_handler, sender=ExtensionVersion)
 
-def enquire(querystring):
+def combine_queries(op, queries):
+    def make_query(left, right):
+        return xapian.Query(op, left, right)
+    return reduce(make_query, queries)
+
+def make_version_queries(versions):
+    queries = [xapian.Query("V%s" % (v,)) for v in versions]
+    return combine_queries(xapian.Query.OP_OR, queries)
+
+def enquire(querystring, versions=None):
     try:
         db = xapian.Database(settings.XAPIAN_DB_PATH)
     except xapian.DatabaseOpeningError:
@@ -57,6 +69,13 @@ def enquire(querystring):
     qp.set_stemmer(xapian.Stem("en"))
     qp.set_database(db)
 
+    query = qp.parse_query(querystring)
+
+    if versions:
+        query = xapian.Query(xapian.Query.OP_FILTER,
+                             query,
+                             make_version_queries(versions))
+
     enquiry = xapian.Enquire(db)
-    enquiry.set_query(qp.parse_query(querystring))
+    enquiry.set_query(query)
     return db, enquiry
