@@ -107,7 +107,7 @@ class Extension(models.Model):
         from django.core.exceptions import ValidationError
 
         if not validate_uuid(self.uuid):
-            raise ValidationError("Invalid UUID")
+            raise ValidationError("Your extension has an invalid UUID")
 
     def save(self, replace_metadata_json=True, *args, **kwargs):
         super(Extension, self).save(*args, **kwargs)
