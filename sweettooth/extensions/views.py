@@ -168,7 +168,11 @@ def ajax_query_params_query(request, n_per_page):
 def ajax_query_search_query(request, n_per_page):
     querystring = request.GET.get('search', '')
 
-    database, enquire = search.enquire(querystring)
+    version_strings = request.GET.getlist('shell_version')
+    if version_strings in (['all'], ['-1']):
+        version_strings = None
+
+    database, enquire = search.enquire(querystring, version_strings)
 
     page = request.GET.get('page', 1)
     try:
