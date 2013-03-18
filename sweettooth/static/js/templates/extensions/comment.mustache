@@ -4,9 +4,9 @@
   {{/is_extension_creator}}
   <img src="{{gravatar}}" class="gravatar">
   <div class="rating-author">
-    {{#has_rating}}
+    {{#rating}}
       <div class="rating" data-rating-value="{{rating}}"></div> by
-    {{/has_rating}}
+    {{/rating}}
     <a class="comment-author" href="{{author.url}}">{{author.username}}</a>
     <p>{{comment}}</p>
     <time datetime="{{date.timestamp}}Z">{{date.standard}}</time>

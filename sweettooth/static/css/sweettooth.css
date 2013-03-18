@@ -1047,7 +1047,7 @@ li.extension:last-child {
 
 .comment .rating {
     margin-right: 6px;
-    float: left;
+    float: right;
 }
 
 .comment .comment-author {

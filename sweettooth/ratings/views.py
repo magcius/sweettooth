@@ -22,14 +22,18 @@ def comment_details(request, comment):
     gravatar = gravatar_url(request, comment.email)
     is_extension_creator = (comment.user == extension.creator)
 
-    return dict(gravatar = gravatar,
-                is_extension_creator = is_extension_creator,
-                rating = comment.rating,
-                comment = comment.comment,
-                author = dict(username=comment.user.username,
-                              url=reverse('auth-profile', kwargs=dict(user=comment.user.username))),
-                date = dict(timestamp = comment.submit_date.isoformat(),
-                            standard = format_date(comment.submit_date, 'F j, Y')))
+    details = dict(gravatar = gravatar,
+                   is_extension_creator = is_extension_creator,
+                   comment = comment.comment,
+                   author = dict(username=comment.user.username,
+                                 url=reverse('auth-profile', kwargs=dict(user=comment.user.username))),
+                   date = dict(timestamp = comment.submit_date.isoformat(),
+                               standard = format_date(comment.submit_date, 'F j, Y')))
+
+    if comment.rating > -1:
+        details['rating'] = comment.rating
+
+    return details
 
 @ajax_view
 def get_comments(request):
