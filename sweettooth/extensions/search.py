@@ -57,7 +57,6 @@ def enquire(querystring):
     qp.set_stemmer(xapian.Stem("en"))
     qp.set_database(db)
 
-    enquire = xapian.Enquire(db)
-    enquire.set_query(qp.parse_query(querystring))
-
-    return db, enquire
+    enquiry = xapian.Enquire(db)
+    enquiry.set_query(qp.parse_query(querystring))
+    return db, enquiry
