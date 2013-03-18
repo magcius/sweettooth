@@ -127,8 +127,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django_extensions',
-    'sorl.thumbnail',
 
     'extensions',
     'auth',
