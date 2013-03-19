@@ -188,6 +188,8 @@ function($, messages, modal, hashParamUtils, templates) {
                 }).done(function(comments) {
                     var $commentsHolder = base.find('.comments-holder');
 
+                    $loading.hide();
+
                     var data = { comments: comments, show_all: showAll };
                     var $newContent = $('<div>').append(templates.get('extensions/comments_list')(data));
                     $newContent.addClass('comments-holder');
