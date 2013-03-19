@@ -190,6 +190,9 @@ function($, messages, modal, hashParamUtils, templates) {
 
                     $loading.hide();
 
+                    if (comments.length < 5)
+                        showAll = false;
+
                     var data = { comments: comments, show_all: showAll };
                     var $newContent = $('<div>').append(templates.get('extensions/comments_list')(data));
                     $newContent.addClass('comments-holder');
