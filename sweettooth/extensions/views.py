@@ -117,12 +117,10 @@ def shell_update(request):
 
     return operations
 
-def ajax_query_params_query(request, n_per_page):
+def ajax_query_params_query(request, versions, n_per_page):
     version_qs = models.ExtensionVersion.objects.visible()
 
-    version_strings = request.GET.getlist('shell_version')
-    if version_strings and version_strings not in (['all'], ['-1']):
-        versions = set(get_versions_for_version_strings(version_strings))
+    if versions:
         version_qs = version_qs.filter(shell_versions__in=versions)
 
     queryset = models.Extension.objects.distinct().filter(versions__in=version_qs)
@@ -165,14 +163,10 @@ def ajax_query_params_query(request, n_per_page):
 
     return page_obj.object_list, paginator.num_pages
 
-def ajax_query_search_query(request, n_per_page):
+def ajax_query_search_query(request, versions, n_per_page):
     querystring = request.GET.get('search', '')
 
-    version_strings = request.GET.getlist('shell_version')
-    if version_strings in (['all'], ['-1']):
-        version_strings = None
-
-    database, enquire = search.enquire(querystring, version_strings)
+    database, enquire = search.enquire(querystring, versions)
 
     page = request.GET.get('page', 1)
     try:
@@ -208,12 +202,18 @@ def ajax_query_view(request):
     except (KeyError, ValueError), e:
         n_per_page = 10
 
+    version_strings = request.GET.getlist('shell_version')
+    if version_strings and version_strings not in (['all'], ['-1']):
+        versions = set(get_versions_for_version_strings(version_strings))
+    else:
+        versions = None
+
     if request.GET.get('search',  ''):
         func = ajax_query_search_query
     else:
         func = ajax_query_params_query
 
-    object_list, num_pages = func(request, n_per_page)
+    object_list, num_pages = func(request, versions, n_per_page)
 
     return dict(extensions=[ajax_details(e) for e in object_list],
                 total=len(object_list),

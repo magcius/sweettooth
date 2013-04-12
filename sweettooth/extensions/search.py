@@ -55,7 +55,7 @@ def combine_queries(op, queries):
     return reduce(make_query, queries)
 
 def make_version_queries(versions):
-    queries = [xapian.Query("V%s" % (v,)) for v in versions]
+    queries = [xapian.Query("V%s" % (v.version_string,)) for v in versions]
     return combine_queries(xapian.Query.OP_OR, queries)
 
 def enquire(querystring, versions=None):
