@@ -69,7 +69,7 @@ def enquire(querystring, versions=None):
     qp.set_stemmer(xapian.Stem("en"))
     qp.set_database(db)
 
-    query = qp.parse_query(querystring)
+    query = qp.parse_query(querystring, qp.FLAG_PARTIAL)
 
     if versions:
         query = xapian.Query(xapian.Query.OP_FILTER,
