@@ -24,5 +24,5 @@ class CodeReview(models.Model):
     class Meta:
         permissions = (
             ("can-review-extensions", "Can review extensions"),
-            ("trusted", "Has his extensions auto-approved"),
+            ("trusted", "Trusted author"),
         )
