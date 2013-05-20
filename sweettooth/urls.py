@@ -31,13 +31,3 @@ else:
     # and a dummy to reverse on for production.
     urlpatterns.append(url(r'^static/extension-data/(?P<path>.*)', lambda *a, **kw: HttpResponse(),
                            name='extension-data'))
-
-if settings.DEBUG:
-    # XXX - I need to be shot for this
-    # Because we need HTTPS + Apache to test, in debug use
-    # static.serve to serve admin media
-    admin_media_dir = os.path.join(os.path.dirname(admin.__file__), 'media')
-    admin_media_prefix = settings.ADMIN_MEDIA_PREFIX.strip('/')
-
-    urlpatterns.append(url(r'^%s(?P<path>.*)' % (admin_media_prefix,),
-                           static.serve, dict(document_root=admin_media_dir)))

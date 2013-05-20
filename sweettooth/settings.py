@@ -62,11 +62,6 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-# URL prefix for admin static files -- CSS, JavaScript and images.
-# Make sure to use a trailing slash.
-# Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static-admin/'
-
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'tv(d+lom-sa^de5i#ab)(g^3249tbzssizuvh8m9_lwppdn1bw'
 
