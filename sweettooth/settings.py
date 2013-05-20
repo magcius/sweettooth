@@ -62,6 +62,10 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    os.path.join(SITE_ROOT, 'static'),
+)
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'tv(d+lom-sa^de5i#ab)(g^3249tbzssizuvh8m9_lwppdn1bw'
 
@@ -117,6 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.staticfiles',
     'django.contrib.messages',
 
     'extensions',
