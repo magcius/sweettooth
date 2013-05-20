@@ -91,16 +91,10 @@ Requirements
   * django-registration_
   * xapian_
 
-I develop with PostgreSQL_ at home, but Django should be able to use SQLite_,
-MySQL_, and others. South_ is used for migrations.
-
 .. _django: http://www.djangoproject.com/
 .. _django-autoslug: http://packages.python.org/django-autoslug/
 .. _Pygments: http://www.pygments.org/
 .. _sorl-thumbnail: http://thumbnail.sorl.net/
-.. _PostgreSQL: http://www.postgresql.org/
-.. _SQLite: http://www.sqlite.org/
-.. _MySQL: http://www.mysql.com/
 .. _south: http://south.aeracode.org/
 .. _django-registration: http://pypi.python.org/pypi/django-registration
 .. _xapian: http://www.xapian.org/

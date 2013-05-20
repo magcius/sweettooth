@@ -40,6 +40,7 @@ venv
 # Data dumps
 *.sql
 *.tar.xz
+*.db
 
 # sweettooth-specific
 Demos
