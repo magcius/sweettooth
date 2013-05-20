@@ -5,15 +5,12 @@ define(['jquery', 'diff'], function($, diff) {
 
     var REVIEW_URL_BASE = '/review/ajax';
 
-    var BINARY_TYPES = {};
-    $.each(['mo', 'compiled'], function() {
-        BINARY_TYPES[this] = true;
-    });
+    var BINARY_TYPES = ['mo', 'compiled'];
 
     function isBinary(filename) {
         var parts = filename.split('.');
         var ext = parts[parts.length - 1];
-        return BINARY_TYPES.hasOwnProperty(ext);
+        return BINARY_TYPES.indexOf(ext) >= 0;
     }
 
     function buildFileView(data) {
