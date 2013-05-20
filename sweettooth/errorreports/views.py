@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.template import Context
 from django.template.loader import render_to_string
 
@@ -13,7 +13,6 @@ from errorreports.forms import ErrorReportForm
 from extensions.models import Extension
 
 from decorators import model_view
-from utils import render
 
 @model_view(Extension.objects.visible())
 def report_error(request, extension):

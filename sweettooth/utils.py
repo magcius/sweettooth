@@ -2,12 +2,6 @@
 import urllib
 import hashlib
 
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-
-def render(req, *args, **kwargs):
-    return render_to_response(context_instance=RequestContext(req), *args, **kwargs)
-
 GRAVATAR_BASE = "https://secure.gravatar.com/avatar/%s?%s"
 
 def gravatar_url(request, email, size=70):

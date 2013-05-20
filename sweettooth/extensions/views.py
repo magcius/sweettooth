@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 from django.http import HttpResponseForbidden, HttpResponseServerError, Http404
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 
@@ -17,7 +17,6 @@ from extensions import models, search
 from extensions.forms import UploadForm
 
 from decorators import ajax_view, model_view
-from utils import render
 
 def get_versions_for_version_strings(version_strings):
     def get_version(major, minor, point):

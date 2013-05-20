@@ -11,7 +11,7 @@ import pygments.formatters
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden, Http404
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.template import Context
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
@@ -21,7 +21,6 @@ from review.models import CodeReview, get_all_reviewers
 from extensions import models
 
 from decorators import ajax_view, model_view
-from utils import render
 
 IMAGE_TYPES = {
     '.png':  'image/png',
