@@ -1,5 +1,6 @@
 
 import os.path
+import json
 import tempfile
 import unittest
 from uuid import uuid4
@@ -13,7 +14,6 @@ except ImportError:
 from django.test import TestCase, TransactionTestCase
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
-from django.utils import simplejson as json
 from extensions import models
 
 from testutils import BasicUserTestCase

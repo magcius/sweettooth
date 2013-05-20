@@ -1,4 +1,5 @@
 
+import json
 from math import ceil
 
 from django.core.exceptions import ValidationError
@@ -10,7 +11,6 @@ from django.db import transaction
 from django.http import HttpResponseForbidden, HttpResponseServerError, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
-from django.utils import simplejson as json
 from django.views.decorators.http import require_POST
 
 from extensions import models, search
