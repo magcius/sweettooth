@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.core.files.base import File, ContentFile, StringIO
 
 from extensions import models
-from review.views import get_old_version, should_auto_approve
+from review.views import get_old_version, should_auto_approve_changeset
 
 from testutils import BasicUserTestCase
 
@@ -39,12 +39,12 @@ class TestAutoApproveLogic(TestCase):
                     unchanged=unchanged or [])
 
     def test_auto_approve_logic(self):
-        self.assertTrue(should_auto_approve(self.build_changeset()))
-        self.assertTrue(should_auto_approve(self.build_changeset(changed=['metadata.json'])))
-        self.assertTrue(should_auto_approve(self.build_changeset(changed=['metadata.json', 'po/en_GB.po', 'images/new_fedora.png', 'stylesheet.css'])))
-        self.assertTrue(should_auto_approve(self.build_changeset(changed=['stylesheet.css'], added=['po/zn_CH.po'])))
+        self.assertTrue(should_auto_approve_changeset(self.build_changeset()))
+        self.assertTrue(should_auto_approve_changeset(self.build_changeset(changed=['metadata.json'])))
+        self.assertTrue(should_auto_approve_changeset(self.build_changeset(changed=['metadata.json', 'po/en_GB.po', 'images/new_fedora.png', 'stylesheet.css'])))
+        self.assertTrue(should_auto_approve_changeset(self.build_changeset(changed=['stylesheet.css'], added=['po/zn_CH.po'])))
 
-        self.assertFalse(should_auto_approve(self.build_changeset(changed=['extension.js'])))
-        self.assertFalse(should_auto_approve(self.build_changeset(changed=['secret_keys.json'])))
-        self.assertFalse(should_auto_approve(self.build_changeset(changed=['libbignumber/BigInteger.js'])))
-        self.assertFalse(should_auto_approve(self.build_changeset(added=['libbignumber/BigInteger.js'])))
+        self.assertFalse(should_auto_approve_changeset(self.build_changeset(changed=['extension.js'])))
+        self.assertFalse(should_auto_approve_changeset(self.build_changeset(changed=['secret_keys.json'])))
+        self.assertFalse(should_auto_approve_changeset(self.build_changeset(changed=['libbignumber/BigInteger.js'])))
+        self.assertFalse(should_auto_approve_changeset(self.build_changeset(added=['libbignumber/BigInteger.js'])))

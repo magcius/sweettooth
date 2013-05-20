@@ -1,15 +1,5 @@
 A new extension version, "{{ extension.name }}", version {{ version.version }}, was auto-approved.
 
-The diff between this version and the last approved version looks like this:
-{% for file in changeset.changed %}
-  M {{ file }}
-{% endfor %}
-{% for file in changeset.added %}
-  + {{ file }}
-{% endfor %}
-
-(where M means "modified" and "+" means "added")
-
 The full review details can be found at {{ review_url }}, and the extension's version page
 can be found at {{ version_url }}.
 

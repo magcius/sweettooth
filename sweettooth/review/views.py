@@ -315,7 +315,7 @@ def send_email_submitted(request, version):
 
     message.send()
 
-def send_email_auto_approved(request, version, changeset):
+def send_email_auto_approved(request, version):
     extension = version.extension
 
     review_url = request.build_absolute_uri(reverse('review-version',
@@ -326,8 +326,7 @@ def send_email_auto_approved(request, version, changeset):
     recipient_list.append(extension.creator.email)
 
     data = dict(version_url=version_url,
-                review_url=review_url,
-                changeset=changeset)
+                review_url=review_url)
 
     message = render_mail(version, 'auto_approved', data)
     message.to = recipient_list
@@ -335,11 +334,7 @@ def send_email_auto_approved(request, version, changeset):
                                   'X-SweetTooth-ExtensionCreator': extension.creator.username})
     message.send()
 
-def should_auto_approve(changes, extension=None):
-    # If a user can approve extensions, don't bother making him do so.
-    if extension is not None and can_approve_extension(extension.creator, extension):
-        return True
-
+def should_auto_approve_changeset(changes):
     for filename in itertools.chain(changes['changed'], changes['added']):
         # metadata.json updates are safe.
         if filename == 'metadata.json':
@@ -363,12 +358,25 @@ def should_auto_approve(changes, extension=None):
 
     return True
 
-def extension_submitted(sender, request, version, **kwargs):
+def should_auto_approve(version):
+    extension = version.extension
+    user = extension.creator
+    can_review = can_approve_extension(user, extension)
+    trusted = user.has_perm("review.trusted")
+
+    if can_review or trusted:
+        return True 
+
     old_version = version.extension.latest_version
+    if old_version is None:
+        return False
+
     old_zipfile, new_zipfile = get_zipfiles(old_version, version)
     changeset = get_file_changeset(old_zipfile, new_zipfile)
+    return should_auto_approve_changeset(changeset)
 
-    if old_zipfile is not None and should_auto_approve(changeset, version.extension):
+def extension_submitted(sender, request, version, **kwargs):
+    if should_auto_approve(version):
         CodeReview.objects.create(version=version,
                                   reviewer=request.user,
                                   comments="",
@@ -376,10 +384,9 @@ def extension_submitted(sender, request, version, **kwargs):
                                   auto=True)
         version.status = models.STATUS_ACTIVE
         version.save()
-        send_email_auto_approved(request, version, changeset)
-        return
-
-    send_email_submitted(request, version)
+        send_email_auto_approved(request, version)
+    else:
+        send_email_submitted(request, version)
 
 models.submitted_for_review.connect(extension_submitted)
 
