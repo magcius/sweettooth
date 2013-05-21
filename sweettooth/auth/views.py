@@ -37,17 +37,20 @@ def profile(request, user):
 @ajax_view
 @require_POST
 @login_required
-def ajax_change_display_name(request):
+def ajax_change_display_name(request, pk):
     if request.POST['id'] != 'new_display_name':
         return HttpResponseForbidden()
 
-    if not request.user.is_authenticated():
+    userobj = get_object_or_404(models.User, pk=pk)
+    is_editable = (request.user == userobj) or request.user.has_perm('review.can-review-extensions')
+
+    if not is_editable:
         return HttpResponseForbidden()
 
     # display name is "%s %s" % (first_name, last_name). Change the first name.
-    request.user.first_name = request.POST['value']
-    request.user.save()
-    return request.POST['value']
+    userobj.first_name = request.POST['value']
+    userobj.save()
+    return userobj.first_name
 
 @login_required
 def profile_redirect(request):
