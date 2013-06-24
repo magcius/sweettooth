@@ -120,7 +120,7 @@ def shell_update(request):
 def ajax_query_params_query(request, versions, n_per_page):
     version_qs = models.ExtensionVersion.objects.visible()
 
-    if versions:
+    if versions is not None:
         version_qs = version_qs.filter(shell_versions__in=versions)
 
     queryset = models.Extension.objects.distinct().filter(versions__in=version_qs)
