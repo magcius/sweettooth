@@ -40,10 +40,20 @@ def report_error(request, extension):
                    form=form)
     return render(request, 'errorreports/report.html', context)
 
+def can_see_reporter_email(user, report):
+    if user.is_superuser:
+        return True
+
+    if user in (report.user, report.extension.creator):
+        return True
+
+    return False
+
 @login_required
 @model_view(ErrorReport)
 def view_error_report(request, obj):
-    return render(request, 'errorreports/view.html', dict(report=obj))
+    return render(request, 'errorreports/view.html', dict(report=obj,
+                                                          show_email=can_see_reporter_email(request.user, obj)))
 
 def send_email_on_error_reported(sender, request, extension, report, **kwargs):
     url = request.build_absolute_uri(reverse('errorreports.views.view_error_report',

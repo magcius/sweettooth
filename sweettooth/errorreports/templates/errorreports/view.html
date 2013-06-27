@@ -8,9 +8,11 @@
 <div>{{ report.comment|default:"No comments" }}</div>
 </div>
 
+{% if show_email %}
 <h3> Contact information </h3>
 <p>Please email the reporter back to respond. The user's address is:</p>
 <a class="email" href="mailto:{{ report.user.email }}">{{ report.user.email }}</a>
+{% endif %}
 {% endblock %}
 
 {% block navclass %}main{% endblock %}
