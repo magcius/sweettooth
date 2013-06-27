@@ -1,6 +1,7 @@
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
@@ -39,6 +40,7 @@ def report_error(request, extension):
                    form=form)
     return render(request, 'errorreports/report.html', context)
 
+@login_required
 @model_view(ErrorReport)
 def view_error_report(request, obj):
     return render(request, 'errorreports/view.html', dict(report=obj))
