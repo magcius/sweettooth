@@ -289,6 +289,8 @@ def ajax_inline_edit_view(request, extension):
     else:
         return HttpResponseForbidden()
 
+    models.extension_updated.send(sender=extension)
+
     extension.save()
 
     return value

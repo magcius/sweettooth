@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models import signals
 
 from extensions.models import Extension, ExtensionVersion
+from extensions.models import reviewed, extension_updated
 
 def index_extension(extension):
     if extension.latest_version is None:
@@ -37,9 +38,13 @@ def delete_extension(extension):
     db.delete_document(idterm)
 
 
-def post_extension_save_handler(instance, **kwargs):
+def reviewed_handler(sender, request, version, review, **kwargs):
+    index_extension(version.extension)
+reviewed.connect(reviewed_handler)
+
+def extension_updated_handler(instance, **kwargs):
     index_extension(instance)
-signals.post_save.connect(post_extension_save_handler, sender=Extension)
+reviewed.connect(extension_updated_handler)
 
 def post_extension_delete_handler(instance, **kwargs):
     delete_extension(instance)
