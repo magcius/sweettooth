@@ -89,7 +89,7 @@ def shell_update(request):
     for uuid, meta in installed.iteritems():
         try:
             version = meta['version']
-        except KeyError:
+        except (KeyError, TypeError):
             # XXX - if the user has a locally installed version of
             # an extension on SweetTooth, what should we do?
             continue
