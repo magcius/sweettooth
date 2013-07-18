@@ -252,7 +252,11 @@ def ajax_adjust_popularity_view(request):
     uuid = request.POST['uuid']
     action = request.POST['action']
 
-    extension = models.Extension.objects.visible().get(uuid=uuid)
+    try:
+        extension = models.Extension.objects.get(uuid=uuid)
+    except models.Extension.DoesNotExist:
+        raise Http404()
+
     pop = models.ExtensionPopularityItem(extension=extension)
 
     if action == 'enable':
