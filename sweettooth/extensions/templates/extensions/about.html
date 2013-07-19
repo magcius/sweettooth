@@ -54,28 +54,20 @@ that provides GNOME 3. See the
 the main GNOME site to learn how to grab a Linux distribution with
 GNOME 3.
 </p>
-<h2 id="old-version"> I'm using GNOME 3. Why can't I install extensions? </h2>
+<h2 id="no-detection"> I'm using GNOME 3. Why can't I install extensions? </h2>
 <p>
-Support for installing extensions from this website was first added in
-GNOME 3.2, so if you are using GNOME 3.0, you'll need to upgrade to a
-newer Linux distribution. You can check what version of GNOME is
-installed on your system using the "System Information" panel of
-"System Settings".  If you are using GNOME 3.2 or newer and
-installation still doesn't work, check to make sure that the "GNOME
-Shell Integration" plugin is installed and enabled in your browser
-preferences.
+If you are using GNOME 3.2 or newer and installation still doesn't work,
+check to make sure that the "GNOME Shell Integration" plugin is installed
+and enabled in your browser preferences. Some browsers have a feature,
+known-
 </p>
+<p>
+Some browsers have a modern feature that might prevent
 <p>
 If you are behind a proxy, make sure you have configured your proxy in
 both your browser's configuration dialog as well as GNOME's Network panel
 under System Settings. GNOME Shell Extensions needs both settings panels
 configured for the one-click installation to work.
-</p>
-<p>
-Note: there were some bugs in the browser plugin shipped in some versions
-of GNOME 3.2 that prevent it from working properly under WebKit-based
-browsers like Epiphany and Chromium. GNOME Shell 3.2.2.1 has fixed these
-problems, so make sure you are using it.
 </p>
 <p>
 Some distributions don't quite package GNOME correctly. Make sure that you
@@ -89,21 +81,7 @@ solutions you have already tried, as well as what the Looking Glass says
 in both the Extensions and Errors tabs. It's also helpful to have a copy of
 the <code>~/.xsession-errors</code> file from the session that you installed
 extensions from.
-<h2 id="uninstall"> How do I uninstall my extensions? </h2>
-<p>
-Unfortunately, there are some bugs in GNOME 3.2 that prevented uninstallation
-from working properly for some extensions. GNOME Shell 3.2.2.1 has fixed these
-problems. Make sure your system is fully updated if you are having issues
-uninstalling extensions.
 </p>
-<p>
-If you do not have GNOME Shell 3.2.2.1 and may be unable to get it, or are
-unsure, you can uninstall the extension manually. Remove the extension's
-directory, and then restart the Shell. The extension should be stored under
-<code>~/.local/share/gnome-shell/extensions</code>. Removing the directory
-won't be enough: you will need to restart the Shell to make sure the extension
-is completely uninstalled: open the run dialog with <kbd>Alt+F2</kbd>, and
-enter <code>restart</code>.
 <h2> How do I update my extensions? </h2>
 <p>
 To update your extension to the latest version, go to the extension's page,

@@ -11,5 +11,5 @@ define({
   "extensions/uninstall": "You uninstalled <b>{{name}}</b>.",
   "messages/cannot_list_errors": "GNOME Shell Extensions cannot automatically detect any errors.",
   "messages/cannot_list_local": "GNOME Shell Extensions cannot list your installed extensions.",
-  "messages/dummy_proxy": "You do not appear to have an up to date version of GNOME3. You won't be able to install extensions from here. See the <a href=\"/about/#old-version\">about page</a> for more information."
+  "messages/dummy_proxy": "We cannot detect a running copy of GNOME on this system, so some parts of the interface may be disabled. See <a href=\"/about/#no-detection\">our troubleshooting entry</a> for more information."
 });
