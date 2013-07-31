@@ -42,8 +42,8 @@ def reviewed_handler(sender, request, version, review, **kwargs):
     index_extension(version.extension)
 reviewed.connect(reviewed_handler)
 
-def extension_updated_handler(instance, **kwargs):
-    index_extension(instance)
+def extension_updated_handler(extension, **kwargs):
+    index_extension(extension)
 extension_updated.connect(extension_updated_handler)
 
 def post_extension_delete_handler(instance, **kwargs):
